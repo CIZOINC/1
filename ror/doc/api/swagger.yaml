@@ -1,0 +1,333 @@
+swagger: '2.0'
+info:
+  title: Cizo API
+  description: API for Cizo
+  version: 1.0.0
+host: api.cizo.com
+schemes:
+  - https
+securityDefinitions: 
+  oauth:
+    type: oauth2
+    flow: password
+    tokenUrl: https://api.cizo.com/oauth2/token
+    scopes:
+      admin: Grants read/write access to all resources
+      user: Grants read access to videos that have a MPAA rating greater than PG
+basePath: /v1
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /videos:
+    get:
+      description: 'The Videos endpoint returns a list of videos available for viewing'
+      tags:
+        - Videos
+      responses:
+        '200':
+          description: An array of videos
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: 'Insert description'
+      security:
+        - oauth: 
+          - admin
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            properties:
+              title:
+                type: string
+                description: Title of video.
+              description:
+                type: string
+                description: Description of video.
+              mpaa_rating:
+                type: string
+                description: 'MPAA rating of video. This must be one of the following strings: "G", "PG", "PG-13", "R", "NC-17"'
+                enum:
+                  - "G"
+                  - "PG"
+                  - "PG-13"
+                  - "R"
+                  - "NC-17"
+              tags:
+                type: array
+                items:
+                  type: string
+      responses:
+        '201':
+          description: A video object
+          schema:
+            type: object
+            $ref: '#/definitions/VideoPartial'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /videos/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    get:
+      summary: A Video
+      description: "Insert description"
+      tags:
+        - Videos
+      responses:
+        '200':
+          description: A video
+          schema:
+            type: object
+            $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /videos/{video-id}/stream_upload:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    get:
+      description: "Insert description"
+      tags:
+        - Videos
+      security:
+        - oauth: 
+          - admin
+      responses:
+        '200':
+          description: "Video stream upload request"
+          schema:
+            type: object
+            properties:
+              key:
+                type: string
+                description: "Upload key. S3 bucket key to store uploaded video in"
+              aws_access_key_id: 
+                type: string
+                description: "Upload AWS access key id"
+              acl: 
+                type: string
+                description: "Upload acl"
+              policy: 
+                type: string
+                description: "Upload policy"
+              signature:
+                type: string
+                description: "Upload signature"
+        '409': 
+          description: "Error occuring when a stream of that type for that video already exists"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /videos/{video-id}/stream:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    post:
+      description: "Create a video stream"
+      tags:
+        - Videos
+      security:
+        - oauth: 
+          - admin
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            properties:
+              raw_video_key:
+                type: string
+                description: "S3 bucket key for raw video"
+              target_type:
+                type: string
+                description: "Target stream type"
+                enum:
+                  - "hls"
+      responses:
+        '202':
+          description: "Stream has been accepted for transcoding"
+        '409': 
+          description: "Error occuring when a stream of that type for that video already exists"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users:
+    get:
+      description: 'The User endpoint returns a list of all users'
+      tags:
+        - Users
+      security:
+        - oauth: 
+          - admin
+      tags:
+        - Users
+      responses:
+        '200':
+          description: An array of users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      tags:
+        - Users
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '201':
+          description: An array of videos
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /me:
+    get:
+      description: 'Gets the current user'
+      tags: 
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '200':
+          description: The user object
+          schema:
+            type: object
+            $ref: '#/definitions/User'
+
+definitions:
+  VideoPartial: 
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: 'Unique identifier representing a specific video'
+        readOnly: true
+      created_at:
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        type: string
+        format: date-time
+        readOnly: true    
+      title:
+        type: string
+        description: Title of video.
+      description:
+        type: string
+        description: Description of video.
+      mpaa_rating:
+        type: string
+        description: 'MPAA rating of video. This must be one of the following strings: "G", "PG", "PG-13", "R", "NC-17"'
+        enum:
+          - "G"
+          - "PG"
+          - "PG-13"
+          - "R"
+          - "NC-17"
+      tags:
+        type: array
+        items:
+          type: string
+  Video:
+    type: object
+    allOf:
+      - $ref: '#/definitions/VideoPartial'
+      - type: object
+        properties:
+          stream:
+            type: object
+            readOnly: true
+            $ref: '#/definitions/StreamPartial'
+          hero_image_link:
+            type: string
+            description: Image URL representing the video.
+          view_count:
+            type: integer
+            description: >
+              View count. <b>NOTE</b> This only visible if oauth2 scope is "admin".
+            format: int32
+            readOnly: true
+  StreamPartial:
+    type: object
+    properties:
+      link: 
+        type: string
+        description: 'URL of stream.'
+      type:
+        type: string
+        description: 'Type of stream.'
+        enum: 
+          - 'hls'
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Unique identifier for the user
+        readOnly: true
+      first_name:
+        type: string
+        description: First name of user
+      last_name:
+        type: string
+        description: Last name of user
+      email:
+        type: string
+        description: Email of user
+      password:
+        type: string
+        description: Password of user 
+      birthday:
+        type: string
+        format: date-time
+        description: Birthday of user. Timezone is UTC
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string

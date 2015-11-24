@@ -71,7 +71,39 @@ paths:
           description: A video object
           schema:
             type: object
-            $ref: '#/definitions/VideoPartial'
+            properties:
+              id:
+                type: integer
+                format: int64
+                description: 'Unique identifier representing a specific video'
+                readOnly: true
+              created_at:
+                type: string
+                format: date-time
+                readOnly: true
+              updated_at:
+                type: string
+                format: date-time
+                readOnly: true    
+              title:
+                type: string
+                description: Title of video.
+              description:
+                type: string
+                description: Description of video.
+              mpaa_rating:
+                type: string
+                description: 'MPAA rating of video. This must be one of the following strings: "G", "PG", "PG-13", "R", "NC-17"'
+                enum:
+                  - "G"
+                  - "PG"
+                  - "PG-13"
+                  - "R"
+                  - "NC-17"
+              tags:
+                type: array
+                items:
+                  type: string
         default:
           description: Unexpected error
           schema:
@@ -84,8 +116,7 @@ paths:
         type: integer
         required: true
     get:
-      summary: A Video
-      description: "Insert description"
+      description: "Returns a video for the given ID. The video must be marked as avaible and the user must be at least the minimum age for the MPAA rating for the given video unless the oauth2 token has a scope of 'admin'"
       tags:
         - Videos
       responses:
@@ -98,7 +129,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /videos/{video-id}/stream_upload:
+  /videos/{video-id}/stream_transcode_request:
     parameters:
       - name: video-id
         in: path
@@ -106,7 +137,7 @@ paths:
         type: integer
         required: true
     get:
-      description: "Insert description"
+      description: "This endpoint returns the S3 upload details for client side uploading of a stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
       tags:
         - Videos
       security:
@@ -114,7 +145,7 @@ paths:
           - admin
       responses:
         '200':
-          description: "Video stream upload request"
+          description: "S3 upload details"
           schema:
             type: object
             properties:
@@ -147,7 +178,7 @@ paths:
         type: integer
         required: true
     post:
-      description: "Create a video stream"
+      description: "Creates a video stream and initiates transcoding for that stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3."
       tags:
         - Videos
       security:
@@ -178,7 +209,7 @@ paths:
             $ref: '#/definitions/Error'
   /users:
     get:
-      description: 'The User endpoint returns a list of all users'
+      description: 'The User endpoint returns a list of all users.'
       tags:
         - Users
       security:
@@ -198,6 +229,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     post:
+      description: 'Creates a user.'
       tags:
         - Users
       parameters:
@@ -233,7 +265,7 @@ paths:
             $ref: '#/definitions/User'
 
 definitions:
-  VideoPartial: 
+  Video:
     type: object
     properties:
       id:
@@ -268,36 +300,27 @@ definitions:
         type: array
         items:
           type: string
-  Video:
-    type: object
-    allOf:
-      - $ref: '#/definitions/VideoPartial'
-      - type: object
+      stream:
+        type: object
+        readOnly: true
         properties:
-          stream:
-            type: object
-            readOnly: true
-            $ref: '#/definitions/StreamPartial'
-          hero_image_link:
+          link:
             type: string
-            description: Image URL representing the video.
-          view_count:
-            type: integer
-            description: >
-              View count. <b>NOTE</b> This only visible if oauth2 scope is "admin".
-            format: int32
-            readOnly: true
-  StreamPartial:
-    type: object
-    properties:
-      link: 
+            description: 'URL of stream.'
+          type:
+            type: string
+            description: 'Type of stream.'
+            enum: 
+              - 'hls'
+      hero_image_link:
         type: string
-        description: 'URL of stream.'
-      type:
-        type: string
-        description: 'Type of stream.'
-        enum: 
-          - 'hls'
+        description: Image URL representing the video.
+      view_count:
+        type: integer
+        description: >
+          View count. <b>NOTE</b> This only visible if oauth2 scope is "admin".
+        format: int32
+        readOnly: true
   User:
     type: object
     properties:

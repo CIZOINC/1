@@ -22,22 +22,25 @@ produces:
 paths:
   /videos:
     get:
-      description: 'The Videos endpoint returns a list of videos available for viewing'
+      description: "Returns a list of videos. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated or is not the age required for the mpaa_rating, streams will be null."
       tags:
         - Videos
       responses:
         '200':
           description: An array of videos
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Video'
+            type: object
+            properties:
+              data:
+                type: array
+                items: 
+                  $ref: '#/definitions/Video'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
     post:
-      description: 'Insert description'
+      description: 'Creates a video'
       security:
         - oauth: 
           - admin
@@ -63,12 +66,13 @@ paths:
                   - "R"
                   - "NC-17"
               tags:
+                description: Tags associated with video.
                 type: array
                 items:
                   type: string
       responses:
         '201':
-          description: A video object
+          description: A video
           schema:
             type: object
             properties:
@@ -104,6 +108,10 @@ paths:
                 type: array
                 items:
                   type: string
+        '403': 
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -116,7 +124,7 @@ paths:
         type: integer
         required: true
     get:
-      description: "Returns a video for the given ID. The video must be marked as avaible and the user must be at least the minimum age for the MPAA rating for the given video unless the oauth2 token has a scope of 'admin'"
+      description: "Returns a video for the given ID. If the user is unauthenticated or is not the age required for the mpaa_rating, streams will be null."
       tags:
         - Videos
       responses:
@@ -125,6 +133,47 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/Video'
+        '403': 
+          description: "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's viewable property is not set to true"
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      description: 'Updates a video. The "streams" and "hero_image_link" properties are ignored.'
+      tags:
+        - Videos
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Video'
+      responses:
+        '200':
+          description: A video
+          schema:
+            type: object
+            $ref: '#/definitions/Video'
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: "Deletes a video"
+      tags:
+        - Videos
+      responses:
+        '204':
+          description: Successfully deleted
+        '403': 
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -164,8 +213,10 @@ paths:
               signature:
                 type: string
                 description: "Upload signature"
-        '409': 
-          description: "Error occuring when a stream of that type for that video already exists"
+        '403': 
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -178,7 +229,7 @@ paths:
         type: integer
         required: true
     post:
-      description: "Creates a video stream and initiates transcoding for that stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3."
+      description: "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'complete', 'canceled', or 'error' for the update to succeed"
       tags:
         - Videos
       security:
@@ -190,26 +241,96 @@ paths:
           required: true
           schema:
             properties:
-              raw_video_key:
+              key:
                 type: string
-                description: "S3 bucket key for raw video"
-              target_type:
-                type: string
-                description: "Target stream type"
-                enum:
-                  - "hls"
+                description: "S3 bucket key for raw video."
+              types:
+                type: array
+                description: "Target stream types. Only 'hls' and 'mp4' are supported."
       responses:
         '202':
           description: "Stream has been accepted for transcoding"
+        '400':
+          description: "Error occurring when the key specified does not exist in S3"
+          schema:
+            $ref: '#/definitions/Error'
         '409': 
-          description: "Error occuring when a stream of that type for that video already exists"
+          description: "Error occuring when a stream of that type for that video is in a 'pending' state"
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /videos/{video-id}/hero_image:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    post:
+      description: "Creates or updates the hero image for a video"
+      tags:
+        - Videos
+      security:
+        - oauth: 
+          - admin
+      consumes: 
+        - multipart/form-data
+      responses:
+        '202':
+          description: "Image has been created or updated"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /videos/{video-id}/like:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: "Set a like on a video."
+      tags:
+        - Videos
+      security:
+        - oauth: 
+          - user
+      responses:
+        '204':
+          description: "Stream has been accepted for transcoding"
+        '403': 
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: "Remove a like on a video."
+      tags:
+        - Videos
+      security:
+        - oauth: 
+          - user
+      responses:
+        '200':
+          description: "Stream has been accepted for transcoding"
+        '403': 
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
   /users:
     get:
-      description: 'The User endpoint returns a list of all users.'
+      description: 'Returns a list of all users.'
       tags:
         - Users
       security:
@@ -221,9 +342,16 @@ paths:
         '200':
           description: An array of users
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/User'
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+        '403': 
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -239,12 +367,39 @@ paths:
           schema:
             $ref: '#/definitions/User'
       responses:
-        '201':
-          description: An array of videos
+        '200':
+          description: A user
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/User'
+            type: object
+            $ref: '#/definitions/User'
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      description: 'Updates a user.'
+      tags:
+        - Users
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: A user
+          schema:
+            type: object
+            $ref: '#/definitions/User'
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -263,7 +418,56 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/User'
-
+        '404':
+          description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      description: 'Updates the current user.'
+      tags:
+        - Users
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: A user
+          schema:
+            type: object
+            $ref: '#/definitions/User'
+        '404':
+          description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /me/videos/likes:
+    get:
+      description: 'Gets a list of videos liked by the current user'
+      tags: 
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '200':
+          description: Liked videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        '404':
+          description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Video:
     type: object
@@ -296,22 +500,18 @@ definitions:
           - "PG-13"
           - "R"
           - "NC-17"
+      viewable: 
+        type: boolean
+        description: Whether a video is viewable.
       tags:
         type: array
         items:
           type: string
-      stream:
-        type: object
+      streams:
+        type: array
         readOnly: true
-        properties:
-          link:
-            type: string
-            description: 'URL of stream.'
-          type:
-            type: string
-            description: 'Type of stream.'
-            enum: 
-              - 'hls'
+        items:
+          $ref: '#/definitions/Stream'
       hero_image_link:
         type: string
         description: Image URL representing the video.
@@ -321,6 +521,28 @@ definitions:
           View count. <b>NOTE</b> This only visible if oauth2 scope is "admin".
         format: int32
         readOnly: true
+  Stream:
+    type: object
+    properties:
+      link:
+        type: string
+        description: 'URL of stream.'
+      type:
+        type: string
+        description: 'Type of stream.'
+        enum:
+          - 'hls'
+          - 'mp4'
+      transcode_status:
+        type: string
+        description: 'Transcode status. This property is only visible to oauth2 scope of "admin"'
+        readOnly: true
+        enum:
+          - 'submitted'
+          - 'progressing'
+          - 'complete'
+          - 'canceled'
+          - 'error'
   User:
     type: object
     properties:
@@ -339,7 +561,7 @@ definitions:
         description: Email of user
       password:
         type: string
-        description: Password of user 
+        description: Password of user. This is omitted from any endpoint returns
       birthday:
         type: string
         format: date-time
@@ -351,6 +573,4 @@ definitions:
         type: integer
         format: int32
       message:
-        type: string
-      fields:
         type: string

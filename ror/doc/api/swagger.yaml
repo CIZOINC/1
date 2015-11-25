@@ -142,7 +142,7 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     put:
-      description: 'Updates a video. The "streams" and "hero_image_link" properties are ignored.'
+      description: "Updates a video. The 'streams' and 'hero_image_link' properties are ignored."
       tags:
         - Videos
       parameters:
@@ -406,7 +406,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /me:
+  /users/me:
     get:
       description: 'Gets the current user'
       tags: 
@@ -448,7 +448,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /me/videos/likes:
+  /users/me/videos/likes:
     get:
       description: 'Gets a list of videos liked by the current user'
       tags: 

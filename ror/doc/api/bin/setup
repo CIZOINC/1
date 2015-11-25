@@ -1,0 +1,54 @@
+#!/bin/sh
+
+say () {
+	local prt="$1"
+	shift
+	printf "$prt\n" "$@"
+}
+
+confirm () {
+  read -r -p "$1 [y/N] " response
+  case $response in
+      [yY][eE][sS]|[yY]) 
+          true
+          ;;
+      *)
+          false
+          ;;
+  esac
+}
+
+brew_is_installed() {
+  local name="$1"
+
+  brew list -1 | grep -Fqx "$name"
+}
+
+install_homebrew() {
+  if ! command -v brew >/dev/null; then
+  say "Installing Homebrew ..."
+    curl -fsS \
+      'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
+
+    export PATH="/usr/local/bin:$PATH"
+  else
+    say "Homebrew already installed. Skipping ..."
+  fi
+}
+
+brew_update_or_install() {
+  if brew_is_installed "$1"; then
+    if brew_is_upgradable "$1"; then
+      confirm "Upgrade available for $1. Upgrade?" && brew upgrade "$@"
+    else
+      say "Already using the latest version of %s. Skipping ..." "$1"
+    fi
+  else
+    say "Installing %s ..." "$1"
+    brew install "$@"
+  fi
+}
+
+install_homebrew
+brew_update_or_install 'swagger-codegen'
+brew_update_or_install 'node'

@@ -247,6 +247,8 @@ paths:
               types:
                 type: array
                 description: "Target stream types. Only 'hls' and 'mp4' are supported."
+                items:
+                  type: string
       responses:
         '202':
           description: "Stream has been accepted for transcoding"

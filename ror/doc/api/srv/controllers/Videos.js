@@ -7,9 +7,12 @@ var Videos = require('./VideosService');
 
 
 module.exports.videosGet = function videosGet (req, res, next) {
+  var createdBefore = req.swagger.params['created_before'].value;
+  var createdAfter = req.swagger.params['created_after'].value;
+  var category = req.swagger.params['category'].value;
   
 
-  var result = Videos.videosGet();
+  var result = Videos.videosGet(createdBefore, createdAfter, category);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

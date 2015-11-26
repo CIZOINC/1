@@ -6,11 +6,9 @@ exports.usersGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
-    "birthday" : "2015-11-25T23:00:07.179+0000",
+    "birthday" : "2015-11-26T01:42:22.943+0000",
     "password" : "aeiou",
-    "last_name" : "aeiou",
-    "id" : "aeiou",
-    "first_name" : "aeiou",
+    "id" : 123,
     "email" : "aeiou"
   } ]
 };
@@ -26,11 +24,9 @@ exports.usersPut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-11-25T23:00:07.189+0000",
+  "birthday" : "2015-11-26T01:42:22.946+0000",
   "password" : "aeiou",
-  "last_name" : "aeiou",
-  "id" : "aeiou",
-  "first_name" : "aeiou",
+  "id" : 123,
   "email" : "aeiou"
 };
   
@@ -45,11 +41,9 @@ exports.usersPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-11-25T23:00:07.191+0000",
+  "birthday" : "2015-11-26T01:42:22.947+0000",
   "password" : "aeiou",
-  "last_name" : "aeiou",
-  "id" : "aeiou",
-  "first_name" : "aeiou",
+  "id" : 123,
   "email" : "aeiou"
 };
   
@@ -64,11 +58,9 @@ exports.usersMeGet = function() {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-11-25T23:00:07.192+0000",
+  "birthday" : "2015-11-26T01:42:22.948+0000",
   "password" : "aeiou",
-  "last_name" : "aeiou",
-  "id" : "aeiou",
-  "first_name" : "aeiou",
+  "id" : 123,
   "email" : "aeiou"
 };
   
@@ -83,11 +75,9 @@ exports.usersMePut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-11-25T23:00:07.193+0000",
+  "birthday" : "2015-11-26T01:42:22.949+0000",
   "password" : "aeiou",
-  "last_name" : "aeiou",
-  "id" : "aeiou",
-  "first_name" : "aeiou",
+  "id" : 123,
   "email" : "aeiou"
 };
   
@@ -104,15 +94,16 @@ exports.usersMeVideosLikesGet = function() {
   examples['application/json'] = {
   "data" : [ {
     "viewable" : true,
-    "updated_at" : "2015-11-25T23:00:07.195+0000",
+    "updated_at" : "2015-11-26T01:42:22.949+0000",
+    "category_id" : 123,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "type" : "aeiou"
     } ],
-    "created_at" : "2015-11-25T23:00:07.195+0000",
+    "created_at" : "2015-11-26T01:42:22.949+0000",
     "description" : "aeiou",
-    "id" : 123456789,
+    "id" : 123,
     "title" : "aeiou",
     "hero_image_link" : "aeiou",
     "mpaa_rating" : "aeiou",

@@ -5,10 +5,11 @@ exports.videosPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "updated_at" : "2015-11-25T23:00:07.207+0000",
-  "created_at" : "2015-11-25T23:00:07.207+0000",
+  "category_id" : 123,
+  "updated_at" : "2015-11-26T01:42:22.953+0000",
+  "created_at" : "2015-11-26T01:42:22.953+0000",
   "description" : "aeiou",
-  "id" : 123456789,
+  "id" : 123,
   "title" : "aeiou",
   "mpaa_rating" : "aeiou",
   "tags" : [ "aeiou" ]

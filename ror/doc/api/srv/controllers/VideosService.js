@@ -1,21 +1,22 @@
 'use strict';
 
-exports.videosGet = function() {
+exports.videosGet = function(createdBefore, createdAfter, category) {
 
   var examples = {};
   
   examples['application/json'] = {
   "data" : [ {
     "viewable" : true,
-    "updated_at" : "2015-11-25T23:00:07.206+0000",
+    "updated_at" : "2015-11-26T01:42:22.950+0000",
+    "category_id" : 123,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "type" : "aeiou"
     } ],
-    "created_at" : "2015-11-25T23:00:07.206+0000",
+    "created_at" : "2015-11-26T01:42:22.950+0000",
     "description" : "aeiou",
-    "id" : 123456789,
+    "id" : 123,
     "title" : "aeiou",
     "hero_image_link" : "aeiou",
     "mpaa_rating" : "aeiou",
@@ -36,15 +37,16 @@ exports.videosVideoIdGet = function(videoId) {
   
   examples['application/json'] = {
   "viewable" : true,
-  "updated_at" : "2015-11-25T23:00:07.209+0000",
+  "updated_at" : "2015-11-26T01:42:22.954+0000",
+  "category_id" : 123,
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
-  "created_at" : "2015-11-25T23:00:07.209+0000",
+  "created_at" : "2015-11-26T01:42:22.954+0000",
   "description" : "aeiou",
-  "id" : 123456789,
+  "id" : 123,
   "title" : "aeiou",
   "hero_image_link" : "aeiou",
   "mpaa_rating" : "aeiou",
@@ -64,15 +66,16 @@ exports.videosVideoIdPut = function(body, videoId) {
   
   examples['application/json'] = {
   "viewable" : true,
-  "updated_at" : "2015-11-25T23:00:07.213+0000",
+  "updated_at" : "2015-11-26T01:42:22.955+0000",
+  "category_id" : 123,
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
-  "created_at" : "2015-11-25T23:00:07.213+0000",
+  "created_at" : "2015-11-26T01:42:22.955+0000",
   "description" : "aeiou",
-  "id" : 123456789,
+  "id" : 123,
   "title" : "aeiou",
   "hero_image_link" : "aeiou",
   "mpaa_rating" : "aeiou",

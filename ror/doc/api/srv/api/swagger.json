@@ -10,6 +10,204 @@
   "basePath": "/v1",
   "paths": {
   
+  "/categories/{category-id}": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a category for the given ID.",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesCategoryIdGet",
+      "parameters": [
+        {
+  "name" : "category-id",
+  "in" : "path",
+  "description" : "Category ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A category",
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Updates a category. Title must be unique.",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesCategoryIdPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+},
+        {
+  "name" : "category-id",
+  "in" : "path",
+  "description" : "Category ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A category",
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\""
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "delete": {
+      "summary": "",
+      "description":"Deletes a category",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesCategoryIdDelete",
+      "parameters": [
+        {
+  "name" : "category-id",
+  "in" : "path",
+  "description" : "Category ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Successfully deleted"
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/categories": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a list of categories",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesGet",
+      "responses": {
+        "200": {
+  "description" : "A list of categories",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "post": {
+      "summary": "",
+      "description":"Creates a category. Title must be unique",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesPost",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A category",
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  
   "/users": {
     
     "get": {
@@ -20,9 +218,9 @@
       "operationId": "usersGet",
       "responses": {
         "200": {
-  "description" : "An array of users",
+  "description" : "A list of users",
   "schema" : {
-    "$ref" : "#/definitions/inline_response_200"
+    "$ref" : "#/definitions/inline_response_200_1"
   }
 }
         ,
@@ -216,7 +414,7 @@
         "200": {
   "description" : "Liked videos",
   "schema" : {
-    "$ref" : "#/definitions/inline_response_200_1"
+    "$ref" : "#/definitions/inline_response_200_2"
   }
 }
         ,
@@ -286,15 +484,41 @@
     
     "get": {
       "summary": "",
-      "description":"Returns a list of videos. For an oauth2 scope of &#39;admin&#39;, this includes all videos. For oauth2 scope of &#39;user&#39; or unauthenticated clients, this includes only videos with &#39;viewable&#39; set to true. &lt;b&gt;NOTE&lt;/b&gt;  If the user is unauthenticated or is not the age required for the mpaa_rating, streams will be null.",
+      "description":"Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of &#39;admin&#39;, this includes all videos. For oauth2 scope of &#39;user&#39; or unauthenticated clients, this includes only videos with &#39;viewable&#39; set to true. &lt;b&gt;NOTE&lt;/b&gt;  If the user is unauthenticated or is not the age required for the mpaa_rating, streams will be null.",
       "x-swagger-router-controller": "Videos",
       "tags": ["Videos"],
       "operationId": "videosGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : true,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : true,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "category",
+  "in" : "query",
+  "description" : "Filters videos by category",
+  "required" : false,
+  "type" : "string"
+}
+        
+      ],
       "responses": {
         "200": {
-  "description" : "An array of videos",
+  "description" : "An list of videos",
   "schema" : {
-    "$ref" : "#/definitions/inline_response_200_1"
+    "$ref" : "#/definitions/inline_response_200_2"
   }
 }
         ,
@@ -333,7 +557,7 @@
         "200": {
   "description" : "S3 upload details",
   "schema" : {
-    "$ref" : "#/definitions/inline_response_200_2"
+    "$ref" : "#/definitions/inline_response_200_3"
   }
 }
         ,
@@ -670,7 +894,7 @@
   "properties" : {
     "id" : {
       "type" : "integer",
-      "format" : "int64",
+      "format" : "int32",
       "description" : "Unique identifier representing a specific video",
       "readOnly" : true
     },
@@ -696,6 +920,11 @@
       "type" : "string",
       "description" : "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
       "enum" : [ "G", "PG", "PG-13", "R", "NC-17" ]
+    },
+    "category_id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier of category"
     },
     "viewable" : {
       "type" : "boolean",
@@ -724,6 +953,19 @@
       "readOnly" : true
     }
   }
+},"Category": {
+  "properties" : {
+    "id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier representing a specific video",
+      "readOnly" : true
+    },
+    "title" : {
+      "type" : "string",
+      "description" : "Title of category"
+    }
+  }
 },"Stream": {
   "properties" : {
     "link" : {
@@ -745,17 +987,10 @@
 },"User": {
   "properties" : {
     "id" : {
-      "type" : "string",
-      "description" : "Unique identifier for the user",
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier representing a specific video",
       "readOnly" : true
-    },
-    "first_name" : {
-      "type" : "string",
-      "description" : "First name of user"
-    },
-    "last_name" : {
-      "type" : "string",
-      "description" : "Last name of user"
     },
     "email" : {
       "type" : "string",
@@ -786,11 +1021,20 @@
     "data" : {
       "type" : "array",
       "items" : {
-        "$ref" : "#/definitions/User"
+        "$ref" : "#/definitions/Category"
       }
     }
   }
 },"inline_response_200_1": {
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/User"
+      }
+    }
+  }
+},"inline_response_200_2": {
   "properties" : {
     "data" : {
       "type" : "array",
@@ -804,6 +1048,11 @@
     "title" : {
       "type" : "string",
       "description" : "Title of video."
+    },
+    "category_id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier of category"
     },
     "description" : {
       "type" : "string",
@@ -824,6 +1073,11 @@
   }
 },"inline_response_201": {
   "properties" : {
+    "category_id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier of category"
+    },
     "updated_at" : {
       "type" : "string",
       "format" : "date-time",
@@ -840,7 +1094,7 @@
     },
     "id" : {
       "type" : "integer",
-      "format" : "int64",
+      "format" : "int32",
       "description" : "Unique identifier representing a specific video",
       "readOnly" : true
     },
@@ -874,7 +1128,7 @@
       }
     }
   }
-},"inline_response_200_2": {
+},"inline_response_200_3": {
   "properties" : {
     "aws_access_key_id" : {
       "type" : "string",

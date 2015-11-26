@@ -1,0 +1,870 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Cizo API",
+        "description": "API for Cizo",
+        "version": "1.0.0"
+    },
+    "host": "api.cizo.com",
+    "schemes": [
+        "https"
+    ],
+    "securityDefinitions": {
+        "oauth": {
+            "type": "oauth2",
+            "flow": "password",
+            "tokenUrl": "https://api.cizo.com/oauth2/token",
+            "scopes": {
+                "admin": "Grants read/write access to all resources",
+                "user": "Grants read access to videos that have a MPAA rating greater than PG"
+            }
+        }
+    },
+    "basePath": "/v1",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/videos": {
+            "get": {
+                "description": "Returns a list of videos. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated or is not the age required for the mpaa_rating, streams will be null.",
+                "tags": [
+                    "Videos"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of videos",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Video"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a video",
+                "security": [
+                    {
+                        "oauth": [
+                            "admin"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "description": "Title of video."
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Description of video."
+                                },
+                                "mpaa_rating": {
+                                    "type": "string",
+                                    "description": "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
+                                    "enum": [
+                                        "G",
+                                        "PG",
+                                        "PG-13",
+                                        "R",
+                                        "NC-17"
+                                    ]
+                                },
+                                "tags": {
+                                    "description": "Tags associated with video.",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "A video",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "description": "Unique identifier representing a specific video",
+                                    "readOnly": true
+                                },
+                                "created_at": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "readOnly": true
+                                },
+                                "updated_at": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "readOnly": true
+                                },
+                                "title": {
+                                    "type": "string",
+                                    "description": "Title of video."
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Description of video."
+                                },
+                                "mpaa_rating": {
+                                    "type": "string",
+                                    "description": "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
+                                    "enum": [
+                                        "G",
+                                        "PG",
+                                        "PG-13",
+                                        "R",
+                                        "NC-17"
+                                    ]
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/videos/{video-id}": {
+            "parameters": [
+                {
+                    "name": "video-id",
+                    "in": "path",
+                    "description": "Video ID",
+                    "type": "integer",
+                    "required": true
+                }
+            ],
+            "get": {
+                "description": "Returns a video for the given ID. If the user is unauthenticated or is not the age required for the mpaa_rating, streams will be null.",
+                "tags": [
+                    "Videos"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A video",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Video"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's viewable property is not set to true",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates a video. The \"streams\" and \"hero_image_link\" properties are ignored.",
+                "tags": [
+                    "Videos"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Video"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A video",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Video"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\""
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes a video",
+                "tags": [
+                    "Videos"
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successfully deleted"
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/videos/{video-id}/stream_transcode_request": {
+            "parameters": [
+                {
+                    "name": "video-id",
+                    "in": "path",
+                    "description": "Video ID",
+                    "type": "integer",
+                    "required": true
+                }
+            ],
+            "get": {
+                "description": "This endpoint returns the S3 upload details for client side uploading of a stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details.",
+                "tags": [
+                    "Videos"
+                ],
+                "security": [
+                    {
+                        "oauth": [
+                            "admin"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "S3 upload details",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string",
+                                    "description": "Upload key. S3 bucket key to store uploaded video in"
+                                },
+                                "aws_access_key_id": {
+                                    "type": "string",
+                                    "description": "Upload AWS access key id"
+                                },
+                                "acl": {
+                                    "type": "string",
+                                    "description": "Upload acl"
+                                },
+                                "policy": {
+                                    "type": "string",
+                                    "description": "Upload policy"
+                                },
+                                "signature": {
+                                    "type": "string",
+                                    "description": "Upload signature"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/videos/{video-id}/stream": {
+            "parameters": [
+                {
+                    "name": "video-id",
+                    "in": "path",
+                    "description": "Video ID",
+                    "type": "integer",
+                    "required": true
+                }
+            ],
+            "post": {
+                "description": "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'complete', 'canceled', or 'error' for the update to succeed",
+                "tags": [
+                    "Videos"
+                ],
+                "security": [
+                    {
+                        "oauth": [
+                            "admin"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "key": {
+                                    "type": "string",
+                                    "description": "S3 bucket key for raw video."
+                                },
+                                "types": {
+                                    "type": "array",
+                                    "description": "Target stream types. Only 'hls' and 'mp4' are supported."
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Stream has been accepted for transcoding"
+                    },
+                    "400": {
+                        "description": "Error occurring when the key specified does not exist in S3",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "409": {
+                        "description": "Error occuring when a stream of that type for that video is in a 'pending' state",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/videos/{video-id}/hero_image": {
+            "parameters": [
+                {
+                    "name": "video-id",
+                    "in": "path",
+                    "description": "Video ID",
+                    "type": "integer",
+                    "required": true
+                }
+            ],
+            "post": {
+                "description": "Creates or updates the hero image for a video",
+                "tags": [
+                    "Videos"
+                ],
+                "security": [
+                    {
+                        "oauth": [
+                            "admin"
+                        ]
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Image has been created or updated"
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/videos/{video-id}/like": {
+            "parameters": [
+                {
+                    "name": "video-id",
+                    "in": "path",
+                    "description": "Video ID",
+                    "type": "integer",
+                    "required": true
+                }
+            ],
+            "put": {
+                "description": "Set a like on a video.",
+                "tags": [
+                    "Videos"
+                ],
+                "security": [
+                    {
+                        "oauth": [
+                            "user"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Stream has been accepted for transcoding"
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove a like on a video.",
+                "tags": [
+                    "Videos"
+                ],
+                "security": [
+                    {
+                        "oauth": [
+                            "user"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Stream has been accepted for transcoding"
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "get": {
+                "description": "Returns a list of all users.",
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "oauth": [
+                            "admin"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of users",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/User"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a user.",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A user",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates a user.",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A user",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/me": {
+            "get": {
+                "description": "Gets the current user",
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "oauth": [
+                            "user"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The user object",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404": {
+                        "description": "User is not logged in",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates the current user.",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A user",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404": {
+                        "description": "User is not logged in",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/videos/likes": {
+            "get": {
+                "description": "Gets a list of videos liked by the current user",
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "oauth": [
+                            "user"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Liked videos",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Video"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User is not logged in",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Video": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "Unique identifier representing a specific video",
+                    "readOnly": true
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "readOnly": true
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Title of video."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of video."
+                },
+                "mpaa_rating": {
+                    "type": "string",
+                    "description": "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
+                    "enum": [
+                        "G",
+                        "PG",
+                        "PG-13",
+                        "R",
+                        "NC-17"
+                    ]
+                },
+                "viewable": {
+                    "type": "boolean",
+                    "description": "Whether a video is viewable."
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "streams": {
+                    "type": "array",
+                    "readOnly": true,
+                    "items": {
+                        "$ref": "#/definitions/Stream"
+                    }
+                },
+                "hero_image_link": {
+                    "type": "string",
+                    "description": "Image URL representing the video."
+                },
+                "view_count": {
+                    "type": "integer",
+                    "description": "View count. <b>NOTE</b> This only visible if oauth2 scope is \"admin\".\n",
+                    "format": "int32",
+                    "readOnly": true
+                }
+            }
+        },
+        "Stream": {
+            "type": "object",
+            "properties": {
+                "link": {
+                    "type": "string",
+                    "description": "URL of stream."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Type of stream.",
+                    "enum": [
+                        "hls",
+                        "mp4"
+                    ]
+                },
+                "transcode_status": {
+                    "type": "string",
+                    "description": "Transcode status. This property is only visible to oauth2 scope of \"admin\"",
+                    "readOnly": true,
+                    "enum": [
+                        "submitted",
+                        "progressing",
+                        "complete",
+                        "canceled",
+                        "error"
+                    ]
+                }
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Unique identifier for the user",
+                    "readOnly": true
+                },
+                "first_name": {
+                    "type": "string",
+                    "description": "First name of user"
+                },
+                "last_name": {
+                    "type": "string",
+                    "description": "Last name of user"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email of user"
+                },
+                "password": {
+                    "type": "string",
+                    "description": "Password of user. This is omitted from any endpoint returns"
+                },
+                "birthday": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Birthday of user. Timezone is UTC"
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

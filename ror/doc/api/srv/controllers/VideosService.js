@@ -1,20 +1,20 @@
 'use strict';
 
-exports.videosGet = function(createdBefore, createdAfter, category) {
+exports.videosGet = function(category, tags, createdBefore, createdAfter) {
 
   var examples = {};
   
   examples['application/json'] = {
   "data" : [ {
     "viewable" : true,
-    "updated_at" : "2015-11-26T01:42:22.950+0000",
+    "updated_at" : "2015-11-28T00:31:30.957+0000",
     "category_id" : 123,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "type" : "aeiou"
     } ],
-    "created_at" : "2015-11-26T01:42:22.950+0000",
+    "created_at" : "2015-11-28T00:31:30.957+0000",
     "description" : "aeiou",
     "id" : 123,
     "title" : "aeiou",
@@ -37,14 +37,14 @@ exports.videosVideoIdGet = function(videoId) {
   
   examples['application/json'] = {
   "viewable" : true,
-  "updated_at" : "2015-11-26T01:42:22.954+0000",
+  "updated_at" : "2015-11-28T00:31:30.961+0000",
   "category_id" : 123,
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
-  "created_at" : "2015-11-26T01:42:22.954+0000",
+  "created_at" : "2015-11-28T00:31:30.961+0000",
   "description" : "aeiou",
   "id" : 123,
   "title" : "aeiou",
@@ -66,14 +66,14 @@ exports.videosVideoIdPut = function(body, videoId) {
   
   examples['application/json'] = {
   "viewable" : true,
-  "updated_at" : "2015-11-26T01:42:22.955+0000",
+  "updated_at" : "2015-11-28T00:31:30.963+0000",
   "category_id" : 123,
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
-  "created_at" : "2015-11-26T01:42:22.955+0000",
+  "created_at" : "2015-11-28T00:31:30.963+0000",
   "description" : "aeiou",
   "id" : 123,
   "title" : "aeiou",
@@ -117,13 +117,6 @@ exports.videosVideoIdLikeDelete = function(videoId) {
 
   
 }
-exports.videosVideoIdStreamPost = function(body, videoId) {
-
-  var examples = {};
-  
-
-  
-}
 exports.videosVideoIdStreamTranscodeRequestGet = function(videoId) {
 
   var examples = {};
@@ -140,5 +133,12 @@ exports.videosVideoIdStreamTranscodeRequestGet = function(videoId) {
   
   if(Object.keys(examples).length > 0)
     return examples[Object.keys(examples)[0]];
+  
+}
+exports.videosVideoIdStreamsPost = function(body, videoId) {
+
+  var examples = {};
+  
+
   
 }

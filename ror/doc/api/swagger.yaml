@@ -22,7 +22,7 @@ produces:
 paths:
   /videos:
     get:
-      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated or is not the age required for the mpaa_rating, streams will be null."
+      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated and the mpaa_rating is greater than 'PG' or is not of the age required for the mpaa_rating, streams will be null."
       tags:
         - Videos
       parameters:
@@ -31,16 +31,21 @@ paths:
           description: Filters videos by category
           required: false
           type: string
+        - name: tags
+          in: query
+          description: Filters videos by tags. Comma separated list of tags.
+          required: false
+          type: string
         - name: created_before
           in: query
           description: Filters videos by created_at date. Videos that have a date before the one specified will be returned.
-          required: true
+          required: false
           type: string
           format: date-time
         - name: created_after
           in: query
           description: Filters videos by created_at date. Videos that have a date after the one specified will be returned.
-          required: true
+          required: false
           type: string
           format: date-time
       responses:
@@ -67,6 +72,11 @@ paths:
           in: body
           required: true
           schema:
+            required:
+              - title
+              - category_id
+              - description
+              - mpaa_rating
             properties:
               title:
                 type: string
@@ -97,6 +107,14 @@ paths:
           description: A video
           schema:
             type: object
+            required:
+              - id
+              - category_id
+              - created_at
+              - updated_at
+              - title
+              - description
+              - mpaa_rating
             properties:
               id:
                 type: integer
@@ -134,7 +152,7 @@ paths:
                 type: array
                 items:
                   type: string
-        '403': 
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
@@ -150,7 +168,7 @@ paths:
         type: integer
         required: true
     get:
-      description: "Returns a video for the given ID. If the user is unauthenticated or is not the age required for the mpaa_rating, streams will be null."
+      description: "Returns a video for the given ID. If the user is unauthenticated and the mpaa_rating is greater than PG or is not the age required for the mpaa_rating, streams will be null."
       tags:
         - Videos
       responses:
@@ -223,6 +241,12 @@ paths:
           description: "S3 upload details"
           schema:
             type: object
+            required:
+              - key
+              - aws_access_key_id
+              - acl
+              - policy
+              - signature
             properties:
               key:
                 type: string
@@ -239,7 +263,7 @@ paths:
               signature:
                 type: string
                 description: "Upload signature"
-        '403': 
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
@@ -247,7 +271,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /videos/{video-id}/stream:
+  /videos/{video-id}/streams:
     parameters:
       - name: video-id
         in: path
@@ -282,7 +306,7 @@ paths:
           description: "Error occurring when the key specified does not exist in S3"
           schema:
             $ref: '#/definitions/Error'
-        '409': 
+        '409':
           description: "Error occuring when a stream of that type for that video is in a 'pending' state"
           schema:
             $ref: '#/definitions/Error'
@@ -298,7 +322,7 @@ paths:
         type: integer
         required: true
     post:
-      description: "Creates or updates the hero image for a video"
+      description: "Creates or updates the hero image for a video. This is a multipart/form-data POST."
       tags:
         - Videos
       security:
@@ -329,8 +353,8 @@ paths:
           - user
       responses:
         '204':
-          description: "Stream has been accepted for transcoding"
-        '403': 
+          description: "Video has been liked"
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
           schema:
             $ref: '#/definitions/Error'
@@ -346,9 +370,9 @@ paths:
         - oauth: 
           - user
       responses:
-        '200':
-          description: "Stream has been accepted for transcoding"
-        '403': 
+        '204':
+          description: "Like has been removed"
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
           schema:
             $ref: '#/definitions/Error'
@@ -398,6 +422,10 @@ paths:
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
+        '409':
+          description: 'Error occurring when a Category with that title already exists'
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -444,6 +472,12 @@ paths:
             $ref: '#/definitions/Category'
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+          schema:
+            $ref: '#/definitions/Error'             
+        '409':
+          description: 'Error occurring when a Category with that title already exists'
+          schema:
+            $ref: '#/definitions/Error'      
         default:
           description: Unexpected error
           schema:
@@ -609,6 +643,11 @@ paths:
 definitions:
   Video:
     type: object
+    required:
+      - title
+      - description
+      - mpaa_rating
+      - category_id
     properties:
       id:
         type: integer
@@ -644,7 +683,7 @@ definitions:
         description: 'Unique identifier of category'
       viewable: 
         type: boolean
-        description: Whether a video is viewable.
+        description: Whether a video is viewable. This property is only visible to clients with an oauth2 scope of 'admin'
       tags:
         type: array
         items:
@@ -665,17 +704,23 @@ definitions:
         readOnly: true
   Category:
     type: object
+    required:
+      - title
     properties:
       id:
         type: integer
         format: int32
-        description: 'Unique identifier representing a specific video'
+        description: 'Unique identifier representing a specific category'
         readOnly: true
       title:
         type: string
         description: Title of category
   Stream:
     type: object
+    required:
+      - link
+      - type
+      - transcode_status
     properties:
       link:
         type: string
@@ -698,6 +743,10 @@ definitions:
           - 'error'
   User:
     type: object
+    required:
+      - email
+      - password
+      - birthday
     properties:
       id:
         type: integer
@@ -706,14 +755,14 @@ definitions:
         readOnly: true
       email:
         type: string
-        description: Email of user
+        description: Email of user       
       password:
         type: string
         description: Password of user. This is omitted from any endpoint returns
       birthday:
         type: string
         format: date-time
-        description: Birthday of user. Timezone is UTC
+        description: Birthday of user. <a href="http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14">ISO-8061 date-time</a>. Timezone is UTC
   Error:
     type: object
     properties:

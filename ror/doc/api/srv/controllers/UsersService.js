@@ -6,7 +6,7 @@ exports.usersGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
-    "birthday" : "2015-11-26T01:42:22.943+0000",
+    "birthday" : "2015-11-28T00:31:30.950+0000",
     "password" : "aeiou",
     "id" : 123,
     "email" : "aeiou"
@@ -24,7 +24,7 @@ exports.usersPut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-11-26T01:42:22.946+0000",
+  "birthday" : "2015-11-28T00:31:30.953+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -41,7 +41,7 @@ exports.usersPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-11-26T01:42:22.947+0000",
+  "birthday" : "2015-11-28T00:31:30.954+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -58,7 +58,7 @@ exports.usersMeGet = function() {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-11-26T01:42:22.948+0000",
+  "birthday" : "2015-11-28T00:31:30.955+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -75,7 +75,7 @@ exports.usersMePut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-11-26T01:42:22.949+0000",
+  "birthday" : "2015-11-28T00:31:30.956+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -94,14 +94,14 @@ exports.usersMeVideosLikesGet = function() {
   examples['application/json'] = {
   "data" : [ {
     "viewable" : true,
-    "updated_at" : "2015-11-26T01:42:22.949+0000",
+    "updated_at" : "2015-11-28T00:31:30.957+0000",
     "category_id" : 123,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "type" : "aeiou"
     } ],
-    "created_at" : "2015-11-26T01:42:22.949+0000",
+    "created_at" : "2015-11-28T00:31:30.957+0000",
     "description" : "aeiou",
     "id" : 123,
     "title" : "aeiou",

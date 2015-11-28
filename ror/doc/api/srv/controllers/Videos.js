@@ -7,12 +7,13 @@ var Videos = require('./VideosService');
 
 
 module.exports.videosGet = function videosGet (req, res, next) {
+  var category = req.swagger.params['category'].value;
+  var tags = req.swagger.params['tags'].value;
   var createdBefore = req.swagger.params['created_before'].value;
   var createdAfter = req.swagger.params['created_after'].value;
-  var category = req.swagger.params['category'].value;
   
 
-  var result = Videos.videosGet(createdBefore, createdAfter, category);
+  var result = Videos.videosGet(category, tags, createdBefore, createdAfter);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');
@@ -107,12 +108,11 @@ module.exports.videosVideoIdLikeDelete = function videosVideoIdLikeDelete (req, 
     res.end();
 };
 
-module.exports.videosVideoIdStreamPost = function videosVideoIdStreamPost (req, res, next) {
-  var body = req.swagger.params['body'].value;
+module.exports.videosVideoIdStreamTranscodeRequestGet = function videosVideoIdStreamTranscodeRequestGet (req, res, next) {
   var videoId = req.swagger.params['video-id'].value;
   
 
-  var result = Videos.videosVideoIdStreamPost(body, videoId);
+  var result = Videos.videosVideoIdStreamTranscodeRequestGet(videoId);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');
@@ -122,11 +122,12 @@ module.exports.videosVideoIdStreamPost = function videosVideoIdStreamPost (req, 
     res.end();
 };
 
-module.exports.videosVideoIdStreamTranscodeRequestGet = function videosVideoIdStreamTranscodeRequestGet (req, res, next) {
+module.exports.videosVideoIdStreamsPost = function videosVideoIdStreamsPost (req, res, next) {
+  var body = req.swagger.params['body'].value;
   var videoId = req.swagger.params['video-id'].value;
   
 
-  var result = Videos.videosVideoIdStreamTranscodeRequestGet(videoId);
+  var result = Videos.videosVideoIdStreamsPost(body, videoId);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

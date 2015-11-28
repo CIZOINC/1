@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if ! command -v swagger-codegen >/dev/null; then
+  echo "Could not find swagger-codegen, please run 'setup'"
+fi
+
+if ! command -v npm >/dev/null; then
+  echo "Could not find npm, please run 'setup'"
+fi
+
+parent_path=$( cd "$(dirname "${BASH_SOURCE}")" ; pwd -P )
+cd "$parent_path"
+
+rm -r ../srv
+
+swagger-codegen generate -i ../swagger.yaml -l nodejs -o ../srv/
+cd ../srv
+npm install

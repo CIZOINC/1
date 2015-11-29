@@ -9,8 +9,8 @@ schemes:
 securityDefinitions: 
   oauth:
     type: oauth2
-    flow: password
-    tokenUrl: https://api.cizo.com/oauth2/token
+    flow: implicit
+    authorizationUrl: https://api.cizo.com/oauth/authorize
     scopes:
       admin: Grants read/write access to all resources
       user: Grants read access to videos that have a MPAA rating greater than PG

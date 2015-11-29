@@ -6,22 +6,22 @@ exports.videosGet = function(category, tags, createdBefore, createdAfter) {
   
   examples['application/json'] = {
   "data" : [ {
+    "tags" : [ "aeiou" ],
+    "id" : 123,
+    "title" : "aeiou",
     "viewable" : true,
-    "updated_at" : "2015-11-28T00:31:30.957+0000",
+    "updated_at" : "2015-11-29T23:41:27.340+0000",
+    "description" : "aeiou",
     "category_id" : 123,
+    "created_at" : "2015-11-29T23:41:27.340+0000",
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "type" : "aeiou"
     } ],
-    "created_at" : "2015-11-28T00:31:30.957+0000",
-    "description" : "aeiou",
-    "id" : 123,
-    "title" : "aeiou",
     "hero_image_link" : "aeiou",
-    "mpaa_rating" : "aeiou",
     "view_count" : 123,
-    "tags" : [ "aeiou" ]
+    "mpaa_rating" : "aeiou"
   } ]
 };
   
@@ -36,22 +36,22 @@ exports.videosVideoIdGet = function(videoId) {
   var examples = {};
   
   examples['application/json'] = {
+  "tags" : [ "aeiou" ],
+  "id" : 123,
+  "title" : "aeiou",
   "viewable" : true,
-  "updated_at" : "2015-11-28T00:31:30.961+0000",
+  "updated_at" : "2015-11-29T23:41:27.348+0000",
+  "description" : "aeiou",
   "category_id" : 123,
+  "created_at" : "2015-11-29T23:41:27.348+0000",
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
-  "created_at" : "2015-11-28T00:31:30.961+0000",
-  "description" : "aeiou",
-  "id" : 123,
-  "title" : "aeiou",
   "hero_image_link" : "aeiou",
-  "mpaa_rating" : "aeiou",
   "view_count" : 123,
-  "tags" : [ "aeiou" ]
+  "mpaa_rating" : "aeiou"
 };
   
 
@@ -65,22 +65,22 @@ exports.videosVideoIdPut = function(body, videoId) {
   var examples = {};
   
   examples['application/json'] = {
+  "tags" : [ "aeiou" ],
+  "id" : 123,
+  "title" : "aeiou",
   "viewable" : true,
-  "updated_at" : "2015-11-28T00:31:30.963+0000",
+  "updated_at" : "2015-11-29T23:41:27.350+0000",
+  "description" : "aeiou",
   "category_id" : 123,
+  "created_at" : "2015-11-29T23:41:27.350+0000",
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
-  "created_at" : "2015-11-28T00:31:30.963+0000",
-  "description" : "aeiou",
-  "id" : 123,
-  "title" : "aeiou",
   "hero_image_link" : "aeiou",
-  "mpaa_rating" : "aeiou",
   "view_count" : 123,
-  "tags" : [ "aeiou" ]
+  "mpaa_rating" : "aeiou"
 };
   
 
@@ -123,10 +123,10 @@ exports.videosVideoIdStreamTranscodeRequestGet = function(videoId) {
   
   examples['application/json'] = {
   "aws_access_key_id" : "aeiou",
-  "signature" : "aeiou",
   "acl" : "aeiou",
+  "policy" : "aeiou",
   "key" : "aeiou",
-  "policy" : "aeiou"
+  "signature" : "aeiou"
 };
   
 

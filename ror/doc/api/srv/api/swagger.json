@@ -1,0 +1,1185 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Cizo API",
+    "description": "API for Cizo",
+    "version": "1.0.0"
+  },
+  "produces": ["application/json"],
+  "host": "localhost:8080",
+  "basePath": "/v1",
+  "paths": {
+  
+  "/videos": {
+    
+    "post": {
+      "summary": "",
+      "description":"Creates a video",
+      "x-swagger-router-controller": "Default",
+      "tags": ["Default"],
+      "operationId": "videosPost",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/body"
+  }
+}
+        
+      ],
+      "responses": {
+        "201": {
+  "description" : "A video",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_201"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  
+  "/users/me": {
+    
+    "get": {
+      "summary": "",
+      "description":"Gets the current user",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeGet",
+      "responses": {
+        "200": {
+  "description" : "The user object",
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        ,
+        "404": {
+  "description" : "User is not logged in",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Updates the current user.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMePut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A user",
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        ,
+        "404": {
+  "description" : "User is not logged in",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a list of all users.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersGet",
+      "responses": {
+        "200": {
+  "description" : "A list of users",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_1"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Updates a user.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A user",
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "post": {
+      "summary": "",
+      "description":"Creates a user.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersPost",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A user",
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/me/videos/likes": {
+    
+    "get": {
+      "summary": "",
+      "description":"Gets a list of videos liked by the current user",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeVideosLikesGet",
+      "responses": {
+        "200": {
+  "description" : "Liked videos",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_2"
+  }
+}
+        ,
+        "404": {
+  "description" : "User is not logged in",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  
+  "/videos/{video-id}/stream_transcode_request": {
+    
+    "get": {
+      "summary": "",
+      "description":"This endpoint returns the S3 upload details for client side uploading of a stream video for transcoding. See &lt;a href=&#39;http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html&#39;&gt;AWS&#39;s browser based upload documentation&lt;/a&gt; for more details.",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosVideoIdStreamTranscodeRequestGet",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "S3 upload details",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_3"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/videos/{video-id}/streams": {
+    
+    "post": {
+      "summary": "",
+      "description":"Creates or updates a set of video streams and initiates transcoding for those stream. &lt;b&gt;NOTE&lt;/b&gt; The video specified by the &#39;raw_video_key&#39; must be present in S3. Usually, this matches the &#39;key&#39; returned by */videos/{video-id}/stream_transcode_request*. &lt;b&gt;NOTE&lt;/b&gt; If stream of the specified type already exists, the stream&#39;s status must be either &#39;complete&#39;, &#39;canceled&#39;, or &#39;error&#39; for the update to succeed",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosVideoIdStreamsPost",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/body_1"
+  }
+},
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "202": {
+  "description" : "Stream has been accepted for transcoding"
+}
+        ,
+        "400": {
+  "description" : "Error occurring when the key specified does not exist in S3",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "409": {
+  "description" : "Error occuring when a stream of that type for that video is in a 'pending' state",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/videos/{video-id}/like": {
+    
+    "put": {
+      "summary": "",
+      "description":"Set a like on a video.",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosVideoIdLikePut",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Video has been liked"
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "delete": {
+      "summary": "",
+      "description":"Remove a like on a video.",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosVideoIdLikeDelete",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Like has been removed"
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/videos/{video-id}/hero_image": {
+    
+    "post": {
+      "summary": "",
+      "description":"Creates or updates the hero image for a video. This is a multipart/form-data POST.",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosVideoIdHeroImagePost",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "202": {
+  "description" : "Image has been created or updated"
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/videos": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of &#39;admin&#39;, this includes all videos. For oauth2 scope of &#39;user&#39; or unauthenticated clients, this includes only videos with &#39;viewable&#39; set to true. &lt;b&gt;NOTE&lt;/b&gt;  If the user is unauthenticated and the mpaa_rating is greater than &#39;PG&#39; or is not of the age required for the mpaa_rating, streams will be null.",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosGet",
+      "parameters": [
+        {
+  "name" : "category",
+  "in" : "query",
+  "description" : "Filters videos by category",
+  "required" : false,
+  "type" : "string"
+},
+        {
+  "name" : "tags",
+  "in" : "query",
+  "description" : "Filters videos by tags. Comma separated list of tags.",
+  "required" : false,
+  "type" : "string"
+},
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "An list of videos",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_2"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/videos/{video-id}": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a video for the given ID. If the user is unauthenticated and the mpaa_rating is greater than PG or is not the age required for the mpaa_rating, streams will be null.",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosVideoIdGet",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A video",
+  "schema" : {
+    "$ref" : "#/definitions/Video"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's viewable property is not set to true",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Updates a video. The &#39;streams&#39; and &#39;hero_image_link&#39; properties are ignored.",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosVideoIdPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/Video"
+  }
+},
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A video",
+  "schema" : {
+    "$ref" : "#/definitions/Video"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\""
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "delete": {
+      "summary": "",
+      "description":"Deletes a video",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosVideoIdDelete",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Successfully deleted"
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  
+  "/categories": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a list of categories",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesGet",
+      "responses": {
+        "200": {
+  "description" : "A list of categories",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "post": {
+      "summary": "",
+      "description":"Creates a category. Title must be unique",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesPost",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A category",
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "409": {
+  "description" : "Error occurring when a Category with that title already exists",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/categories/{category-id}": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a category for the given ID.",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesCategoryIdGet",
+      "parameters": [
+        {
+  "name" : "category-id",
+  "in" : "path",
+  "description" : "Category ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A category",
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Updates a category. Title must be unique.",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesCategoryIdPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+},
+        {
+  "name" : "category-id",
+  "in" : "path",
+  "description" : "Category ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A category",
+  "schema" : {
+    "$ref" : "#/definitions/Category"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "409": {
+  "description" : "Error occurring when a Category with that title already exists",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "delete": {
+      "summary": "",
+      "description":"Deletes a category",
+      "x-swagger-router-controller": "Categories",
+      "tags": ["Categories"],
+      "operationId": "categoriesCategoryIdDelete",
+      "parameters": [
+        {
+  "name" : "category-id",
+  "in" : "path",
+  "description" : "Category ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Successfully deleted"
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } 
+  
+  }, "definitions": {
+  "Video": {
+  "required" : [ "category_id", "description", "mpaa_rating", "title" ],
+  "properties" : {
+    "id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier representing a specific video",
+      "readOnly" : true
+    },
+    "created_at" : {
+      "type" : "string",
+      "format" : "date-time",
+      "readOnly" : true
+    },
+    "updated_at" : {
+      "type" : "string",
+      "format" : "date-time",
+      "readOnly" : true
+    },
+    "title" : {
+      "type" : "string",
+      "description" : "Title of video."
+    },
+    "description" : {
+      "type" : "string",
+      "description" : "Description of video."
+    },
+    "mpaa_rating" : {
+      "type" : "string",
+      "description" : "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
+      "enum" : [ "G", "PG", "PG-13", "R", "NC-17" ]
+    },
+    "category_id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier of category"
+    },
+    "viewable" : {
+      "type" : "boolean",
+      "description" : "Whether a video is viewable. This property is only visible to clients with an oauth2 scope of 'admin'"
+    },
+    "tags" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "streams" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Stream"
+      }
+    },
+    "hero_image_link" : {
+      "type" : "string",
+      "description" : "Image URL representing the video."
+    },
+    "view_count" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "View count. <b>NOTE</b> This only visible if oauth2 scope is \"admin\".\n",
+      "readOnly" : true
+    }
+  }
+},"Category": {
+  "required" : [ "title" ],
+  "properties" : {
+    "id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier representing a specific category",
+      "readOnly" : true
+    },
+    "title" : {
+      "type" : "string",
+      "description" : "Title of category"
+    }
+  }
+},"Stream": {
+  "required" : [ "link", "transcode_status", "type" ],
+  "properties" : {
+    "link" : {
+      "type" : "string",
+      "description" : "URL of stream."
+    },
+    "type" : {
+      "type" : "string",
+      "description" : "Type of stream.",
+      "enum" : [ "hls", "mp4" ]
+    },
+    "transcode_status" : {
+      "type" : "string",
+      "description" : "Transcode status. This property is only visible to oauth2 scope of \"admin\"",
+      "readOnly" : true,
+      "enum" : [ "submitted", "progressing", "complete", "canceled", "error" ]
+    }
+  }
+},"User": {
+  "required" : [ "birthday", "email", "password" ],
+  "properties" : {
+    "id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier representing a specific video",
+      "readOnly" : true
+    },
+    "email" : {
+      "type" : "string",
+      "description" : "Email of user"
+    },
+    "password" : {
+      "type" : "string",
+      "description" : "Password of user. This is omitted from any endpoint returns"
+    },
+    "birthday" : {
+      "type" : "string",
+      "format" : "date-time",
+      "description" : "Birthday of user. <a href=\"http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14\">ISO-8061 date-time</a>. Timezone is UTC"
+    }
+  }
+},"Error": {
+  "properties" : {
+    "code" : {
+      "type" : "integer",
+      "format" : "int32"
+    },
+    "message" : {
+      "type" : "string"
+    }
+  }
+},"inline_response_200": {
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Category"
+      }
+    }
+  }
+},"inline_response_200_1": {
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/User"
+      }
+    }
+  }
+},"inline_response_200_2": {
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Video"
+      }
+    }
+  }
+},"body": {
+  "required" : [ "category_id", "description", "mpaa_rating", "title" ],
+  "properties" : {
+    "title" : {
+      "type" : "string",
+      "description" : "Title of video."
+    },
+    "category_id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier of category"
+    },
+    "description" : {
+      "type" : "string",
+      "description" : "Description of video."
+    },
+    "mpaa_rating" : {
+      "type" : "string",
+      "description" : "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
+      "enum" : [ "G", "PG", "PG-13", "R", "NC-17" ]
+    },
+    "tags" : {
+      "type" : "array",
+      "description" : "Tags associated with video.",
+      "items" : {
+        "type" : "string"
+      }
+    }
+  }
+},"inline_response_201": {
+  "properties" : {
+    "tags" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier representing a specific video",
+      "readOnly" : true
+    },
+    "title" : {
+      "type" : "string",
+      "description" : "Title of video."
+    },
+    "updated_at" : {
+      "type" : "string",
+      "format" : "date-time",
+      "readOnly" : true
+    },
+    "description" : {
+      "type" : "string",
+      "description" : "Description of video."
+    },
+    "created_at" : {
+      "type" : "string",
+      "format" : "date-time",
+      "readOnly" : true
+    },
+    "category_id" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Unique identifier of category"
+    },
+    "mpaa_rating" : {
+      "type" : "string",
+      "description" : "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
+      "enum" : [ "G", "PG", "PG-13", "R", "NC-17" ]
+    }
+  }
+},"inline_response_200_3": {
+  "properties" : {
+    "acl" : {
+      "type" : "string",
+      "description" : "Upload acl"
+    },
+    "aws_access_key_id" : {
+      "type" : "string",
+      "description" : "Upload AWS access key id"
+    },
+    "policy" : {
+      "type" : "string",
+      "description" : "Upload policy"
+    },
+    "signature" : {
+      "type" : "string",
+      "description" : "Upload signature"
+    },
+    "key" : {
+      "type" : "string",
+      "description" : "Upload key. S3 bucket key to store uploaded video in"
+    }
+  }
+},"body_1": {
+  "properties" : {
+    "key" : {
+      "type" : "string",
+      "description" : "S3 bucket key for raw video."
+    },
+    "types" : {
+      "type" : "array",
+      "description" : "Target stream types. Only 'hls' and 'mp4' are supported.",
+      "items" : {
+        "type" : "string"
+      }
+    }
+  }
+}
+  }
+}

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if ! command -v node >/dev/null; then
+  echo "Could not find node, please run 'setup'"
+fi
+
+parent_path=$( cd "$(dirname "${BASH_SOURCE}")" ; pwd -P )
+cd "$parent_path"
+
+cd ../srv/
+
+# This line is gross but gets the job done.
+(sleep 1; open http://localhost:8080/docs) &
+
+node .
+

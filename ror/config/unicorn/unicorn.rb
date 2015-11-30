@@ -1,3 +1,5 @@
+# NOT FOR PRODUCTION USE
+
 app_dir = "/srv/app"
 
 worker_processes 4
@@ -10,9 +12,20 @@ timeout 30
 
 # feel free to point this anywhere accessible on the filesystem
 pid "#{app_dir}/shared/pids/unicorn.pid"
+old_pid = "#{app_dir}/shared/pids/unicorn.pid"
+
+# THIS IS PURELY TO WORK AROUND DOCKER 
+# AND STALE PIDS
+# DO NOT USE IN PRODUCTION
+if File.exists?(old_pid)
+  puts "Found existing unicorn PID"
+  pid = File.read(old_pid).to_i
+  File.delete(old_pid)
+end
 
 stderr_path "#{app_dir}/shared/log/unicorn.stderr.log"
 stdout_path "#{app_dir}/shared/log/unicorn.stdout.log"
+
 
 # combine Ruby 2.0.0+ with "preload_app true" for memory savings
 preload_app true

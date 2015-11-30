@@ -1,0 +1,12 @@
+postgres:
+  image: postgres:9.4.4
+  ports:
+    - "5432"
+web:
+  build: .
+  volumes:
+    - .:/srv/app/current
+  ports: 
+    - "80:80"
+  links:
+    - postgres

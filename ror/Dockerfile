@@ -4,10 +4,10 @@ FROM ruby:2.2.3
 RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62
 RUN echo "deb http://nginx.org/packages/mainline/debian/ jessie nginx" >> /etc/apt/sources.list
 
-ENV NGINX_VERSION 1.9.6-1~jessie
+ENV NGINX_VERSION 1.9.7-1~jessie
 
 RUN apt-get update && \
-    apt-get install -y ca-certificates nginx=${NGINX_VERSION} nodejs supervisor && \
+    apt-get install -y ca-certificates nginx=${NGINX_VERSION} nodejs && \
     rm -rf /var/lib/apt/lists/*
 
 # forward request and error logs to docker log collector
@@ -34,22 +34,14 @@ ADD Gemfile Gemfile
 ADD Gemfile.lock Gemfile.lock
 RUN bundle install --without development test
 
-ADD . .
-
 RUN mkdir -p /srv/app/shared/log/
 RUN mkdir -p /srv/app/shared/pids/
 
 RUN ln -sf /dev/stdout /srv/app/shared/log/unicorn.stdout.log
 RUN ln -sf /dev/stderr /srv/app/shared/log/unicorn.stderr.log
 
-RUN foreman export supervisord ./ -f Procfile -u root -l /var/log
-
-RUN sed -i '1i[supervisord]\nnodaemon=true\n\n' ./app.conf
-
-ENV RAILS_ENV production
+ENV RAILS_ENV development
 
 EXPOSE 80
 
-CMD bundle exec rake assets:precompile && /usr/bin/supervisord -c ./app.conf
-
-# CMD bundle exec rake assets:precompile && foreman start -f Procfile
+CMD cd /srv/app/current && bundle exec rake assets:precompile && foreman start -f Procfile

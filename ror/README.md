@@ -47,13 +47,17 @@ docker-compose run web rake db:migrate
 
 ### Deploying
 
-Deployment is done using AWS's Elastic Beanstalk. To deploy your current working directory use the following (replacing [environment with either cizo-staging or cizo-production):
+Deployment is done using AWS's Elastic Beanstalk. To deploy a new version use the following command to deploy to staging, replacing <version> with the current version (eg v0.0.1).
 
 ```
-eb deploy [environment]
+eb deploy cizo-staging --label "<version>"  --message "commit `git rev-parse --short HEAD`"
 ```
 
-**NOTE**: Deployments to production should only happen from the ror/master branch.
+Once the deployment has completed and validated, use the following command to deploy that version to production
+
+```
+eb deploy cizo-production --version "<version>"
+```
 
 ### SSL
 

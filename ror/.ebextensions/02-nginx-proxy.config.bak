@@ -20,7 +20,7 @@ files:
         listen         80;
         server_name    localhost;
   
-        location = /status.html {
+        location = /health {
           proxy_pass          http://my_app;
           proxy_http_version  1.1;
   

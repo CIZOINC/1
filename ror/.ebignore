@@ -1,0 +1,5 @@
+.elasticbeanstalk/*
+/log/*
+!/log/.keep
+/tmp
+/.bundle

@@ -1,0 +1,10 @@
+branch-defaults:
+  default:
+    environment: cizo-staging
+global:
+  application_name: cizo
+  default_ec2_keyname: cizo-eb
+  default_platform: Ruby 2.2 (Puma)
+  default_region: us-east-1
+  profile: cizo
+  sc: null

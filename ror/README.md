@@ -1,8 +1,6 @@
 # CIZO Web App
 
-## Synopsis
-
-## Getting Started
+### Getting Started
 
 The following is required to develop for this project:
 - [Docker](https://docs.docker.com/engine/installation/mac/)
@@ -44,16 +42,30 @@ Migrations can be performed by running the following:
 docker-compose run web rake db:migrate
 ```
 
+Development should be done on seperate feature branches. Pull requests should be submitted to merge the feature branches into develop. 
+
+Feature branches must use the following naming convention:
+```
+ror/feature/<JIRA-ISSUE>-Short_Description
+```
+where `<JIRA-ISSUE>` is replaced with the JIRA issue number. For example,
+```
+ror/feature/SEN-30_Deployment
+```
 
 ### Deploying
 
-Deployment is done using AWS's Elastic Beanstalk. To deploy your current working directory use the following (replacing [environment with either cizo-staging or cizo-production):
+Deployment is done using AWS's Elastic Beanstalk. To deploy a new version use the following command to deploy to staging, replacing <version> with the current version (eg v0.0.1).
 
 ```
-eb deploy [environment]
+eb deploy cizo-staging --label "<version>"  --message "commit `git rev-parse --short HEAD`"
 ```
 
-**NOTE**: Deployments to production should only happen from the ror/master branch.
+Once deployment has completed and has been validated, use the following command to deploy that version to production
+
+```
+eb deploy cizo-production --version "<version>"
+```
 
 ### SSL
 

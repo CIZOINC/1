@@ -1,5 +1,6 @@
-.elasticbeanstalk/*
-/log/*
-!/log/.keep
-/tmp
-/.bundle
+.elasticbeanstalk/
+.ebextensions/
+doc/
+log/
+tmp/
+.bundle/

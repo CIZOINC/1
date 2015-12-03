@@ -380,6 +380,25 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /trending:
+    get: 
+      description: "Returns a list of trending videos"
+      tags: 
+        - Trending
+      responses:
+        '200':
+          description: A list of videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items: 
+                  $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
   /categories:
     get: 
       description: "Returns a list of categories"
@@ -552,6 +571,27 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /users/{user-id}:
+    parameters:
+      - name: user-id
+        in: path
+        description: User ID
+        type: integer
+        required: true
+    get:
+      description: "Returns a user for the given ID."
+      tags:
+        - Users
+      responses:
+        '200':
+          description: A user
+          schema:
+            type: object
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
     put:
       description: 'Updates a user.'
       tags:
@@ -576,6 +616,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+    
   /users/me:
     get:
       description: 'Gets the current user'
@@ -612,6 +653,24 @@ paths:
             $ref: '#/definitions/User'
         '404':
           description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: "Deletes the current user. All oauth2 tokens for the user will be revoked"
+      tags:
+        - User
+      security:
+        - oauth: 
+          - user
+      responses:
+        '204':
+          description: "User has been removed"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -696,6 +755,11 @@ definitions:
       hero_image_link:
         type: string
         description: Image URL representing the video.
+      liked:
+        type: boolean
+        description: 'Boolean representing whether the current user has liked the video. This property is always false for unauthenticated clients.'
+        default: false
+        readOnly: true
       view_count:
         type: integer
         description: >

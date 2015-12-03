@@ -136,3 +136,18 @@ module.exports.videosVideoIdStreamsPost = function videosVideoIdStreamsPost (req
   else
     res.end();
 };
+
+module.exports.videosVideoIdStreamsStreamTypeGet = function videosVideoIdStreamsStreamTypeGet (req, res, next) {
+  var videoId = req.swagger.params['video-id'].value;
+  var streamType = req.swagger.params['stream-type'].value;
+  
+
+  var result = Videos.videosVideoIdStreamsStreamTypeGet(videoId, streamType);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};

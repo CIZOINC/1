@@ -233,6 +233,7 @@ paths:
       description: "This endpoint returns the S3 upload details for client side uploading of a stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
       tags:
         - Videos
+        - Streams
       security:
         - oauth: 
           - admin
@@ -282,6 +283,7 @@ paths:
       description: "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'complete', 'canceled', or 'error' for the update to succeed"
       tags:
         - Videos
+        - Streams
       security:
         - oauth: 
           - admin
@@ -314,6 +316,19 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /videos/streams/transcode_notification:
+    post:
+      description: "Handles a transcode notification. This includes update the status of the stream for which the notification is for. See <a href='http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/notifications.html'>Elastic Transcoder's SNS documentation</a> for POST body."
+      tags:
+        - Videos
+        - Streams
+      responses:
+        '202':
+          description: "Image has been created or updated"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /videos/{video-id}/streams/{stream-type}:
     parameters:
       - name: video-id
@@ -333,6 +348,7 @@ paths:
       description: "This endpoint redirects to the location of the stream. Prior to redirecting, it validates that the user meets the age requirements for streaming a video and increases the view count of a video."
       tags:
         - Videos
+        - Streams
       security:
         - oauth: 
           - admin

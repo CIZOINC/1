@@ -13,10 +13,10 @@ exports.videosVideoIdStreamTranscodeRequestGet = function(videoId) {
   
   examples['application/json'] = {
   "aws_access_key_id" : "aeiou",
+  "signature" : "aeiou",
   "acl" : "aeiou",
-  "policy" : "aeiou",
   "key" : "aeiou",
-  "signature" : "aeiou"
+  "policy" : "aeiou"
 };
   
 
@@ -37,8 +37,8 @@ exports.videosVideoIdStreamsStreamTypeGet = function(videoId, streamType) {
   var examples = {};
   
   examples['application/json'] = {
-  "message" : "aeiou",
-  "code" : 123
+  "code" : 123,
+  "message" : "aeiou"
 };
   
 

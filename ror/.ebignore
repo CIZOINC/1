@@ -1,6 +1,7 @@
 .elasticbeanstalk/
 .ebextensions/
 doc/
+!doc/api/
 log/
 tmp/
 .bundle/

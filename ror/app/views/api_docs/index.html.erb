@@ -1,0 +1,6 @@
+<%= stylesheet_link_tag    'swagger', media: 'all', 'data-turbolinks-track' => true %>
+<%= javascript_include_tag 'swagger', 'data-turbolinks-track' => true %>
+
+<div class="swagger-section">
+<%= render 'swagger_ui/swagger_ui', discovery_url: '/api_docs/swagger.json' %>
+</div>

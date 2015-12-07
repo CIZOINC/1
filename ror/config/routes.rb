@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+
+  if Rails.env.development? || Rails.env.staging?
+    get 'api_docs/index'
+    get 'api_docs/swagger.json' => 'api_docs#swagger'
+  end
+
   get 'welcome/index'
 
   # The priority is based upon order of creation: first created -> highest priority.

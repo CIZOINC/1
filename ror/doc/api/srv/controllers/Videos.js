@@ -23,6 +23,20 @@ module.exports.videosGet = function videosGet (req, res, next) {
     res.end();
 };
 
+module.exports.videosPost = function videosPost (req, res, next) {
+  var body = req.swagger.params['body'].value;
+  
+
+  var result = Videos.videosPost(body);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
 module.exports.videosVideoIdGet = function videosVideoIdGet (req, res, next) {
   var videoId = req.swagger.params['video-id'].value;
   

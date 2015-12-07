@@ -10,40 +10,6 @@
   "basePath": "/v1",
   "paths": {
   
-  "/users/me": {
-    
-    "delete": {
-      "summary": "",
-      "description":"Deletes the current user. All oauth2 tokens for the user will be revoked",
-      "x-swagger-router-controller": "User",
-      "tags": ["User"],
-      "operationId": "usersMeDelete",
-      "responses": {
-        "204": {
-  "description" : "User has been removed"
-}
-        ,
-        "403": {
-  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        ,
-        "default": {
-  "description" : "Unexpected error",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        
-        
-      }
-    } 
-    
-  } ,
-  
-  
   "/categories/{category-id}": {
     
     "get": {
@@ -436,6 +402,35 @@
         
         
       }
+    } ,
+    
+    "delete": {
+      "summary": "",
+      "description":"Deletes the current user. All oauth2 tokens for the user will be revoked",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeDelete",
+      "responses": {
+        "204": {
+  "description" : "User has been removed"
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
     } 
     
   } ,
@@ -547,54 +542,6 @@
         ,
         "404": {
   "description" : "User is not logged in",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        
-        
-      }
-    } 
-    
-  } ,
-  
-  
-  "/videos": {
-    
-    "post": {
-      "summary": "",
-      "description":"Creates a video",
-      "x-swagger-router-controller": "Default",
-      "tags": ["Default"],
-      "operationId": "videosPost",
-      "parameters": [
-        {
-  "in" : "body",
-  "name" : "body",
-  "required" : true,
-  "schema" : {
-    "$ref" : "#/definitions/body"
-  }
-}
-        
-      ],
-      "responses": {
-        "201": {
-  "description" : "A video",
-  "schema" : {
-    "$ref" : "#/definitions/inline_response_201"
-  }
-}
-        ,
-        "403": {
-  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        ,
-        "default": {
-  "description" : "Unexpected error",
   "schema" : {
     "$ref" : "#/definitions/Error"
   }
@@ -835,6 +782,49 @@
   "description" : "An list of videos",
   "schema" : {
     "$ref" : "#/definitions/inline_response_200_1"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "post": {
+      "summary": "",
+      "description":"Creates a video",
+      "x-swagger-router-controller": "Videos",
+      "tags": ["Videos"],
+      "operationId": "videosPost",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/body"
+  }
+}
+        
+      ],
+      "responses": {
+        "201": {
+  "description" : "A video",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_201"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
   }
 }
         ,

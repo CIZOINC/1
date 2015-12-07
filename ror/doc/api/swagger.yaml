@@ -64,6 +64,8 @@ paths:
             $ref: '#/definitions/Error'
     post:
       description: 'Creates a video'
+      tags:
+        - Videos
       security:
         - oauth: 
           - admin
@@ -706,7 +708,7 @@ paths:
     delete:
       description: "Deletes the current user. All oauth2 tokens for the user will be revoked"
       tags:
-        - User
+        - Users
       security:
         - oauth: 
           - user

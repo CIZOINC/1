@@ -6,23 +6,23 @@ exports.trendingGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
-    "tags" : [ "aeiou" ],
-    "liked" : true,
-    "category_id" : 123,
-    "id" : 123,
-    "title" : "aeiou",
-    "updated_at" : "2015-12-07T00:35:07.461+0000",
-    "viewable" : true,
-    "description" : "aeiou",
-    "created_at" : "2015-12-07T00:35:07.461+0000",
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "type" : "aeiou"
     } ],
+    "created_at" : "2015-12-07T20:18:55.381+0000",
+    "description" : "aeiou",
+    "title" : "aeiou",
+    "liked" : true,
+    "tags" : [ "aeiou" ],
+    "viewable" : true,
+    "updated_at" : "2015-12-07T20:18:55.381+0000",
+    "category_id" : 123,
+    "id" : 123,
     "hero_image_link" : "aeiou",
-    "view_count" : 123,
-    "mpaa_rating" : "aeiou"
+    "mpaa_rating" : "aeiou",
+    "view_count" : 123
   } ]
 };
   

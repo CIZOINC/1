@@ -23,19 +23,6 @@ module.exports.videosGet = function videosGet (req, res, next) {
     res.end();
 };
 
-module.exports.videosStreamsTranscodeNotificationPost = function videosStreamsTranscodeNotificationPost (req, res, next) {
-  
-
-  var result = Videos.videosStreamsTranscodeNotificationPost();
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};
-
 module.exports.videosVideoIdGet = function videosVideoIdGet (req, res, next) {
   var videoId = req.swagger.params['video-id'].value;
   
@@ -112,50 +99,6 @@ module.exports.videosVideoIdLikeDelete = function videosVideoIdLikeDelete (req, 
   
 
   var result = Videos.videosVideoIdLikeDelete(videoId);
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};
-
-module.exports.videosVideoIdStreamTranscodeRequestGet = function videosVideoIdStreamTranscodeRequestGet (req, res, next) {
-  var videoId = req.swagger.params['video-id'].value;
-  
-
-  var result = Videos.videosVideoIdStreamTranscodeRequestGet(videoId);
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};
-
-module.exports.videosVideoIdStreamsPost = function videosVideoIdStreamsPost (req, res, next) {
-  var body = req.swagger.params['body'].value;
-  var videoId = req.swagger.params['video-id'].value;
-  
-
-  var result = Videos.videosVideoIdStreamsPost(body, videoId);
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};
-
-module.exports.videosVideoIdStreamsStreamTypeGet = function videosVideoIdStreamsStreamTypeGet (req, res, next) {
-  var videoId = req.swagger.params['video-id'].value;
-  var streamType = req.swagger.params['stream-type'].value;
-  
-
-  var result = Videos.videosVideoIdStreamsStreamTypeGet(videoId, streamType);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

@@ -11,19 +11,40 @@ exports.videosGet = function(category, tags, createdBefore, createdAfter) {
       "link" : "aeiou",
       "type" : "aeiou"
     } ],
-    "created_at" : "2015-12-07T20:18:55.391+0000",
+    "created_at" : "2015-12-07T22:31:39.561+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "tags" : [ "aeiou" ],
     "viewable" : true,
-    "updated_at" : "2015-12-07T20:18:55.391+0000",
+    "updated_at" : "2015-12-07T22:31:39.561+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",
     "mpaa_rating" : "aeiou",
     "view_count" : 123
   } ]
+};
+  
+
+  
+  if(Object.keys(examples).length > 0)
+    return examples[Object.keys(examples)[0]];
+  
+}
+exports.videosPost = function(body) {
+
+  var examples = {};
+  
+  examples['application/json'] = {
+  "category_id" : 123,
+  "updated_at" : "2015-12-07T22:31:39.565+0000",
+  "created_at" : "2015-12-07T22:31:39.565+0000",
+  "description" : "aeiou",
+  "id" : 123,
+  "title" : "aeiou",
+  "mpaa_rating" : "aeiou",
+  "tags" : [ "aeiou" ]
 };
   
 
@@ -42,13 +63,13 @@ exports.videosVideoIdGet = function(videoId) {
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
-  "created_at" : "2015-12-07T20:18:55.396+0000",
+  "created_at" : "2015-12-07T22:31:39.566+0000",
   "description" : "aeiou",
   "title" : "aeiou",
   "liked" : true,
   "tags" : [ "aeiou" ],
   "viewable" : true,
-  "updated_at" : "2015-12-07T20:18:55.396+0000",
+  "updated_at" : "2015-12-07T22:31:39.566+0000",
   "category_id" : 123,
   "id" : 123,
   "hero_image_link" : "aeiou",
@@ -72,13 +93,13 @@ exports.videosVideoIdPut = function(body, videoId) {
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
-  "created_at" : "2015-12-07T20:18:55.399+0000",
+  "created_at" : "2015-12-07T22:31:39.568+0000",
   "description" : "aeiou",
   "title" : "aeiou",
   "liked" : true,
   "tags" : [ "aeiou" ],
   "viewable" : true,
-  "updated_at" : "2015-12-07T20:18:55.399+0000",
+  "updated_at" : "2015-12-07T22:31:39.568+0000",
   "category_id" : 123,
   "id" : 123,
   "hero_image_link" : "aeiou",

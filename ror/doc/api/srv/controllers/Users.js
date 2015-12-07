@@ -60,6 +60,19 @@ module.exports.usersMePut = function usersMePut (req, res, next) {
     res.end();
 };
 
+module.exports.usersMeDelete = function usersMeDelete (req, res, next) {
+  
+
+  var result = Users.usersMeDelete();
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
 module.exports.usersMeVideosLikesGet = function usersMeVideosLikesGet (req, res, next) {
   
 

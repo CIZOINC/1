@@ -13,7 +13,7 @@ securityDefinitions:
     authorizationUrl: https://api.cizo.com/oauth/authorize
     scopes:
       admin: Grants read/write access to all resources
-      user: Grants read access to videos that have a MPAA rating greater than PG
+      user: Grants read access to videos that have a MPAA rating greater than G if the user meets the age requirement for a given mpaa_rating
 basePath: /v1
 consumes:
   - application/json
@@ -22,7 +22,7 @@ produces:
 paths:
   /videos:
     get:
-      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated and the mpaa_rating is greater than 'PG' or is not of the age required for the mpaa_rating, streams will be null."
+      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated and the mpaa_rating is greater than 'G' or is not of the age required for the mpaa_rating, streams will be null."
       tags:
         - Videos
       parameters:
@@ -232,7 +232,7 @@ paths:
     get:
       description: "This endpoint returns the S3 upload details for client side uploading of a stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
       tags:
-        - Videos
+        - Streams
       security:
         - oauth: 
           - admin
@@ -281,7 +281,7 @@ paths:
     post:
       description: "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'complete', 'canceled', or 'error' for the update to succeed"
       tags:
-        - Videos
+        - Streams
       security:
         - oauth: 
           - admin
@@ -308,6 +308,51 @@ paths:
             $ref: '#/definitions/Error'
         '409':
           description: "Error occuring when a stream of that type for that video is in a 'pending' state"
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /videos/streams/transcode_notification:
+    post:
+      description: "Handles a transcode notification. This includes update the status of the stream for which the notification is for. See <a href='http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/notifications.html'>Elastic Transcoder's SNS documentation</a> for POST body."
+      tags:
+        - Streams
+      responses:
+        '202':
+          description: "Image has been created or updated"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /videos/{video-id}/streams/{stream-type}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+      - name: stream-type
+        in: path
+        description: Stream Type
+        type: string
+        enum:
+          - hls
+          - mp4
+        required: true
+    get:
+      description: "This endpoint redirects to the location of the stream. Prior to redirecting, it validates that the user meets the age requirements for streaming a video and increases the view count of a video."
+      tags:
+        - Streams
+      security:
+        - oauth: 
+          - admin
+      responses:
+        '302':
+          description: "Redirect to stream location"
+        '403':
+          description: "Forbidden. This is returned if the mpaa_rating is greater than G and the client is unauthenticated and the mpaa_rating is greater than 'G' or is not of the age required for the mpaa_rating"
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -380,6 +425,25 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /trending:
+    get: 
+      description: "Returns a list of trending videos"
+      tags: 
+        - Trending
+      responses:
+        '200':
+          description: A list of videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items: 
+                  $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'            
   /categories:
     get: 
       description: "Returns a list of categories"
@@ -552,6 +616,27 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /users/{user-id}:
+    parameters:
+      - name: user-id
+        in: path
+        description: User ID
+        type: integer
+        required: true
+    get:
+      description: "Returns a user for the given ID."
+      tags:
+        - Users
+      responses:
+        '200':
+          description: A user
+          schema:
+            type: object
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
     put:
       description: 'Updates a user.'
       tags:
@@ -612,6 +697,24 @@ paths:
             $ref: '#/definitions/User'
         '404':
           description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: "Deletes the current user. All oauth2 tokens for the user will be revoked"
+      tags:
+        - User
+      security:
+        - oauth: 
+          - user
+      responses:
+        '204':
+          description: "User has been removed"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -696,6 +799,11 @@ definitions:
       hero_image_link:
         type: string
         description: Image URL representing the video.
+      liked:
+        type: boolean
+        description: 'Boolean representing whether the current user has liked the video. This property is always false for unauthenticated clients.'
+        default: false
+        readOnly: true
       view_count:
         type: integer
         description: >
@@ -755,7 +863,7 @@ definitions:
         readOnly: true
       email:
         type: string
-        description: Email of user       
+        description: Email of user
       password:
         type: string
         description: Password of user. This is omitted from any endpoint returns

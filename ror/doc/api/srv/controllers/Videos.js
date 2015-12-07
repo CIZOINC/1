@@ -107,32 +107,3 @@ module.exports.videosVideoIdLikeDelete = function videosVideoIdLikeDelete (req, 
   else
     res.end();
 };
-
-module.exports.videosVideoIdStreamTranscodeRequestGet = function videosVideoIdStreamTranscodeRequestGet (req, res, next) {
-  var videoId = req.swagger.params['video-id'].value;
-  
-
-  var result = Videos.videosVideoIdStreamTranscodeRequestGet(videoId);
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};
-
-module.exports.videosVideoIdStreamsPost = function videosVideoIdStreamsPost (req, res, next) {
-  var body = req.swagger.params['body'].value;
-  var videoId = req.swagger.params['video-id'].value;
-  
-
-  var result = Videos.videosVideoIdStreamsPost(body, videoId);
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};

@@ -19,20 +19,6 @@ module.exports.usersGet = function usersGet (req, res, next) {
     res.end();
 };
 
-module.exports.usersPut = function usersPut (req, res, next) {
-  var body = req.swagger.params['body'].value;
-  
-
-  var result = Users.usersPut(body);
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};
-
 module.exports.usersPost = function usersPost (req, res, next) {
   var body = req.swagger.params['body'].value;
   
@@ -78,6 +64,35 @@ module.exports.usersMeVideosLikesGet = function usersMeVideosLikesGet (req, res,
   
 
   var result = Users.usersMeVideosLikesGet();
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersUserIdGet = function usersUserIdGet (req, res, next) {
+  var userId = req.swagger.params['user-id'].value;
+  
+
+  var result = Users.usersUserIdGet(userId);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersUserIdPut = function usersUserIdPut (req, res, next) {
+  var body = req.swagger.params['body'].value;
+  var userId = req.swagger.params['user-id'].value;
+  
+
+  var result = Users.usersUserIdPut(body, userId);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

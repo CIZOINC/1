@@ -58,13 +58,13 @@ ror/feature/SEN-30_Deployment
 Deployment is done using AWS's Elastic Beanstalk. To deploy a new version use the following command to deploy to staging, replacing <version> with the current version (eg v0.0.1).
 
 ```
-eb deploy cizo-staging --label "<version>"  --message "commit `git rev-parse --short HEAD`"
+eb deploy cizo-staging --label "`git describe  --abbrev=0`"  --message "commit `git rev-parse --short HEAD`"
 ```
 
 Once deployment has completed and has been validated, use the following command to deploy that version to production
 
 ```
-eb deploy cizo-production --version "<version>"
+eb deploy cizo-production --version "`git describe  --abbrev=0`"
 ```
 
 ### SSL

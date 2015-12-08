@@ -1,4 +1,4 @@
-class V1::VideosController < ApplicationController
+class V1::VideosController < V1::ApiController
   before_action :set_video, only: [:show, :destroy]
   def index
     conditions = []
@@ -39,7 +39,20 @@ class V1::VideosController < ApplicationController
     head :no_content
   end
 
+  def create
+    @video = Video.new(videos_params)
+    if @video.save
+      render :show, status: :created, location: @video
+    else
+      render json: @video.errors, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def videos_params
+    params.require(:videos).permit(:id, :title, :description, :mpaa_rating, :category_id, :viewable, :hero_image_link, :liked, :view_count)
+  end
 
   def set_video
     @video = Video.find(params[:id])

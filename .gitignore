@@ -181,3 +181,8 @@ ror/node_modules/
 ror/gulpfile-compiled.js
 ror/gulpfile-compiled.js.map
 ror/web_client/views/main/*-compiled.js.map
+*-compiled.js.map
+ror/public/**/*-compiled.js
+ror/doc/**/*-compiled.js
+ror/app/**/*-compiled.js
+gulpfile-compiled.js

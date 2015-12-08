@@ -1,20 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="app">
 <head>
     <meta charset="UTF-8">
-    <!-- inject:css -->
-    <link rel="stylesheet" href="/node_modules/angular/angular-csp.css">
-    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+    <title>How Muchos</title>
+
+    <!-- third_party:css -->
+    <link rel="stylesheet" href="../node_modules/angular/angular-csp.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
     <!-- endinject -->
-    <title>Cizo</title>
 </head>
-<body>
-    Cizo
-    <div ui-view></div>
-    <!-- inject:js -->
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="/node_modules/angular/angular.js"></script>
-    <script src="/web_client/views/main/MainCtrl-compiled.js"></script>
-    <!-- endinject -->
+<body ng-controller="AppCtrl">
+
+{{title}}
+
+<div ui-view></div>
+
+<!-- third_party:js -->
+<script src="../node_modules/angular/angular.js"></script>
+<script src="../node_modules/jquery/dist/jquery.js"></script>
+<script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script src="../node_modules/ui-router/release/angular-ui-router.js"></script>
+<!-- endinject -->
+
+<!-- inject:js -->
+<script src="views/main/MainCtrl-compiled.js"></script>
+<script src="common/router/routes-compiled.js"></script>
+<script src="common/router/routeHelper-compiled.js"></script>
+<script src="common/recursionHelper-compiled.js"></script>
+<script src="AppCtrl-compiled.js"></script>
+<script src="app-compiled.js"></script>
+<!-- endinject -->
+
+
 </body>
 </html>

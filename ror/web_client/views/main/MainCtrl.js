@@ -1,9 +1,14 @@
+/*global angular*/
 angular
-    .module('app.classes', [])
-    .factory('', MainCtrl);
+    .module('app.controls', [])
+    .controller('MainCtrl', MainCtrl);
 
-MainCtrl.$inject = [];
+MainCtrl.$inject = ['$scope'];
 
-function MainCtrl() {
-    
+function MainCtrl($scope) {
+    "use strict";
+
+    $scope.trending = 'Trending';
+    $scope.categories = 'Categories';
+    $scope.videos = 'Videos';
 }

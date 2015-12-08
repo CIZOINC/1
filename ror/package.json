@@ -1,0 +1,31 @@
+{
+  "name": "cizo",
+  "version": "0.0.1",
+  "description": "trailers watcher",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "angular": "^1.4.8",
+    "babel-preset-es2015": "^6.3.13",
+    "bootstrap": "^3.3.6",
+    "gulp": "^3.9.0",
+    "gulp-inject": "^3.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WeezLabs/CIZO.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WeezLabs/CIZO/issues"
+  },
+  "homepage": "https://github.com/WeezLabs/CIZO#readme"
+}

@@ -26,4 +26,9 @@ class V1::VideosController < ApplicationController
 
     @videos = Video.where(conditions, arguments)
   end
+
+  def show
+    @video = Video.find(params[:id])
+  end
+  
 end

@@ -1,5 +1,7 @@
 class V1::VideosController < V1::ApiController
-  before_action :set_video, only: [:show, :destroy]
+  before_action :set_video, only: [:show, :destroy, :update]
+
+
   def index
     conditions = []
     arguments = {}
@@ -34,6 +36,14 @@ class V1::VideosController < V1::ApiController
   def show
   end
 
+  def update
+    if @video.update(videos_params)
+      render :show, status: :created, location: @video
+    else
+      render json: @video.errors, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     @video.destroy
     head :no_content
@@ -51,7 +61,7 @@ class V1::VideosController < V1::ApiController
   private
 
   def videos_params
-    params.require(:videos).permit(:id, :title, :description, :mpaa_rating, :category_id, :viewable, :hero_image_link, :liked, :view_count)
+    params.require(:videos).permit(:id, :title, :description, :mpaa_rating, :category_id)
   end
 
   def set_video

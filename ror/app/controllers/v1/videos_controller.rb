@@ -1,4 +1,5 @@
 class V1::VideosController < ApplicationController
+  before_action :set_video, only: [:show, :destroy]
   def index
     conditions = []
     arguments = {}
@@ -18,9 +19,12 @@ class V1::VideosController < ApplicationController
       arguments[:category] = params[:category]
     end
 
-
-
-    #TODO tags
+    # unless params[:tags].blank?
+    #   params[:tags].split(',').each do |tag|
+    #     conditions.push("tags = (SELECT id FROM tags WHERE name = tag)")
+    #     arguments[tag] = tag
+    #   end
+    # end
 
     conditions = conditions.join(" AND ")
 
@@ -28,7 +32,17 @@ class V1::VideosController < ApplicationController
   end
 
   def show
+  end
+
+  def destroy
+    @video.destroy
+    head :no_content
+  end
+
+  private
+
+  def set_video
     @video = Video.find(params[:id])
   end
-  
+
 end

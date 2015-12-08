@@ -2,6 +2,7 @@ class Video < ActiveRecord::Base
   belongs_to :category
   has_many :tags
 
+
   validates :title, presence: true
   validates :description, presence: true
   validates :mpaa_rating, presence: true

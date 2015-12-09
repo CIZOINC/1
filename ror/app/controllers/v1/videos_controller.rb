@@ -19,12 +19,11 @@ class V1::VideosController < V1::ApiController
       arguments[:category] = params[:category]
     end
 
-    # unless params[:tags].blank?
-    #   params[:tags].split(',').each do |tag|
-    #     conditions.push("tags = (SELECT id FROM tags WHERE name = tag)")
-    #     arguments[tag] = tag
-    #   end
-    # end
+    unless params[:tags].blank?
+      params[:tags].split(',').each do |tag|
+        puts tag
+      end
+    end
 
     conditions = conditions.join(" AND ")
 

@@ -21,7 +21,6 @@ class V1::VideosController < V1::ApiController
 
     unless params[:tags].blank?
       params[:tags].split(',').each do |tag|
-        puts tag
       end
     end
 
@@ -50,7 +49,7 @@ class V1::VideosController < V1::ApiController
   private
 
   def videos_params
-    params.require(:videos).permit(:id, :title, :description, :mpaa_rating, :category_id, :viewable, :hero_image_link, :liked, :view_count)
+    params.require(:videos).permit(:id, :title, :description, :mpaa_rating, :category_id, :viewable, :hero_image_link, :liked, :view_count, tags_attributes:[:video_id, :name])
   end
 
   def set_video

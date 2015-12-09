@@ -1,3 +1,4 @@
 class Tag < ActiveRecord::Base
-  belongs_to :video
+  has_many :taggings
+  has_many :videos, through: :taggings
 end

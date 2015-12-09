@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :videos
     end
 
+
   root 'welcome#index'
 
   get 'health', to: 'application#health_check'

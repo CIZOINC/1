@@ -1,5 +1,7 @@
 class V1::VideosController < V1::ApiController
-  before_action :set_video, only: [:show, :destroy]
+  before_action :set_video, only: [:show, :destroy, :update]
+
+
   def index
     conditions = []
     arguments = {}
@@ -18,18 +20,25 @@ class V1::VideosController < V1::ApiController
       conditions.push("category_id = (SELECT id FROM categories WHERE title = :category)")
       arguments[:category] = params[:category]
     end
-
-    unless params[:tags].blank?
-      params[:tags].split(',').each do |tag|
-      end
-    end
-
     conditions = conditions.join(" AND ")
 
     @videos = Video.where(conditions, arguments)
+
+    unless params[:tags].blank?
+      @videos = @videos.tagged_with(params[:tags])
+    end
+
   end
 
   def show
+  end
+
+  def update
+    if @video.update(videos_params)
+      render :show, status: :created, location: @video
+    else
+      render json: @video.errors, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -49,9 +58,12 @@ class V1::VideosController < V1::ApiController
   private
 
   def videos_params
-    params.require(:video).permit(:id, :title, :description, :mpaa_rating, :category_id,  tags: [:video_id, :name])
+    params.permit(:id, :title, :description, :mpaa_rating, :category_id, :tag_list)
   end
 
+  def method_name
+
+  end
   def set_video
     @video = Video.find(params[:id])
   end

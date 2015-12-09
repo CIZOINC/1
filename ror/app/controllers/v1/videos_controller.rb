@@ -51,7 +51,7 @@ class V1::VideosController < V1::ApiController
   private
 
   def videos_params
-    params.require(:videos).permit(:id, :title, :description, :mpaa_rating, :category_id, :viewable, :hero_image_link, :liked, :view_count)
+    params.permit(:id, :title, :description, :mpaa_rating, :category_id, :viewable, :hero_image_link, :liked, :view_count)
   end
 
   def set_video

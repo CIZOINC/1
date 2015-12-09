@@ -2,6 +2,8 @@ class Video < ActiveRecord::Base
   belongs_to :category
   has_many :taggings
   has_many :tags, through: :taggings
+  has_many :streams
+
 
   accepts_nested_attributes_for :tags
 

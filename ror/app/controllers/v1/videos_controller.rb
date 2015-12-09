@@ -27,7 +27,6 @@ class V1::VideosController < V1::ApiController
     unless params[:tags].blank?
       @videos = @videos.tagged_with(params[:tags])
     end
-
   end
 
   def show

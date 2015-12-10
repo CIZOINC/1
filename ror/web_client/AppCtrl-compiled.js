@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app', ['app.controls', 'app.routerHelper', 'app.routes']).controller('AppCtrl', AppCtrl);
+angular.module('app', ['app.controls', 'app.directives', 'app.routerHelper', 'app.wrappers', 'app.routes', 'ngSanitize']).controller('AppCtrl', AppCtrl);
 
 AppCtrl.$inject = ['$scope'];
 

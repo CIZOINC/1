@@ -10,12 +10,14 @@
   "dependencies": {},
   "devDependencies": {
     "angular": "^1.4.8",
+    "angular-sanitize": "^1.4.8",
     "babel-preset-es2015": "^6.3.13",
     "bootstrap": "^3.3.6",
     "gulp": "^3.9.0",
     "gulp-angular-filesort": "^1.1.1",
     "gulp-inject": "^3.0.0",
     "jquery": "^2.1.4",
+    "moment": "^2.10.6",
     "ui-router": "^0.2.15"
   },
   "scripts": {

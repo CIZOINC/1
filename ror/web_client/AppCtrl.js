@@ -1,8 +1,11 @@
 angular
     .module('app', [
         'app.controls',
+        'app.directives',
         'app.routerHelper',
+        'app.wrappers',
         'app.routes',
+        'ngSanitize'
         ])
     .controller('AppCtrl', AppCtrl);
 

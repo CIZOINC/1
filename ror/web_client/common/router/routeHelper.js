@@ -1,5 +1,5 @@
 angular
-    .module('app.routerHelper', ['ui.router'])
+    .module('app.routerHelper', ['ui.router']) 
     .provider('routerHelper', routerHelperProvider);
 
 routerHelperProvider.$inject = ['$locationProvider', '$stateProvider', '$urlRouterProvider'];

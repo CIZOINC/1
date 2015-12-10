@@ -8,6 +8,22 @@ angular.module('app.routes', []).constant('routesList', [{
         controller: 'MainCtrl',
         controllerAs: 'main'
     }
+}, {
+    state: 'videos',
+    config: {
+        url: '/videos',
+        templateUrl: 'views/videos/videos.html',
+        controller: 'VideosCtrl',
+        controllerAs: 'videos'
+    }
+}, {
+    state: 'watch',
+    config: {
+        url: '/watch/:link',
+        templateUrl: 'views/watch/watch.html',
+        controller: 'WatchCtrl',
+        controllerAs: 'watch'
+    }
 }]);
 
 //# sourceMappingURL=routes-compiled.js.map

@@ -1,7 +1,6 @@
 class V1::VideosController < V1::ApiController
   before_action :set_video, only: [:show, :destroy, :update]
 
-
   def index
     conditions = []
     arguments = {}
@@ -52,6 +51,22 @@ class V1::VideosController < V1::ApiController
     else
       render json: @video.errors, status: :unprocessable_entity
     end
+  end
+
+  def stream_transcode_request
+    timestamp = Time.now.to_i
+    @video = Video.find(params[:id])
+    s3 = Aws::S3::Resource.new(region: "us-west-2")
+    obj = s3.bucket('cizo-example').object("#{@video.id}/#{params[:filename]}_#{timestamp}")
+    url = URI.parse(obj.presigned_url(:put, acl: 'public-read', expires_in: 3600))
+
+    body = File.read('/home/karetnikov_kirill/Turkey Dubstep [high].mp4')
+    Net::HTTP.start(url.host) do |http|
+      http.send_request("PUT", url.request_uri, body, {
+        "content-type" => "",
+      })
+    end
+    @url = url
   end
 
   private

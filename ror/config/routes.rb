@@ -4,7 +4,11 @@ Rails.application.routes.draw do
                 header: { name: 'Accept', value: 'application/vnd.cizo.com; version=1' },
                 default: true) do
 
-      resources :videos
+      resources :videos do
+        get 'stream_transcode_request', on: :member
+
+        get :upload_url, on: :member
+      end
     end
 
 

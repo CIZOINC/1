@@ -187,3 +187,6 @@ ror/doc/**/*-compiled.js
 ror/app/**/*-compiled.js
 gulpfile-compiled.js
 /ror/web_client/nbproject/private/
+web/node_modules/
+web/public/all.min.js
+web/public/

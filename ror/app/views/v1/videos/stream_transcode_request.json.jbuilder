@@ -1,3 +1,1 @@
-query = @url.query.split('&')
-json.query query
-json.url @url
+json.url @url.to_s

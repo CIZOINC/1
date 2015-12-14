@@ -5,8 +5,9 @@ Rails.application.routes.draw do
                 default: true) do
 
       resources :videos do
-        get :stream_transcode_request, on: :member
+        get :stream_upload_request, on: :member
         post :streams, on: :member
+        get 'streams/:stream_type', to: 'streams#show', param: :stream_type
       end
     end
 

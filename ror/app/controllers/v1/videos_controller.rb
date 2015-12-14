@@ -1,6 +1,7 @@
 class V1::VideosController < V1::ApiController
-  before_action :set_video, only: [:show, :destroy, :update, :streams, :stream_transcode_request]
-  before_action :set_region, only: [:stream_transcode_request, :streams]
+  before_action :set_video, only: [:show, :destroy, :update, :streams, :stream_upload_request]
+  before_action :set_region, only: [:stream_upload_request, :streams]
+  before_action :set_pipeline, only: [:streams]
 
   def index
     conditions = []
@@ -54,14 +55,12 @@ class V1::VideosController < V1::ApiController
     end
   end
 
-  def stream_transcode_request
+  def stream_upload_request
     s3 = Aws::S3::Resource.new(region: @region)
-    obj = s3.bucket('cizo-example').object("staging/raw/#{@video.id}/#{params[:filename]}")
+    obj = s3.bucket('cizo-assets').object("staging/raw/#{@video.id}/#{params[:filename]}")
     @url = URI.parse(obj.presigned_url(:put, acl: 'public-read', expires_in: 300))
-    # puts url
-      # url = URI::HTTPS.build([nil, "cizo-example.s3-us-west-2.amazonaws.com", nil, "/91/MyAwesomeFile_1449826027", "X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAJWMTWVQJCMXSZGLA%2F20151211%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20151211T092707Z&X-Amz-Expires=120&X-Amz-SignedHeaders=host&x-amz-acl=public-read&X-Amz-Signature=b87e4933de6c216eb60f57f173659e55e34d81e1d78c460ed8c4cf607a363dfd", nil])
 
-    # body = File.read('/home/karetnikov_kirill/Downloads/The+Simpsons+Movie+-+1080p+Trailer.mp4')
+    # body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
     # Net::HTTP.start(@url.host) do |http|
     #     http.send_request("PUT", @url.request_uri, body, {
     #       "content-type" => "",
@@ -70,159 +69,120 @@ class V1::VideosController < V1::ApiController
   end
 
   def streams
-    if params[:type] == 'hls'
-      pipeline_id = '1449830739426-81tqoj'
-      input_key = "staging/raw/#{@video.id}/#{params[:filename]}"
+    input_key = "staging/raw/#{@video.id}/#{params[:filename]}"
+    transcoder_client = Aws::ElasticTranscoder::Client.new(region: @region)
+    input = { key: input_key }
 
-      # HLS Presets that will be used to create an adaptive bitrate playlist.
-      hls_64k_audio_preset_id = '1351620000001-200071';
-      hls_0400k_preset_id     = '1351620000001-200050';
-      hls_0600k_preset_id     = '1351620000001-200040';
-      hls_1000k_preset_id     = '1351620000001-200030';
-      hls_1500k_preset_id     = '1351620000001-200020';
-      hls_2000k_preset_id     = '1351620000001-200010';
+    if params[:type].include?('hls')
+      #HLS
+      hls_160k_audio_preset_id = '1448047928709-h3supp';
+      hls_464k_preset_id       = '1448047049441-dkgwlg';
+      hls_664k_preset_id       = '1448047415455-oufocx';
+      hls_3596k_preset_id      = '1448393146722-1iu5sc';
+      hls_6628k_preset_id      = '1448048034864-8f527z';
 
-      # HLS Segment duration that will be targeted.
-      segment_duration = '2'
+      segment_duration = '10'
+      output_key_prefix = "staging/stream/#{@video.id}/hls/"
 
-      #All outputs will have this prefix prepended to their output key.
-      output_key_prefix = "staging/stream/#{@video.id}/#{params[:filename]}/hls"
 
-      # Create the client for Elastic Transcoder.
-      transcoder_client = Aws::ElasticTranscoder::Client.new(region: @region)
+      output_key_hls = params[:filename]
 
-      # Setup the job input using the provided input key.
-      input = { key: input_key }
-
-      #Setup the job outputs using the HLS presets.
-      output_key = Digest::SHA256.hexdigest(input_key.encode('UTF-8'))
-
-      hls_audio = {
-        key: 'hlsAudio/' + output_key,
-        preset_id: hls_64k_audio_preset_id,
+      hls_160k_audio = {
+        key: 'hls_160k_' + output_key_hls,
+        preset_id: hls_160k_audio_preset_id,
         segment_duration: segment_duration
       }
 
-      hls_400k = {
-        key: 'hls0400k/' + output_key,
-        preset_id: hls_0400k_preset_id,
+      hls_464k = {
+        key: 'hls_464k_' + output_key_hls,
+        preset_id: hls_464k_preset_id,
         segment_duration: segment_duration
       }
 
-      hls_600k = {
-        key: 'hls0600k/' + output_key,
-        preset_id: hls_0600k_preset_id,
+      hls_664k = {
+        key: 'hls_664k_' + output_key_hls,
+        preset_id: hls_664k_preset_id,
         segment_duration: segment_duration
       }
 
-      hls_1000k = {
-        key: 'hls1000k/' + output_key,
-        preset_id: hls_1000k_preset_id,
+      hls_3596k = {
+        key: 'hls_3596k_' + output_key_hls,
+        preset_id: hls_3596k_preset_id,
         segment_duration: segment_duration
       }
 
-      hls_1500k = {
-        key: 'hls1500k/' + output_key,
-        preset_id: hls_1500k_preset_id,
+      hls_6628k = {
+        key: 'hls_6628k_' + output_key_hls,
+        preset_id: hls_6628k_preset_id,
         segment_duration: segment_duration
       }
 
-      hls_2000k = {
-        key: 'hls2000k/' + output_key,
-        preset_id: hls_2000k_preset_id,
-        segment_duration: segment_duration
-      }
-
-      outputs = [ hls_audio, hls_400k, hls_600k, hls_1000k, hls_1500k, hls_2000k ]
+      outputs_hls = [ hls_160k_audio, hls_464k, hls_664k, hls_3596k, hls_6628k ]
       playlist = {
-        name: 'hls_' + output_key,
+        name: 'hls_' + output_key_hls,
         format: 'HLSv3',
-        output_keys: outputs.map { |output| output[:key] }
+        output_keys: outputs_hls.map { |output| output[:key] }
       }
 
       job = transcoder_client.create_job(
-        pipeline_id: pipeline_id,
+        pipeline_id: @pipeline_id,
         input: input,
-        output_key_prefix: output_key_prefix + output_key + '/',
-        outputs: outputs,
+        output_key_prefix: output_key_prefix,
+        outputs: outputs_hls,
         playlists: [ playlist ])[:job]
-   elsif params[:type] == 'mp4'
-     pipeline_id = '1449830739426-81tqoj'
-     input_key = "staging/raw/#{@video.id}/#{params[:filename]}"
+      wait_for_job(transcoder_client, job)
+    end
 
-     # MP4 Presets that will be used to create an adaptive bitrate playlist.
-     generic_1080p_audio_preset_id      = '1351620000001-000001';
-     generic_720p_audio_preset_id       = '1351620000001-000010';
-     generic_480p_16_9_audio_preset_id  = '1351620000001-000020';
-     generic_480p_4_3_audio_preset_id   = '1351620000001-000030';
-     generic_360p_16_9_audio_preset_id  = '1351620000001-000040';
-     generic_360p_4_3_audio_preset_id   = '1351620000001-000050';
+    if params[:type].include?('mp4')
+        #MP4
+       web_preset_id = '1351620000001-100070'
+       output_key_mp4 = "staging/stream/#{@video.id}/mp4/video.mp4"
+       web = {
+         key: output_key_mp4,
+         preset_id: web_preset_id
+       }
 
-     # HLS Segment duration that will be targeted.
-     segment_duration = '5'
+       outputs_mp4 = [ web ]
 
-     #All outputs will have this prefix prepended to their output key.
-     output_key_prefix = "staging/stream/#{@video.id}/#{params[:filename]}.mp4"
+       job = transcoder_client.create_job(
+         pipeline_id: @pipeline_id,
+         input: input,
+         outputs: outputs_mp4)[:job]
 
-     # Create the client for Elastic Transcoder.
-     transcoder_client = Aws::ElasticTranscoder::Client.new(region: @region)
-
-     # Setup the job input using the provided input key.
-     input = { key: input_key }
-
-     #Setup the job outputs using the HLS presets.
-     output_key = Digest::SHA256.hexdigest(input_key.encode('UTF-8'))
-
-     generic_1080p = {
-       key: 'generic_1080p/' + output_key,
-       preset_id: generic_1080p_audio_preset_id
-     }
-
-     generic_720p = {
-       key: 'generic_720p/' + output_key,
-       preset_id: generic_720p_audio_preset_id
-     }
-
-     generic_480p_16_9 = {
-       key: 'generic_480p_16_9/' + output_key,
-       preset_id: generic_480p_16_9_audio_preset_id
-     }
-
-     generic_480p_4_3 = {
-       key: 'generic_480p_4_3/' + output_key,
-       preset_id: generic_480p_4_3_audio_preset_id
-     }
-
-     generic_360p_16_9 = {
-       key: 'generic_360p_16_9/' + output_key,
-       preset_id: generic_360p_16_9_audio_preset_id
-     }
-
-     generic_360p_4_3 = {
-       key: 'generic_360p_4_3/' + output_key,
-       preset_id: generic_360p_4_3_audio_preset_id
-     }
-
-     outputs = [ generic_1080p ]
-    #  playlist = {
-    #    name: 'mp4_' + output_key,
-    #    format: 'HLSv3',
-    #    output_keys: outputs.map { |output| output[:key] }
-    #  }
-
-     job = transcoder_client.create_job(
-       pipeline_id: pipeline_id,
-       input: input,
-       output_key_prefix: output_key_prefix + output_key + '/',
-       outputs: outputs)[:job]
-   end
-
+      wait_for_job(transcoder_client, job)
+    end
   end
 
   private
 
+  def set_pipeline
+    if Rails.env == 'stage' || 'development'
+      @pipeline_id = '1448045831910-jsofcg'
+    elsif Rails.env == 'production'
+      @pipeline_id = '1449264108808-yw3pko'
+    end
+  end
+
+  def wait_for_job(client, job)
+    begin
+      client.wait_until(:job_complete, {id: job.id}) do |w|
+        w.delay = 5
+        w.max_attempts = 60
+        puts client.read_job(id: job.id).job.status
+      end
+      puts status = client.read_job(id: job.id).job.status
+      if status == 'Complete'
+        client = Aws::SNS::Client.new(region: @region)
+        client.publish({topic_arn: "arn:aws:sns:us-east-1:667987826167:testTopicFromConsole", message: "Job Completed!"})
+      end
+    rescue Aws::Waiters::Errors::WaiterFailed => e
+      puts e
+    end
+
+  end
+
   def set_region
-    @region = "us-west-2"
+    @region = "us-east-1"
   end
 
   def videos_params

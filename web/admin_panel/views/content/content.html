@@ -1,0 +1,14 @@
+<div>
+    <h2>Videos</h2>
+    <div>
+
+        <button class="btn btn-lg" ui-sref="video">Add video</button>
+
+        <div ng-repeat="movie in videosList">
+            <div>{{movie.title}}</div>
+            <div>{{movie.description}}</div>
+            {{movie.streams.link}}
+            <a ui-sref="video({id: movie.id })">Edit</a>
+        </div>
+    </div>
+</div>

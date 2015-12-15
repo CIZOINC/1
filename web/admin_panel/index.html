@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cizo</title>
+
+    <link xmlns="http://www.w3.org/1999/xhtml" rel="shortcut icon" href="cizo.svg" />
+
+    <!-- third_party:css -->
+    <link rel="stylesheet" href="../node_modules/angular/angular-csp.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <!-- endinject -->
+
+    <!-- css_common:css -->
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="components/player/player.css">
+    <link rel="stylesheet" href="components/uploader/uploader.css">
+    <link rel="stylesheet" href="components/sidebar/sidebar.css">
+    <!-- endinject -->
+</head>
+<body ng-controller="AppCtrl">
+<sidebar>
+    <li>Manage Users</li>
+    <li ui-sref="content">Content</li>
+    <li>Categories</li>
+    <li>Settings</li>
+</sidebar>
+
+<div ui-view class="main-view"></div>
+
+<!-- third_party:js -->
+
+<script src="../node_modules/angular/angular.js"></script>
+
+<script src="../node_modules/jquery/dist/jquery.js"></script>
+
+<script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+
+<script src="../node_modules/ui-router/release/angular-ui-router.js"></script>
+
+<script src="../node_modules/angular-sanitize/angular-sanitize.js"></script>
+
+<script src="../node_modules/moment/moment.js"></script>
+
+<script src="../node_modules/lodash/dist/lodash.js"></script>
+
+<!-- endinject -->
+
+<!-- inject:js -->
+
+<script src="views/main/MainCtrl-compiled.js"></script>
+
+<script src="views/watch/WatchCtrl-compiled.js"></script>
+
+<script src="views/video/VideoCtrl-compiled.js"></script>
+
+<script src="views/upload/upload-compiled.js"></script>
+
+<script src="views/content/ContentCtrl-compiled.js"></script>
+
+<script src="components/player/player-compiled.js"></script>
+
+<script src="components/sidebar/sidebar-compiled.js"></script>
+
+<script src="components/uploader/uploader-compiled.js"></script>
+
+<script src="common/router/routes-compiled.js"></script>
+
+<script src="common/router/routeHelper-compiled.js"></script>
+
+<script src="wrappers/moment-compiled.js"></script>
+
+<script src="wrappers/lodash-compiled.js"></script>
+
+<script src="common/recursionHelper-compiled.js"></script>
+
+<script src="common/recursionHelper-compiled-compiled.js"></script>
+
+<script src="AppCtrl-compiled.js"></script>
+
+<!-- endinject -->
+
+<script>
+    angular.bootstrap(document, ['app']);
+</script>
+
+
+</body>
+</html>

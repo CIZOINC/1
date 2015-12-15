@@ -4,30 +4,70 @@ angular
     .directive('uploader', uploader);
 
 /* @ngInject */
-function uploader($log, _) {
+function uploader($log, _, $timeout) {
     "use strict";
 
-    function handleFiles(files) {
-        /*files.forEach((file) => {
-            let imageType = /^image\//;
+    function uploadProgress(event) {
+        let dropZone = angular.element(document.querySelector('.drop-zone'));
+        var percent = parseInt(event.loaded / event.total * 100);
+        dropZone.text('Upload: ' + percent + '%');
+    }
 
-            if (!imageType.test(file.type.match)) {
+    function stateChange(event) {
+        let dropZone = angular.element(document.querySelector('.drop-zone'));
+        if (event.target.readyState == 4) {
+            if (event.target.status == 200) {
+                dropZone.text('Upload successfully finished');
+            } else {
+                dropZone.text(`Error occurred with status ${event.target.status}`);
+                dropZone.addClass('error');
+                $timeout(() => {
+                    dropZone.text('Drag file or click to select');
+                    dropZone.removeClass('error');
+                }, 3000);
+
+            }
+        }
+    }
+
+    function handleFiles(files) {
+        let dropZone = angular.element(document.querySelector('.drop-zone'));
+        _.each(files, (file) => {
+
+            const timeToRestore = 3000;
+
+            dropZone[0].classList.remove('drop');
+
+            if (file.type !== 'video/mp4') {
+                $log.warn('Unsupported file format');
+                dropZone.text('Unsupported file format');
+                dropZone.addClass('error');
+                $timeout(() => {
+                    dropZone.text('Drag file or click to select');
+                    dropZone.removeClass('error');
+                }, timeToRestore);
                 return;
             }
 
-            let img = document.createElement("img");
-            img.classList.add("obj");
-            img.file = file;
-            preview.appendChild(img); // Assuming that "preview" is the div output where the content will be displayed.
+            let xhr = new XMLHttpRequest();
+            let postURL = 'localhost:8080/v1/videos/2/stream_transcode_request';
 
-            var reader = new FileReader();
-            reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
-            reader.readAsDataURL(file);
-        });*/
+            xhr.upload.addEventListener('progress', uploadProgress, false);
+            xhr.onreadystatechange = stateChange;
+            xhr.open('POST', postURL);
+            xhr.send(file);
+        });
+
     }
 
-    function linkFn(scope, element) {
+    function linkFn() {
         let dropZone = angular.element(document.querySelector('.drop-zone'));
+        let fileInput = angular.element(document.querySelector('.file-input'));
+
+        dropZone.on('click', () => {
+            let fileInput = angular.element(document.querySelector('.file-input'));
+            fileInput[0].click();
+        });
 
         dropZone.on('dragover', function (e) {
             e.preventDefault();
@@ -35,24 +75,29 @@ function uploader($log, _) {
             return false;
         });
 
-        dropZone.on('dragleave', function (e) {
+        dropZone.on('dragleave', (e) => {
             e.preventDefault();
             dropZone[0].classList.remove('hover');
             return false;
         });
 
-        dropZone.on('drop', function (event) {
+        dropZone.on('drop', (event) => {
             event.stopPropagation();
             event.preventDefault();
             dropZone[0].classList.remove('hover');
             dropZone[0].classList.add('drop');
-            $log.info('sent');
-            let dataTransfer = event.dataTransfer;
-            let files = dataTransfer.files;
 
-            handleFiles(files);
+            if (event && event.dataTransfer && event.dataTransfer.files) {
+                let files = event.dataTransfer.files;
+                handleFiles(files);
+            }
 
             return false;
+        });
+
+        fileInput.on('change', () => {
+            let files = angular.element(document.querySelector('.file-input'))[0].files;
+            handleFiles(files);
         });
     }
 
@@ -66,4 +111,4 @@ function uploader($log, _) {
     }
 }
 
-uploader.$inject = ['$log', 'lodash'];
+uploader.$inject = ['$log', 'lodash', '$timeout'];

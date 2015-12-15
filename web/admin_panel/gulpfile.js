@@ -19,7 +19,7 @@ gulp.task('index_files_gathering', function () {
             '../node_modules/ui-router/release/angular-ui-router.js',
             '../node_modules/angular-sanitize/angular-sanitize.js',
             '../node_modules/moment/moment.js',
-            '../node_modules/lodash/dist/lodash.js'
+            '../node_modules/lodash/index.js'
         ], {read: false}), {name: 'third_party', addRootSlash: false}))
         .pipe(inject(gulp.src([
             './**/*.css'
@@ -41,13 +41,14 @@ gulp.task('build_package', function () {
             '../node_modules/bootstrap/dist/js/bootstrap.js',
             '../node_modules/ui-router/release/angular-ui-router.js',
             '../node_modules/angular-sanitize/angular-sanitize.js',
-            '../node_modules/moment/moment.js'
+            '../node_modules/moment/moment.js',
+            '../node_modules/node_modules/lodash/index.js'
         ])
         .pipe(sourcemaps.init())
         .pipe(concat('all.min.js', {newLine: ';'}))
         .pipe(uglify({mangle: true}))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('../public'));
+        .pipe(gulp.dest('../public/apanel'));
 
         //minify angular files
     gulp.src([
@@ -61,7 +62,7 @@ gulp.task('build_package', function () {
          }))
         .pipe(uglify({mangle: true}))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('../public'));
+        .pipe(gulp.dest('../public/apanel'));
 
         //minify css
     gulp.src([
@@ -71,16 +72,16 @@ gulp.task('build_package', function () {
         ])
         .pipe(concat('all.min.css'))
         .pipe(cssmin())
-        .pipe(gulp.dest('../public/css'));
+        .pipe(gulp.dest('../public/apanel/css'));
     gulp.src(['../node_modules/bootstrap/fonts/**.*'])
-        .pipe(gulp.dest('../public/fonts'));
+        .pipe(gulp.dest('../public/apanel/fonts'));
     gulp.src([
         '**/*.html',
         '!index.html'
     ])
-        .pipe(gulp.dest('../public'));
+        .pipe(gulp.dest('../public/apanel'));
 });
 
 gulp.task('send_to_ror', function () {
-    gulp.src(['../public/**/*.*']).pipe(gulp.dest('../../ror/public/client'));
+    gulp.src(['../public/apanel/**/*.*']).pipe(gulp.dest('../../ror/public/admin_panel'));
 });

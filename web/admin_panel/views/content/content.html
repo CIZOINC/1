@@ -3,12 +3,15 @@
     <div>
 
         <button class="btn btn-lg" ui-sref="video">Add video</button>
+        <button class="btn btn-lg" ui-sref="upload">Upload video</button>
 
-        <div ng-repeat="movie in videosList">
-            <div>{{movie.title}}</div>
-            <div>{{movie.description}}</div>
-            {{movie.streams.link}}
-            <a ui-sref="video({id: movie.id })">Edit</a>
+        <div class="list-group">
+            <div class="list-group-item" ng-repeat="movie in videosList">
+                <div class="list-group-item-heading">{{movie.title}}</div>
+                <div class="list-group-item-text">{{movie.description}}</div>
+                {{movie.streams.link}}
+                <a ui-sref="video({id: movie.id })">Edit</a>
+            </div>
         </div>
     </div>
 </div>

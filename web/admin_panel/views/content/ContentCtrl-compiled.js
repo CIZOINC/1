@@ -1,3 +1,5 @@
+'use strict';
+
 /*global angular*/
 angular.module('app.controls').controller('ContentCtrl', ContentCtrl);
 
@@ -5,7 +7,7 @@ angular.module('app.controls').controller('ContentCtrl', ContentCtrl);
 function ContentCtrl($scope, $http, $log) {
     "use strict";
 
-    let contentURL = 'views/content/videos.json';
+    var contentURL = 'views/content/videos.json';
     $http({
         method: 'GET',
         url: contentURL

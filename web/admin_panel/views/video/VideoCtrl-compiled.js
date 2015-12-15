@@ -1,3 +1,5 @@
+'use strict';
+
 /*global angular*/
 angular.module('app.controls').controller('VideoCtrl', VideoCtrl);
 

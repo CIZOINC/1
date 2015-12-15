@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('app.routes', []).constant('routesList', [{
     state: 'main',
     config: {
@@ -21,6 +23,14 @@ angular.module('app.routes', []).constant('routesList', [{
         templateUrl: 'views/video/video.html',
         controller: 'VideoCtrl',
         controllerAs: 'video'
+    }
+}, {
+    state: 'upload',
+    config: {
+        url: '/upload/:id',
+        templateUrl: 'views/upload/upload.html',
+        controller: 'UploadCtrl',
+        controllerAs: 'upload'
     }
 }]);
 

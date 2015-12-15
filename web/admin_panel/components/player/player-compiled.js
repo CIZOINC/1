@@ -1,3 +1,5 @@
+'use strict';
+
 /*global angular*/
 angular.module('app.directives', []).directive('player', player);
 
@@ -9,8 +11,8 @@ function player($log, moment) {
 
     function linkFn(scope, element, attrs) {
         function togglePlayPause() {
-            let screen = angular.element(document.querySelector("video.screen"))[0];
-            let playBtn = angular.element(document.querySelector('div.play-button span'))[0];
+            var screen = angular.element(document.querySelector("video.screen"))[0];
+            var playBtn = angular.element(document.querySelector('div.play-button span'))[0];
             if (screen.paused) {
                 screen.play();
                 $log.info('start playing');
@@ -26,7 +28,7 @@ function player($log, moment) {
             }
         }
 
-        let screen = angular.element(document.querySelector('video.screen'));
+        var screen = angular.element(document.querySelector('video.screen'));
         screen.on('click', clickScreen);
         screen.on('timeupdate', function () {
             scope.timePassed = moment().startOf('year').add(screen[0].currentTime, 's').format('mm:ss');
@@ -34,7 +36,7 @@ function player($log, moment) {
             scope.$apply();
         });
 
-        let likeBtn = angular.element(document.querySelector('div.play-button span'));
+        var likeBtn = angular.element(document.querySelector('div.play-button span'));
         likeBtn.on('click', togglePlayPause);
     }
 

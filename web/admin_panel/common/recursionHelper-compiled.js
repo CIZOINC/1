@@ -1,3 +1,5 @@
+'use strict';
+
 /*global angular*/
 angular.module('app.helpers', []).factory('RecursionHelper', ['$compile', function ($compile) {
     "use strict";
@@ -9,7 +11,7 @@ angular.module('app.helpers', []).factory('RecursionHelper', ['$compile', functi
          * @param [link] A post-link function, or an object with function(s) registered via pre and post properties.
          * @returns {pre: *, post: RecursionHelper.post} object containing the linking functions.
          */
-        compile: function (element, link) {
+        compile: function compile(element, link) {
             // Normalize the link parameter
             if (angular.isFunction(link)) {
                 link = { post: link };
@@ -24,7 +26,7 @@ angular.module('app.helpers', []).factory('RecursionHelper', ['$compile', functi
                 /**
                  * Compiles and re-adds the contents
                  */
-                post: function (scope, element) {
+                post: function post(scope, element) {
                     // Compile the contents
                     if (!compiledContents) {
                         compiledContents = $compile(contents);

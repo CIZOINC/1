@@ -1,3 +1,5 @@
+'use strict';
+
 /*global angular*/
 angular.module('app.wrappers', []).factory('moment', _moment);
 

@@ -27,5 +27,14 @@ angular
                 controller: 'VideoCtrl',
                 controllerAs: 'video'
             }
+        },
+        {
+            state: 'upload',
+            config: {
+                url: '/upload/:id',
+                templateUrl: 'views/upload/upload.html',
+                controller: 'UploadCtrl',
+                controllerAs: 'upload'
+            }
         }
     ]);

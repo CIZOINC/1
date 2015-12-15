@@ -5,5 +5,5 @@ angular
 
 /* @ngInject */
 function _lodash() {
-    return lodash._;
+    return _;
 }

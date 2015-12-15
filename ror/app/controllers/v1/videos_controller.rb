@@ -1,7 +1,7 @@
 class V1::VideosController < V1::ApiController
-  before_action :set_video, only: [:show, :destroy, :update, :streams, :stream_upload_request]
-  before_action :set_region, only: [:stream_upload_request, :streams]
-  before_action :set_pipeline, only: [:streams]
+  before_action :set_video, only: [:show, :destroy, :update, :stream_upload_request]
+  before_action :set_region, only: [:stream_upload_request, :destroy]
+  # before_action :set_pipeline, only: [:streams]
 
   def index
     conditions = []
@@ -31,6 +31,10 @@ class V1::VideosController < V1::ApiController
   end
 
   def show
+    current_user = nil
+    if (current_user.nil? && @video.mpaa_rating > "PG") || !user_age_meets_requirement
+      @access_to_stream_denied = true
+    end
   end
 
   def update
@@ -42,7 +46,15 @@ class V1::VideosController < V1::ApiController
   end
 
   def destroy
-    @video.destroy
+    s3 = Aws::S3::Resource.new(region: @region)
+    bucket = s3.bucket('cizo-assets')
+    raw_folder = "staging/raw/#{@video.id}"
+    stream_folder = "staging/stream/#{@video.id}"
+    if @video.destroy
+      bucket.objects(prefix: raw_folder).delete
+      bucket.objects(prefix: stream_folder).delete
+    end
+
     head :no_content
   end
 
@@ -57,128 +69,28 @@ class V1::VideosController < V1::ApiController
 
   def stream_upload_request
     s3 = Aws::S3::Resource.new(region: @region)
-    obj = s3.bucket('cizo-assets').object("staging/raw/#{@video.id}/#{params[:filename]}")
+    bucket = s3.bucket('cizo-assets')
+    file_folder = "staging/raw/#{@video.id}/"
+    file = "#{params[:filename]}"
+    #check if folder doesn't exist on bucket
+    # unless bucket.objects(prefix: file_folder) > 0
+    # end
+    obj = bucket.object(file_folder + file)
     @url = URI.parse(obj.presigned_url(:put, acl: 'public-read', expires_in: 300))
 
-    # body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
-    # Net::HTTP.start(@url.host) do |http|
-    #     http.send_request("PUT", @url.request_uri, body, {
-    #       "content-type" => "",
-    #     })
-    # end
-  end
-
-  def streams
-    input_key = "staging/raw/#{@video.id}/#{params[:filename]}"
-    transcoder_client = Aws::ElasticTranscoder::Client.new(region: @region)
-    input = { key: input_key }
-
-    if params[:type].include?('hls')
-      #HLS
-      hls_160k_audio_preset_id = '1448047928709-h3supp';
-      hls_464k_preset_id       = '1448047049441-dkgwlg';
-      hls_664k_preset_id       = '1448047415455-oufocx';
-      hls_3596k_preset_id      = '1448393146722-1iu5sc';
-      hls_6628k_preset_id      = '1448048034864-8f527z';
-
-      segment_duration = '10'
-      output_key_prefix = "staging/stream/#{@video.id}/hls/"
-
-
-      output_key_hls = params[:filename]
-
-      hls_160k_audio = {
-        key: 'hls_160k_' + output_key_hls,
-        preset_id: hls_160k_audio_preset_id,
-        segment_duration: segment_duration
-      }
-
-      hls_464k = {
-        key: 'hls_464k_' + output_key_hls,
-        preset_id: hls_464k_preset_id,
-        segment_duration: segment_duration
-      }
-
-      hls_664k = {
-        key: 'hls_664k_' + output_key_hls,
-        preset_id: hls_664k_preset_id,
-        segment_duration: segment_duration
-      }
-
-      hls_3596k = {
-        key: 'hls_3596k_' + output_key_hls,
-        preset_id: hls_3596k_preset_id,
-        segment_duration: segment_duration
-      }
-
-      hls_6628k = {
-        key: 'hls_6628k_' + output_key_hls,
-        preset_id: hls_6628k_preset_id,
-        segment_duration: segment_duration
-      }
-
-      outputs_hls = [ hls_160k_audio, hls_464k, hls_664k, hls_3596k, hls_6628k ]
-      playlist = {
-        name: 'hls_' + output_key_hls,
-        format: 'HLSv3',
-        output_keys: outputs_hls.map { |output| output[:key] }
-      }
-
-      job = transcoder_client.create_job(
-        pipeline_id: @pipeline_id,
-        input: input,
-        output_key_prefix: output_key_prefix,
-        outputs: outputs_hls,
-        playlists: [ playlist ])[:job]
-      wait_for_job(transcoder_client, job)
-    end
-
-    if params[:type].include?('mp4')
-        #MP4
-       web_preset_id = '1351620000001-100070'
-       output_key_mp4 = "staging/stream/#{@video.id}/mp4/video.mp4"
-       web = {
-         key: output_key_mp4,
-         preset_id: web_preset_id
-       }
-
-       outputs_mp4 = [ web ]
-
-       job = transcoder_client.create_job(
-         pipeline_id: @pipeline_id,
-         input: input,
-         outputs: outputs_mp4)[:job]
-
-      wait_for_job(transcoder_client, job)
+    body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
+    Net::HTTP.start(@url.host) do |http|
+        http.send_request("PUT", @url.request_uri, body, {
+          "content-type" => "",
+        })
     end
   end
+
 
   private
 
-  def set_pipeline
-    if Rails.env == 'stage' || 'development'
-      @pipeline_id = '1448045831910-jsofcg'
-    elsif Rails.env == 'production'
-      @pipeline_id = '1449264108808-yw3pko'
-    end
-  end
-
-  def wait_for_job(client, job)
-    begin
-      client.wait_until(:job_complete, {id: job.id}) do |w|
-        w.delay = 5
-        w.max_attempts = 60
-        puts client.read_job(id: job.id).job.status
-      end
-      puts status = client.read_job(id: job.id).job.status
-      if status == 'Complete'
-        client = Aws::SNS::Client.new(region: @region)
-        client.publish({topic_arn: "arn:aws:sns:us-east-1:667987826167:testTopicFromConsole", message: "Job Completed!"})
-      end
-    rescue Aws::Waiters::Errors::WaiterFailed => e
-      puts e
-    end
-
+  def user_age_meets_requirement
+    true
   end
 
   def set_region

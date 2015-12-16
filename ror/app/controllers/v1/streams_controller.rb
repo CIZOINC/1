@@ -109,8 +109,6 @@ class V1::StreamsController < V1::ApiController
        outputs: outputs_mp4)[:job]
 
      object = Aws::S3::Object.new(bucket_name: "cizo-assets", region: @region, key: output_key_mp4)
-
-
     @mp4_stream.update_columns(link: object.public_url, job_id: job.id) if @mp4_stream
 
   end

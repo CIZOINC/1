@@ -19,11 +19,11 @@ module.exports.videosStreamsTranscodeNotificationPost = function videosStreamsTr
     res.end();
 };
 
-module.exports.videosVideoIdStreamTranscodeRequestGet = function videosVideoIdStreamTranscodeRequestGet (req, res, next) {
+module.exports.videosVideoIdRawStreamUploadRequestGet = function videosVideoIdRawStreamUploadRequestGet (req, res, next) {
   var videoId = req.swagger.params['video-id'].value;
   
 
-  var result = Streams.videosVideoIdStreamTranscodeRequestGet(videoId);
+  var result = Streams.videosVideoIdRawStreamUploadRequestGet(videoId);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

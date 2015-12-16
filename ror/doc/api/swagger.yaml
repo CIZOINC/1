@@ -224,7 +224,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /videos/{video-id}/stream_transcode_request:
+  /videos/{video-id}/raw_stream_upload_request:
     parameters:
       - name: video-id
         in: path
@@ -232,7 +232,7 @@ paths:
         type: integer
         required: true
     get:
-      description: "This endpoint returns the S3 upload details for client side uploading of a stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
+      description: "This endpoint returns the S3 upload details for client side uploading of a raw stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
       tags:
         - Streams
       security:

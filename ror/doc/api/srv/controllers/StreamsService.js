@@ -7,16 +7,16 @@ exports.videosStreamsTranscodeNotificationPost = function() {
 
   
 }
-exports.videosVideoIdStreamTranscodeRequestGet = function(videoId) {
+exports.videosVideoIdRawStreamUploadRequestGet = function(videoId) {
 
   var examples = {};
   
   examples['application/json'] = {
   "aws_access_key_id" : "aeiou",
-  "signature" : "aeiou",
   "acl" : "aeiou",
+  "policy" : "aeiou",
   "key" : "aeiou",
-  "policy" : "aeiou"
+  "signature" : "aeiou"
 };
   
 
@@ -37,8 +37,8 @@ exports.videosVideoIdStreamsStreamTypeGet = function(videoId, streamType) {
   var examples = {};
   
   examples['application/json'] = {
-  "code" : 123,
-  "message" : "aeiou"
+  "message" : "aeiou",
+  "code" : 123
 };
   
 

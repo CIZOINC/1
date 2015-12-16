@@ -1,6 +1,6 @@
 class V1::VideosController < V1::ApiController
-  before_action :set_video, only: [:show, :destroy, :update, :stream_upload_request]
-  before_action :set_region, only: [:stream_upload_request, :destroy]
+  before_action :set_video, only: [:show, :destroy, :update]
+  before_action :set_region, only: [:destroy]
   # before_action :set_pipeline, only: [:streams]
 
   def index
@@ -48,8 +48,8 @@ class V1::VideosController < V1::ApiController
   def destroy
     s3 = Aws::S3::Resource.new(region: @region)
     bucket = s3.bucket('cizo-assets')
-    raw_folder = "staging/raw/#{@video.id}"
-    stream_folder = "staging/stream/#{@video.id}"
+    raw_folder = (Rails.env == 'production') ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
+    stream_folder = (Rails.env == 'production') ? "production/stream/#{@video.id}" : "staging/stream/#{@video.id}"
     if @video.destroy
       bucket.objects(prefix: raw_folder).delete
       bucket.objects(prefix: stream_folder).delete
@@ -61,31 +61,16 @@ class V1::VideosController < V1::ApiController
   def create
     @video = Video.new(videos_params)
     if @video.save
+      ActiveRecord::Base.transaction do
+        %w(hls mp4).each do |type|
+          @video.streams.build(stream_type: type).save(validate: false)
+        end
+      end  
       render :show, status: :created, location: @video
     else
       render json: @video.errors, status: :unprocessable_entity
     end
   end
-
-  def stream_upload_request
-    s3 = Aws::S3::Resource.new(region: @region)
-    bucket = s3.bucket('cizo-assets')
-    file_folder = "staging/raw/#{@video.id}/"
-    file = "#{params[:filename]}"
-    #check if folder doesn't exist on bucket
-    # unless bucket.objects(prefix: file_folder) > 0
-    # end
-    obj = bucket.object(file_folder + file)
-    @url = URI.parse(obj.presigned_url(:put, acl: 'public-read', expires_in: 300))
-
-    body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
-    Net::HTTP.start(@url.host) do |http|
-        http.send_request("PUT", @url.request_uri, body, {
-          "content-type" => "",
-        })
-    end
-  end
-
 
   private
 

@@ -1,21 +1,40 @@
 class V1::StreamsController < V1::ApiController
-  before_action :set_video, only: [:show, :create]
+  before_action :set_video, only: [:show, :create, :raw_stream_upload_request]
   before_action :set_stream, only: :show
   before_action :check_for_requirement, only: :show
-  before_action :set_region, only: [:stream_upload_request, :create, :destroy]
-  before_action :set_pipeline, only: [:create]
+  before_action :set_region, only: [:raw_stream_upload_request, :create, :destroy, :transcode_notification]
+  before_action :set_pipeline, only: [:create, :transcode_notification]
 
   def show
+    render :show, status: 302, location: @stream.link
+  end
+
+  def raw_stream_upload_request
+    s3 = Aws::S3::Resource.new(region: @region)
+    bucket = s3.bucket('cizo-assets')
+    file_folder = (Rails.env == 'production') ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
+    filename = "#{params[:filename]}"
+    @video.update_attribute(:raw_filename, filename)
+    obj = bucket.object(file_folder + filename)
+    @url = URI.parse(obj.presigned_url(:put, acl: 'public-read', expires_in: 300))
+
+    body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
+    Net::HTTP.start(@url.host) do |http|
+        http.send_request("PUT", @url.request_uri, body, {
+          "content-type" => "",
+        })
+    end
   end
 
   def create
-    input_key_prefix = "staging/raw/#{@video.id}"
-    input_key = "staging/raw/#{@video.id}/#{params[:filename]}"
+    input_key_prefix = (Rails.env == 'production') ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
+    input_key = (Rails.env == 'production') ? "production/raw/#{@video.id}/#{@video.raw_filename}" : "staging/raw/#{@video.id}/#{@video.raw_filename}"
     transcoder_client = Aws::ElasticTranscoder::Client.new(region: @region)
+
     input = { key: input_key }
 
     #HLS
-    if params[:type].include?('hls')
+      @hls_stream = @video.streams.find_by(stream_type: "hls")
       hls_160k_audio_preset_id = '1448047928709-h3supp';
       hls_464k_preset_id       = '1448047049441-dkgwlg';
       hls_664k_preset_id       = '1448047415455-oufocx';
@@ -23,10 +42,8 @@ class V1::StreamsController < V1::ApiController
       hls_6628k_preset_id      = '1448048034864-8f527z';
 
       segment_duration = '10'
-      output_key_prefix = "staging/stream/#{@video.id}/hls/"
-
-
-      output_key_hls = params[:filename]
+      output_key_prefix = (Rails.env == 'production') ? "production/stream/#{@video.id}/hls/" : "staging/stream/#{@video.id}/hls/"
+      output_key_hls = @video.raw_filename
 
       hls_160k = {
         key: 'hls_160k_' + output_key_hls,
@@ -72,38 +89,65 @@ class V1::StreamsController < V1::ApiController
         outputs: outputs_hls,
         playlists: [ playlist ])[:job]
 
-      @video.streams.build(link:"link", job_id: job.id, type: "hls").save(validate: false)
-
-    end
+      object = Aws::S3::Object.new(bucket_name: "cizo-assets", region: @region, key: output_key_prefix + 'index.m3u8')
+      @hls_stream.update_columns(link: object.public_url, job_id: job.id) if @hls_stream
 
     #MP4
-    if params[:type].include?('mp4')
-       web_preset_id = '1351620000001-100070'
-       output_key_mp4 = "staging/stream/#{@video.id}/mp4/video.mp4"
-       web = {
-         key: output_key_mp4,
-         preset_id: web_preset_id
-       }
+    web_preset_id = '1351620000001-100070'
+    output_key_mp4 = (Rails.env == 'production') ? "production/stream/#{@video.id}/mp4/video.mp4" : "staging/stream/#{@video.id}/mp4/video.mp4"
+    @mp4_stream = @video.streams.find_by(stream_type: "mp4")
+     web = {
+       key: output_key_mp4,
+       preset_id: web_preset_id
+     }
 
-       outputs_mp4 = [ web ]
+     outputs_mp4 = [ web ]
 
-       job = transcoder_client.create_job(
-         pipeline_id: @pipeline_id,
-         input: input,
-         outputs: outputs_mp4)[:job]
+     job = transcoder_client.create_job(
+       pipeline_id: @pipeline_id,
+       input: input,
+       outputs: outputs_mp4)[:job]
 
-      @video.streams.build(link:"link", job_id: job.id, stream_type: "mp4").save(validate: false)
-    end
+     object = Aws::S3::Object.new(bucket_name: "cizo-assets", region: @region, key: output_key_mp4)
+
+
+    @mp4_stream.update_columns(link: object.public_url, job_id: job.id) if @mp4_stream
 
   end
 
   def transcode_notification
     @stream = Stream.find_by(job_id: params[:jobId])
     @stream.update_attribute(:transcode_status, params[:state].downcase )
-    #TODO add cases for all states
+
+    #Give access to the key if job completed
+    if @stream.transcode_status == 'completed'
+      client = Aws::S3::Client.new(region: @region)
+      if @stream.stream_type == 'mp4'
+        client.put_object_acl(acl:'public-read', bucket: "cizo-assets", key: params[:outputKeyPrefix] + "video.mp4")
+      elsif @stream.stream_type == "hls"
+        bucket = Aws::S3::Bucket.new(region: @region, name: 'cizo-assets')
+        bucket.objects(prefix: params[:outputKeyPrefix]).each do |obj|
+          client.put_object_acl(acl:'public-read', bucket: bucket.name, key: obj.key)
+        end
+      end
+
+    end
+
+    #delete input file from bucket if no jobs connected with input key
+    if no_more_jobs_for(params[:input][:key])
+      object = Aws::S3::Object.new(bucket_name: "cizo-assets", region: @region, key: params[:input][:key])
+      object.delete
+    end
   end
 
   private
+
+  #check if no progressing jobs for this input
+  def no_more_jobs_for(raw_file)
+    client = Aws::ElasticTranscoder::Client.new(region: @region)
+    jobs = client.list_jobs_by_pipeline(pipeline_id: @pipeline_id).jobs.select{|i| i.input.key == raw_file}
+    jobs.select{|job| job.output.status == "Progressing"}.empty?
+  end
 
   def set_video
     @video = Video.find_by(id: params[:video_id])
@@ -114,11 +158,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def set_pipeline
-    if Rails.env == 'stage' || 'development'
-      @pipeline_id = '1448045831910-jsofcg'
-    elsif Rails.env == 'production'
-      @pipeline_id = '1449264108808-yw3pko'
-    end
+    @pipeline_id = (Rails.env == 'production') ? '1449264108808-yw3pko' : '1448045831910-jsofcg'
   end
 
   def set_stream
@@ -142,29 +182,5 @@ class V1::StreamsController < V1::ApiController
   def increase_view_count
     @video.increase_view_count! if @video
   end
-
-  # def streams_params
-  #   params.require(:stream).permit(:id, :link, :transcode_status, :stream_type)
-  # end
-
-  # def wait_for_job(client, job)
-  #   begin
-  #     client.wait_until(:job_complete, {id: job.id}) do |w|
-  #       w.delay = 5
-  #       w.max_attempts = 60
-  #       puts client.read_job(id: job.id).job.status
-  #     end
-  #     puts status = client.read_job(id: job.id).job.status
-  #     if status == 'Complete'
-  #       client = Aws::SNS::Client.new(region: @region)
-  #       @stream = @video.streams.build(job_id: job.id).save(validate: false)
-  #       @stream.inspect
-  #       client.publish({topic_arn: "arn:aws:sns:us-east-1:667987826167:testTopicFromConsole", message: "Job #{job.id} is completed!"})
-  #     end
-  #   rescue Aws::Waiters::Errors::WaiterFailed => e
-  #     puts e
-  #   end
-  #
-  # end
 
 end

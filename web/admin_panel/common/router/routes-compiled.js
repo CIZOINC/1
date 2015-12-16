@@ -32,6 +32,14 @@ angular.module('app.routes', []).constant('routesList', [{
         controller: 'UploadCtrl',
         controllerAs: 'upload'
     }
+}, {
+    state: 'categories',
+    config: {
+        url: '/categories/:id',
+        templateUrl: 'views/categories/categories.html',
+        controller: 'CategoriesCtrl',
+        controllerAs: 'categories'
+    }
 }]);
 
 //# sourceMappingURL=routes-compiled.js.map

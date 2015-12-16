@@ -36,5 +36,15 @@ angular
                 controller: 'UploadCtrl',
                 controllerAs: 'upload'
             }
+        },
+        {
+            state: 'categories',
+            config: {
+                url: '/categories/:id',
+                templateUrl: 'views/categories/categories.html',
+                controller: 'CategoriesCtrl',
+                controllerAs: 'categories'
+            }
         }
+
     ]);

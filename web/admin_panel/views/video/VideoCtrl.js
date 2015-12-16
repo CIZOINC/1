@@ -4,10 +4,11 @@ angular
     .controller('VideoCtrl', VideoCtrl);
 
 /* @ngInject */
-function VideoCtrl($scope, $log) {
+function VideoCtrl($scope, $log, videoServ) {
     "use strict";
-
-
+    $scope.self = $scope;
+    $scope.srv = videoServ;
+    $log.info(videoServ);
 }
 
-VideoCtrl.$inject = ['$scope', '$log'];
+VideoCtrl.$inject = ['$scope', '$log', 'videoServ'];

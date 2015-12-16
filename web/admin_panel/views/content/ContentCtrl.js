@@ -1,6 +1,6 @@
 /*global angular*/
 angular
-    .module('app.controls')
+    .module('app.controls', ['ngSanitize'])
     .controller('ContentCtrl', ContentCtrl);
 
 /* @ngInject */

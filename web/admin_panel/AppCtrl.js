@@ -1,5 +1,6 @@
 angular
     .module('app', [
+        'app.services',
         'app.controls',
         'app.directives',
         'app.routerHelper',
@@ -12,7 +13,8 @@ angular
 /* @ngInject */
 function AppCtrl($scope, routerHelper, routesList, $state) {
     $scope.title = 'Cizo';
-    $scope.videosList = [];
+    $scope.versionAPI = 'v1';
+    $scope.hostName = `http://localhost:63342/${$scope.versionAPI}`;
     applicationStart(routerHelper, routesList, $state);
 }
 AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state'];

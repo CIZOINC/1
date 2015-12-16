@@ -1,9 +1,11 @@
 /*global angular*/
 angular
-    .module('app.wrappers')
+    .module('app.wrappers', [])
     .factory('lodash', _lodash);
 
 /* @ngInject */
 function _lodash() {
     return _;
 }
+
+_lodash.$inject = [];

@@ -42,7 +42,7 @@ gulp.task('build_package', function () {
             '../node_modules/ui-router/release/angular-ui-router.js',
             '../node_modules/angular-sanitize/angular-sanitize.js',
             '../node_modules/moment/moment.js',
-            '../node_modules/node_modules/lodash/index.js'
+            '../node_modules/lodash/index.js'
         ])
         .pipe(sourcemaps.init())
         .pipe(concat('all.min.js', {newLine: ';'}))
@@ -56,9 +56,9 @@ gulp.task('build_package', function () {
             './**/*-compiled.js'
         ])
         .pipe(sourcemaps.init())
-        .pipe(concat('all-ng.min.js', {newLine: ';'}))
+        .pipe(concat('all-ng.min.js'))
         .pipe(ngAnnotate({
-            add: true
+            //add: true
          }))
         .pipe(uglify({mangle: true}))
         .pipe(sourcemaps.write('./'))

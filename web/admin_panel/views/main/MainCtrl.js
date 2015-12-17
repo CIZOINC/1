@@ -4,11 +4,11 @@ angular
     .controller('MainCtrl', MainCtrl);
 
 /* @ngInject */
-function MainCtrl($scope) {
+function MainCtrl($scope, $log) {
     "use strict";
 
     $scope.trending = 'Trending';
     $scope.categories = 'Categories';
     $scope.videos = 'Videos';
 }
-MainCtrl.$inject = ['$scope'];
+MainCtrl.$inject = ['$scope', '$log'];

@@ -1,11 +1,13 @@
 'use strict';
 
 /*global angular*/
-angular.module('app.wrappers').factory('lodash', _lodash);
+angular.module('app.wrappers', []).factory('lodash', _lodash);
 
 /* @ngInject */
-function _lodash() {
+function _lodash($log) {
     return _;
 }
+
+_lodash.$inject = ['$log'];
 
 //# sourceMappingURL=lodash-compiled.js.map

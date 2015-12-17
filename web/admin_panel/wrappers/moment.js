@@ -4,8 +4,8 @@ angular
     .factory('moment', _moment);
 
 /* @ngInject */
-function _moment() {
+function _moment($log) {
     return moment;
 }
 
-_moment.$inject = [];
+_moment.$inject = ['$log'];

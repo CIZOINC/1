@@ -1,13 +1,12 @@
 /*global angular*/
 angular
-    .module('app.controls')
+    .module('app.controls', ['ngSanitize'])
     .controller('CategoriesCtrl', CategoriesCtrl);
 
 /* @ngInject */
 function CategoriesCtrl($scope, $log) {
     "use strict";
 
-    let t = 3;
+    $log.info('categories started');
 }
-
 CategoriesCtrl.$inject = ['$scope', '$log'];

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app.services').factory('categoriesServ', categoriesServ);
+angular.module('app.services', []).factory('categoriesServ', categoriesServ);
 
 /* @ngInject */
 function categoriesServ($http, $q, $log) {

@@ -4,8 +4,8 @@ angular
     .factory('lodash', _lodash);
 
 /* @ngInject */
-function _lodash() {
+function _lodash($log) {
     return _;
 }
 
-_lodash.$inject = [];
+_lodash.$inject = ['$log'];

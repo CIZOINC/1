@@ -1,7 +1,7 @@
 'use strict';
 
 /*global angular*/
-angular.module('app.controls', ['ngSanitize']).controller('ContentCtrl', ContentCtrl);
+angular.module('app.controls').controller('ContentCtrl', ContentCtrl);
 
 /* @ngInject */
 function ContentCtrl($scope, $http, $log) {

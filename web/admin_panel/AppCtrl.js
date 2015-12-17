@@ -6,7 +6,8 @@ angular
         'app.routerHelper',
         'app.wrappers',
         'app.routes',
-        'ngSanitize'])
+        'ngSanitize',
+        'templates'])
     .controller('AppCtrl', AppCtrl);
 
 

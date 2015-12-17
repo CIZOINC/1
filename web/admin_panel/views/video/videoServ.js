@@ -1,5 +1,5 @@
 angular
-    .module('app.services', [])
+    .module('app.services')
     .factory('videoServ', videoServ);
 
 /* @ngInject */
@@ -10,7 +10,9 @@ function videoServ($http, $q, $log) {
         makeVideo: makeVideo,
         getVideo: getVideo,
         setVideo: setVideo,
-        deleteVideo: deleteVideo
+        deleteVideo: deleteVideo,
+
+        uploadHeroImage: uploadHeroImage
     };
 
     function makeVideo(scope, videoData) {
@@ -85,6 +87,28 @@ function videoServ($http, $q, $log) {
 
             function error(response) {
                 $log.info(`video data deleting error with status ${response.status}`);
+                reject(response);
+            }
+        });
+    }
+
+    function uploadHeroImage(scope, id, data) {
+        let formData = new FormData();
+        let encodedData = formData.append('heroImage', data)
+        return $q( (resolve, reject) => {
+            $http({
+                method: 'POST',
+                url: `${scope.hostName}/videos/${id}/heroimage`,
+                data: encodedData
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('hero image uploaded');
+                resolve(response);
+            }
+
+            function error(response) {
+                $log.info(`hero image uploading error with status ${response.status}`);
                 reject(response);
             }
         });

@@ -41,6 +41,8 @@ gem 'acts-as-taggable-on'
 
 gem 'aws-sdk', '~> 2'
 
+gem 'versionist'
+
 gem 'carrierwave'
 gem "fog-aws"
 gem "fog"
@@ -58,7 +60,6 @@ group :development do
   gem 'quiet_assets'
 
   #api versioning
-  gem 'versionist'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'

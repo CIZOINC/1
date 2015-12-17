@@ -8,6 +8,11 @@ CarrierWave.configure do |config|
     # host:                  's3.example.com',             # optional, defaults to nil
     # endpoint:              'https://s3.example.com:8080' # optional, defaults to nil
   }
+
+  if not Rails.env.development? 
+    fog_credentials[:use_iam_profile] = true
+  end
+
   config.fog_directory  = 'cizo-assets'                          # required
   # config.fog_public     = false                                        # optional, defaults to true
   # config.fog_attributes = { 'Cache-Control' => "max-age=#{365.day.to_i}" } # optional, defaults to {}

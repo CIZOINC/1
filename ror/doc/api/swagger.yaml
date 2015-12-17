@@ -296,11 +296,6 @@ paths:
               key:
                 type: string
                 description: "S3 bucket key for raw video."
-              types:
-                type: array
-                description: "Target stream types. Only 'hls' and 'mp4' are supported."
-                items:
-                  type: string
       responses:
         '202':
           description: "Stream has been accepted for transcoding"

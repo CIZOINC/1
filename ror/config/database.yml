@@ -11,7 +11,7 @@ default: &default
   timeout: 5000
   username: karetnikov_kirill
   password: password
-  host: postgres
+  host: ror_postgres_1
   port: 5432
 
 development:

@@ -65,11 +65,18 @@ class V1::VideosController < V1::ApiController
         %w(hls mp4).each do |type|
           @video.streams.build(stream_type: type).save(validate: false)
         end
-      end  
+      end
       render :show, status: :created, location: @video
     else
       render json: @video.errors, status: :unprocessable_entity
     end
+  end
+
+  def hero_image
+    @video = Video.find(params[:video_id])
+    @video.hero_image = params[:file]
+    @video.save(validate: false)
+    render json: {}, status: 202
   end
 
   private

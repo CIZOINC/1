@@ -1,4 +1,5 @@
 class Video < ActiveRecord::Base
+  mount_uploader :hero_image, HeroImageUploader
   acts_as_taggable
 
   belongs_to :category

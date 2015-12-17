@@ -1,1 +1,2 @@
-json.url @url.to_s
+json.url @form.url.to_s
+json.merge! @form.fields

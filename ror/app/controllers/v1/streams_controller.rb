@@ -15,10 +15,10 @@ class V1::StreamsController < V1::ApiController
     file_folder = (Rails.env == 'production') ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
     filename = "#{params[:filename]}"
     @video.update_attribute(:raw_filename, filename)
-    obj = bucket.object(file_folder + filename)
+
     current_admin = 'admin'
     unless current_admin.nil? #TODO check if oauth2 scope is admin
-      @url = URI.parse(obj.presigned_url(:put, acl: 'public-read', expires_in: 300))
+      @form = bucket.presigned_post(key: file_folder + filename, expires: Time.now + 300)
     else
       render json: {}, status: 403
     end
@@ -89,7 +89,7 @@ class V1::StreamsController < V1::ApiController
 
      object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_mp4)
     @mp4_stream.update_columns(link: object.public_url, job_id: job.id) if @mp4_stream
-    render status: 202
+    render nothing: true, status: 202
   end
 
   def transcode_notification
@@ -114,7 +114,7 @@ class V1::StreamsController < V1::ApiController
       object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: params[:input][:key])
       object.delete
     end
-    render json: {}, status: 202
+    render nothing: true, status: 202
   end
 
   private

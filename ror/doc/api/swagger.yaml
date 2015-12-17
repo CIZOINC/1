@@ -6,7 +6,7 @@ info:
 host: api.cizo.com
 schemes:
   - https
-securityDefinitions: 
+securityDefinitions:
   oauth:
     type: oauth2
     flow: implicit
@@ -56,7 +56,7 @@ paths:
             properties:
               data:
                 type: array
-                items: 
+                items:
                   $ref: '#/definitions/Video'
         default:
           description: Unexpected error
@@ -67,7 +67,7 @@ paths:
       tags:
         - Videos
       security:
-        - oauth: 
+        - oauth:
           - admin
       parameters:
         - name: body
@@ -134,7 +134,7 @@ paths:
               updated_at:
                 type: string
                 format: date-time
-                readOnly: true    
+                readOnly: true
               title:
                 type: string
                 description: Title of video.
@@ -179,7 +179,7 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/Video'
-        '403': 
+        '403':
           description: "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's viewable property is not set to true"
           schema:
             $ref: '#/definitions/Error'
@@ -216,7 +216,7 @@ paths:
       responses:
         '204':
           description: Successfully deleted
-        '403': 
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
@@ -236,7 +236,7 @@ paths:
       tags:
         - Streams
       security:
-        - oauth: 
+        - oauth:
           - admin
       responses:
         '200':
@@ -253,13 +253,13 @@ paths:
               key:
                 type: string
                 description: "Upload key. S3 bucket key to store uploaded video in"
-              aws_access_key_id: 
+              aws_access_key_id:
                 type: string
                 description: "Upload AWS access key id"
-              acl: 
+              acl:
                 type: string
                 description: "Upload acl"
-              policy: 
+              policy:
                 type: string
                 description: "Upload policy"
               signature:
@@ -285,7 +285,7 @@ paths:
       tags:
         - Streams
       security:
-        - oauth: 
+        - oauth:
           - admin
       parameters:
         - name: body
@@ -343,7 +343,7 @@ paths:
       tags:
         - Streams
       security:
-        - oauth: 
+        - oauth:
           - admin
       responses:
         '302':
@@ -368,9 +368,9 @@ paths:
       tags:
         - Videos
       security:
-        - oauth: 
+        - oauth:
           - admin
-      consumes: 
+      consumes:
         - multipart/form-data
       responses:
         '202':
@@ -391,7 +391,7 @@ paths:
       tags:
         - Videos
       security:
-        - oauth: 
+        - oauth:
           - user
       responses:
         '204':
@@ -409,7 +409,7 @@ paths:
       tags:
         - Videos
       security:
-        - oauth: 
+        - oauth:
           - user
       responses:
         '204':
@@ -423,9 +423,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   /trending:
-    get: 
+    get:
       description: "Returns a list of trending videos"
-      tags: 
+      tags:
         - Trending
       responses:
         '200':
@@ -435,16 +435,16 @@ paths:
             properties:
               data:
                 type: array
-                items: 
+                items:
                   $ref: '#/definitions/Video'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'
   /categories:
-    get: 
+    get:
       description: "Returns a list of categories"
-      tags: 
+      tags:
         - Categories
       responses:
         '200':
@@ -454,7 +454,7 @@ paths:
             properties:
               data:
                 type: array
-                items: 
+                items:
                   $ref: '#/definitions/Category'
         default:
           description: Unexpected error
@@ -462,7 +462,7 @@ paths:
             $ref: '#/definitions/Error'
     post:
       description: "Creates a category. Title must be unique"
-      tags: 
+      tags:
         - Categories
       security:
         - oauth:
@@ -534,11 +534,11 @@ paths:
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
-            $ref: '#/definitions/Error'             
+            $ref: '#/definitions/Error'
         '409':
           description: 'Error occurring when a Category with that title already exists'
           schema:
-            $ref: '#/definitions/Error'      
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -553,7 +553,7 @@ paths:
       responses:
         '204':
           description: Successfully deleted
-        '403': 
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
@@ -567,7 +567,7 @@ paths:
       tags:
         - Users
       security:
-        - oauth: 
+        - oauth:
           - admin
       tags:
         - Users
@@ -661,7 +661,7 @@ paths:
   /users/me:
     get:
       description: 'Gets the current user'
-      tags: 
+      tags:
         - Users
       security:
         - oauth:
@@ -705,7 +705,7 @@ paths:
       tags:
         - Users
       security:
-        - oauth: 
+        - oauth:
           - user
       responses:
         '204':
@@ -721,7 +721,7 @@ paths:
   /users/me/videos/likes:
     get:
       description: 'Gets a list of videos liked by the current user'
-      tags: 
+      tags:
         - Users
       security:
         - oauth:
@@ -761,7 +761,7 @@ definitions:
       updated_at:
         type: string
         format: date-time
-        readOnly: true    
+        readOnly: true
       title:
         type: string
         description: Title of video.
@@ -781,7 +781,7 @@ definitions:
         type: integer
         format: int32
         description: 'Unique identifier of category'
-      viewable: 
+      viewable:
         type: boolean
         description: Whether a video is viewable. This property is only visible to clients with an oauth2 scope of 'admin'
       tags:

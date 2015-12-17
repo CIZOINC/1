@@ -16,14 +16,19 @@ class V1::StreamsController < V1::ApiController
     filename = "#{params[:filename]}"
     @video.update_attribute(:raw_filename, filename)
     obj = bucket.object(file_folder + filename)
-    @url = URI.parse(obj.presigned_url(:put, acl: 'public-read', expires_in: 300))
-
-    body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
-    Net::HTTP.start(@url.host) do |http|
-        http.send_request("PUT", @url.request_uri, body, {
-          "content-type" => "",
-        })
+    current_admin = 'admin'
+    unless current_admin.nil? #TODO check if oauth2 scope is admin
+      @url = URI.parse(obj.presigned_url(:put, acl: 'public-read', expires_in: 300))
+    else
+      render json: {}, status: 403
     end
+
+    # body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
+    # Net::HTTP.start(@url.host) do |http|
+    #     http.send_request("PUT", @url.request_uri, body, {
+    #       "content-type" => "",
+    #     })
+    # end
   end
 
   def create
@@ -35,7 +40,7 @@ class V1::StreamsController < V1::ApiController
 
     #check if file exists on bucket
     unless obj.exists?
-      render(json: { error: 'Input key does not exist on S3 bucket' }, status: 400)
+      render json: { error: 'Input key does not exist on S3 bucket' }, status: 400
       return
     end
 
@@ -109,6 +114,7 @@ class V1::StreamsController < V1::ApiController
       object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: params[:input][:key])
       object.delete
     end
+    render json: {}, status: 202
   end
 
   private

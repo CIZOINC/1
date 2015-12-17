@@ -50,9 +50,13 @@ class V1::VideosController < V1::ApiController
     bucket = s3.bucket('cizo-assets')
     raw_folder = (Rails.env == 'production') ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
     stream_folder = (Rails.env == 'production') ? "production/stream/#{@video.id}" : "staging/stream/#{@video.id}"
+    hero_image = (Rails.env == 'production') ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
     if @video.destroy
-      bucket.objects(prefix: raw_folder).delete
-      bucket.objects(prefix: stream_folder).delete
+      bucket.objects(prefix: raw_folder).batch_delete!
+      bucket.objects(prefix: stream_folder).batch_delete!
+      if hero_image
+        bucket.objects(prefix: hero_image).batch_delete!
+      end
     end
 
     head :no_content

@@ -163,7 +163,7 @@ class V1::StreamsController < V1::ApiController
   def stream_meets_requirements?
     streams = @video.streams
     streams.each do |s|
-      return false unless s.transcode_status == 'completed' || s.transcode_status == 'error' || s.transcode_status == 'canceled'
+      return false unless s.transcode_status == 'completed' || s.transcode_status == 'error' || s.transcode_status == 'canceled' || s.transcode_status.nil?
     end
   end
 

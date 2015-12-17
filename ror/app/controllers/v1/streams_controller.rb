@@ -128,7 +128,6 @@ class V1::StreamsController < V1::ApiController
           client.put_object_acl(acl:'public-read', bucket: bucket.name, key: obj.key)
         end
       end
-
     end
 
     #delete input file from bucket if no jobs connected with input key

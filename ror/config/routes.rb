@@ -9,12 +9,12 @@ Rails.application.routes.draw do
         get 'streams/:stream_type', to: 'streams#show', param: :stream_type
         post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
         post :streams, to: "streams#create"
+        post :hero_image
       end
     end
 
 
   root 'welcome#index'
-
   get 'health', to: 'application#health_check'
 
 end

@@ -4,21 +4,21 @@
 angular.module('app.controls').controller('ContentCtrl', ContentCtrl);
 
 /* @ngInject */
-function ContentCtrl($scope, $http, $log) {
+function ContentCtrl($scope, $http, $log, videoServ) {
     "use strict";
 
-    var contentURL = 'views/content/videos.json';
-    $http({
-        method: 'GET',
-        url: contentURL
-    }).then(function success(response) {
+    videoServ.getVideosList($scope).then(function success(response) {
         $scope.videosList = response.data.data;
         $log.info('data received');
     }, function error(response) {
         $log.error('receiving error happened: ' + response);
     });
+
+    $scope.deleteVideo = function (id) {
+        videoServ.deleteVideo($scope, id);
+    };
 }
 
-ContentCtrl.$inject = ['$scope', '$http', '$log'];
+ContentCtrl.$inject = ['$scope', '$http', '$log', 'videoServ'];
 
 //# sourceMappingURL=ContentCtrl-compiled.js.map

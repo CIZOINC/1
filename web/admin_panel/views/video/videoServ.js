@@ -7,6 +7,8 @@ function videoServ($http, $q, $log) {
     "use strict";
 
     return {
+        getVideosList: getVideosList,
+
         makeVideo: makeVideo,
         getVideo: getVideo,
         setVideo: setVideo,
@@ -14,6 +16,25 @@ function videoServ($http, $q, $log) {
 
         uploadHeroImage: uploadHeroImage
     };
+
+    function getVideosList(scope) {
+        return $q( (resolve, reject) => {
+            $http({
+                method: 'GET',
+                url: `${scope.hostName}/videos`
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('video list obtained');
+                resolve(response);
+            }
+
+            function error(response) {
+                $log.info(`video list obtaining error with status ${response.status}`);
+                reject(response);
+            }
+        });
+    }
 
     function makeVideo(scope, videoData) {
         return $q( (resolve, reject) => {
@@ -54,11 +75,12 @@ function videoServ($http, $q, $log) {
         });
     }
 
-    function setVideo(scope, id) {
+    function setVideo(scope, id, videoData) {
         return $q( (resolve, reject) => {
             $http({
                 method: 'PUT',
-                url: `${scope.hostName}/videos/${id}`
+                url: `${scope.hostName}/videos/${id}`,
+                data: videoData
             }).then(success, error);
 
             function success(response) {
@@ -94,7 +116,7 @@ function videoServ($http, $q, $log) {
 
     function uploadHeroImage(scope, id, data) {
         let formData = new FormData();
-        let encodedData = formData.append('heroImage', data)
+        let encodedData = formData.append('heroImage', data);
         return $q( (resolve, reject) => {
             $http({
                 method: 'POST',

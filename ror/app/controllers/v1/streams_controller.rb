@@ -51,7 +51,7 @@ class V1::StreamsController < V1::ApiController
 
     #check for stream's status
     unless stream_meets_requirements?
-      render json: { error: 'Stream is in a "pending" state' }, status: 409
+      render json: { error: 'Transcode in progess' }, status: 409
       return
     end
 
@@ -74,7 +74,7 @@ class V1::StreamsController < V1::ApiController
       playlists: [ playlist ])[:job]
 
     object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_prefix + 'index.m3u8')
-    @hls_stream.update_columns(link: object.public_url, job_id: job.id) if @hls_stream
+    @hls_stream.update_columns(link: object.public_url, job_id: job.id, status: 'submitted') if @hls_stream
 
     #MP4
     web_preset_id = '1351620000001-100070'
@@ -93,7 +93,7 @@ class V1::StreamsController < V1::ApiController
        outputs: outputs_mp4)[:job]
 
      object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_mp4)
-    @mp4_stream.update_columns(link: object.public_url, job_id: job.id) if @mp4_stream
+    @mp4_stream.update_columns(link: object.public_url, job_id: job.id, status: 'submitted') if @mp4_stream
     render nothing: true, status: 202
   end
 
@@ -181,7 +181,7 @@ class V1::StreamsController < V1::ApiController
   def stream_meets_requirements?
     streams = @video.streams
     streams.each do |s|
-      return false unless s.transcode_status == 'completed' || s.transcode_status == 'error' || s.transcode_status == 'canceled' || s.transcode_status.nil?
+      return false unless s.transcode_status == 'pending' || s.transcode_status == 'completed' || s.transcode_status == 'error' || s.transcode_status == 'canceled' || s.transcode_status.nil?
     end
   end
 

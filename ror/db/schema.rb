@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20151218073622) do
   create_table "streams", force: :cascade do |t|
     t.string   "link"
     t.string   "stream_type"
-    t.string   "transcode_status", default: "submitted"
+    t.string   "transcode_status", default: "pending"
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
     t.integer  "video_id"

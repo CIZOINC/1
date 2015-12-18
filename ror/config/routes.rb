@@ -16,6 +16,8 @@ Rails.application.routes.draw do
       post :streams, to: "streams#create"
       post :hero_image
     end
+
+    resources :categories
   end
 
   root 'welcome#index'

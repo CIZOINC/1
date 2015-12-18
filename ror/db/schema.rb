@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151217091731) do
+ActiveRecord::Schema.define(version: 20151218073622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,9 +25,9 @@ ActiveRecord::Schema.define(version: 20151217091731) do
   create_table "streams", force: :cascade do |t|
     t.string   "link"
     t.string   "stream_type"
-    t.string   "transcode_status"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.string   "transcode_status", default: "submitted"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.integer  "video_id"
     t.string   "job_id"
   end

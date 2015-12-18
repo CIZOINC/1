@@ -13,14 +13,19 @@ class V1::StreamsController < V1::ApiController
     s3 = Aws::S3::Resource.new(region: @region)
     bucket = s3.bucket(bucket_name)
     file_folder = (Rails.env == 'production') ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
-    filename = "#{params[:filename]}"
+
+    if (filename = params[:filename]).blank?
+      render json: {errors:"filename required"}, status: 403
+      return
+    end
+
     @video.update_attribute(:raw_filename, filename)
 
     current_admin = 'admin'
     unless current_admin.nil? #TODO check if oauth2 scope is admin
       @form = bucket.presigned_post(key: file_folder + filename, expires: Time.now + 300)
     else
-      render json: {}, status: 403
+      render nothing: true, status: 403
     end
 
     # body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
@@ -93,7 +98,20 @@ class V1::StreamsController < V1::ApiController
   end
 
   def transcode_notification
+    puts "HEADERS:"
+    request.headers.each do |key, value|
+      puts "  #{key}: #{value}"
+    end
+    puts
+    puts "BODY:"
+    puts request.body.read
     @stream = Stream.find_by(job_id: params[:jobId])
+
+    if @stream.nil?
+      render nothing: true, status: 404
+      return
+    end
+
     @stream.update_attribute(:transcode_status, params[:state].downcase )
 
     #Give access to the key if job completed

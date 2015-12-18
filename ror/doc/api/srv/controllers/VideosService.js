@@ -6,23 +6,23 @@ exports.videosGet = function(category, tags, createdBefore, createdAfter) {
   
   examples['application/json'] = {
   "data" : [ {
-    "tags" : [ "aeiou" ],
-    "liked" : true,
-    "category_id" : 123,
-    "id" : 123,
-    "title" : "aeiou",
-    "updated_at" : "2015-12-16T06:33:11.936+0000",
-    "viewable" : true,
-    "description" : "aeiou",
-    "created_at" : "2015-12-16T06:33:11.936+0000",
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "type" : "aeiou"
     } ],
+    "created_at" : "2015-12-18T02:18:26.514+0000",
+    "description" : "aeiou",
+    "title" : "aeiou",
+    "liked" : true,
+    "tags" : [ "aeiou" ],
+    "viewable" : true,
+    "updated_at" : "2015-12-18T02:18:26.514+0000",
+    "category_id" : 123,
+    "id" : 123,
     "hero_image_link" : "aeiou",
-    "view_count" : 123,
-    "mpaa_rating" : "aeiou"
+    "mpaa_rating" : "aeiou",
+    "view_count" : 123
   } ]
 };
   
@@ -37,14 +37,14 @@ exports.videosPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "id" : 123,
-  "tags" : [ "aeiou" ],
-  "title" : "aeiou",
-  "updated_at" : "2015-12-16T06:33:11.943+0000",
-  "description" : "aeiou",
   "category_id" : 123,
-  "created_at" : "2015-12-16T06:33:11.943+0000",
-  "mpaa_rating" : "aeiou"
+  "updated_at" : "2015-12-18T02:18:26.518+0000",
+  "created_at" : "2015-12-18T02:18:26.518+0000",
+  "description" : "aeiou",
+  "id" : 123,
+  "title" : "aeiou",
+  "mpaa_rating" : "aeiou",
+  "tags" : [ "aeiou" ]
 };
   
 
@@ -58,23 +58,23 @@ exports.videosVideoIdGet = function(videoId) {
   var examples = {};
   
   examples['application/json'] = {
-  "tags" : [ "aeiou" ],
-  "liked" : true,
-  "category_id" : 123,
-  "id" : 123,
-  "title" : "aeiou",
-  "updated_at" : "2015-12-16T06:33:11.945+0000",
-  "viewable" : true,
-  "description" : "aeiou",
-  "created_at" : "2015-12-16T06:33:11.945+0000",
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
+  "created_at" : "2015-12-18T02:18:26.519+0000",
+  "description" : "aeiou",
+  "title" : "aeiou",
+  "liked" : true,
+  "tags" : [ "aeiou" ],
+  "viewable" : true,
+  "updated_at" : "2015-12-18T02:18:26.519+0000",
+  "category_id" : 123,
+  "id" : 123,
   "hero_image_link" : "aeiou",
-  "view_count" : 123,
-  "mpaa_rating" : "aeiou"
+  "mpaa_rating" : "aeiou",
+  "view_count" : 123
 };
   
 
@@ -88,23 +88,23 @@ exports.videosVideoIdPut = function(body, videoId) {
   var examples = {};
   
   examples['application/json'] = {
-  "tags" : [ "aeiou" ],
-  "liked" : true,
-  "category_id" : 123,
-  "id" : 123,
-  "title" : "aeiou",
-  "updated_at" : "2015-12-16T06:33:11.949+0000",
-  "viewable" : true,
-  "description" : "aeiou",
-  "created_at" : "2015-12-16T06:33:11.949+0000",
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
     "type" : "aeiou"
   } ],
+  "created_at" : "2015-12-18T02:18:26.521+0000",
+  "description" : "aeiou",
+  "title" : "aeiou",
+  "liked" : true,
+  "tags" : [ "aeiou" ],
+  "viewable" : true,
+  "updated_at" : "2015-12-18T02:18:26.521+0000",
+  "category_id" : 123,
+  "id" : 123,
   "hero_image_link" : "aeiou",
-  "view_count" : 123,
-  "mpaa_rating" : "aeiou"
+  "mpaa_rating" : "aeiou",
+  "view_count" : 123
 };
   
 

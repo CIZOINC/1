@@ -21,9 +21,10 @@ module.exports.videosStreamsTranscodeNotificationPost = function videosStreamsTr
 
 module.exports.videosVideoIdRawStreamUploadRequestGet = function videosVideoIdRawStreamUploadRequestGet (req, res, next) {
   var videoId = req.swagger.params['video-id'].value;
+  var filename = req.swagger.params['filename'].value;
   
 
-  var result = Streams.videosVideoIdRawStreamUploadRequestGet(videoId);
+  var result = Streams.videosVideoIdRawStreamUploadRequestGet(videoId, filename);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

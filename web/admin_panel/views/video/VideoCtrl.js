@@ -16,6 +16,7 @@ function VideoCtrl($scope, $log, $stateParams, videoServ) {
     ];
 
     $scope.screenTitle = Number($stateParams.id) > 0 ? 'Edit' : 'Create';
+    $scope.hostNameUpload = $scope.hostName;
 
     if (Number($stateParams.id)) {
         videoServ.getVideo($scope, $stateParams.id)

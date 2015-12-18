@@ -1,7 +1,7 @@
 'use strict';
 
 /*global angular*/
-angular.module('app.directives', []).directive('player', player);
+angular.module('app.directives', ['app.services']).directive('player', player);
 
 /* @ngInject */
 function player($log, moment) {

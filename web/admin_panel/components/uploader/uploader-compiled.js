@@ -4,7 +4,7 @@
 angular.module('app.directives').directive('uploader', uploader);
 
 /* @ngInject */
-function uploader($log, _, $timeout) {
+function uploader($log, _, $timeout, uploaderServ, $stateParams) {
     "use strict";
 
     function uploadProgress(event) {
@@ -29,10 +29,14 @@ function uploader($log, _, $timeout) {
         }
     }
 
-    function handleFiles(files) {
+    function handleFiles(files, scope) {
         var dropZone = angular.element(document.querySelector('.drop-zone'));
         _.each(files, function (file) {
 
+            if (Number($stateParams.id)) {
+                uploaderServ.sendRequest(Number($stateParams.id), scope.hostLink);
+            }
+            return;
             var timeToRestore = 3000;
 
             dropZone[0].classList.remove('drop');
@@ -58,7 +62,7 @@ function uploader($log, _, $timeout) {
         });
     }
 
-    function linkFn() {
+    function linkFn(scope) {
         var dropZone = angular.element(document.querySelector('.drop-zone'));
         var fileInput = angular.element(document.querySelector('.file-input'));
 
@@ -87,7 +91,7 @@ function uploader($log, _, $timeout) {
 
             if (event && event.dataTransfer && event.dataTransfer.files) {
                 var files = event.dataTransfer.files;
-                handleFiles(files);
+                handleFiles(files, scope);
             }
 
             return false;
@@ -95,7 +99,7 @@ function uploader($log, _, $timeout) {
 
         fileInput.on('change', function () {
             var files = angular.element(document.querySelector('.file-input'))[0].files;
-            handleFiles(files);
+            handleFiles(files, scope);
         });
     }
 
@@ -104,10 +108,12 @@ function uploader($log, _, $timeout) {
         templateUrl: 'components/uploader/uploader.html',
         link: linkFn,
         transclude: true,
-        scope: {}
+        scope: {
+            hostLink: '=link'
+        }
     };
 }
 
-uploader.$inject = ['$log', 'lodash', '$timeout'];
+uploader.$inject = ['$log', 'lodash', '$timeout', 'uploaderServ', '$stateParams'];
 
 //# sourceMappingURL=uploader-compiled.js.map

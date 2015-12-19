@@ -12,7 +12,7 @@ class V1::StreamsController < V1::ApiController
   def raw_stream_upload_request
     s3 = Aws::S3::Resource.new(region: @region)
     bucket = s3.bucket(bucket_name)
-    file_folder = (Rails.env == 'production') ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
+    file_folder = Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
 
     if (filename = params[:filename]).blank?
       render json: {errors:"filename required"}, status: 403
@@ -37,8 +37,8 @@ class V1::StreamsController < V1::ApiController
   end
 
   def create
-    input_key_prefix = (Rails.env == 'production') ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
-    input_key = (Rails.env == 'production') ? "production/raw/#{@video.id}/#{@video.raw_filename}" : "staging/raw/#{@video.id}/#{@video.raw_filename}"
+    input_key_prefix = Rails.env.production? ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
+    input_key = Rails.env.production? ? "production/raw/#{@video.id}/#{@video.raw_filename}" : "staging/raw/#{@video.id}/#{@video.raw_filename}"
     transcoder_client = Aws::ElasticTranscoder::Client.new(region: @region)
     input = { key: input_key }
     obj = Aws::S3::Object.new(bucket_name: bucket_name, key: input_key, region: @region)
@@ -57,7 +57,7 @@ class V1::StreamsController < V1::ApiController
 
     #HLS
     @hls_stream = @video.streams.find_by(stream_type: "hls")
-    output_key_prefix = (Rails.env == 'production') ? "production/stream/#{@video.id}/hls/" : "staging/stream/#{@video.id}/hls/"
+    output_key_prefix = Rails.env.production? ? "production/stream/#{@video.id}/hls/" : "staging/stream/#{@video.id}/hls/"
     define_hls_presets
     outputs_hls = [ define_hls_presets[0], define_hls_presets[1], define_hls_presets[2], define_hls_presets[3], define_hls_presets[4] ]
     playlist = {
@@ -78,7 +78,7 @@ class V1::StreamsController < V1::ApiController
 
     #MP4
     web_preset_id = '1351620000001-100070'
-    output_key_mp4 = (Rails.env == 'production') ? "production/stream/#{@video.id}/mp4/video.mp4" : "staging/stream/#{@video.id}/mp4/video.mp4"
+    output_key_mp4 = Rails.env.production? ? "production/stream/#{@video.id}/mp4/video.mp4" : "staging/stream/#{@video.id}/mp4/video.mp4"
     @mp4_stream = @video.streams.find_by(stream_type: "mp4")
      web = {
        key: output_key_mp4,
@@ -194,7 +194,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def set_pipeline
-    @pipeline_id = (Rails.env == 'production') ? '1449264108808-yw3pko' : '1448045831910-jsofcg'
+    @pipeline_id = Rails.env.production? ? '1449264108808-yw3pko' : '1448045831910-jsofcg'
   end
 
   def bucket_name

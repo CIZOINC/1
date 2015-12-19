@@ -1,5 +1,6 @@
 class V1::CategoriesController < V1::ApiController
   before_action :set_category, only: [:show, :update, :destroy]
+  before_action :doorkeeper_authorize!
 
   def show
   end
@@ -11,7 +12,7 @@ class V1::CategoriesController < V1::ApiController
   def create
     @category = Category.new(categories_params)
     if current_admin.nil?
-      status_403
+      status_401
     else
       if @category.save
         render :show, status: 200, location: @category
@@ -19,13 +20,13 @@ class V1::CategoriesController < V1::ApiController
         error(500)
       elsif @category.errors.added?(:title, taken)
         error(409)
-      end      
+      end
     end
   end
 
   def update
     if current_admin.nil?
-      status_403
+      status_401
     else
       if @category.update_attributes(categories_params)
         render :show, status: 200, location: @category
@@ -41,7 +42,7 @@ class V1::CategoriesController < V1::ApiController
 
   def destroy
     if current_admin.nil?
-      status_403
+      status_401
     else
       @category.destroy
       head :no_content
@@ -70,8 +71,8 @@ class V1::CategoriesController < V1::ApiController
     params.require(:category).permit(:id, :title)
   end
 
-  def status_403
-    render json: {errors: "Access denied"}, status: 403
+  def status_401
+    render json: {errors: "Access denied"}, status: 401
   end
 
   def error(status)

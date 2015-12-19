@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  use_doorkeeper
+  devise_for :users
+
   if Rails.env.development? || Rails.env.staging?
     get 'api_docs/index'
     get 'api_docs/swagger.json' => 'api_docs#swagger'
@@ -17,6 +20,9 @@ Rails.application.routes.draw do
       post :hero_image
     end
 
+    resources :users do
+      get :me, on: :collection
+    end
     resources :categories
   end
 

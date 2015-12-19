@@ -7,11 +7,11 @@ CarrierWave.configure do |config|
     # endpoint:              'https://s3.example.com:8080' # optional, defaults to nil
   }
 
-  if not Rails.env.development? 
+  unless Rails.env.development?
     fog_credentials[:use_iam_profile] = true
-  else
-    fog_credentials[:aws_access_key_id] = ENV['AWS_ACCESS_KEY_ID']
-    fog_credentials[:aws_secret_access_key] = ENV['AWS_SECRET_ACCESS_KEY']
+  # else
+  #   fog_credentials[:aws_access_key_id] = ENV['AWS_ACCESS_KEY_ID']
+  #   fog_credentials[:aws_secret_access_key] = ENV['AWS_SECRET_ACCESS_KEY']
   end
 
   config.fog_credentials = fog_credentials

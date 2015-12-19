@@ -6,7 +6,7 @@ exports.usersGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
-    "birthday" : "2015-12-18T02:18:26.508+0000",
+    "birthday" : "2015-12-19T02:10:53.515+0000",
     "password" : "aeiou",
     "id" : 123,
     "email" : "aeiou"
@@ -24,7 +24,7 @@ exports.usersPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-18T02:18:26.509+0000",
+  "birthday" : "2015-12-19T02:10:53.516+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -41,7 +41,7 @@ exports.usersMeGet = function() {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-18T02:18:26.510+0000",
+  "birthday" : "2015-12-19T02:10:53.517+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -58,7 +58,7 @@ exports.usersMePut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-18T02:18:26.511+0000",
+  "birthday" : "2015-12-19T02:10:53.518+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -88,13 +88,13 @@ exports.usersMeVideosLikesGet = function() {
       "link" : "aeiou",
       "type" : "aeiou"
     } ],
-    "created_at" : "2015-12-18T02:18:26.512+0000",
+    "created_at" : "2015-12-19T02:10:53.520+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "tags" : [ "aeiou" ],
     "viewable" : true,
-    "updated_at" : "2015-12-18T02:18:26.512+0000",
+    "updated_at" : "2015-12-19T02:10:53.520+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",
@@ -114,7 +114,7 @@ exports.usersUserIdGet = function(userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-18T02:18:26.513+0000",
+  "birthday" : "2015-12-19T02:10:53.521+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -131,7 +131,7 @@ exports.usersUserIdPut = function(body, userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-18T02:18:26.513+0000",
+  "birthday" : "2015-12-19T02:10:53.522+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"

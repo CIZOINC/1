@@ -635,7 +635,7 @@
     
     "post": {
       "summary": "",
-      "description":"Creates or updates a set of video streams and initiates transcoding for those stream. &lt;b&gt;NOTE&lt;/b&gt; The video specified by the &#39;raw_video_key&#39; must be present in S3. Usually, this matches the &#39;key&#39; returned by */videos/{video-id}/stream_transcode_request*. &lt;b&gt;NOTE&lt;/b&gt; If stream of the specified type already exists, the stream&#39;s status must be either &#39;complete&#39;, &#39;canceled&#39;, or &#39;error&#39; for the update to succeed",
+      "description":"Creates or updates a set of video streams and initiates transcoding for those stream. &lt;b&gt;NOTE&lt;/b&gt; The video specified by the &#39;raw_video_key&#39; must be present in S3. Usually, this matches the &#39;key&#39; returned by */videos/{video-id}/stream_transcode_request*. &lt;b&gt;NOTE&lt;/b&gt; If stream of the specified type already exists, the stream&#39;s status must be either &#39;completed&#39;, &#39;canceled&#39;, or &#39;error&#39; for the update to succeed",
       "x-swagger-router-controller": "Streams",
       "tags": ["Streams"],
       "operationId": "videosVideoIdStreamsPost",
@@ -1199,7 +1199,7 @@
       "type" : "string",
       "description" : "Transcode status. This property is only visible to oauth2 scope of \"admin\"",
       "readOnly" : true,
-      "enum" : [ "submitted", "progressing", "complete", "canceled", "error" ]
+      "enum" : [ "pending", "submitted", "progressing", "completed", "canceled", "error" ]
     }
   }
 },"User": {

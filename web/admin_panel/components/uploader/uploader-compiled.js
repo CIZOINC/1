@@ -7,39 +7,10 @@ angular.module('app.directives').directive('uploader', uploader);
 function uploader($log, _, $timeout, uploaderServ, $stateParams) {
     "use strict";
 
-    function uploadProgress(event) {
-        var dropZone = angular.element(document.querySelector('.drop-zone'));
-        var percent = parseInt(event.loaded / event.total * 100);
-        dropZone.text('Upload: ' + percent + '%');
-    }
-
-    function stateChange(event) {
-        var dropZone = angular.element(document.querySelector('.drop-zone'));
-        if (event.target.readyState == 4) {
-            if (event.target.status == 200) {
-                dropZone.text('Upload successfully finished');
-            } else {
-                dropZone.text('Error occurred with status ' + event.target.status);
-                dropZone.addClass('error');
-                $timeout(function () {
-                    dropZone.text('Drag file or click to select');
-                    dropZone.removeClass('error');
-                }, 3000);
-            }
-        }
-    }
-
     function handleFiles(files, scope) {
         var dropZone = angular.element(document.querySelector('.drop-zone'));
         _.each(files, function (file) {
-
-            if (Number($stateParams.id)) {
-                uploaderServ.sendRequest(Number($stateParams.id), scope.hostLink);
-            }
-            return;
             var timeToRestore = 3000;
-
-            dropZone[0].classList.remove('drop');
 
             if (file.type !== 'video/mp4') {
                 $log.warn('Unsupported file format');
@@ -51,14 +22,27 @@ function uploader($log, _, $timeout, uploaderServ, $stateParams) {
                 }, timeToRestore);
                 return;
             }
+            if (Number($stateParams.id)) {
+                uploaderServ.sendRequest(Number($stateParams.id), file.name, scope.hostLink).then(function (awsData) {
+                    scope.postData = {
+                        url: awsData.data['url'],
+                        key: awsData.data['key'],
+                        expires: awsData.data['Expires'],
+                        policy: awsData.data['policy'],
+                        credential: awsData.data['x-amz-credential'],
+                        algorithm: awsData.data['x-amz-algorithm'],
+                        date: awsData.data['x-amz-date'],
+                        token: awsData.data['x-amz-security-token'],
+                        signature: awsData.data['x-amz-signature']
+                    };
 
-            var xhr = new XMLHttpRequest();
-            var postURL = 'localhost:8080/v1/videos/2/stream_transcode_request';
+                    var form = document.querySelector('form');
+                    //form.submit();
+                });
+            }
 
-            xhr.upload.addEventListener('progress', uploadProgress, false);
-            xhr.onreadystatechange = stateChange;
-            xhr.open('POST', postURL);
-            xhr.send(file);
+            dropZone[0].classList.remove('drop');
+            return;
         });
     }
 
@@ -109,7 +93,8 @@ function uploader($log, _, $timeout, uploaderServ, $stateParams) {
         link: linkFn,
         transclude: true,
         scope: {
-            hostLink: '=link'
+            hostLink: '=link',
+            postData: '@'
         }
     };
 }

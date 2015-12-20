@@ -11,15 +11,17 @@ function uploaderServ($http, $q, $log) {
         sendRequest: sendRequest
     };
 
-    function sendRequest(id, link) {
+    function sendRequest(id, filename, link) {
         return $q(function (resolve, reject) {
             $http({
                 method: 'GET',
-                url: link + '/videos/' + id + '/raw_stream_upload_request'
+                url: link + '/videos/' + id + '/raw_stream_upload_request',
+                params: { filename: filename }
             }).then(success, error);
 
             function success(response) {
                 $log.info('request data received');
+                $log.info(JSON.stringify(response));
                 resolve(response);
             }
 

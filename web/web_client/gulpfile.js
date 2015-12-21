@@ -6,6 +6,7 @@ var ngAnnotate = require('gulp-ng-annotate');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var cssmin = require('gulp-cssmin');
+var templateCache = require('gulp-angular-templatecache');
 
 gulp.task('index_files_gathering', function () {
     "use strict";
@@ -28,8 +29,15 @@ gulp.task('index_files_gathering', function () {
             './**/*-compiled.js'
 
         ])
-            .pipe(angularFilesort()), {addRootSlash: false}))
+        .pipe(angularFilesort()), {addRootSlash: false}))
         .pipe(gulp.dest('.'));
+
+    gulp.src([
+            '!index.html',
+            './**/*.html'
+        ])
+        .pipe(templateCache())
+        .pipe(gulp.dest('common'));
 });
 
 gulp.task('build_package', function () {
@@ -73,13 +81,19 @@ gulp.task('build_package', function () {
         .pipe(gulp.dest('../public/css'));
     gulp.src(['../node_modules/bootstrap/fonts/**.*'])
         .pipe(gulp.dest('../public/fonts'));
+
     gulp.src([
-        '**/*.html',
-        '!index.html'
+        '**/*.json',
+        'fonts/**/*.*',
+        '**/*.svg'
     ])
         .pipe(gulp.dest('../public'));
 });
 
 gulp.task('send_to_ror', function () {
-    gulp.src(['../public/**/*.*']).pipe(gulp.dest('../../ror/public/client'));
+    gulp.src([
+        '../public/**/*.*',
+        '!../public/apanel/**.*',
+        '!../public/**/*.map'
+    ]).pipe(gulp.dest('../../ror/public/client'));
 });

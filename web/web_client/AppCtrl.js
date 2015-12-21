@@ -1,7 +1,6 @@
-//angular.bootstrap(document, ['app']);
-
 angular
     .module('app', [
+        'app.services',
         'app.controls',
         'app.directives',
         'app.routerHelper',
@@ -15,6 +14,7 @@ angular
 /* @ngInject */
 function AppCtrl($scope, routerHelper, routesList, $state) {
     $scope.title = 'Cizo';
+    $scope.hostName = `http://staging.cizo.com`;
     applicationStart(routerHelper, routesList, $state);
 }
 AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state'];

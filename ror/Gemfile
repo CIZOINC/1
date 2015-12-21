@@ -47,8 +47,11 @@ gem 'carrierwave'
 gem "fog-aws"
 gem "fog"
 
+gem 'rest-client', '~> 1.8'
+
 gem 'doorkeeper'
 gem 'devise'
+
 gem 'oauth2', '~> 1.0'
 gem 'omniauth'
 

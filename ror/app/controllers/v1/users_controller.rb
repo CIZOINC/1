@@ -4,8 +4,6 @@ class V1::UsersController < V1::ApiController
   end
 
   def me
-    puts current_resource_owner
-    # puts doorkeeper_token.resource_owner_id
   end
 
   private

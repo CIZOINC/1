@@ -1,7 +1,7 @@
 class V1::VideosController < V1::ApiController
   before_action :set_video, only: [:show, :destroy, :update]
   before_action :set_region, only: [:destroy]
-  # before_action :set_pipeline, only: [:streams]
+  before_action :doorkeeper_authorize!, only:[:index]
 
   def index
     conditions = []

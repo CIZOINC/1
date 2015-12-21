@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
 
-  use_doorkeeper
-  devise_for :users
+
+  use_doorkeeper do
+       controllers tokens: 'custom/tokens'
+  end
+  devise_for :users, controllers: {
+    registrations: "auth/registrations"
+  }
 
   if Rails.env.development? || Rails.env.staging?
     get 'api_docs/index'

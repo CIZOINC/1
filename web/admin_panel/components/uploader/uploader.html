@@ -1,9 +1,8 @@
 <div class="drop-zone">
     Drag file or click to select
 </div>
-<form action="{{postData.url}}" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="success_action_redirect" value="http://examplebucket.s3.amazonaws.com/successful_upload.html" />
-    <input name="key" ng-model="postData.url">
+<form action="https://cizo-assets.s3.amazonaws.com" method="post" enctype="multipart/form-data">
+    <input name="key" ng-model="postData.key">
     <input name="Expires" ng-model="postData.expires">
     <input name="policy" ng-model="postData.policy">
     <input name="x-amz-credential" ng-model="postData.credential">
@@ -12,9 +11,5 @@
     <input name="x-amz-security-token" ng-model="postData.token">
     <input name="x-amz-signature" ng-model="postData.signature">
 
-    <input name="acl" value="public-read" />
-    <input name="Content-Type" value="video/mp4" />
-
     <input type="file" class="file-input"   name="file" />
-    <input type="submit" name="submit" value="Upload to Amazon S3" />
 </form>

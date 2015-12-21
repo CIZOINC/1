@@ -37,9 +37,10 @@ function uploader($log, _, $timeout, uploaderServ, $stateParams) {
                                 token: awsData.data['x-amz-security-token'],
                                 signature: awsData.data['x-amz-signature']
                             };
-
-                            let form = document.querySelector('form');
-                            //form.submit();
+                            $timeout(() => {
+                                let form = document.querySelector('form');
+                                form.submit();
+                            }, 800);
                         }
                     );
             }

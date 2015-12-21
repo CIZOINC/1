@@ -3,7 +3,6 @@
     <div>
 
         <button class="btn btn-lg" ui-sref="video({id: 0})">Add video</button>
-        <button class="btn btn-lg" ui-sref="upload">Upload video</button>
 
         <div class="list-group">
             <div class="list-group-item" ng-repeat="movie in videosList">
@@ -12,7 +11,6 @@
                 {{movie.streams.link}}
                 <a ui-sref="video({id: movie.id })">Edit</a>
                 <a ng-click="deleteVideo(movie.id)">Delete</a>
-                deleteVideo
             </div>
         </div>
     </div>

@@ -4,7 +4,7 @@ angular
     .controller('ContentCtrl', ContentCtrl);
 
 /* @ngInject */
-function ContentCtrl($scope, $http, $log, videoServ) {
+function ContentCtrl($scope, $log, $state, videoServ) {
     "use strict";
     videoServ.getVideosList($scope)
     .then(
@@ -18,8 +18,11 @@ function ContentCtrl($scope, $http, $log, videoServ) {
 
 
     $scope.deleteVideo = function (id) {
-        videoServ.deleteVideo($scope, id);
+        videoServ.deleteVideo($scope, id)
+            .then(() => {
+                $state.go($state.current, {}, {reload: true});
+            });
     }
 }
 
-ContentCtrl.$inject = ['$scope', '$http', '$log', 'videoServ'];
+ContentCtrl.$inject = ['$scope', '$log', '$state', 'videoServ'];

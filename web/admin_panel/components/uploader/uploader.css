@@ -26,3 +26,7 @@ uploader .drop {
 uploader .error {
   background-color: #843534;
 }
+uploader form input {
+  position: absolute;
+  left: 3000px;
+}

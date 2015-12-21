@@ -4,7 +4,7 @@
 angular.module('app.controls').controller('VideoCtrl', VideoCtrl);
 
 /* @ngInject */
-function VideoCtrl($scope, $log, $stateParams, videoServ) {
+function VideoCtrl($scope, $log, $state, $stateParams, videoServ) {
     "use strict";
 
     $scope.mpaaRatingList = ['G', 'PG', 'PG-13', 'R', 'NC-17'];
@@ -30,6 +30,7 @@ function VideoCtrl($scope, $log, $stateParams, videoServ) {
         if (Number($stateParams.id)) {
             videoServ.setVideo($scope, $stateParams.id, $scope.videoItem).then(function () {
                 $log.info('successfully sent');
+                $state.go('content');
             }, function (resp) {
                 $log.info('error happened with status ' + resp.status);
             });
@@ -38,11 +39,17 @@ function VideoCtrl($scope, $log, $stateParams, videoServ) {
             $scope.videoItem.updated_at = new Date();
             $scope.videoItem.category_id = '0';
             $scope.videoItem.tags = [];
-            videoServ.makeVideo($scope, $scope.videoItem);
+            videoServ.makeVideo($scope, $scope.videoItem).then(function () {
+                $state.go('content');
+            });
         }
+    };
+
+    $scope.updateStreams = function () {
+        videoServ.sendStreams($scope, $stateParams.id);
     };
 }
 
-VideoCtrl.$inject = ['$scope', '$log', '$stateParams', 'videoServ'];
+VideoCtrl.$inject = ['$scope', '$log', '$state', '$stateParams', 'videoServ'];
 
 //# sourceMappingURL=VideoCtrl-compiled.js.map

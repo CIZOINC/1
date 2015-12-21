@@ -10,6 +10,13 @@ var templateCache = require('gulp-angular-templatecache');
 
 gulp.task('index_files_gathering', function () {
     "use strict";
+    gulp.src([
+            '!index.html',
+            './**/*.html'
+        ])
+        .pipe(templateCache())
+        .pipe(gulp.dest('common'));
+
     gulp.src('./index.html')
         .pipe(inject(gulp.src([
             '../node_modules/angular/angular-csp.css',
@@ -33,12 +40,7 @@ gulp.task('index_files_gathering', function () {
         .pipe(angularFilesort()), {addRootSlash: false}))
         .pipe(gulp.dest('.'));
 
-    gulp.src([
-        '!index.html',
-        './**/*.html'
-    ])
-        .pipe(templateCache())
-        .pipe(gulp.dest('common'));
+
 });
 
 gulp.task('build_package', function () {

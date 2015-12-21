@@ -17,7 +17,7 @@ function uploader($log, _, $timeout, uploaderServ, $stateParams) {
                 dropZone.text('Unsupported file format');
                 dropZone.addClass('error');
                 $timeout(() => {
-                    dropZone.text('Drag file or click to select');
+                    dropZone.text('Click to select file for uploading');
                     dropZone.removeClass('error');
                 }, timeToRestore);
                 return;
@@ -39,6 +39,11 @@ function uploader($log, _, $timeout, uploaderServ, $stateParams) {
                             };
                             $timeout(() => {
                                 let form = document.querySelector('form');
+                                form[0].onsubmit = function () {
+                                    $log.info('before send streams');
+                                    uploaderServ.sendStreams(Number($stateParams.id), scope.hostLink);
+                                    $log.info('after send streams');
+                                };
                                 form.submit();
                             }, 800);
                         }
@@ -90,6 +95,7 @@ function uploader($log, _, $timeout, uploaderServ, $stateParams) {
             let files = angular.element(document.querySelector('.file-input'))[0].files;
             handleFiles(files, scope);
         });
+
     }
 
 

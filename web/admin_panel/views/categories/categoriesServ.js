@@ -1,5 +1,5 @@
 angular
-    .module('app.services', [])
+    .module('app.services')
     .factory('categoriesServ', categoriesServ);
 
 /* @ngInject */
@@ -7,11 +7,32 @@ function categoriesServ($http, $q, $log) {
     "use strict";
 
     return {
+        getCategoriesList: getCategoriesList,
+
         makeCategory: makeCategory,
         getCategory: getCategory,
         setCategory: setCategory,
         deleteCategory: deleteCategory
     };
+
+    function getCategoriesList(scope) {
+        return $q( (resolve, reject) => {
+            $http({
+                method: 'GET',
+                url: `${scope.hostName}/categories`
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('categories list obtained');
+                resolve(response);
+            }
+
+            function error(response) {
+                $log.info(`categories list obtaining error with status ${response.status}`);
+                reject(response);
+            }
+        });
+    }
 
     function makeCategory(scope, categoryData) {
         return $q( (resolve, reject) => {
@@ -33,11 +54,11 @@ function categoriesServ($http, $q, $log) {
         });
     }
 
-    function getCategory(id) {
+    function getCategory(scope, id) {
         return $q( (resolve, reject) => {
             $http({
                 method: 'GET',
-                url: `${$scope.hostName}/categories/${id}`
+                url: `${scope.hostName}/categories/${id}`
             }).then(success, error);
 
             function success(response) {
@@ -52,11 +73,12 @@ function categoriesServ($http, $q, $log) {
         });
     }
 
-    function setCategory(id) {
+    function setCategory(scope, id, categoryData) {
         return $q( (resolve, reject) => {
             $http({
                 method: 'PUT',
-                url: `${$scope.hostName}/categories/${id}`
+                url: `${scope.hostName}/categories/${id}`,
+                data: categoryData
             }).then(success, error);
 
             function success(response) {
@@ -71,11 +93,11 @@ function categoriesServ($http, $q, $log) {
         });
     }
 
-    function deleteCategory() {
+    function deleteCategory(scope, id) {
         return $q( (resolve, reject) => {
             $http({
                 method: 'DELETE',
-                url: `${$scope.hostName}/categories/${id}`
+                url: `${scope.hostName}/categories/${id}`
             }).then(success, error);
 
             function success(response) {

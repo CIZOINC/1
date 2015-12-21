@@ -35,10 +35,18 @@ angular.module('app.routes', []).constant('routesList', [{
 }, {
     state: 'categories',
     config: {
-        url: '/categories/:id',
+        url: '/categories',
         templateUrl: 'views/categories/categories.html',
         controller: 'CategoriesCtrl',
         controllerAs: 'categories'
+    }
+}, {
+    state: 'category',
+    config: {
+        url: '/category/:id',
+        templateUrl: 'views/categories/category.html',
+        controller: 'CategoryCtrl',
+        controllerAs: 'category'
     }
 }]);
 

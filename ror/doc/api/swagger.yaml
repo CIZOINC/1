@@ -232,7 +232,7 @@ paths:
         required: true
       - name: filename
         in: query
-        description: Filename of file to be uploaded
+        description: 'Filename of file to be uploaded. Must contain only lowercase letters, numbers, hyphens (-), and periods (.). Must start and end with a letter or number. Max length of 25.'
         required: true
         type: string
     get:
@@ -828,13 +828,13 @@ definitions:
     type: object
     required:
       - link
-      - type
+      - stream_type
       - transcode_status
     properties:
       link:
         type: string
         description: 'URL of stream.'
-      type:
+      stream_type:
         type: string
         description: 'Type of stream.'
         enum:

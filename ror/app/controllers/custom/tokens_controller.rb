@@ -1,6 +1,6 @@
 module Custom
   class TokensController < Doorkeeper::ApplicationsController
-    # skip_before_action :verify_authenticity_token
+    skip_before_action :verify_authenticity_token
     def create
       response = authorize_response
       self.headers.merge! response.headers

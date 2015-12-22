@@ -77,10 +77,11 @@ function videoServ($http, $q, $log) {
 
     function setVideo(scope, id, videoData) {
         return $q( (resolve, reject) => {
+            let sendDate = angular.toJson(videoData);
             $http({
                 method: 'PUT',
                 url: `${scope.hostName}/videos/${id}`,
-                data: videoData
+                data: sendDate
             }).then(success, error);
 
             function success(response) {
@@ -114,14 +115,13 @@ function videoServ($http, $q, $log) {
         });
     }
 
-    function uploadHeroImage(scope, id, data) {
+    function uploadHeroImage(scope, id, file) {
         let formData = new FormData();
-        let encodedData = formData.append('heroImage', data);
+        formData.append('file', file);
         return $q( (resolve, reject) => {
-            $http({
-                method: 'POST',
-                url: `${scope.hostName}/videos/${id}/heroimage`,
-                data: encodedData
+            $http.post(`${scope.hostLink}/videos/${id}/hero_image`, formData, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
             }).then(success, error);
 
             function success(response) {

@@ -30,17 +30,6 @@ function uploader($log, _, $timeout, uploaderServ, $stateParams, $http) {
                             let dropZone = angular.element(document.querySelector('.drop-zone'));
                             dropZone.text('File is uploading. Please wait');
                             dropZone.addClass('upload');
-                            scope.postData = {
-                                url: awsData.data['url'],
-                                key: awsData.data['key'],
-                                expires: awsData.data['Expires'],
-                                policy: awsData.data['policy'],
-                                credential: awsData.data['x-amz-credential'],
-                                algorithm: awsData.data['x-amz-algorithm'],
-                                date: awsData.data['x-amz-date'],
-                                token: awsData.data['x-amz-security-token'],
-                                signature: awsData.data['x-amz-signature']
-                            };
 
                             let formData = new FormData();
                             formData.append('key', awsData.data['key']);

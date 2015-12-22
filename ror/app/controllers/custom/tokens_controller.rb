@@ -6,13 +6,21 @@ module Custom
       self.headers.merge! response.headers
       self.response_body = response.body.to_json
       self.status        = response.status
-      puts response.body['access_token']
-      puts params[:username]
-      puts response.status
-      puts User.find_by_email(params[:username]).email
-      user = User.find_by_email(params[:username])
-      puts user
-      user.update_attribute(:token, response.body['access_token'])
+      puts access_token = response.body['access_token']
+      puts refresh_token = response.body['refresh_token']
+      puts username = params[:username]
+      puts grant_type = params[:grant_type]
+
+      if grant_type == 'password'
+        user = User.find_by_email(username)
+        user.update_attributes(access_token: access_token, refresh_token: refresh_token)
+      elsif grant_type == 'refresh_token'
+        new_refresh_token = params[:refresh_token]
+        user = User.find_by_refresh_token(new_refresh_token)
+        user.update_attributes(access_token: access_token, refresh_token: refresh_token) if user
+      end
+
+
     # rescue Errors::DoorkeeperError => e
     #   handle_token_exception e
     end

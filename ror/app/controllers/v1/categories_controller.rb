@@ -1,7 +1,7 @@
 class V1::CategoriesController < V1::ApiController
   before_action :set_category, only: [:show, :update, :destroy]
   before_action :doorkeeper_authorize!
-  # before_action :current_user
+
 
   def show
   end
@@ -52,6 +52,10 @@ class V1::CategoriesController < V1::ApiController
 
   private
 
+  def get_response_code
+    response.code
+  end
+
   def blank
     'can\'t be blank'
   end
@@ -79,6 +83,5 @@ class V1::CategoriesController < V1::ApiController
   def error(status)
     render json:{error: @category.errors.full_messages}, status: status
   end
-
 
 end

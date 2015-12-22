@@ -11,9 +11,62 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20151218205232) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "title",      null: false
+  end
+
+  add_index "categories", ["title"], name: "index_categories_on_title", unique: true, using: :btree
+
+  create_table "streams", force: :cascade do |t|
+    t.string   "link"
+    t.string   "stream_type"
+    t.string   "transcode_status", default: "pending"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.integer  "video_id"
+    t.string   "job_id"
+  end
+
+  create_table "taggings", force: :cascade do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.string   "taggable_type"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "context",       limit: 128
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
+
+  create_table "tags", force: :cascade do |t|
+    t.string  "name"
+    t.integer "taggings_count", default: 0
+  end
+
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+
+  create_table "videos", force: :cascade do |t|
+    t.string   "title"
+    t.string   "description"
+    t.string   "mpaa_rating"
+    t.integer  "category_id"
+    t.boolean  "viewable"
+    t.string   "hero_image_link"
+    t.boolean  "liked"
+    t.integer  "view_count"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "raw_filename"
+    t.string   "hero_image"
+  end
 
 end

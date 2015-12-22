@@ -20,26 +20,28 @@ docker-compose build
 After the build completes, run:
 
 ```
-docker-compose up 
+docker-compose --x-networking up 
 ```
 
-Once the launch has completed (when no additional logs are outputted to the screen), press ctrl-c and then run the following two commands:
+Once the launch has completed (when no additional logs are outputted to the screen), open a new shell and then run the following two commands:
 
 ```
-docker-compose run web rake db:create
-docker-compose run web rake db:migrate
+docker-compose --x-networking run web rake db:create
+docker-compose --x-networking run web rake db:migrate
 ```
+
+Once completed, exit the original shell by pressing `ctrl+c`.
 
 To run the environment, use the following command:
 
 ```
-docker-compose up
+docker-compose --x-networking up
 ```
 
 Migrations can be performed by running the following:
 
 ```
-docker-compose run web rake db:migrate
+docker-compose --x-networking run web rake db:migrate
 ```
 
 Development should be done on seperate feature branches. Pull requests should be submitted to merge the feature branches into develop. 
@@ -58,13 +60,13 @@ ror/feature/SEN-30_Deployment
 Deployment is done using AWS's Elastic Beanstalk. To deploy a new version use the following command to deploy to staging, replacing <version> with the current version (eg v0.0.1).
 
 ```
-eb deploy cizo-staging --label "<version>"  --message "commit `git rev-parse --short HEAD`"
+eb deploy cizo-staging --label "`git describe  --abbrev=0`"  --message "commit `git rev-parse --short HEAD`"
 ```
 
 Once deployment has completed and has been validated, use the following command to deploy that version to production
 
 ```
-eb deploy cizo-production --version "<version>"
+eb deploy cizo-production --version "`git describe  --abbrev=0`"
 ```
 
 ### SSL

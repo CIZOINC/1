@@ -1,12 +1,13 @@
 postgres:
   image: postgres:9.4.4
   ports:
-    - "5432"
+    - "5432:5432"
+  environment:
+    POSTGRES_USER: karetnikov_kirill
+    POSTGRES_PASSWORD: password
 web:
   build: .
   volumes:
     - .:/srv/app/current
   ports: 
     - "80:80"
-  links:
-    - postgres

@@ -1,0 +1,11 @@
+<div>
+    <h2>Videos</h2>
+
+    <div class="list-group">
+        <div class="list-group-item" ng-repeat="movie in videosList">
+            <div class="list-group-item-heading"><b>{{movie.title}}</b></div>
+            <div class="list-group-item-text">{{movie.description}}</div>
+            <a ui-sref="watch({link: movie.streams[0].link })">Watch</a>
+        </div>
+    </div>
+</div>

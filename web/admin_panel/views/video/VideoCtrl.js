@@ -55,10 +55,6 @@ function VideoCtrl($scope, $log, $state, $stateParams, videoServ) {
             });
         }
     };
-
-    $scope.updateStreams = function () {
-        videoServ.sendStreams($scope, $stateParams.id);
-    }
 }
 
 VideoCtrl.$inject = ['$scope', '$log', '$state', '$stateParams', 'videoServ'];

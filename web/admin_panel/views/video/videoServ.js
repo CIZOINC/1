@@ -14,9 +14,7 @@ function videoServ($http, $q, $log) {
         setVideo: setVideo,
         deleteVideo: deleteVideo,
 
-        uploadHeroImage: uploadHeroImage,
-
-        sendStreams: sendStreams
+        uploadHeroImage: uploadHeroImage
     };
 
     function getVideosList(scope) {
@@ -133,26 +131,6 @@ function videoServ($http, $q, $log) {
 
             function error(response) {
                 $log.info(`hero image uploading error with status ${response.status}`);
-                reject(response);
-            }
-        });
-    }
-
-    function sendStreams(scope, id) {
-        return $q( (resolve, reject) => {
-            $http({
-                method: 'POST',
-                url: `${scope.hostName}/videos/${id}/streams`
-            }).then(success, error);
-
-            function success(response) {
-                $log.info('streams called');
-                $log.info(JSON.stringify(response));
-                resolve(response);
-            }
-
-            function error(response) {
-                $log.info(`streams call receiving error with status ${response.status}`);
                 reject(response);
             }
         });

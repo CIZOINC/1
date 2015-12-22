@@ -8,15 +8,26 @@ function uploaderServ($http, $q, $log) {
     "use strict";
 
     return {
-        sendRequest: sendRequest
+        sendRequest: sendRequest,
+        updateStreams: updateStreams
     };
+
+    function processFileName(fileName) {
+        let processedName = fileName.toLowerCase();
+        processedName = processedName.replace(/^[^a-z0-9]/g, '');
+        processedName = processedName.replace(/[^a-z0-9\-\.]/g, '_');
+        if (processedName.length > 25) {
+            processedName = processedName.substr(0, 25);
+        }
+        return processedName;
+    }
 
     function sendRequest(id, filename, link) {
         return $q( (resolve, reject) => {
             $http({
                 method: 'GET',
                 url: `${link}/videos/${id}/raw_stream_upload_request`,
-                params: {filename: filename}
+                params: {filename: processFileName(filename)}
             }).then(success, error);
 
             function success(response) {
@@ -30,6 +41,13 @@ function uploaderServ($http, $q, $log) {
                 reject(response);
             }
         });
+    }
+
+    function updateStreams(id, link) {
+        return $http({
+            method: 'POST',
+            url: `${link}/videos/${id}/streams`
+        })
     }
 
 

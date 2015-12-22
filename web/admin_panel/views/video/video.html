@@ -22,13 +22,29 @@
                 <label class="col-md-offset-3 col-sm-3">Rating</label>
                 <select class="col-sm-6" ng-model="videoItem.mpaa_rating" ng-options="rate for rate in mpaaRatingList" required></select>
             </div>
+            <div class="row">
+                <label class="col-md-offset-3 col-sm-3">Category</label>
+                <select class="col-sm-6" ng-model="videoItem.category_id" required>
+                    <option ng-repeat="option in categoriesList" value="{{option.id}}">{{option.title}}</option>
+                </select>
+            </div>
+            <div class="row">
+                <label class="col-md-offset-3 col-sm-3">Viewable</label>
+                <input type="checkbox" class="col-sm-6" ng-model="videoItem.viewable"></input>
+            </div>
         </div>
         <div class="col-sm-4">
+            <div class="row">
+                <label class="col-sm-3">Video</label>
+            </div>
             <div class="row">
                 <uploader link="hostNameUpload"></uploader>
             </div>
             <div class="row">
-                <button ng-click="updateStreams()">Upload streams</button>
+                <label class="col-sm-3">Hero Image</label>
+            </div>
+            <div class="row">
+                <image-uploader link="hostNameUpload"></image-uploader>
             </div>
         </div>
     </div>

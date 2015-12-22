@@ -1,5 +1,11 @@
 'use strict';
 
+angular.module('app.directives', []);
+
+angular.module('app.services', []);
+
+angular.module('templates', []);
+
 angular.module('app', ['app.services', 'app.controls', 'app.directives', 'app.routerHelper', 'app.wrappers', 'app.routes', 'ngSanitize', 'templates']).controller('AppCtrl', AppCtrl);
 
 /* @ngInject */

@@ -19,13 +19,18 @@ class V1::StreamsController < V1::ApiController
       return
     end
 
-    @video.update_attribute(:raw_filename, filename)
-
-    current_admin = 'admin'
+    current_admin = "admin"
     unless current_admin.nil? #TODO check if oauth2 scope is admin
       @form = bucket.presigned_post(key: file_folder + filename, expires: Time.now + 300)
     else
       render nothing: true, status: 403
+      return
+    end
+
+    skip_spaces!(filename)
+    unless @video.update(raw_filename: filename)
+      render json: {errors: @video.errors.full_messages}
+      return
     end
 
     # body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
@@ -129,6 +134,10 @@ class V1::StreamsController < V1::ApiController
   end
 
   private
+
+  def skip_spaces!(filename)
+    filename.squish!.gsub!(" ","_")
+  end
 
   def define_hls_presets
     output_key_hls = @video.raw_filename

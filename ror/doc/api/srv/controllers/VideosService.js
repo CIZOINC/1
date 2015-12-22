@@ -9,15 +9,15 @@ exports.videosGet = function(category, tags, createdBefore, createdAfter) {
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
-      "type" : "aeiou"
+      "stream_type" : "aeiou"
     } ],
-    "created_at" : "2015-12-19T02:10:53.523+0000",
+    "created_at" : "2015-12-22T01:47:12.359+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "tags" : [ "aeiou" ],
     "viewable" : true,
-    "updated_at" : "2015-12-19T02:10:53.523+0000",
+    "updated_at" : "2015-12-22T01:47:12.359+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",
@@ -38,8 +38,8 @@ exports.videosPost = function(body) {
   
   examples['application/json'] = {
   "category_id" : 123,
-  "updated_at" : "2015-12-19T02:10:53.527+0000",
-  "created_at" : "2015-12-19T02:10:53.527+0000",
+  "updated_at" : "2015-12-22T01:47:12.363+0000",
+  "created_at" : "2015-12-22T01:47:12.363+0000",
   "description" : "aeiou",
   "id" : 123,
   "title" : "aeiou",
@@ -61,15 +61,15 @@ exports.videosVideoIdGet = function(videoId) {
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
-    "type" : "aeiou"
+    "stream_type" : "aeiou"
   } ],
-  "created_at" : "2015-12-19T02:10:53.528+0000",
+  "created_at" : "2015-12-22T01:47:12.364+0000",
   "description" : "aeiou",
   "title" : "aeiou",
   "liked" : true,
   "tags" : [ "aeiou" ],
   "viewable" : true,
-  "updated_at" : "2015-12-19T02:10:53.528+0000",
+  "updated_at" : "2015-12-22T01:47:12.364+0000",
   "category_id" : 123,
   "id" : 123,
   "hero_image_link" : "aeiou",
@@ -91,15 +91,15 @@ exports.videosVideoIdPut = function(body, videoId) {
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
-    "type" : "aeiou"
+    "stream_type" : "aeiou"
   } ],
-  "created_at" : "2015-12-19T02:10:53.531+0000",
+  "created_at" : "2015-12-22T01:47:12.366+0000",
   "description" : "aeiou",
   "title" : "aeiou",
   "liked" : true,
   "tags" : [ "aeiou" ],
   "viewable" : true,
-  "updated_at" : "2015-12-19T02:10:53.531+0000",
+  "updated_at" : "2015-12-22T01:47:12.366+0000",
   "category_id" : 123,
   "id" : 123,
   "hero_image_link" : "aeiou",

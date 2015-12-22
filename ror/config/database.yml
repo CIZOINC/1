@@ -12,7 +12,7 @@ default: &default
   username: karetnikov_kirill
   password: password
   host: ror_postgres_1
-  port: 5432
+  port: 5433
 
 development:
   <<: *default

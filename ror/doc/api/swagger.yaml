@@ -4,6 +4,7 @@ info:
   description: API for Cizo
   version: 1.0.0
 host: api.cizo.com
+basePath: /
 schemes:
   - https
 securityDefinitions:
@@ -232,7 +233,7 @@ paths:
         required: true
       - name: filename
         in: query
-        description: Filename of file to be uploaded
+        description: 'Filename of file to be uploaded. Must contain only lowercase letters, numbers, hyphens (-), and periods (.). Must start and end with a letter or number. Max length of 25.'
         required: true
         type: string
     get:
@@ -285,7 +286,7 @@ paths:
         type: integer
         required: true
     post:
-      description: "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'complete', 'canceled', or 'error' for the update to succeed"
+      description: "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'completed', 'canceled', or 'error' for the update to succeed"
       tags:
         - Streams
       security:
@@ -828,13 +829,13 @@ definitions:
     type: object
     required:
       - link
-      - type
+      - stream_type
       - transcode_status
     properties:
       link:
         type: string
         description: 'URL of stream.'
-      type:
+      stream_type:
         type: string
         description: 'Type of stream.'
         enum:
@@ -845,9 +846,10 @@ definitions:
         description: 'Transcode status. This property is only visible to oauth2 scope of "admin"'
         readOnly: true
         enum:
+          - 'pending'
           - 'submitted'
           - 'progressing'
-          - 'complete'
+          - 'completed'
           - 'canceled'
           - 'error'
   User:

@@ -179,6 +179,8 @@ crashlytics-build.properties
 fabric.properties
 ror/node_modules/
 ror/gulpfile-compiled.js
+web/node_modules/
+
 ror/gulpfile-compiled.js.map
 ror/web_client/views/main/*-compiled.js.map
 *-compiled.js.map
@@ -190,3 +192,4 @@ gulpfile-compiled.js
 web/node_modules/
 web/public/all.min.js
 web/public/
+node_modules/

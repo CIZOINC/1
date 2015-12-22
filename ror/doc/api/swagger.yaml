@@ -4,6 +4,7 @@ info:
   description: API for Cizo
   version: 1.0.0
 host: api.cizo.com
+basePath: /
 schemes:
   - https
 securityDefinitions:

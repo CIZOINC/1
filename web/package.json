@@ -2,7 +2,7 @@
   "name": "cizo",
   "version": "0.0.1",
   "description": "trailers watcher",
-  "main": "index.js",
+  "main": "AppCtrl.js",
   "directories": {
     "doc": "doc",
     "test": "test"
@@ -16,15 +16,20 @@
     "gulp": "^3.9.0",
     "gulp-angular-filesort": "^1.1.1",
     "gulp-angular-templatecache": "^1.8.0",
+    "gulp-babel": "^6.1.1",
     "gulp-concat": "^2.6.0",
     "gulp-cssmin": "^0.1.7",
     "gulp-inject": "^3.0.0",
+    "gulp-less": "^3.0.5",
     "gulp-ng-annotate": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-rimraf": "^0.2.0",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.1",
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
+    "run-sequence": "^1.1.5",
     "ui-router": "^0.2.15"
   },
   "scripts": {

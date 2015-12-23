@@ -48,9 +48,9 @@ class V1::VideosController < V1::ApiController
   def destroy
     s3 = Aws::S3::Resource.new(region: @region)
     bucket = s3.bucket('cizo-assets')
-    raw_folder = (Rails.env == 'production') ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
-    stream_folder = (Rails.env == 'production') ? "production/stream/#{@video.id}" : "staging/stream/#{@video.id}"
-    hero_image = (Rails.env == 'production') ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
+    raw_folder = Rails.env.production? ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
+    stream_folder = Rails.env.production? ? "production/stream/#{@video.id}" : "staging/stream/#{@video.id}"
+    hero_image = Rails.env.production? ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
     if @video.destroy
       bucket.objects(prefix: raw_folder).batch_delete!
       bucket.objects(prefix: stream_folder).batch_delete!
@@ -80,7 +80,8 @@ class V1::VideosController < V1::ApiController
     @video = Video.find(params[:video_id])
     @video.hero_image = params[:file]
     @video.save(validate: false)
-    render json: {}, status: 202
+    @video.update_column(:hero_image_link, @video.hero_image.url)
+    render nothing: true, status: 202
   end
 
   private
@@ -94,7 +95,7 @@ class V1::VideosController < V1::ApiController
   end
 
   def videos_params
-    params.permit(:id, :title, :description, :mpaa_rating, :category_id, :tag_list)
+    params.permit(:id, :title, :description, :mpaa_rating, :viewable, :hero_image_link, :liked, :category_id, :tag_list)
   end
 
   def set_video

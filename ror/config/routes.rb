@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
 
   use_doorkeeper do
-       controllers tokens: 'custom/tokens'
+       controllers tokens: 'doorkeeper/tokens'
   end
   devise_for :users, controllers: {
     registrations: "auth/registrations"
@@ -27,6 +27,9 @@ Rails.application.routes.draw do
 
     resources :users do
       get :me, on: :collection
+      delete :me, on: :collection, to: "users#destroy_self_account"
+      put :me, on: :collection, to: "users#update_self_account"
+      get 'me/videos/likes',  to: "users#likes", on: :collection
     end
     resources :categories
   end

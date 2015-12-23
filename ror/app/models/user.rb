@@ -2,6 +2,10 @@ class User < ActiveRecord::Base
   # Include default devise modules.
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  # scope :admin, -> {where(is_admin: false)  }
+  # scope :public, -> {where(is_admin: false)}
+
   # after_save :update_token
   # #
   # def update_token

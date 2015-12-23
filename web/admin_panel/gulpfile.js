@@ -154,9 +154,16 @@ gulp.task('send_to_ror', function () {
     ]).pipe(gulp.dest('../../ror/public/admin_panel'));
 });
 
+gulp.task('clean_temp', function () {
+    gulp.src([
+        './temp'
+    ]).pipe(rimraf());
+});
+
 gulp.task('default', function () {
     "use strict";
-    runSequence([
+    runSequence('clean_temp',
+    [
         'collect_css',
         'collect_html',
         'compile_js'

@@ -194,3 +194,9 @@ web/public/all.min.js
 web/public/
 node_modules/
 ror/public/client/apanel/
+web/admin_panel/*-compiled.js
+web/admin_panel/*.css
+web/admin_panel/**/*.css
+web/admin_panel/temp/
+web/admin_panel/**/*-compiled.js
+web/admin_panel/common/templates.js

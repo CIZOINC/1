@@ -15,6 +15,7 @@ class Video < ActiveRecord::Base
   scope :created_after, -> (date){where('created_at>?', date) }
   scope :created_before, -> (date){where('created_at<?', date) }
 
+  scope :trending, -> (){ where(viewable: true).order(view_count: :desc).limit(10) }
 
   def increase_view_count!
     update(view_count: view_count.to_i.succ)

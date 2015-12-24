@@ -26,6 +26,8 @@ Rails.application.routes.draw do
       post :like, to: "videos#like"
       delete :like, to: "videos#dislike"
     end
+    
+    get :trending, to: "videos#trending"
 
     resources :users do
       get :me, on: :collection

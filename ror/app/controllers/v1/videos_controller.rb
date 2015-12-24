@@ -3,10 +3,10 @@ class V1::VideosController < V1::ApiController
   before_action :set_video_by_video_id, only: [:hero_image, :like, :dislike]
   before_action :set_region, only: [:destroy]
 
-  skip_before_action :check_if_logged_in, only:[:index, :show, :create]
-  skip_before_action :logged_in_as_admin?, only: [:index, :show, :like, :dislike]
-  skip_before_action :logged_in_as_user?, only: [:index, :show, :create]
-  before_action :user_age_meets_requirement, only: [:index, :show], if: :current_user
+  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :trending]
+  skip_before_action :logged_in_as_admin?, only: [:index, :show, :like, :dislike, :trending]
+  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :trending]
+  before_action :user_age_meets_requirement, only: [:index, :show, :trending], if: :current_user
 
   def index
     conditions = []
@@ -103,6 +103,11 @@ class V1::VideosController < V1::ApiController
     @like = Like.find_by(user_id: @current_user.id, video_id: @video.id)
     @like.destroy if @like
     render nothing: true, status: 204
+  end
+
+  def trending
+    @videos = Video.trending
+    render :index
   end
 
   private

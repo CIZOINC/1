@@ -1,8 +1,8 @@
 class V1::UsersController < V1::ApiController
   before_action :set_user, only: [:show, :update, :destroy]
-  before_action :current_user, only: [:me, :update_self_account, :destroy_self_account, :index, :show, :update]
-  before_action :admin?, only: [:index, :update, :destroy, :show]
-
+  skip_before_action :check_if_logged_in, only:[:index, :create, :update, :destroy]
+  skip_before_action :logged_in_as_admin?, only: [:index, :me, :update_self_account, :destroy_self_account]
+  skip_before_action :logged_in_as_user?, only: [:index, :create, :update, :destroy]
 
   def index
     @users = User.all
@@ -38,10 +38,6 @@ class V1::UsersController < V1::ApiController
     end
   end
 
-  def likes
-
-  end
-
   private
 
   def users_params
@@ -50,15 +46,6 @@ class V1::UsersController < V1::ApiController
 
   def set_user
       @user = User.find(params[:id])
-  end
-
-  def admin?
-    render json: {errors: "Access denied"}, status: 403 unless @current_user.is_admin
-  end
-
-  def current_user
-    @current_user = User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
-    (render json: {errors: "Should be logged in"}, status: 404) && return  if @current_user.nil?
   end
 
 end

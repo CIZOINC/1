@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151223110600) do
+ActiveRecord::Schema.define(version: 20151224101945) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,15 @@ ActiveRecord::Schema.define(version: 20151223110600) do
   end
 
   add_index "categories", ["title"], name: "index_categories_on_title", unique: true, using: :btree
+
+  create_table "likes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "video_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "likes", ["user_id", "video_id"], name: "index_likes_on_user_id_and_video_id", unique: true, using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false
@@ -73,6 +82,8 @@ ActiveRecord::Schema.define(version: 20151223110600) do
     t.integer  "video_id"
     t.string   "job_id"
   end
+
+  add_index "streams", ["video_id", "stream_type"], name: "index_streams_on_video_id_and_stream_type", unique: true, using: :btree
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"

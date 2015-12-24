@@ -1,7 +1,8 @@
 class V1::CategoriesController < V1::ApiController
   before_action :set_category, only: [:show, :update, :destroy]
-  before_action :doorkeeper_authorize!
-
+  skip_before_action :check_if_logged_in, only:[:index, :create, :update, :destroy]
+  skip_before_action :logged_in_as_admin?, only: [:index]
+  skip_before_action :logged_in_as_user?, only: [:index, :create, :update, :destroy]
 
   def show
   end
@@ -12,42 +13,30 @@ class V1::CategoriesController < V1::ApiController
 
   def create
     @category = Category.new(categories_params)
-    if current_admin.nil?
-      status_401
-    else
-      if @category.save
-        render :show, status: 200, location: @category
-      elsif @category.errors.added?(:title, blank)
-        error(500)
-      elsif @category.errors.added?(:title, taken)
-        error(409)
-      end
+    if @category.save
+      render :show, status: 200, location: @category
+    elsif @category.errors.added?(:title, blank)
+      error(500)
+    elsif @category.errors.added?(:title, taken)
+      error(409)
     end
   end
 
   def update
-    if current_admin.nil?
-      status_401
+    if @category.update_attributes(categories_params)
+      render :show, status: 200, location: @category
+    elsif @category.errors.added?(:title, blank)
+      error(500)
+    elsif @category.errors.added?(:title, taken)
+      error(409)
     else
-      if @category.update_attributes(categories_params)
-        render :show, status: 200, location: @category
-      elsif @category.errors.added?(:title, blank)
-        error(500)
-      elsif @category.errors.added?(:title, taken)
-        error(409)
-      else
-        render nothing: true, status: 500
-      end
+      render nothing: true, status: 500
     end
   end
 
   def destroy
-    if current_admin.nil?
-      status_401
-    else
-      @category.destroy
-      head :no_content
-    end
+    @category.destroy
+    head :no_content
   end
 
   private
@@ -68,16 +57,8 @@ class V1::CategoriesController < V1::ApiController
     @category = Category.find(params[:id])
   end
 
-  def current_admin
-    "nil"
-  end
-
   def categories_params
     params.require(:category).permit(:id, :title)
-  end
-
-  def status_401
-    render json: {errors: "Access denied"}, status: 401
   end
 
   def error(status)

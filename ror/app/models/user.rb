@@ -3,6 +3,10 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  def user_age_meets_requirement!
+    (self.birthday.to_date < 18.years.ago) ? true : false
+  end
+
   # scope :admin, -> {where(is_admin: false)  }
   # scope :public, -> {where(is_admin: false)}
 

@@ -1,7 +1,12 @@
 class V1::VideosController < V1::ApiController
   before_action :set_video, only: [:show, :destroy, :update]
+  before_action :set_video_by_video_id, only: [:hero_image, :like, :dislike]
   before_action :set_region, only: [:destroy]
-  before_action :doorkeeper_authorize!, only:[:index]
+
+  skip_before_action :check_if_logged_in, only:[:index, :show, :create]
+  skip_before_action :logged_in_as_admin?, only: [:index, :show, :like, :dislike]
+  skip_before_action :logged_in_as_user?, only: [:index, :show, :create]
+  before_action :user_age_meets_requirement, only: [:index, :show], if: :current_user
 
   def index
     conditions = []
@@ -23,18 +28,21 @@ class V1::VideosController < V1::ApiController
     end
     conditions = conditions.join(" AND ")
 
+
     @videos = Video.where(conditions, arguments)
 
     unless params[:tags].blank?
       @videos = @videos.tagged_with(params[:tags])
     end
+
+    if @current_user && @current_user.is_admin
+      @videos = @videos.order(created_at: :desc)
+    else
+      @videos = @videos.limit(1000).where(viewable: true)
+    end
   end
 
   def show
-    current_user = nil
-    if (current_user.nil? && @video.mpaa_rating > "PG") || !user_age_meets_requirement
-      @access_to_stream_denied = true
-    end
   end
 
   def update
@@ -58,11 +66,11 @@ class V1::VideosController < V1::ApiController
         bucket.objects(prefix: hero_image).batch_delete!
       end
     end
-
     head :no_content
   end
 
   def create
+    @user_age_meets_requirement = true
     @video = Video.new(videos_params)
     if @video.save
       ActiveRecord::Base.transaction do
@@ -77,16 +85,30 @@ class V1::VideosController < V1::ApiController
   end
 
   def hero_image
-    @video = Video.find(params[:video_id])
     @video.hero_image = params[:file]
     @video.save(validate: false)
     render json: {}, status: 202
   end
 
+  def like
+    @like = Like.find_or_create_by(user_id: @current_user.id, video_id: @video.id)
+    if @like
+      render nothing: true, status: 204
+    else
+      render nothing: true, status: 404
+    end
+  end
+
+  def dislike
+    @like = Like.find_by(user_id: @current_user.id, video_id: @video.id)
+    @like.destroy if @like
+    render nothing: true, status: 204
+  end
+
   private
 
   def user_age_meets_requirement
-    true
+    @user_age_meets_requirement = @current_user.is_admin ? true : @current_user.user_age_meets_requirement!
   end
 
   def set_region
@@ -99,6 +121,10 @@ class V1::VideosController < V1::ApiController
 
   def set_video
     @video = Video.find(params[:id])
+  end
+
+  def set_video_by_video_id
+    @video = Video.find(params[:video_id])
   end
 
 end

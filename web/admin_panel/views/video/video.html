@@ -1,39 +1,39 @@
 <div class="container page">
     <h2>{{::screenTitle}} Video</h2>
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-md-8 col-xs-12">
             <div class="row">
-                <label class="col-md-offset-3 col-sm-3">Created</label>
-                <span class="col-sm-6">{{::createdDate}}</span>
+                <label class="col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-xs-12">Created</label>
+                <span class="col-sm-6 col-xs-12">{{::createdDate}}</span>
             </div>
             <div class="row">
-                <label class="col-md-offset-3 col-sm-3">Last Update</label>
-                <span class="col-sm-6">{{::updatedDate}}</span>
+                <label class="col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-xs-12">Last Update</label>
+                <span class="col-sm-6 col-xs-12">{{::updatedDate}}</span>
             </div>
             <div class="row">
-                <label class="col-md-offset-3 col-sm-3">Title</label>
-                <input class="col-sm-6" ng-model="videoItem.title" required>
+                <label class="col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-xs-12">Title</label>
+                <input class="col-sm-6 col-xs-12" ng-model="videoItem.title" required>
             </div>
             <div class="row">
-                <label class="col-md-offset-3 col-sm-3">Description</label>
-                <textarea class="col-sm-6" ng-model="videoItem.description" required></textarea>
+                <label class="col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-xs-12">Description</label>
+                <textarea class="col-sm-6 col-xs-12" ng-model="videoItem.description" required></textarea>
             </div>
             <div class="row">
-                <label class="col-md-offset-3 col-sm-3">Rating</label>
-                <select class="col-sm-6" ng-model="videoItem.mpaa_rating" ng-options="rate for rate in mpaaRatingList" required></select>
+                <label class="col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-xs-12">Rating</label>
+                <select class="col-sm-6 col-xs-12" ng-model="videoItem.mpaa_rating" ng-options="rate for rate in mpaaRatingList" required></select>
             </div>
             <div class="row">
-                <label class="col-md-offset-3 col-sm-3">Category</label>
-                <select class="col-sm-6" ng-model="videoItem.category_id" required>
+                <label class="col-lg-offset-2 col-md-offset-1 col-xs-offset-0 col-sm-3 col-xs-12">Category</label>
+                <select class="col-sm-6 col-xs-12" ng-model="videoItem.category_id" required>
                     <option ng-repeat="option in categoriesList" value="{{option.id}}">{{option.title}}</option>
                 </select>
             </div>
             <div class="row">
-                <label class="col-md-offset-3 col-sm-3">Viewable</label>
-                <input type="checkbox" class="col-sm-6" ng-model="videoItem.viewable"></input>
+                <label class="col-lg-offset-2 col-md-offset-1 col-sm-3">Viewable</label>
+                <input type="checkbox" class="col-sm-7 col-xs-12" ng-model="videoItem.viewable"></input>
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4 col-xs-12">
             <div class="row">
                 <label class="col-sm-3">Video</label>
             </div>

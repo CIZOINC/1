@@ -201,3 +201,4 @@ web/admin_panel/temp/
 web/admin_panel/**/*-compiled.js
 web/admin_panel/common/templates.js
 web/web_client/temp/
+web/web_client/**/*-compiled.js

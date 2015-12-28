@@ -3,9 +3,9 @@ class V1::VideosController < V1::ApiController
   before_action :set_video_by_video_id, only: [:hero_image, :like, :dislike]
   before_action :set_region, only: [:destroy]
 
-  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :trending]
+  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update, :destroy, :hero_image, :trending]
   skip_before_action :logged_in_as_admin?, only: [:index, :show, :like, :dislike, :trending]
-  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :trending]
+  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :update, :destroy, :hero_image, :trending]
   before_action :user_age_meets_requirement, only: [:index, :show, :trending], if: :current_user
 
   def index
@@ -70,7 +70,6 @@ class V1::VideosController < V1::ApiController
   end
 
   def create
-    @user_age_meets_requirement = true
     @video = Video.new(videos_params)
     if @video.save
       ActiveRecord::Base.transaction do
@@ -87,22 +86,22 @@ class V1::VideosController < V1::ApiController
   def hero_image
     @video.hero_image = params[:file]
     @video.save(validate: false)
-    render json: {}, status: 202
+    nothing 202
   end
 
   def like
     @like = Like.find_or_create_by(user_id: @current_user.id, video_id: @video.id)
     if @like
-      render nothing: true, status: 204
+      nothing 204
     else
-      render nothing: true, status: 404
+      nothing 404
     end
   end
 
   def dislike
     @like = Like.find_by(user_id: @current_user.id, video_id: @video.id)
     @like.destroy if @like
-    render nothing: true, status: 204
+    nothing 204
   end
 
   def trending
@@ -130,6 +129,10 @@ class V1::VideosController < V1::ApiController
 
   def set_video_by_video_id
     @video = Video.find(params[:video_id])
+  end
+
+  def nothing(status)
+    render nothing: true, status: status
   end
 
 end

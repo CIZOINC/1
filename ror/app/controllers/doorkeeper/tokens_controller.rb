@@ -2,7 +2,7 @@ module Doorkeeper
   class TokensController < Doorkeeper::ApplicationsController
     skip_before_action :verify_authenticity_token
     protect_from_forgery with: :null_session
-    
+
     def create
       response = authorize_response
       self.headers.merge! response.headers
@@ -16,11 +16,17 @@ module Doorkeeper
 
       if grant_type == 'password'
         user = User.find_by_email(username)
-        user.update_attributes(access_token: access_token, refresh_token: refresh_token)
+        user.update_columns(access_token: access_token, refresh_token: refresh_token)
+        # destroy previous access tokens
+        #TODO destroy expired and revoked tokens
+        destroy_previous_tokens(user)
       elsif grant_type == 'refresh_token'
         previous_refresh_token = params[:refresh_token]
         user = User.find_by_refresh_token(previous_refresh_token)
-        user.update_attributes(access_token: access_token, refresh_token: refresh_token) if user
+        user.update_columns(access_token: access_token, refresh_token: refresh_token) if user
+        # destroy previous access tokens
+        #TODO destroy expired and revoked tokens
+        destroy_previous_tokens(user)
       end
 
 
@@ -59,6 +65,10 @@ module Doorkeeper
 
     def authorize_response
       @authorize_response ||= strategy.authorize
+    end
+
+    def destroy_previous_tokens(user)
+      puts Doorkeeper::AccessToken.where(resource_owner_id: user.id).where.not(id: Doorkeeper::AccessToken.last.id).destroy_all
     end
 
   end

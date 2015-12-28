@@ -1,8 +1,8 @@
 class V1::UsersController < V1::ApiController
   before_action :set_user, only: [:show, :update, :destroy]
-  skip_before_action :check_if_logged_in, only:[:index, :create, :update, :destroy]
+  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update]
   skip_before_action :logged_in_as_admin?, only: [:index, :me, :update_self_account, :destroy_self_account]
-  skip_before_action :logged_in_as_user?, only: [:index, :create, :update, :destroy]
+  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :update]
 
   def index
     @users = User.all
@@ -19,14 +19,13 @@ class V1::UsersController < V1::ApiController
   def show
   end
 
-  def destroy
-  end
-
   def me
   end
 
   def destroy_self_account
     if @current_user.destroy
+      Doorkeeper::AccessToken.where(resource_owner_id: @current_user).destroy_all
+      head :no_content
     end
   end
 

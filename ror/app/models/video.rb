@@ -4,6 +4,7 @@ class Video < ActiveRecord::Base
 
   belongs_to :category
   has_many :streams
+  has_many :likes
 
   validates :title, presence: true
   validates :description, presence: true
@@ -15,10 +16,10 @@ class Video < ActiveRecord::Base
   scope :created_after, -> (date){where('created_at>?', date) }
   scope :created_before, -> (date){where('created_at<?', date) }
 
-  scope :trending, -> (){ where(viewable: true).order(view_count: :desc).limit(10) }
+  scope :trending, -> (){ where(viewable: true).order(view_count: :desc) }
 
   def increase_view_count!
-    update(view_count: view_count.to_i.succ)
+    update_column(:view_count, view_count.to_i.succ)
   end
 
 end

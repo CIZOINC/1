@@ -16,9 +16,9 @@ class V1::CategoriesController < V1::ApiController
     if @category.save
       render :show, status: 200, location: @category
     elsif @category.errors.added?(:title, blank)
-      error(500)
+      error 500
     elsif @category.errors.added?(:title, taken)
-      error(409)
+      error 409
     end
   end
 
@@ -26,11 +26,9 @@ class V1::CategoriesController < V1::ApiController
     if @category.update_attributes(categories_params)
       render :show, status: 200, location: @category
     elsif @category.errors.added?(:title, blank)
-      error(500)
+      error 500
     elsif @category.errors.added?(:title, taken)
-      error(409)
-    else
-      render nothing: true, status: 500
+      error 409
     end
   end
 
@@ -40,10 +38,6 @@ class V1::CategoriesController < V1::ApiController
   end
 
   private
-
-  def get_response_code
-    response.code
-  end
 
   def blank
     'can\'t be blank'

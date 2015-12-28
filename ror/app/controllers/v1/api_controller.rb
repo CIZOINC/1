@@ -7,14 +7,11 @@ class V1::ApiController < ApplicationController
   before_action :logged_in_as_admin?
   before_action :get_info, if: :current_user
 
-
-
-
   private
 
   def get_info
-    puts @current_user.id
-    puts @current_user.birthday.to_date < 18.years.ago
+    # puts "Current user ID: #{@current_user.id}"
+    # puts @current_user.birthday.to_date < 18.years.ago
   end
 
   def set_tokens_to_session

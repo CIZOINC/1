@@ -9,10 +9,10 @@ Doorkeeper.configure do
   #   #   User.find_by_id(session[:user_id]) || redirect_to(new_user_session_url)
   #   current_user
   # end
-  default_scopes :public
+  # default_scopes :public
 
   # other available scopes
-  optional_scopes :admin
+  # optional_scopes :admin
 
   resource_owner_from_credentials do |routes|
      user = User.find_for_database_authentication(email: params[:username])

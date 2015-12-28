@@ -23,10 +23,10 @@ Rails.application.routes.draw do
       post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
       post :streams, to: "streams#create"
       post :hero_image
-      post :like, to: "videos#like"
+      put :like, to: "videos#like"
       delete :like, to: "videos#dislike"
     end
-    
+
     get :trending, to: "videos#trending"
 
     resources :users do

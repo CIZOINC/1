@@ -21,6 +21,9 @@ angular
 function AppCtrl($scope, routerHelper, routesList, $state) {
     $scope.title = 'Cizo';
     $scope.hostName = `http://staging.cizo.com`;
+
+    $scope.categoriesList = [];
+
     applicationStart(routerHelper, routesList, $state);
 }
 AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state'];

@@ -5,43 +5,41 @@ angular
 
 
 /* @ngInject */
-function player($log, moment) {
+function player($log, moment, _, $sce) {
     "use strict";
-
-    function clickScreen() {
-
-    }
 
     function linkFn(scope, element, attrs) {
         function togglePlayPause() {
-            let screen = angular.element(document.querySelector("video.screen"))[0];
-            let playBtn = angular.element(document.querySelector('div.play-button span'))[0];
+            let screen = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] video`))[0];
+            let playBtn = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] div.play-button span`))[0];
             if (screen.paused) {
                 screen.play();
                 $log.info('start playing');
                 playBtn.classList.add('glyphicon-play');
                 playBtn.classList.remove('glyphicon-pause');
-                scope.$apply();
+
+                scope.desriptionVisible = false;
+
+                //scope.$apply();
             } else {
                 screen.pause();
                 $log.info('set to pause');
                 playBtn.classList.add('glyphicon-pause');
                 playBtn.classList.remove('glyphicon-play');
-                scope.$apply();
+                //scope.$apply();
+
+                scope.desriptionVisible = true;
             }
 
         }
 
-        let screen = angular.element(document.querySelector('video.screen'));
-        screen.on('click', clickScreen);
-        screen.on('timeupdate', function () {
-            scope.timePassed = moment().startOf('year').add(screen[0].currentTime, 's').format('mm:ss');
-            scope.duration = moment().startOf('year').add(screen[0].duration, 's').format('mm:ss');
-            scope.$apply();
-        });
+        if (scope.video.streams) {
+            let stream = _.find(scope.video.streams, (stream) => stream.stream_type === 'mp4');
+            scope.videoLink = $sce.trustAs($sce.RESOURCE_URL, stream.link);
+        }
 
-        let likeBtn = angular.element(document.querySelector('div.play-button span'));
-        likeBtn.on('click', togglePlayPause);
+        scope.togglePlayPause = togglePlayPause;
+        scope.desriptionVisible = true;
     }
 
     return {
@@ -50,8 +48,8 @@ function player($log, moment) {
         link: linkFn,
         transclude: true,
         scope: {
-            width: '@'
+            video: '=video'
         }
     }
 }
-player.$inject = ['$log', 'moment'];
+player.$inject = ['$log', 'moment', 'lodash', '$sce'];

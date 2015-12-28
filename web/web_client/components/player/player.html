@@ -1,12 +1,28 @@
-<div class="container">
-    <video class="screen" width="{{width}}" autoplay  ng-transclude></video>
-    <div class="like-button">
-        <span class="glyphicon glyphicon-heart-empty"></span>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 no-padding" video-id="{{::video.id}}">
+            <video class="col-xs-12 no-padding"  preload='none'>
+                <source src="">
+                <source src="{{::videoLink}}" type="video/mp4">
+            </video>
+            <div class="like-button">
+                <span class="glyphicon glyphicon-heart-empty"></span>
+            </div>
+            <div class="play-button">
+                <span class="glyphicon glyphicon-play" ng-click="togglePlayPause()"></span>
+            </div>
+            <div class="info-panel">
+                <span>{{timePassed}} / {{duration}}</span>
+            </div>
+        </div>
     </div>
-    <div class="play-button">
-        <span class="glyphicon glyphicon-play"></span>
+    <div class="row">
+        <div class="description" style="color: white">
+            {{::video.title}}
+            <br>
+            {{::video.description}}
+        </div>
     </div>
-    <div class="info-panel">
-        <span>{{timePassed}} / {{duration}}</span>
-    </div>
+
+
 </div>

@@ -19,7 +19,8 @@ var thirdPartyJS = [
     '../node_modules/bootstrap/dist/js/bootstrap.js',
     '../node_modules/ui-router/release/angular-ui-router.js',
     '../node_modules/angular-sanitize/angular-sanitize.js',
-    '../node_modules/moment/moment.js'
+    '../node_modules/moment/moment.js',
+    '../node_modules/lodash/index.js'
 ];
 var thirdPartyCSS = [
     '../node_modules/angular/angular-csp.css',

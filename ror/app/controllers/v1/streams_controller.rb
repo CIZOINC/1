@@ -17,14 +17,19 @@ class V1::StreamsController < V1::ApiController
     s3 = Aws::S3::Resource.new(region: @region)
     bucket = s3.bucket(bucket_name)
     file_folder = Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
+
     if (filename = params[:filename]).blank?
       render json: {errors:"filename required"}, status: 403
       return
     end
 
-    @video.update_attribute(:raw_filename, filename)
-    @form = bucket.presigned_post(key: file_folder + filename, expires: Time.now + 300)
+    apply_format!(filename)
+    unless @video.update(raw_filename: filename)
+      render json: {errors: @video.errors.full_messages}
+      return
+    end
 
+    @form = bucket.presigned_post(key: file_folder + filename, expires: Time.now + 300)
 
     # obj = bucket.object(file_folder+filename)
     # @url = URI.parse(obj.presigned_url(:put, key: file_folder + filename))
@@ -131,6 +136,11 @@ class V1::StreamsController < V1::ApiController
   end
 
   private
+
+  def apply_format!(filename)
+    filename.squish!.gsub!(" ","_")
+    filename.downcase!
+  end
 
   def define_hls_presets
     output_key_hls = @video.raw_filename

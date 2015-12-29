@@ -86,6 +86,7 @@ class V1::VideosController < V1::ApiController
   def hero_image
     @video.hero_image = params[:file]
     @video.save(validate: false)
+    @video.update_column(:hero_image_link, @video.hero_image.url)
     nothing 202
   end
 
@@ -121,7 +122,7 @@ class V1::VideosController < V1::ApiController
   end
 
   def videos_params
-    params.permit(:id, :title, :description, :mpaa_rating, :category_id, :tag_list)
+    params.permit(:id, :title, :description, :mpaa_rating, :viewable, :hero_image_link, :liked, :category_id, :tag_list)
   end
 
   def set_video

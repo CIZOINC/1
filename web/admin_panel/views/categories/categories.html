@@ -1,0 +1,15 @@
+<div>
+    <h2>Categories</h2>
+    <div>
+
+        <button class="btn btn-lg" ui-sref="category({id: 0})">Add category</button>
+
+        <div class="list-group">
+            <div class="list-group-item" ng-repeat="item in categoriesList">
+                <div class="list-group-item-heading">{{item.title}}</div>
+                <a ui-sref="category({id: item.id })">Edit</a>
+                <a ng-click="deleteCategory(item.id)">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>

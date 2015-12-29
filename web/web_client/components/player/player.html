@@ -1,25 +1,40 @@
-<div class="container-fluid">
+<div class="container-fluid" video-id="{{::video.id}}">
     <div class="row">
-        <div class="col-xs-12 no-padding" video-id="{{::video.id}}">
-            <video class="col-xs-12 no-padding"  preload='none'>
-                <source src="">
-                <source src="{{::videoLink}}" type="video/mp4">
-            </video>
-            <div class="like-button">
-                <span class="glyphicon glyphicon-heart-empty"></span>
+        <div class="col-xs-12 no-padding">
+            <!-- video layer -->
+            <div class="col-xs-12 no-padding video-layer hidden-layer">
+                <video class="col-xs-12 no-padding"  preload='none'>
+                    <source src="">
+                    <source src="{{::videoLink}}" type="video/mp4">
+                </video>
+                <div class="info-panel">
+                    <span>{{timePassed}} / {{duration}}</span>
+                </div>
             </div>
-            <div class="play-button">
-                <span class="glyphicon glyphicon-play" ng-click="togglePlayPause()"></span>
+
+            <!-- hero image layer -->
+            <div class="col-xs-12 no-padding hero-image-layer">
+                <img class="col-xs-12"  ng-src="{{::video.hero_image_link}}">
             </div>
-            <div class="info-panel">
-                <span>{{timePassed}} / {{duration}}</span>
+
+            <!-- play button layer-->
+            <div class="play-button-layer">
+                <div class="play-button-centered" ng-click="togglePlayPause()">
+                    <img src="images/iconVidPlay.svg">
+                </div>
+            </div>
+            <!-- text overlay -->
+            <div class="text-overlay-layer hidden-layer">
+                <div class="text-overlay-region">
+                    <img ng-src="images/iconCategory{{::iconTitle}}.svg">
+                    <h3 class="overlayText">{{::video.title}}</h3>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" ng-show="descriptionVisible">
         <div class="description" style="color: white">
-            {{::video.title}}
-            <br>
+            <h4>{{::video.title}}</h4>
             {{::video.description}}
         </div>
     </div>

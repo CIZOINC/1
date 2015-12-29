@@ -15,8 +15,6 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
                     resolve();
                 });
         });
-
-
     }
 
     function getVideos() {

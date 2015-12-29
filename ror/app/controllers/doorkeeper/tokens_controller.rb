@@ -8,43 +8,26 @@ module Doorkeeper
       self.headers.merge! response.headers
       self.response_body = response.body.to_json
       self.status        = response.status
-      access_token = response.body['access_token']
-      refresh_token = response.body['refresh_token']
       username = params[:username]
       grant_type = params[:grant_type]
-      session[:auth] = access_token
 
       if grant_type == 'password'
         user = User.find_by_email(username)
-        user.update_columns(access_token: access_token, refresh_token: refresh_token)
-        # destroy previous access tokens
-        #TODO destroy expired and revoked tokens
-        destroy_previous_tokens(user)
+        destroy_useless_tokens(user) if user
       elsif grant_type == 'refresh_token'
         previous_refresh_token = params[:refresh_token]
-        user = User.find_by_refresh_token(previous_refresh_token)
-        user.update_columns(access_token: access_token, refresh_token: refresh_token) if user
-        # destroy previous access tokens
-        #TODO destroy expired and revoked tokens
-        destroy_previous_tokens(user)
+        if token = Doorkeeper::AccessToken.find_by_refresh_token(previous_refresh_token)
+          user = User.find_by(id: token.resource_owner_id)
+        end
+        destroy_useless_tokens(user) if user
       end
-
-
-    # rescue Errors::DoorkeeperError => e
-    #   handle_token_exception e
     end
 
-    # OAuth 2.0 Token Revocation - http://tools.ietf.org/html/rfc7009
     def revoke
-      # The authorization server first validates the client credentials
       if doorkeeper_token && doorkeeper_token.accessible?
-        # Doorkeeper does not use the token_type_hint logic described in the RFC 7009
-        # due to the refresh token implementation that is a field in the access token model.
-        revoke_token(request.POST['token']) if request.POST['token']
+        revoke_token(request['token']) if request['token']
       end
-      # The authorization server responds with HTTP status code 200 if the
-      # token has been revoked successfully or if the client submitted an invalid token
-      render json: {}, status: 200
+      render nothing: true, status: 200
     end
 
       private
@@ -67,8 +50,19 @@ module Doorkeeper
       @authorize_response ||= strategy.authorize
     end
 
-    def destroy_previous_tokens(user)
-      puts Doorkeeper::AccessToken.where(resource_owner_id: user.id).where.not(id: Doorkeeper::AccessToken.last.id).destroy_all
+    def destroy_expired_tokens(user)
+      expired_tokens = Doorkeeper::AccessToken.where('resource_owner_id = ? AND created_at < ?', user.id, 1.week.ago)
+      expired_tokens.destroy_all
+    end
+
+    def destroy_revoked_tokens(user)
+      revoked_tokens = Doorkeeper::AccessToken.where('resource_owner_id = ? AND revoked_at IS NOT ? AND revoked_at < ?', user.id, nil, DateTime.now)
+      revoked_tokens.destroy_all
+    end
+
+    def destroy_useless_tokens(user)
+      destroy_expired_tokens(user)
+      destroy_revoked_tokens(user)
     end
 
   end

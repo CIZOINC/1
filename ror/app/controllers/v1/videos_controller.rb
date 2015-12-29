@@ -100,6 +100,7 @@ class V1::VideosController < V1::ApiController
 
   def dislike
     @like = Like.find_by(user_id: @current_user.id, video_id: @video.id)
+    puts @like
     @like.destroy if @like
     nothing 204
   end

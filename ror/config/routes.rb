@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   use_doorkeeper do
        controllers tokens: 'doorkeeper/tokens'
   end
+  
   devise_for :users, controllers: {
     registrations: "auth/registrations"
   }

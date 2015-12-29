@@ -4,7 +4,7 @@ class Video < ActiveRecord::Base
 
   belongs_to :category
   has_many :streams
-  has_many :likes
+  has_many :likes, dependent: :destroy
 
   validates :title, presence: true
   validates :description, presence: true

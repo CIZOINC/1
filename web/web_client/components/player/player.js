@@ -22,6 +22,17 @@ function player($log, moment, _, $sce) {
         angular.element(imageLayer).bind('mouseenter', imageHover);
         angular.element(imageLayer).bind('mouseleave', imageBlur);
         angular.element(imageLayer).bind('click', togglePlayPause);
+
+        let screen = element[0].querySelector('div.video-layer video');
+        angular.element(screen).bind('timeupdate', () => {
+            let screen = element[0].querySelector('div.video-layer video');
+            let screenElement = angular.element(screen)[0];
+            scope.timePassed = moment().startOf('year').add(screenElement.currentTime, 's').format('mm:ss');
+            scope.duration = moment().startOf('year').add(screenElement.duration, 's').format('mm:ss');
+            scope.$apply();
+        });
+
+
         if (scope.video.streams) {
             let stream = _.find(scope.video.streams, (stream) => stream.stream_type === 'mp4');
             scope.videoLink = $sce.trustAs($sce.RESOURCE_URL, stream.link);
@@ -54,7 +65,6 @@ function player($log, moment, _, $sce) {
 
         function togglePlayPause() {
             let screen = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] video`))[0];
-            //let playBtn = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] div.play-button span`))[0];
 
             let videoLayer = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] div.video-layer`))[0];
             let imageLayer = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] div.hero-image-layer`))[0];
@@ -63,8 +73,6 @@ function player($log, moment, _, $sce) {
             if (screen.paused) {
                 screen.play();
                 $log.info('start playing');
-                //playBtn.classList.add('glyphicon-play');
-                //playBtn.classList.remove('glyphicon-pause');
 
                 videoLayer.classList.remove('hidden-layer');
                 imageLayer.classList.add('hidden-layer');
@@ -77,8 +85,6 @@ function player($log, moment, _, $sce) {
             } else {
                 screen.pause();
                 $log.info('set to pause');
-                //playBtn.classList.add('glyphicon-pause');
-                //playBtn.classList.remove('glyphicon-play');
 
                 videoLayer.classList.add('hidden-layer');
                 imageLayer.classList.remove('hidden-layer');
@@ -88,9 +94,7 @@ function player($log, moment, _, $sce) {
                 scope.$apply();
                 imageHover();
             }
-
         }
-
     }
 
     return {

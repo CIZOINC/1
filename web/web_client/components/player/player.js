@@ -86,8 +86,6 @@ function player($log, moment, _, $sce) {
                 screen.pause();
                 $log.info('set to pause');
 
-                videoLayer.classList.add('hidden-layer');
-                imageLayer.classList.remove('hidden-layer');
                 playButtonLayer.classList.remove('hidden-layer');
 
                 scope.descriptionVisible = false;

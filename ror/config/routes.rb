@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       post :hero_image
     end
 
+    get :search, to: 'videos#search'
     resources :categories
   end
 

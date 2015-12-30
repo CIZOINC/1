@@ -47,6 +47,10 @@ gem 'carrierwave'
 gem "fog-aws"
 gem "fog"
 
+#search
+gem 'pg_search', '~> 1.0', '>= 1.0.5'
+# gem 'textacular', '~> 3.0'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

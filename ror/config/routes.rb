@@ -16,8 +16,10 @@ Rails.application.routes.draw do
       post :streams, to: "streams#create"
       post :hero_image
     end
-
+    get :featured, to: "videos#featured"
+    
     resources :categories
+
   end
 
   root 'welcome#index'

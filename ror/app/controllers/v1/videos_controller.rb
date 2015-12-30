@@ -84,6 +84,11 @@ class V1::VideosController < V1::ApiController
     render nothing: true, status: 202
   end
 
+  #TODO add restrictions
+  def featured
+    @videos = Video.where("featured = ? AND viewable = ?", true, true)
+  end
+
   private
 
   def user_age_meets_requirement
@@ -95,7 +100,7 @@ class V1::VideosController < V1::ApiController
   end
 
   def videos_params
-    params.permit(:id, :title, :description, :mpaa_rating, :viewable, :hero_image_link, :liked, :category_id, :tag_list)
+    params.permit(:id, :title, :description, :mpaa_rating, :viewable, :hero_image_link, :liked, :category_id, :tag_list, :featured)
   end
 
   def set_video

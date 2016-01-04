@@ -27,6 +27,10 @@ Rails.application.routes.draw do
       put :like, to: "videos#like"
       delete :like, to: "videos#dislike"
     end
+    
+    get :featured, to: "videos#featured"
+    
+    resources :categories
 
     get :trending, to: "videos#trending"
 
@@ -36,8 +40,9 @@ Rails.application.routes.draw do
       put :me, on: :collection, to: "users#update_self_account"
       get 'me/videos/likes',  to: "users#likes", on: :collection
     end
+
     get :search, to: 'videos#search'
-    resources :categories
+
   end
 
   root 'welcome#index'

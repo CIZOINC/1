@@ -3,10 +3,10 @@ class V1::VideosController < V1::ApiController
   before_action :set_video_by_video_id, only: [:hero_image, :like, :dislike]
   before_action :set_region, only: [:destroy]
 
-  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update, :destroy, :hero_image, :trending]
-  skip_before_action :logged_in_as_admin?, only: [:index, :show, :like, :dislike, :trending]
-  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :update, :destroy, :hero_image, :trending]
-  before_action :user_age_meets_requirement, only: [:index, :show, :trending], if: :current_user
+  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update, :destroy, :hero_image, :trending, :featured]
+  skip_before_action :logged_in_as_admin?, only: [:index, :show, :like, :dislike, :trending, :featured]
+  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :update, :destroy, :hero_image, :trending, :featured]
+  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured], if: :current_user
 
   def index
     conditions = []
@@ -120,6 +120,11 @@ class V1::VideosController < V1::ApiController
     end
   end
 
+  #TODO add restrictions
+  def featured
+    @videos = Video.where("featured = ? AND viewable = ?", true, true)
+  end
+
   private
 
   def user_age_meets_requirement
@@ -131,7 +136,7 @@ class V1::VideosController < V1::ApiController
   end
 
   def videos_params
-    params.permit(:id, :title, :description, :mpaa_rating, :viewable, :hero_image_link, :liked, :category_id, :tag_list)
+    params.permit(:id, :title, :description, :mpaa_rating, :viewable, :hero_image_link, :liked, :category_id, :tag_list, :featured)
   end
 
   def set_video

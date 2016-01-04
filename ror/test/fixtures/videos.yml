@@ -1,21 +1,21 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+  # # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+  #
+  one:
+    title: MyString
+    description: MyString
+    mpaa_rating: MyString
+    category_id: 1
+    viewable: false
+    hero_image_link: MyString
+    liked: false
+    view_count: 1
 
-one:
-  title: MyString
-  description: MyString
-  mpaa_rating: MyString
-  category_id: 1
-  viewable: false
-  hero_image_link: MyString
-  liked: false
-  view_count: 1
-
-two:
-  title: MyString
-  description: MyString
-  mpaa_rating: MyString
-  category_id: 1
-  viewable: false
-  hero_image_link: MyString
-  liked: false
-  view_count: 1
+  two:
+    title: MyString2
+    description: MyString2
+    mpaa_rating: MyString2
+    category_id: 1
+    viewable: false
+    hero_image_link: MyString2
+    liked: false
+    view_count: 1

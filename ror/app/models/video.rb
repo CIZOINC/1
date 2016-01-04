@@ -1,9 +1,26 @@
 class Video < ActiveRecord::Base
+  include PgSearch
+  pg_search_scope :full_search,
+                  associated_against: {tags: :name},
+                  against: [:title, :description],
+                  using: {
+                    tsearch: {
+                      prefix: true,
+                      negation: true,
+                      any_word: true
+                    },
+                    dmetaphone: {
+                      any_word: true
+                    },
+                    trigram:{}
+                  }
+                                    
   mount_uploader :hero_image, HeroImageUploader
   acts_as_taggable
 
   belongs_to :category
   has_many :streams
+  has_many :likes, dependent: :destroy
 
   validates :title, presence: true
   validates :description, presence: true
@@ -21,9 +38,10 @@ class Video < ActiveRecord::Base
   scope :created_after, -> (date){where('created_at>?', date) }
   scope :created_before, -> (date){where('created_at<?', date) }
 
+  scope :trending, -> (){ where(viewable: true).order(view_count: :desc) }
 
   def increase_view_count!
-    update(view_count: view_count.to_i.succ)
+    update_column(:view_count, view_count.to_i.succ)
   end
 
 end

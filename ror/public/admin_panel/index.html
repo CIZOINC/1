@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cizo</title>
+    <link rel="stylesheet" href="css/all.min.css">
+</head>
+<body ng-controller="AppCtrl">
+<sidebar>
+    <li>Manage Users</li>
+    <li ui-sref="content">Content</li>
+    <li ui-sref="categories">Categories</li>
+    <li>Settings</li>
+</sidebar>
+
+<div ui-view class="main-view"></div>
+
+
+<script src="all.min.js"></script>
+<script src="all-ng.min.js"></script>
+
+<script>
+    angular.bootstrap(document, ['app']);
+</script>
+
+
+</body>
+</html>

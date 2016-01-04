@@ -6,7 +6,7 @@ exports.usersGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
-    "birthday" : "2015-12-07T22:31:39.554+0000",
+    "birthday" : "2015-12-22T01:47:12.352+0000",
     "password" : "aeiou",
     "id" : 123,
     "email" : "aeiou"
@@ -24,7 +24,7 @@ exports.usersPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-07T22:31:39.555+0000",
+  "birthday" : "2015-12-22T01:47:12.353+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -41,7 +41,7 @@ exports.usersMeGet = function() {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-07T22:31:39.557+0000",
+  "birthday" : "2015-12-22T01:47:12.354+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -58,7 +58,7 @@ exports.usersMePut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-07T22:31:39.558+0000",
+  "birthday" : "2015-12-22T01:47:12.355+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -86,15 +86,15 @@ exports.usersMeVideosLikesGet = function() {
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
-      "type" : "aeiou"
+      "stream_type" : "aeiou"
     } ],
-    "created_at" : "2015-12-07T22:31:39.559+0000",
+    "created_at" : "2015-12-22T01:47:12.357+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "tags" : [ "aeiou" ],
     "viewable" : true,
-    "updated_at" : "2015-12-07T22:31:39.559+0000",
+    "updated_at" : "2015-12-22T01:47:12.357+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",
@@ -114,7 +114,7 @@ exports.usersUserIdGet = function(userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-07T22:31:39.560+0000",
+  "birthday" : "2015-12-22T01:47:12.357+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -131,7 +131,7 @@ exports.usersUserIdPut = function(body, userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2015-12-07T22:31:39.561+0000",
+  "birthday" : "2015-12-22T01:47:12.358+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"

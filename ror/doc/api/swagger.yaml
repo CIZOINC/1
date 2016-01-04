@@ -4,9 +4,10 @@ info:
   description: API for Cizo
   version: 1.0.0
 host: api.cizo.com
+basePath: /
 schemes:
   - https
-securityDefinitions: 
+securityDefinitions:
   oauth:
     type: oauth2
     flow: implicit
@@ -14,7 +15,6 @@ securityDefinitions:
     scopes:
       admin: Grants read/write access to all resources
       user: Grants read access to videos that have a MPAA rating greater than G if the user meets the age requirement for a given mpaa_rating
-basePath: /v1
 consumes:
   - application/json
 produces:
@@ -56,7 +56,7 @@ paths:
             properties:
               data:
                 type: array
-                items: 
+                items:
                   $ref: '#/definitions/Video'
         default:
           description: Unexpected error
@@ -67,7 +67,7 @@ paths:
       tags:
         - Videos
       security:
-        - oauth: 
+        - oauth:
           - admin
       parameters:
         - name: body
@@ -134,7 +134,7 @@ paths:
               updated_at:
                 type: string
                 format: date-time
-                readOnly: true    
+                readOnly: true
               title:
                 type: string
                 description: Title of video.
@@ -179,7 +179,7 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/Video'
-        '403': 
+        '403':
           description: "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's viewable property is not set to true"
           schema:
             $ref: '#/definitions/Error'
@@ -216,7 +216,7 @@ paths:
       responses:
         '204':
           description: Successfully deleted
-        '403': 
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
@@ -224,19 +224,24 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /videos/{video-id}/stream_transcode_request:
+  /videos/{video-id}/raw_stream_upload_request:
     parameters:
       - name: video-id
         in: path
         description: Video ID
         type: integer
         required: true
+      - name: filename
+        in: query
+        description: 'Filename of file to be uploaded. Must contain only lowercase letters, numbers, hyphens (-), and periods (.). Must start and end with a letter or number. Max length of 25.'
+        required: true
+        type: string
     get:
-      description: "This endpoint returns the S3 upload details for client side uploading of a stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
+      description: "This endpoint returns the S3 upload details for client side uploading of a raw stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
       tags:
         - Streams
       security:
-        - oauth: 
+        - oauth:
           - admin
       responses:
         '200':
@@ -253,13 +258,13 @@ paths:
               key:
                 type: string
                 description: "Upload key. S3 bucket key to store uploaded video in"
-              aws_access_key_id: 
+              aws_access_key_id:
                 type: string
                 description: "Upload AWS access key id"
-              acl: 
+              acl:
                 type: string
                 description: "Upload acl"
-              policy: 
+              policy:
                 type: string
                 description: "Upload policy"
               signature:
@@ -281,11 +286,11 @@ paths:
         type: integer
         required: true
     post:
-      description: "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'complete', 'canceled', or 'error' for the update to succeed"
+      description: "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'completed', 'canceled', or 'error' for the update to succeed"
       tags:
         - Streams
       security:
-        - oauth: 
+        - oauth:
           - admin
       parameters:
         - name: body
@@ -296,11 +301,6 @@ paths:
               key:
                 type: string
                 description: "S3 bucket key for raw video."
-              types:
-                type: array
-                description: "Target stream types. Only 'hls' and 'mp4' are supported."
-                items:
-                  type: string
       responses:
         '202':
           description: "Stream has been accepted for transcoding"
@@ -348,7 +348,7 @@ paths:
       tags:
         - Streams
       security:
-        - oauth: 
+        - oauth:
           - admin
       responses:
         '302':
@@ -373,9 +373,9 @@ paths:
       tags:
         - Videos
       security:
-        - oauth: 
+        - oauth:
           - admin
-      consumes: 
+      consumes:
         - multipart/form-data
       responses:
         '202':
@@ -396,7 +396,7 @@ paths:
       tags:
         - Videos
       security:
-        - oauth: 
+        - oauth:
           - user
       responses:
         '204':
@@ -414,7 +414,7 @@ paths:
       tags:
         - Videos
       security:
-        - oauth: 
+        - oauth:
           - user
       responses:
         '204':
@@ -428,9 +428,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
   /trending:
-    get: 
+    get:
       description: "Returns a list of trending videos"
-      tags: 
+      tags:
         - Trending
       responses:
         '200':
@@ -440,16 +440,16 @@ paths:
             properties:
               data:
                 type: array
-                items: 
+                items:
                   $ref: '#/definitions/Video'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'            
+            $ref: '#/definitions/Error'
   /categories:
-    get: 
+    get:
       description: "Returns a list of categories"
-      tags: 
+      tags:
         - Categories
       responses:
         '200':
@@ -459,7 +459,7 @@ paths:
             properties:
               data:
                 type: array
-                items: 
+                items:
                   $ref: '#/definitions/Category'
         default:
           description: Unexpected error
@@ -467,7 +467,7 @@ paths:
             $ref: '#/definitions/Error'
     post:
       description: "Creates a category. Title must be unique"
-      tags: 
+      tags:
         - Categories
       security:
         - oauth:
@@ -539,11 +539,11 @@ paths:
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
-            $ref: '#/definitions/Error'             
+            $ref: '#/definitions/Error'
         '409':
           description: 'Error occurring when a Category with that title already exists'
           schema:
-            $ref: '#/definitions/Error'      
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -558,7 +558,7 @@ paths:
       responses:
         '204':
           description: Successfully deleted
-        '403': 
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
@@ -572,7 +572,7 @@ paths:
       tags:
         - Users
       security:
-        - oauth: 
+        - oauth:
           - admin
       tags:
         - Users
@@ -666,7 +666,7 @@ paths:
   /users/me:
     get:
       description: 'Gets the current user'
-      tags: 
+      tags:
         - Users
       security:
         - oauth:
@@ -710,7 +710,7 @@ paths:
       tags:
         - Users
       security:
-        - oauth: 
+        - oauth:
           - user
       responses:
         '204':
@@ -726,7 +726,7 @@ paths:
   /users/me/videos/likes:
     get:
       description: 'Gets a list of videos liked by the current user'
-      tags: 
+      tags:
         - Users
       security:
         - oauth:
@@ -766,7 +766,7 @@ definitions:
       updated_at:
         type: string
         format: date-time
-        readOnly: true    
+        readOnly: true
       title:
         type: string
         description: Title of video.
@@ -786,7 +786,7 @@ definitions:
         type: integer
         format: int32
         description: 'Unique identifier of category'
-      viewable: 
+      viewable:
         type: boolean
         description: Whether a video is viewable. This property is only visible to clients with an oauth2 scope of 'admin'
       tags:
@@ -829,13 +829,13 @@ definitions:
     type: object
     required:
       - link
-      - type
+      - stream_type
       - transcode_status
     properties:
       link:
         type: string
         description: 'URL of stream.'
-      type:
+      stream_type:
         type: string
         description: 'Type of stream.'
         enum:
@@ -846,9 +846,10 @@ definitions:
         description: 'Transcode status. This property is only visible to oauth2 scope of "admin"'
         readOnly: true
         enum:
+          - 'pending'
           - 'submitted'
           - 'progressing'
-          - 'complete'
+          - 'completed'
           - 'canceled'
           - 'error'
   User:

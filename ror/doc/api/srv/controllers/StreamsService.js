@@ -7,7 +7,7 @@ exports.videosStreamsTranscodeNotificationPost = function() {
 
   
 }
-exports.videosVideoIdStreamTranscodeRequestGet = function(videoId) {
+exports.videosVideoIdRawStreamUploadRequestGet = function(videoId, filename) {
 
   var examples = {};
   

@@ -13,7 +13,7 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -32,8 +32,32 @@ gem 'unicorn'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+gem 'swagger-docs'
 
 gem 'swagger-ui_rails', :git => 'https://github.com/audionerd/swagger-ui_rails.git', :branch => "master"
+gem 'rack-cors', :require => 'rack/cors'
+
+gem 'acts-as-taggable-on'
+
+gem 'aws-sdk', '~> 2'
+
+gem 'versionist'
+
+gem 'carrierwave'
+gem "fog-aws"
+gem "fog"
+
+gem 'rest-client', '~> 1.8'
+
+gem 'doorkeeper'
+gem 'devise'
+
+gem 'oauth2', '~> 1.0'
+gem 'omniauth'
+
+#search
+gem 'pg_search', '~> 1.0', '>= 1.0.5'
+# gem 'textacular', '~> 3.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -44,7 +68,11 @@ group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
 
+  # DRY logs
+  gem 'quiet_assets'
+
+  #api versioning
+
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
-

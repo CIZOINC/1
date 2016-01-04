@@ -3,10 +3,10 @@ class V1::VideosController < V1::ApiController
   before_action :set_video_by_video_id, only: [:hero_image, :like, :dislike]
   before_action :set_region, only: [:destroy]
 
-  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update, :destroy, :hero_image, :trending, :featured]
-  skip_before_action :logged_in_as_admin?, only: [:index, :show, :like, :dislike, :trending, :featured]
-  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :update, :destroy, :hero_image, :trending, :featured]
-  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured], if: :current_user
+  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update, :destroy, :hero_image, :trending, :featured, :search]
+  skip_before_action :logged_in_as_admin?, only: [:index, :show, :like, :dislike, :trending, :featured, :search]
+  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :update, :destroy, :hero_image, :trending, :featured, :search]
+  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search], if: :current_user
 
   def index
     conditions = []
@@ -111,18 +111,22 @@ class V1::VideosController < V1::ApiController
     render :index
   end
 
-  #TODO add restrictions
   def search
     if search = params[:search]
-      @videos = Video.full_search(search)
-    else
-      @videos = Video.all
+      if @current_user && @current_user.is_admin
+        @videos = Video.full_search(search)
+      else
+        @videos = Video.full_search(search).where("viewable = ?", true).limit(1000)
+      end
     end
   end
 
-  #TODO add restrictions
   def featured
-    @videos = Video.where("featured = ? AND viewable = ?", true, true)
+    if @current_user && @current_user.is_admin
+      @videos = Video.where("featured = ?", true).order(created_at: :desc)
+    else
+      @videos = Video.where("featured = ? AND viewable = ?", true, true).limit(1000)
+    end
   end
 
   private

@@ -12,6 +12,7 @@
 
     <!-- css_common:css -->
     <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="temp/common.css">
     <link rel="stylesheet" href="components/image_upload/imageUploader.css">
     <link rel="stylesheet" href="components/player/player.css">
     <link rel="stylesheet" href="components/sidebar/sidebar.css">
@@ -24,14 +25,31 @@
     <!-- endinject -->
 </head>
 <body ng-controller="AppCtrl">
-<sidebar>
-    <li>Manage Users</li>
-    <li ui-sref="content">Content</li>
-    <li ui-sref="categories">Categories</li>
-    <li>Settings</li>
-</sidebar>
+<div class="nav visible-xs">
+    <div class="dropdown">
+        <button class="btn btn-default" data-toggle="dropdown">
+            <span>Menu</span>
+            <span class="glyphicon glyphicon-menu-hamburger"></span>
+        </button>
+        <ul class="dropdown-menu" >
+            <li><a ui-sref="content">Content</a></li>
+            <li><a ui-sref="categories">Categories</a></li>
+        </ul>
+    </div>
+</div>
 
-<div ui-view class="main-view"></div>
+<div class="container-fluid main-container">
+    <div class="row">
+        <sidebar class="col-sm-3 col-lg-2 hidden-xs">
+            <li>Manage Users</li>
+            <li ui-sref="content">Content</li>
+            <li ui-sref="categories">Categories</li>
+            <li>Settings</li>
+        </sidebar>
+        <div ui-view class="col-sm-9 col-lg-10"></div>
+    </div>
+</div>
+
 
 <!-- third_party:js -->
 <script src="../node_modules/angular/angular.js"></script>

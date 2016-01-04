@@ -1,6 +1,6 @@
 /*global angular*/
 angular
-    .module('app.wrappers', [])
+    .module('app.wrappers')
     .factory('moment', _moment);
 
 function _moment() {

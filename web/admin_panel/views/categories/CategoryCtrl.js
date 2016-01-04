@@ -21,7 +21,7 @@ function CategoryCtrl($scope, $log, $state, $stateParams, categoriesServ) {
                 })
     }
 
-    $scope.updateCategory = function() {
+    $scope.updateCategory = function() { 
         if (Number($stateParams.id)) {
             categoriesServ.setCategory($scope, $stateParams.id, $scope.categoryItem)
                 .then(function () {

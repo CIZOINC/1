@@ -20,7 +20,13 @@ var thirdPartyJSLibraries = [
     '../node_modules/ui-router/release/angular-ui-router.js',
     '../node_modules/angular-sanitize/angular-sanitize.js',
     '../node_modules/lodash/index.js',
-    '../node_modules/moment/moment.js'
+    '../node_modules/moment/moment.js',
+    '../node_modules/jquery/dist/jquery.js'
+];
+
+var thirdPartyCSSLibraries = [
+    '../node_modules/angular/angular-csp.css',
+    '../node_modules/bootstrap/dist/css/bootstrap.css'
 ];
 
 
@@ -47,6 +53,7 @@ gulp.task('compile_js', function () {
     return gulp.src([
         './**/*.js',
         '!./**/*-compiled.js',
+        '!./temp/**/*.*',
         '!gulpfile.js'
     ])
         .pipe(babel({
@@ -55,7 +62,9 @@ gulp.task('compile_js', function () {
         .pipe(gulp.dest('./temp'));
 });
 
-gulp.task('develop_index_compile', function () {
+
+
+gulp.task('DEVELOP_index_compile', function () {
     "use strict";
     gulp.src([
             '!index.html',
@@ -65,17 +74,8 @@ gulp.task('develop_index_compile', function () {
         .pipe(gulp.dest('common'));
 
     gulp.src('./index.html')
-        .pipe(inject(gulp.src([
-            '../node_modules/angular/angular-csp.css',
-            '../node_modules/bootstrap/dist/css/bootstrap.css',
-            '../node_modules/angular/angular.js',
-            '../node_modules/jquery/dist/jquery.js',
-            '../node_modules/bootstrap/dist/js/bootstrap.js',
-            '../node_modules/ui-router/release/angular-ui-router.js',
-            '../node_modules/angular-sanitize/angular-sanitize.js',
-            '../node_modules/lodash/index.js',
-            '../node_modules/moment/moment.js'
-        ], {read: false}), {name: 'third_party', addRootSlash: false}))
+        .pipe(inject(gulp.src(thirdPartyJSLibraries.concat(thirdPartyCSSLibraries),
+            {read: false}), {name: 'third_party', addRootSlash: false}))
         .pipe(inject(gulp.src([
             './**/*.css'
         ], {read: false}), {name: 'css_common', addRootSlash: false}))

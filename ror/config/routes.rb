@@ -1,5 +1,14 @@
 Rails.application.routes.draw do
 
+
+  use_doorkeeper do
+       controllers tokens: 'doorkeeper/tokens'
+  end
+  
+  devise_for :users, controllers: {
+    registrations: "auth/registrations"
+  }
+
   if Rails.env.development? || Rails.env.staging?
     get 'api_docs/index'
     get 'api_docs/swagger.json' => 'api_docs#swagger'
@@ -15,8 +24,18 @@ Rails.application.routes.draw do
       post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
       post :streams, to: "streams#create"
       post :hero_image
+      put :like, to: "videos#like"
+      delete :like, to: "videos#dislike"
     end
 
+    get :trending, to: "videos#trending"
+
+    resources :users do
+      get :me, on: :collection
+      delete :me, on: :collection, to: "users#destroy_self_account"
+      put :me, on: :collection, to: "users#update_self_account"
+      get 'me/videos/likes',  to: "users#likes", on: :collection
+    end
     resources :categories
   end
 

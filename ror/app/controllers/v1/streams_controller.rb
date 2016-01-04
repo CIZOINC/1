@@ -1,9 +1,13 @@
 class V1::StreamsController < V1::ApiController
   before_action :set_video, only: [:show, :create, :raw_stream_upload_request]
   before_action :set_stream, only: :show
-  before_action :check_for_requirement, only: :show
+
   before_action :set_region, only: [:raw_stream_upload_request, :create, :destroy, :transcode_notification]
   before_action :set_pipeline, only: [:create, :transcode_notification]
+  skip_before_action :check_if_logged_in, only: [:show, :create, :raw_stream_upload_request]
+  skip_before_action :logged_in_as_admin?, only: [:show]
+  skip_before_action :logged_in_as_user?, only: [:show, :create, :raw_stream_upload_request]
+  before_action :check_for_requirement, only: :show
 
   def show
     render :show, status: 302, location: @stream.link
@@ -12,38 +16,35 @@ class V1::StreamsController < V1::ApiController
   def raw_stream_upload_request
     s3 = Aws::S3::Resource.new(region: @region)
     bucket = s3.bucket(bucket_name)
-    file_folder = (Rails.env == 'production') ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
+    file_folder = Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
 
     if (filename = params[:filename]).blank?
       render json: {errors:"filename required"}, status: 403
       return
     end
 
-    current_admin = "admin"
-    unless current_admin.nil? #TODO check if oauth2 scope is admin
-      @form = bucket.presigned_post(key: file_folder + filename, expires: Time.now + 300)
-    else
-      render nothing: true, status: 403
-      return
-    end
-
-    skip_spaces!(filename)
+    apply_format!(filename)
     unless @video.update(raw_filename: filename)
       render json: {errors: @video.errors.full_messages}
       return
     end
 
+    @form = bucket.presigned_post(key: file_folder + filename, expires: Time.now + 300)
+
+    # obj = bucket.object(file_folder+filename)
+    # @url = URI.parse(obj.presigned_url(:put, key: file_folder + filename))
     # body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
     # Net::HTTP.start(@url.host) do |http|
     #     http.send_request("PUT", @url.request_uri, body, {
     #       "content-type" => "",
     #     })
+    #   puts "Uploaded"
     # end
   end
 
   def create
-    input_key_prefix = (Rails.env == 'production') ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
-    input_key = (Rails.env == 'production') ? "production/raw/#{@video.id}/#{@video.raw_filename}" : "staging/raw/#{@video.id}/#{@video.raw_filename}"
+    input_key_prefix = Rails.env.production? ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
+    input_key = Rails.env.production? ? "production/raw/#{@video.id}/#{@video.raw_filename}" : "staging/raw/#{@video.id}/#{@video.raw_filename}"
     transcoder_client = Aws::ElasticTranscoder::Client.new(region: @region)
     input = { key: input_key }
     obj = Aws::S3::Object.new(bucket_name: bucket_name, key: input_key, region: @region)
@@ -62,7 +63,7 @@ class V1::StreamsController < V1::ApiController
 
     #HLS
     @hls_stream = @video.streams.find_by(stream_type: "hls")
-    output_key_prefix = (Rails.env == 'production') ? "production/stream/#{@video.id}/hls/" : "staging/stream/#{@video.id}/hls/"
+    output_key_prefix_hls = Rails.env.production? ? "production/stream/#{@video.id}/hls/" : "staging/stream/#{@video.id}/hls/"
     define_hls_presets
     outputs_hls = [ define_hls_presets[0], define_hls_presets[1], define_hls_presets[2], define_hls_presets[3], define_hls_presets[4] ]
     playlist = {
@@ -74,16 +75,17 @@ class V1::StreamsController < V1::ApiController
     job = transcoder_client.create_job(
       pipeline_id: @pipeline_id,
       input: input,
-      output_key_prefix: output_key_prefix,
+      output_key_prefix: output_key_prefix_hls,
       outputs: outputs_hls,
       playlists: [ playlist ])[:job]
 
-    object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_prefix + 'index.m3u8')
-    @hls_stream.update_columns(link: object.public_url, job_id: job.id, transcode_status: 'submitted') if @hls_stream
+    object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_prefix_hls + 'index.m3u8')
+    @hls_stream.update_columns(link: output_key_prefix_hls, job_id: job.id, transcode_status: 'submitted') if @hls_stream
 
     #MP4
     web_preset_id = '1351620000001-100070'
-    output_key_mp4 = (Rails.env == 'production') ? "production/stream/#{@video.id}/mp4/video.mp4" : "staging/stream/#{@video.id}/mp4/video.mp4"
+    output_key_prefix_mp4 =  Rails.env.production? ? "production/stream/#{@video.id}/mp4/" : "staging/stream/#{@video.id}/mp4/"
+    output_key_mp4 = Rails.env.production? ? output_key_prefix_mp4 + "video.mp4" : output_key_prefix_mp4 + "video.mp4"
     @mp4_stream = @video.streams.find_by(stream_type: "mp4")
      web = {
        key: output_key_mp4,
@@ -98,7 +100,7 @@ class V1::StreamsController < V1::ApiController
        outputs: outputs_mp4)[:job]
 
      object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_mp4)
-    @mp4_stream.update_columns(link: object.public_url, job_id: job.id, transcode_status: 'submitted') if @mp4_stream
+    @mp4_stream.update_columns(link: output_key_prefix_mp4, job_id: job.id, transcode_status: 'submitted') if @mp4_stream
     render nothing: true, status: 202
   end
 
@@ -135,8 +137,9 @@ class V1::StreamsController < V1::ApiController
 
   private
 
-  def skip_spaces!(filename)
+  def apply_format!(filename)
     filename.squish!.gsub!(" ","_")
+    filename.downcase!
   end
 
   def define_hls_presets
@@ -203,7 +206,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def set_pipeline
-    @pipeline_id = (Rails.env == 'production') ? '1449264108808-yw3pko' : '1448045831910-jsofcg'
+    @pipeline_id = Rails.env.production? ? '1449264108808-yw3pko' : '1448045831910-jsofcg'
   end
 
   def bucket_name
@@ -215,17 +218,11 @@ class V1::StreamsController < V1::ApiController
   end
 
   def check_for_requirement
-    current_user = nil
-    if (@video.mpaa_rating > "G" && current_user.nil?) || (@video.mpaa_rating > "G" && !user_age_meets_requirement )
-      render json: { error: 'Forbidden video.' }, status: 403
+    if (@video.mpaa_rating > "G" && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
+      render json: { error: 'Forbidden video' }, status: 403
     else
       increase_view_count
     end
-  end
-
-  def user_age_meets_requirement
-    #user's age should meet requirement
-    true
   end
 
   def increase_view_count

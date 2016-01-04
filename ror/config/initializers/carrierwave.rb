@@ -9,5 +9,5 @@ CarrierWave.configure do |config|
 
   config.fog_credentials = fog_credentials
   config.fog_directory  = 'cizo-assets'                          # required
-  
+
 end

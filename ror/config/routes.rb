@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       put :me, on: :collection, to: "users#update_self_account"
       get 'me/videos/likes',  to: "users#likes", on: :collection
     end
+    get :search, to: 'videos#search'
     resources :categories
   end
 

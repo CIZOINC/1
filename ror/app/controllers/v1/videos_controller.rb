@@ -111,6 +111,15 @@ class V1::VideosController < V1::ApiController
     render :index
   end
 
+  #TODO add restrictions
+  def search
+    if search = params[:search]
+      @videos = Video.full_search(search)
+    else
+      @videos = Video.all
+    end
+  end
+
   private
 
   def user_age_meets_requirement

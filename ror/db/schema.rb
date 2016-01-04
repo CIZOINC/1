@@ -11,11 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20151229110738) do
+ActiveRecord::Schema.define(version: 20151230115922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pg_trgm"
+  enable_extension "fuzzystrmatch"
 
   create_table "categories", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -24,7 +25,6 @@ ActiveRecord::Schema.define(version: 20151229110738) do
   end
 
   add_index "categories", ["title"], name: "index_categories_on_title", unique: true, using: :btree
-
 
   create_table "likes", force: :cascade do |t|
     t.integer  "user_id"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 20151229110738) do
     t.datetime "updated_at",                      null: false
     t.string   "raw_filename"
     t.string   "hero_image"
+    t.boolean  "featured",        default: false
   end
 
 end

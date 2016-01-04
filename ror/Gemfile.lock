@@ -241,6 +241,10 @@ GEM
       rack (~> 1.0)
     orm_adapter (0.5.0)
     pg (0.18.4)
+    pg_search (1.0.5)
+      activerecord (>= 3.1)
+      activesupport (>= 3.1)
+      arel
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.4)
@@ -354,6 +358,7 @@ DEPENDENCIES
   oauth2 (~> 1.0)
   omniauth
   pg
+  pg_search (~> 1.0, >= 1.0.5)
   quiet_assets
   rack-cors
   rails (= 4.2.5)

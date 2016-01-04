@@ -5,43 +5,94 @@ angular
 
 
 /* @ngInject */
-function player($log, moment) {
+function player($log, moment, _, $sce) {
     "use strict";
 
-    function clickScreen() {
-
-    }
-
     function linkFn(scope, element, attrs) {
-        function togglePlayPause() {
-            let screen = angular.element(document.querySelector("video.screen"))[0];
-            let playBtn = angular.element(document.querySelector('div.play-button span'))[0];
-            if (screen.paused) {
-                screen.play();
-                $log.info('start playing');
-                playBtn.classList.add('glyphicon-play');
-                playBtn.classList.remove('glyphicon-pause');
-                scope.$apply();
-            } else {
-                screen.pause();
-                $log.info('set to pause');
-                playBtn.classList.add('glyphicon-pause');
-                playBtn.classList.remove('glyphicon-play');
-                scope.$apply();
-            }
 
-        }
+        scope = angular.extend(scope, {
+            togglePlayPause: togglePlayPause,
+            descriptionVisible: false,
+            iconTitle: categoryIcon(scope.video.category_id),
+            imageHover: imageHover,
+            imageBlur: imageBlur
+        });
 
-        let screen = angular.element(document.querySelector('video.screen'));
-        screen.on('click', clickScreen);
-        screen.on('timeupdate', function () {
-            scope.timePassed = moment().startOf('year').add(screen[0].currentTime, 's').format('mm:ss');
-            scope.duration = moment().startOf('year').add(screen[0].duration, 's').format('mm:ss');
+        let imageLayer = element[0].querySelector('.row');
+        angular.element(imageLayer).bind('mouseenter', imageHover);
+        angular.element(imageLayer).bind('mouseleave', imageBlur);
+        angular.element(imageLayer).bind('click', togglePlayPause);
+
+        let screen = element[0].querySelector('div.video-layer video');
+        angular.element(screen).bind('timeupdate', () => {
+            let screen = element[0].querySelector('div.video-layer video');
+            let screenElement = angular.element(screen)[0];
+            scope.timePassed = moment().startOf('year').add(screenElement.currentTime, 's').format('mm:ss');
+            scope.duration = moment().startOf('year').add(screenElement.duration, 's').format('mm:ss');
             scope.$apply();
         });
 
-        let likeBtn = angular.element(document.querySelector('div.play-button span'));
-        likeBtn.on('click', togglePlayPause);
+
+        if (scope.video.streams) {
+            let stream = _.find(scope.video.streams, (stream) => stream.stream_type === 'mp4');
+            scope.videoLink = $sce.trustAs($sce.RESOURCE_URL, stream.link);
+        }
+
+        function categoryIcon(id) {
+            let iconMap = {
+                '11': 'Movie',
+                '12': 'TV',
+                '13': 'Games',
+                '14': 'Lifestyle'
+            };
+
+            return iconMap[String(id)];
+        }
+
+        function imageHover() {
+            let textOverlayLayer = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] div.text-overlay-layer`))[0];
+            let screen = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] video`))[0];
+
+            if (screen.paused) {
+                textOverlayLayer.classList.remove('hidden-layer');
+            }
+        }
+
+        function imageBlur() {
+            let textOverlayLayer = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] div.text-overlay-layer`))[0];
+            textOverlayLayer.classList.add('hidden-layer');
+        }
+
+        function togglePlayPause() {
+            let screen = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] video`))[0];
+
+            let videoLayer = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] div.video-layer`))[0];
+            let imageLayer = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] div.hero-image-layer`))[0];
+            let playButtonLayer = angular.element(document.querySelector(`div[video-id="${scope.video.id}"] div.play-button-layer`))[0];
+
+            if (screen.paused) {
+                screen.play();
+                $log.info('start playing');
+
+                videoLayer.classList.remove('hidden-layer');
+                imageLayer.classList.add('hidden-layer');
+                playButtonLayer.classList.add('hidden-layer');
+
+                scope.descriptionVisible = true;
+                scope.$apply();
+                imageBlur();
+
+            } else {
+                screen.pause();
+                $log.info('set to pause');
+
+                playButtonLayer.classList.remove('hidden-layer');
+
+                scope.descriptionVisible = false;
+                scope.$apply();
+                imageHover();
+            }
+        }
     }
 
     return {
@@ -50,8 +101,8 @@ function player($log, moment) {
         link: linkFn,
         transclude: true,
         scope: {
-            width: '@'
+            video: '=video'
         }
     }
 }
-player.$inject = ['$log', 'moment'];
+player.$inject = ['$log', 'moment', 'lodash', '$sce'];

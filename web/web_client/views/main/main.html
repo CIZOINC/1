@@ -1,7 +1,24 @@
-<div>
+<nav class="navbar">
+    <div class="container-fluid">
+        <div class="row">
+            <span class="glyphicon glyphicon-menu-hamburger col-xs-1">Menu</span>
+            <div class="col-xs-10 text-center">Cizo</div>
+            <span class="glyphicon glyphicon-search col-xs-1">Search</span>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row" ng-repeat="videoItem in videosList">
+        <player class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem"></player>
+    </div>
+</div>
+
+<!--<div>
     <div class="btn-group-vertical">
         <a class="btn btn-default" ui-sref="videos">{{videos}}</a>
         <a class="btn btn-default">{{categories}}</a>
         <a class="btn btn-default">{{trending}}</a>
     </div>
-</div>
+</div>-->

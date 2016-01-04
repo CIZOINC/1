@@ -1,4 +1,4 @@
-angular 
+angular
     .module('app.routes', [])
     .constant('routesList', [
         {

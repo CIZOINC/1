@@ -29,6 +29,7 @@
     "jquery": "^2.1.4",
     "lodash": "^3.10.1",
     "moment": "^2.10.6",
+    "rimraf": "^2.5.0",
     "run-sequence": "^1.1.5",
     "ui-router": "^0.2.15"
   },

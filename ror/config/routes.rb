@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   use_doorkeeper do
        controllers tokens: 'doorkeeper/tokens'
   end
-  
+
   devise_for :users, controllers: {
     registrations: "auth/registrations"
   }
@@ -27,9 +27,9 @@ Rails.application.routes.draw do
       put :like, to: "videos#like"
       delete :like, to: "videos#dislike"
     end
-    
+
     get :featured, to: "videos#featured"
-    
+
     resources :categories
 
     get :trending, to: "videos#trending"

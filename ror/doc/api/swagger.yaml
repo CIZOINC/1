@@ -647,7 +647,11 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/User'
       responses:
         '200':
           description: A user
@@ -692,7 +696,11 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/User'
       responses:
         '200':
           description: A user
@@ -734,7 +742,11 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/User'
       responses:
         '200':
           description: A user

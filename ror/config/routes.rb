@@ -1,10 +1,9 @@
 Rails.application.routes.draw do
 
-
   use_doorkeeper do
        controllers tokens: 'doorkeeper/tokens'
   end
-  
+
   devise_for :users, controllers: {
     registrations: "auth/registrations"
   }
@@ -20,19 +19,18 @@ Rails.application.routes.draw do
 
     resources :videos do
       get :raw_stream_upload_request, to: "streams#raw_stream_upload_request"
-      get 'streams/:stream_type', to: 'streams#show', param: :stream_type
+      get 'streams/:stream_type', to: 'streams#show', param: :stream_type, constraints: {stream_type: /hls|mp4/}
       post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
       post :streams, to: "streams#create"
       post :hero_image
       put :like, to: "videos#like"
       delete :like, to: "videos#dislike"
     end
-    
-    get :featured, to: "videos#featured"
-    
-    resources :categories
 
+    get :featured, to: "videos#featured"
     get :trending, to: "videos#trending"
+
+    resources :categories
 
     resources :users do
       get :me, on: :collection

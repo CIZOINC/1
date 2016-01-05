@@ -6,6 +6,10 @@ class V1::ApiController < ApplicationController
 
   private
 
+  def user_age_meets_requirement
+    @user_age_meets_requirement = @current_user.is_admin ? true : @current_user.user_age_meets_requirement!
+  end
+
   def logged_in_as_admin?
     render json: {errors: "Access denied"}, status: 403 unless @current_user && @current_user.is_admin
   end

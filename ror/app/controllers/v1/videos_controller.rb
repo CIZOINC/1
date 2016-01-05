@@ -131,10 +131,6 @@ class V1::VideosController < V1::ApiController
 
   private
 
-  def user_age_meets_requirement
-    @user_age_meets_requirement = @current_user.is_admin ? true : @current_user.user_age_meets_requirement!
-  end
-
   def set_region
     @region = "us-east-1"
   end

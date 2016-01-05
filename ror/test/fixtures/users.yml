@@ -3,9 +3,29 @@
 # This model initially had no columns defined.  If you add columns to the
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+# #
+one:
+  id: 1
+  email: user@test.com
+  is_admin: true
+  birthday: 2015-12-28T06:11:29.973Z
+
+two:
+  id: 2
+  email: user2@test.com
+  is_admin: false
+  birthday: 1995-12-28T06:11:29.973Z
+
+three:
+  id: 3
+  email: user3@test.com
+  is_admin: false
+  birthday: 2000-12-28T06:11:29.973Z
+
+  # password: 123456789
+  # password_confirmation: 123456789
+
+# # column: value
+# #
+# two: {}
+# #  column: value

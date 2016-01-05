@@ -1,3 +1,10 @@
+angular.module('app.directives', []);
+
+angular.module('app.services', []);
+
+angular.module('templates', []);
+
+
 angular
     .module('app', [
         'app.services',

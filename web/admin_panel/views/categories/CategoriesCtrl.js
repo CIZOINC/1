@@ -10,7 +10,7 @@ function CategoriesCtrl($scope, $log, $state, categoriesServ) {
     categoriesServ.getCategoriesList($scope)
         .then(
             function success(response) {
-                $scope.categoriesList = response.data;
+                $scope.categoriesList = response.data.data;
                 $log.info('data received');
             },
             function error(response) {

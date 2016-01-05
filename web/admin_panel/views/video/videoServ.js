@@ -14,9 +14,7 @@ function videoServ($http, $q, $log) {
         setVideo: setVideo,
         deleteVideo: deleteVideo,
 
-        uploadHeroImage: uploadHeroImage,
-
-        sendStreams: sendStreams
+        uploadHeroImage: uploadHeroImage
     };
 
     function getVideosList(scope) {
@@ -79,10 +77,11 @@ function videoServ($http, $q, $log) {
 
     function setVideo(scope, id, videoData) {
         return $q( (resolve, reject) => {
+            let sendDate = angular.toJson(videoData);
             $http({
                 method: 'PUT',
                 url: `${scope.hostName}/videos/${id}`,
-                data: videoData
+                data: sendDate
             }).then(success, error);
 
             function success(response) {
@@ -116,14 +115,13 @@ function videoServ($http, $q, $log) {
         });
     }
 
-    function uploadHeroImage(scope, id, data) {
+    function uploadHeroImage(scope, id, file) {
         let formData = new FormData();
-        let encodedData = formData.append('heroImage', data);
+        formData.append('file', file);
         return $q( (resolve, reject) => {
-            $http({
-                method: 'POST',
-                url: `${scope.hostName}/videos/${id}/heroimage`,
-                data: encodedData
+            $http.post(`${scope.hostLink}/videos/${id}/hero_image`, formData, {
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
             }).then(success, error);
 
             function success(response) {
@@ -133,26 +131,6 @@ function videoServ($http, $q, $log) {
 
             function error(response) {
                 $log.info(`hero image uploading error with status ${response.status}`);
-                reject(response);
-            }
-        });
-    }
-
-    function sendStreams(scope, id) {
-        return $q( (resolve, reject) => {
-            $http({
-                method: 'POST',
-                url: `${scope.hostName}/videos/${id}/streams`
-            }).then(success, error);
-
-            function success(response) {
-                $log.info('streams called');
-                $log.info(JSON.stringify(response));
-                resolve(response);
-            }
-
-            function error(response) {
-                $log.info(`streams call receiving error with status ${response.status}`);
                 reject(response);
             }
         });

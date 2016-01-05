@@ -1,15 +1,6 @@
 <div class="drop-zone">
     Click to select file for uploading
 </div>
-<form action="https://cizo-assets.s3.amazonaws.com" method="post" enctype="multipart/form-data">
-    <input name="key" ng-model="postData.key" class="hidden">
-    <input name="Expires" ng-model="postData.expires" class="hidden-field">
-    <input name="policy" ng-model="postData.policy" class="hidden-field">
-    <input name="x-amz-credential" ng-model="postData.credential" class="hidden-field">
-    <input name="x-amz-algorithm" ng-model="postData.algorithm" class="hidden-field">
-    <input name="x-amz-date" ng-model="postData.date" class="hidden-field">
-    <input name="x-amz-security-token" ng-model="postData.token" class="hidden-field">
-    <input name="x-amz-signature" ng-model="postData.signature" class="hidden-field">
-
-    <input type="file" class="file-input"   name="file" />
+<form>
+    <input type="file" class="file-input" name="file" />
 </form>

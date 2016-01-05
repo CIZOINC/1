@@ -73,20 +73,52 @@ class V1::VideosControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'only admin can create video' do
+  test 'users can not create video' do
     @request.headers["Authorization"] = "Bearer user_access_token"
     post :create, {title: "Title", description: "Description", category_id: 1, mpaa_rating: "G"}
     assert_response 403
   end
 
-  test 'only admin can update video' do
+  test 'only admins can create video' do
+    @request.headers["Authorization"] = "Bearer admin_access_token"
+    post :create, {title: "Title", description: "Description", category_id: 1, mpaa_rating: "G"}
+    assert_response 201
+  end
+
+  test 'users can not update video' do
     @request.headers["Authorization"] = "Bearer user_access_token"
     put :update, {id: 1, title: "Updated title", description: "Updated description", category_id: 1, mpaa_rating: "G"}
     assert_response 403
   end
 
-  test 'should have destroy action' do
+  test 'only admins can update video' do
+    @request.headers["Authorization"] = "Bearer admin_access_token"
+    put :update, {id: 1, title: "Updated title", description: "Updated description", category_id: 1, mpaa_rating: "G"}
+    assert_response 201
+  end
 
+  test 'users can not destroy video' do
+    @request.headers["Authorization"] = "Bearer user_access_token"
+    put :update, {id: 1, title: "Updated title", description: "Updated description", category_id: 1, mpaa_rating: "G"}
+    assert_response 403
+  end
+
+  test 'only admin can destroy video' do
+    @request.headers["Authorization"] = "Bearer admin_access_token"
+    delete 'destroy', {id: 1}
+    assert_response 204
+  end
+
+  test 'users can not post hero image' do
+    @request.headers["Authorization"] = "Bearer user_access_token"
+    post 'hero_image', {video_id: 1}
+    assert_response 403
+  end
+
+  test 'admins can post hero image' do
+    @request.headers["Authorization"] = "Bearer admin_access_token"
+    post 'hero_image', {video_id: 1}
+    assert_response 202
   end
 
 

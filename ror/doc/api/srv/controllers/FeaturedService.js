@@ -1,6 +1,6 @@
 'use strict';
 
-exports.trendingGet = function() {
+exports.featuredGet = function() {
 
   var examples = {};
   
@@ -11,13 +11,13 @@ exports.trendingGet = function() {
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-01-05T03:07:24.367+0000",
+    "created_at" : "2016-01-05T03:07:24.362+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "tags" : [ "aeiou" ],
     "viewable" : true,
-    "updated_at" : "2016-01-05T03:07:24.367+0000",
+    "updated_at" : "2016-01-05T03:07:24.362+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",

@@ -427,6 +427,50 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /featured:
+    get:
+      description: "Returns a list of featured videos"
+      tags:
+        - Featured
+      responses:
+        '200':
+          description: A list of videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /search:
+    get:
+      description: "Searches using the specfied parameter and returns a list of matching videos."
+      tags:
+        - Search
+      parameters:
+        - name: search
+          in: query
+          description: Phrase to search by
+          required: false
+          type: string
+      responses:
+        '200':
+          description: A list of videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /trending:
     get:
       description: "Returns a list of trending videos"
@@ -882,3 +926,4 @@ definitions:
         format: int32
       message:
         type: string
+

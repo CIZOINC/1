@@ -225,6 +225,76 @@
   } ,
   
   
+  "/search": {
+    
+    "get": {
+      "summary": "",
+      "description":"Searches using the specfied parameter and returns a list of matching videos.",
+      "x-swagger-router-controller": "Search",
+      "tags": ["Search"],
+      "operationId": "searchGet",
+      "parameters": [
+        {
+  "name" : "search",
+  "in" : "query",
+  "description" : "Phrase to search by",
+  "required" : false,
+  "type" : "string"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A list of videos",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_1"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  
+  "/featured": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a list of featured videos",
+      "x-swagger-router-controller": "Featured",
+      "tags": ["Featured"],
+      "operationId": "featuredGet",
+      "responses": {
+        "200": {
+  "description" : "A list of videos",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_1"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  
   "/trending": {
     
     "get": {

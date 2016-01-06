@@ -76,4 +76,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # log to STDOUT so logs appear in puma logs
+  Rails.logger = Logger.new(STDOUT)
+  
 end

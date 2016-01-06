@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
+#
 one:
   link: MyString
-  type: 
-  transcode_status: MyString
+  stream_type: hls
+  transcode_status: pending
 
 two:
-  link: MyString
-  type: 
-  transcode_status: MyString
+  link: MyString2
+  stream_type: mp4
+  transcode_status: pending

@@ -121,10 +121,18 @@ class V1::VideosControllerTest < ActionController::TestCase
     assert_response 202
   end
 
+  test 'users can like videos' do
+    @request.headers["Authorization"] = "Bearer young_user_access_token"
+    likes_count = Like.all.count
+    put 'like', {video_id: 1, user_id: 3}
+    assert_response 204
+    assert_equal likes_count+1, Like.all.count
+  end
 
-
-
-
-
+  test 'users can dislike videos' do
+    @request.headers["Authorization"] = "Bearer young_user_access_token"
+    delete 'like', {video_id: 1, user_id: 3}
+    assert_response 204
+  end
 
 end

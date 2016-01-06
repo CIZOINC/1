@@ -384,49 +384,6 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /videos/{video-id}/like:
-    parameters:
-      - name: video-id
-        in: path
-        description: Video ID
-        type: integer
-        required: true
-    put:
-      description: "Set a like on a video."
-      tags:
-        - Videos
-      security:
-        - oauth:
-          - user
-      responses:
-        '204':
-          description: "Video has been liked"
-        '403':
-          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
-          schema:
-            $ref: '#/definitions/Error'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
-    delete:
-      description: "Remove a like on a video."
-      tags:
-        - Videos
-      security:
-        - oauth:
-          - user
-      responses:
-        '204':
-          description: "Like has been removed"
-        '403':
-          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
-          schema:
-            $ref: '#/definitions/Error'
-        default:
-          description: Unexpected error
-          schema:
-            $ref: '#/definitions/Error'
   /featured:
     get:
       description: "Returns a list of featured videos"
@@ -779,7 +736,123 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /users/me/videos/likes:
+  /users/me/videos/seen:
+    get:
+      description: 'Gets a list of videos seen by the current user'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '200':
+          description: Seen videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        '404':
+          description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/seen/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: "Marks a video as seen. The video's skipped parameter will be set to false and removed from the skipped resource if present."
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '204':
+          description: "Video has been marked as seen."
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/unseen:
+    get:
+      description: 'Gets a list of videos unseen by the current user'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '200':
+          description: Unseen videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        '404':
+          description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/skipped:
+    get:
+      description: 'Gets a list of videos skipped by the current user'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '200':
+          description: Skipped videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        '404':
+          description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/skipped/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: 'Marks a video as skipped.'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '204':
+          description: "Video has been marked as skipped"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/liked:
     get:
       description: 'Gets a list of videos liked by the current user'
       tags:
@@ -799,6 +872,49 @@ paths:
                   $ref: '#/definitions/Video'
         '404':
           description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/liked/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: 'Marks a video as liked.'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '204':
+          description: "Video has been marked as likes"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: "Removes a like on a video."
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '204':
+          description: "Like has been removed"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
 definitions:
@@ -860,6 +976,16 @@ definitions:
       liked:
         type: boolean
         description: 'Boolean representing whether the current user has liked the video. This property is always false for unauthenticated clients.'
+        default: false
+        readOnly: true
+      seen:
+        type: boolean
+        description: 'Boolean representing whether the current user has seen the video. This property is always false for unauthenticated clients.'
+        default: false
+        readOnly: true
+      skipped:
+        type: boolean
+        description: 'Boolean representing whether the current user has skipped the video. This property is always false for unauthenticated clients.'
         default: false
         readOnly: true
       view_count:

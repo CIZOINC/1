@@ -12,8 +12,8 @@ class V1::StreamsController < V1::ApiController
   def show
     request.headers['Authorization'].clear if request.headers['Authorization']
     prefix = host + bucket_name + env + "/stream/#{@video.id}/#{@stream.stream_type}/"
-    location =   params[:stream_type] == 'mp4' ? (prefix + 'video.mp4') : (prefix + 'index.m3u8')
-    render :show, status: 302, location: location
+    @location =   params[:stream_type] == 'mp4' ? (prefix + 'video.mp4') : (prefix + 'index.m3u8')
+    render :show, location: @location#, status: 302
   end
 
   def raw_stream_upload_request

@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-
   use_doorkeeper do
        controllers tokens: 'doorkeeper/tokens'
   end
@@ -20,7 +19,7 @@ Rails.application.routes.draw do
 
     resources :videos do
       get :raw_stream_upload_request, to: "streams#raw_stream_upload_request"
-      get 'streams/:stream_type', to: 'streams#show', param: :stream_type
+      get 'streams/:stream_type', to: 'streams#show', param: :stream_type, constraints: {stream_type: /hls|mp4/}
       post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
       post :streams, to: "streams#create"
       post :hero_image
@@ -29,10 +28,9 @@ Rails.application.routes.draw do
     end
 
     get :featured, to: "videos#featured"
+    get :trending, to: "videos#trending"
 
     resources :categories
-
-    get :trending, to: "videos#trending"
 
     resources :users do
       get :me, on: :collection

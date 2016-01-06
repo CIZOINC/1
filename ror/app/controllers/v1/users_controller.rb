@@ -1,11 +1,24 @@
 class V1::UsersController < V1::ApiController
   before_action :set_user, only: [:show, :update, :destroy]
-  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update]
-  skip_before_action :logged_in_as_admin?, only: [:me, :index, :update_self_account, :destroy_self_account, :likes]
-  skip_before_action :logged_in_as_user?, only: [:me, :index, :show, :create, :update]
+  # skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update]
+  # skip_before_action :logged_in_as_admin?, only: [:me, :index, :update_self_account, :destroy_self_account, :likes]
+  # skip_before_action :logged_in_as_user?, only: [:me, :index, :show, :create, :update]
+  before_action only: [:me, :destroy_self_account, :update_self_account] do
+    doorkeeper_authorize! :user, :admin
+  end
+
+  before_action only: [:index, :update] do
+    doorkeeper_authorize! :admin
+  end
+
   before_action :user_age_meets_requirement, only: [:likes]
+
   def index
     @users = User.all
+  end
+
+  def current_resource_owner
+    puts doorkeeper_token.resource_owner_id
   end
 
   def update

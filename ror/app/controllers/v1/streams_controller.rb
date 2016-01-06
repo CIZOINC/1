@@ -4,10 +4,14 @@ class V1::StreamsController < V1::ApiController
 
   before_action :set_region, only: [:raw_stream_upload_request, :create, :destroy, :transcode_notification]
   before_action :set_pipeline, only: [:create, :transcode_notification]
-  skip_before_action :check_if_logged_in, only: [:show, :create, :raw_stream_upload_request]
-  skip_before_action :logged_in_as_admin?, only: [:show]
-  skip_before_action :logged_in_as_user?, only: [:show, :create, :raw_stream_upload_request]
+  # skip_before_action :check_if_logged_in, only: [:show, :create, :raw_stream_upload_request]
+  # skip_before_action :logged_in_as_admin?, only: [:show]
+  # skip_before_action :logged_in_as_user?, only: [:show, :create, :raw_stream_upload_request]
   before_action :check_for_requirement, only: :show
+
+  before_action only: [:show] do
+    doorkeeper_authorize! :admin, :user
+  end
 
   def show
     render :show, status: 302, location: @stream.link

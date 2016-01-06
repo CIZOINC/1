@@ -1,8 +1,8 @@
 class V1::ApiController < ApplicationController
   before_action :current_user
-  before_action :check_if_logged_in
-  before_action :logged_in_as_user?
-  before_action :logged_in_as_admin?
+  # before_action :check_if_logged_in
+  # before_action :logged_in_as_user?
+  # before_action :logged_in_as_admin?
 
   private
 

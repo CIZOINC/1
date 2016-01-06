@@ -10,10 +10,20 @@ module Doorkeeper
       self.status        = response.status
       username = params[:username]
       grant_type = params[:grant_type]
-
+      scope = params[:scope]
+      puts scope
       if grant_type == 'password'
-        user = User.find_by_email(username)
-        destroy_useless_tokens(user) if user
+        if !scope || scope == 'user' || scope.blank?
+          user = User.find_by_email(username)
+          destroy_useless_tokens(user) if user
+        elsif scope == "admin"
+          user = User.find_by_email(username)
+          if !user.is_admin
+            head 403
+          elsif user.is_admin
+            destroy_useless_tokens(user) if user
+          end
+        end
       elsif grant_type == 'refresh_token'
         previous_refresh_token = params[:refresh_token]
         if token = Doorkeeper::AccessToken.find_by_refresh_token(previous_refresh_token)

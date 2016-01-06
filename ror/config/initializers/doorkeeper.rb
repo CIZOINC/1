@@ -14,6 +14,7 @@ Doorkeeper.configure do
   # other available scopes
   optional_scopes :admin
 
+
   resource_owner_from_credentials do |routes|
      user = User.find_for_database_authentication(email: params[:username])
      user if user && user.valid_for_authentication? { user.valid_password?(params[:password]) }

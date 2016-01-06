@@ -73,10 +73,105 @@ module.exports.usersMeDelete = function usersMeDelete (req, res, next) {
     res.end();
 };
 
-module.exports.usersMeVideosLikesGet = function usersMeVideosLikesGet (req, res, next) {
+module.exports.usersMeVideosLikedGet = function usersMeVideosLikedGet (req, res, next) {
   
 
-  var result = Users.usersMeVideosLikesGet();
+  var result = Users.usersMeVideosLikedGet();
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersMeVideosLikedVideoIdPut = function usersMeVideosLikedVideoIdPut (req, res, next) {
+  var videoId = req.swagger.params['video-id'].value;
+  
+
+  var result = Users.usersMeVideosLikedVideoIdPut(videoId);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersMeVideosLikedVideoIdDelete = function usersMeVideosLikedVideoIdDelete (req, res, next) {
+  var videoId = req.swagger.params['video-id'].value;
+  
+
+  var result = Users.usersMeVideosLikedVideoIdDelete(videoId);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersMeVideosSeenGet = function usersMeVideosSeenGet (req, res, next) {
+  
+
+  var result = Users.usersMeVideosSeenGet();
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersMeVideosSeenVideoIdPut = function usersMeVideosSeenVideoIdPut (req, res, next) {
+  var videoId = req.swagger.params['video-id'].value;
+  
+
+  var result = Users.usersMeVideosSeenVideoIdPut(videoId);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersMeVideosSkippedGet = function usersMeVideosSkippedGet (req, res, next) {
+  
+
+  var result = Users.usersMeVideosSkippedGet();
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersMeVideosSkippedVideoIdPut = function usersMeVideosSkippedVideoIdPut (req, res, next) {
+  var videoId = req.swagger.params['video-id'].value;
+  
+
+  var result = Users.usersMeVideosSkippedVideoIdPut(videoId);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersMeVideosUnseenGet = function usersMeVideosUnseenGet (req, res, next) {
+  
+
+  var result = Users.usersMeVideosUnseenGet();
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

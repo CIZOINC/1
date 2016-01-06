@@ -93,31 +93,3 @@ module.exports.videosVideoIdHeroImagePost = function videosVideoIdHeroImagePost 
   else
     res.end();
 };
-
-module.exports.videosVideoIdLikePut = function videosVideoIdLikePut (req, res, next) {
-  var videoId = req.swagger.params['video-id'].value;
-  
-
-  var result = Videos.videosVideoIdLikePut(videoId);
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};
-
-module.exports.videosVideoIdLikeDelete = function videosVideoIdLikeDelete (req, res, next) {
-  var videoId = req.swagger.params['video-id'].value;
-  
-
-  var result = Videos.videosVideoIdLikeDelete(videoId);
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};

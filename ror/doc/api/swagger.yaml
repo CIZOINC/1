@@ -14,7 +14,7 @@ securityDefinitions:
     authorizationUrl: https://api.cizo.com/oauth/authorize
     scopes:
       admin: Grants read/write access to all resources
-      user: Grants read access to videos that have a MPAA rating greater than G if the user meets the age requirement for a given mpaa_rating
+      user: Grants read access to videos that marked as mature content is the user is 18 years old or older. Grants read/write access to user resource owned by that user. 
 consumes:
   - application/json
 produces:
@@ -22,7 +22,7 @@ produces:
 paths:
   /videos:
     get:
-      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated and the mpaa_rating is greater than 'G' or is not of the age required for the mpaa_rating, streams will be null."
+      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null."
       tags:
         - Videos
       parameters:
@@ -38,7 +38,7 @@ paths:
           type: string
         - name: created_before
           in: query
-          description: Filters videos by created_at date. Videos that have a date before the one specified will be returned.
+          description: Filters videos by created_at date. Videos that have a date before the one specified will be returned.`
           required: false
           type: string
           format: date-time
@@ -78,7 +78,7 @@ paths:
               - title
               - category_id
               - description
-              - mpaa_rating
+              - mature_content
             properties:
               title:
                 type: string
@@ -90,15 +90,10 @@ paths:
               description:
                 type: string
                 description: Description of video.
-              mpaa_rating:
-                type: string
-                description: 'MPAA rating of video. This must be one of the following strings: "G", "PG", "PG-13", "R", "NC-17"'
-                enum:
-                  - "G"
-                  - "PG"
-                  - "PG-13"
-                  - "R"
-                  - "NC-17"
+              mature_content:
+                type: boolean
+                description: 'Boolean indicating if the video contains mature content'
+                default: false
               tags:
                 description: Tags associated with video.
                 type: array
@@ -116,7 +111,6 @@ paths:
               - updated_at
               - title
               - description
-              - mpaa_rating
             properties:
               id:
                 type: integer
@@ -141,15 +135,10 @@ paths:
               description:
                 type: string
                 description: Description of video.
-              mpaa_rating:
-                type: string
-                description: 'MPAA rating of video. This must be one of the following strings: "G", "PG", "PG-13", "R", "NC-17"'
-                enum:
-                  - "G"
-                  - "PG"
-                  - "PG-13"
-                  - "R"
-                  - "NC-17"
+              mature_content:
+                type: boolean
+                description: 'Boolean indicating if the video contains mature content'
+                default: false
               tags:
                 type: array
                 items:
@@ -170,7 +159,7 @@ paths:
         type: integer
         required: true
     get:
-      description: "Returns a video for the given ID. If the user is unauthenticated and the mpaa_rating is greater than PG or is not the age required for the mpaa_rating, streams will be null."
+      description: "Returns a video for the given ID. If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null."
       tags:
         - Videos
       responses:
@@ -354,7 +343,7 @@ paths:
         '302':
           description: "Redirect to stream location"
         '403':
-          description: "Forbidden. This is returned if the mpaa_rating is greater than G and the client is unauthenticated and the mpaa_rating is greater than 'G' or is not of the age required for the mpaa_rating"
+          description: "Forbidden. This is returned if the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old."
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -923,7 +912,6 @@ definitions:
     required:
       - title
       - description
-      - mpaa_rating
       - category_id
     properties:
       id:
@@ -945,15 +933,10 @@ definitions:
       description:
         type: string
         description: Description of video.
-      mpaa_rating:
-        type: string
-        description: 'MPAA rating of video. This must be one of the following strings: "G", "PG", "PG-13", "R", "NC-17"'
-        enum:
-          - "G"
-          - "PG"
-          - "PG-13"
-          - "R"
-          - "NC-17"
+      mature_content:
+        type: boolean
+        description: 'Boolean indicating if the video contains mature content'
+        default: false
       category_id:
         type: integer
         format: int32

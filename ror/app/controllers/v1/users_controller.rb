@@ -1,9 +1,9 @@
 class V1::UsersController < V1::ApiController
   before_action :set_user, only: [:show, :update, :destroy]
   skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update]
-  skip_before_action :logged_in_as_admin?, only: [:index, :me, :update_self_account, :destroy_self_account]
-  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :update]
-
+  skip_before_action :logged_in_as_admin?, only: [:me, :index, :update_self_account, :destroy_self_account, :likes]
+  skip_before_action :logged_in_as_user?, only: [:me, :index, :show, :create, :update]
+  before_action :user_age_meets_requirement, only: [:likes]
   def index
     @users = User.all
   end
@@ -27,6 +27,11 @@ class V1::UsersController < V1::ApiController
       Doorkeeper::AccessToken.where(resource_owner_id: @current_user).destroy_all
       head :no_content
     end
+  end
+
+  def likes
+    @likes = true
+    @videos = Video.joins(:likes).where(likes: {user_id: @current_user.id})
   end
 
   def update_self_account

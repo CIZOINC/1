@@ -1,16 +1,19 @@
 class V1::StreamsController < V1::ApiController
   before_action :set_video, only: [:show, :create, :raw_stream_upload_request]
   before_action :set_stream, only: :show
-
   before_action :set_region, only: [:raw_stream_upload_request, :create, :destroy, :transcode_notification]
   before_action :set_pipeline, only: [:create, :transcode_notification]
-  skip_before_action :check_if_logged_in, only: [:show, :create, :raw_stream_upload_request]
-  skip_before_action :logged_in_as_admin?, only: [:show]
-  skip_before_action :logged_in_as_user?, only: [:show, :create, :raw_stream_upload_request]
+  skip_before_action :check_if_logged_in, only: [:show, :create, :raw_stream_upload_request, :transcode_notification]
+  skip_before_action :logged_in_as_admin?, only: [:show, :transcode_notification]
+  skip_before_action :logged_in_as_user?, only: [:show, :create, :raw_stream_upload_request, :transcode_notification]
   before_action :check_for_requirement, only: :show
 
+
   def show
-    render :show, status: 302, location: @stream.link
+    request.headers['Authorization'].clear if request.headers['Authorization']
+    prefix = host + bucket_name + env + "/stream/#{@video.id}/#{@stream.stream_type}/"
+    @location =   params[:stream_type] == 'mp4' ? (prefix + 'video.mp4') : (prefix + 'index.m3u8')
+    redirect_to @location, status: 302
   end
 
   def raw_stream_upload_request
@@ -45,6 +48,7 @@ class V1::StreamsController < V1::ApiController
   def create
     input_key_prefix = Rails.env.production? ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
     input_key = Rails.env.production? ? "production/raw/#{@video.id}/#{@video.raw_filename}" : "staging/raw/#{@video.id}/#{@video.raw_filename}"
+    prefix = Rails.env.production? ? "http://api.cizo.com/" : "http://staging.cizo.com/"
     transcoder_client = Aws::ElasticTranscoder::Client.new(region: @region)
     input = { key: input_key }
     obj = Aws::S3::Object.new(bucket_name: bucket_name, key: input_key, region: @region)
@@ -80,27 +84,28 @@ class V1::StreamsController < V1::ApiController
       playlists: [ playlist ])[:job]
 
     object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_prefix_hls + 'index.m3u8')
-    @hls_stream.update_columns(link: output_key_prefix_hls, job_id: job.id, transcode_status: 'submitted') if @hls_stream
+    @hls_stream.update_columns(link: prefix + "videos/#{@video.id}/streams/#{@hls_stream.stream_type}", job_id: job.id, transcode_status: 'submitted') if @hls_stream
 
     #MP4
     web_preset_id = '1351620000001-100070'
     output_key_prefix_mp4 =  Rails.env.production? ? "production/stream/#{@video.id}/mp4/" : "staging/stream/#{@video.id}/mp4/"
     output_key_mp4 = Rails.env.production? ? output_key_prefix_mp4 + "video.mp4" : output_key_prefix_mp4 + "video.mp4"
     @mp4_stream = @video.streams.find_by(stream_type: "mp4")
-     web = {
-       key: output_key_mp4,
-       preset_id: web_preset_id
-     }
+    web = {
+     key: output_key_mp4,
+     preset_id: web_preset_id
+    }
 
-     outputs_mp4 = [ web ]
+    outputs_mp4 = [ web ]
 
-     job = transcoder_client.create_job(
-       pipeline_id: @pipeline_id,
-       input: input,
-       outputs: outputs_mp4)[:job]
+    job = transcoder_client.create_job(
+     pipeline_id: @pipeline_id,
+     input: input,
+     outputs: outputs_mp4)[:job]
 
-     object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_mp4)
-    @mp4_stream.update_columns(link: output_key_prefix_mp4, job_id: job.id, transcode_status: 'submitted') if @mp4_stream
+    object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_mp4)
+
+    @mp4_stream.update_columns(link: prefix + "videos/#{@video.id}/streams/#{@mp4_stream.stream_type}", job_id: job.id, transcode_status: 'submitted') if @mp4_stream
     render nothing: true, status: 202
   end
 
@@ -211,6 +216,14 @@ class V1::StreamsController < V1::ApiController
 
   def bucket_name
     'cizo-assets'
+  end
+
+  def host
+    'https://s3.amazonaws.com/'
+  end
+
+  def env
+    Rails.env.production? ? '/production' : '/staging'
   end
 
   def set_stream

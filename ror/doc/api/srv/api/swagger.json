@@ -911,7 +911,7 @@
 }
         ,
         "403": {
-  "description" : "Forbidden. This is returned if the mpaa_rating is greater than G and the client is unauthenticated and the mpaa_rating is greater than 'G' or is not of the age required for the mpaa_rating",
+  "description" : "Forbidden. This is returned if the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old.",
   "schema" : {
     "$ref" : "#/definitions/Error"
   }
@@ -1072,7 +1072,7 @@
     
     "get": {
       "summary": "",
-      "description":"Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of &#39;admin&#39;, this includes all videos. For oauth2 scope of &#39;user&#39; or unauthenticated clients, this includes only videos with &#39;viewable&#39; set to true. &lt;b&gt;NOTE&lt;/b&gt;  If the user is unauthenticated and the mpaa_rating is greater than &#39;G&#39; or is not of the age required for the mpaa_rating, streams will be null.",
+      "description":"Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of &#39;admin&#39;, this includes all videos. For oauth2 scope of &#39;user&#39; or unauthenticated clients, this includes only videos with &#39;viewable&#39; set to true. &lt;b&gt;NOTE&lt;/b&gt;  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null.",
       "x-swagger-router-controller": "Videos",
       "tags": ["Videos"],
       "operationId": "videosGet",
@@ -1094,7 +1094,7 @@
         {
   "name" : "created_before",
   "in" : "query",
-  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.`",
   "required" : false,
   "type" : "string",
   "format" : "date-time"
@@ -1213,7 +1213,7 @@
     
     "get": {
       "summary": "",
-      "description":"Returns a video for the given ID. If the user is unauthenticated and the mpaa_rating is greater than PG or is not the age required for the mpaa_rating, streams will be null.",
+      "description":"Returns a video for the given ID. If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null.",
       "x-swagger-router-controller": "Videos",
       "tags": ["Videos"],
       "operationId": "videosVideoIdGet",
@@ -1343,7 +1343,7 @@
   
   }, "definitions": {
   "Video": {
-  "required" : [ "category_id", "description", "mpaa_rating", "title" ],
+  "required" : [ "category_id", "description", "title" ],
   "properties" : {
     "id" : {
       "type" : "integer",
@@ -1369,10 +1369,10 @@
       "type" : "string",
       "description" : "Description of video."
     },
-    "mpaa_rating" : {
-      "type" : "string",
-      "description" : "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
-      "enum" : [ "G", "PG", "PG-13", "R", "NC-17" ]
+    "mature_content" : {
+      "type" : "boolean",
+      "description" : "Boolean indicating if the video contains mature content",
+      "default" : false
     },
     "category_id" : {
       "type" : "integer",
@@ -1539,7 +1539,7 @@
     }
   }
 },"body_3": {
-  "required" : [ "category_id", "description", "mpaa_rating", "title" ],
+  "required" : [ "category_id", "description", "mature_content", "title" ],
   "properties" : {
     "title" : {
       "type" : "string",
@@ -1554,10 +1554,10 @@
       "type" : "string",
       "description" : "Description of video."
     },
-    "mpaa_rating" : {
-      "type" : "string",
-      "description" : "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
-      "enum" : [ "G", "PG", "PG-13", "R", "NC-17" ]
+    "mature_content" : {
+      "type" : "boolean",
+      "description" : "Boolean indicating if the video contains mature content",
+      "default" : false
     },
     "tags" : {
       "type" : "array",
@@ -1569,6 +1569,11 @@
   }
 },"inline_response_201": {
   "properties" : {
+    "mature_content" : {
+      "type" : "boolean",
+      "description" : "Boolean indicating if the video contains mature content",
+      "default" : false
+    },
     "category_id" : {
       "type" : "integer",
       "format" : "int32",
@@ -1597,11 +1602,6 @@
     "title" : {
       "type" : "string",
       "description" : "Title of video."
-    },
-    "mpaa_rating" : {
-      "type" : "string",
-      "description" : "MPAA rating of video. This must be one of the following strings: \"G\", \"PG\", \"PG-13\", \"R\", \"NC-17\"",
-      "enum" : [ "G", "PG", "PG-13", "R", "NC-17" ]
     },
     "tags" : {
       "type" : "array",

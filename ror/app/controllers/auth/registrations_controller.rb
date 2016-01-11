@@ -14,7 +14,7 @@ module Auth
         render json:{errors: resource.errors.full_messages}, status: 500
       end
     end
-    
+
     protected
 
      def configure_permitted_parameters

@@ -5,3 +5,9 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+# puts "Start creation"
+# 10000.times do |i|
+#   Video.create!(title: "Title_#{i}", description: "description_#{i}", category_id: 1, mpaa_rating: (i<5000) ? "G" : "PG" )
+#   puts i
+# end
+# puts "DONE!"

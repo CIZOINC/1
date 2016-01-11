@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-
   use_doorkeeper do
        controllers tokens: 'doorkeeper/tokens'
   end
@@ -20,25 +19,31 @@ Rails.application.routes.draw do
 
     resources :videos do
       get :raw_stream_upload_request, to: "streams#raw_stream_upload_request"
-      get 'streams/:stream_type', to: 'streams#show', param: :stream_type
+      get 'streams/:stream_type', to: 'streams#show', param: :stream_type, constraints: {stream_type: /hls|mp4/}
       post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
       post :streams, to: "streams#create"
       post :hero_image
-      put :like, to: "videos#like"
-      delete :like, to: "videos#dislike"
     end
 
     get :featured, to: "videos#featured"
+    get :trending, to: "videos#trending"
 
     resources :categories
-
-    get :trending, to: "videos#trending"
 
     resources :users do
       get :me, on: :collection
       delete :me, on: :collection, to: "users#destroy_self_account"
       put :me, on: :collection, to: "users#update_self_account"
-      get 'me/videos/likes',  to: "users#likes", on: :collection
+
+      put 'me/videos/liked/:video_id', to: "users#like_video", on: :collection
+      delete 'me/videos/liked/:video_id', to: "users#dislike_video", on: :collection
+      get 'me/videos/liked',  to: "users#likes", on: :collection
+
+      get 'me/videos/skipped', to: 'users#skipped', on: :collection
+      put 'me/videos/skipped/:video_id', to: 'users#skip_video', on: :collection
+      get 'me/videos/seen', to: 'users#seen', on: :collection
+      get 'me/videos/unseen', to: 'users#unseen', on: :collection
+      put 'me/videos/seen/:video_id', to: 'users#mark_video_as_seen', on: :collection
     end
 
     get :search, to: 'videos#search'

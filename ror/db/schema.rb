@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160111105916) do
+ActiveRecord::Schema.define(version: 20160112082258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -148,7 +148,6 @@ ActiveRecord::Schema.define(version: 20160111105916) do
   create_table "videos", force: :cascade do |t|
     t.string   "title"
     t.string   "description"
-    t.string   "mpaa_rating"
     t.integer  "category_id"
     t.boolean  "viewable",        default: false
     t.string   "hero_image_link"
@@ -159,6 +158,7 @@ ActiveRecord::Schema.define(version: 20160111105916) do
     t.string   "raw_filename"
     t.string   "hero_image"
     t.boolean  "featured",        default: false
+    t.boolean  "mature_content",  default: false
   end
 
 end

@@ -1,7 +1,7 @@
 class V1::UsersController < V1::ApiController
   before_action :set_user, only: [:show, :update, :destroy]
   before_action :set_video, only: [:like_video, :dislike_video, :mark_video_as_seen, :skip_video]
-  before_action only: [:me, :destroy_self_account, :update_self_account, :show, :like_video, :dislike_video, :likes, :skipped, :skip_video, :seen, :mark_video_as_seen] do
+  before_action only: [:me, :destroy_self_account, :update_self_account, :show, :like_video, :dislike_video, :likes, :skipped, :skip_video, :seen, :unseen, :mark_video_as_seen] do
     doorkeeper_authorize! :user, :admin
   end
 
@@ -70,6 +70,7 @@ class V1::UsersController < V1::ApiController
   end
 
   def unseen
+    @unseen = true
     seen_videos_ids = Video.joins(:seen_videos).where(seen_videos: {user_id: @current_user.id}).pluck(:id)
     @unseen_videos = seen_videos_ids.empty? ? Video.all : Video.where("id not in (?)", seen_videos_ids)
   end

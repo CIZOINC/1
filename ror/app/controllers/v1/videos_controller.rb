@@ -39,7 +39,7 @@ class V1::VideosController < V1::ApiController
     if @current_user && @current_user.is_admin
       @videos = @videos.order(created_at: :desc)
     else
-      @videos = @videos.limit(1000).where(viewable: true)
+      @videos = @videos.order(created_at: :desc).where(viewable: true).limit(1000)
     end
   end
 

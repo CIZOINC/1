@@ -55,6 +55,7 @@ class V1::UsersController < V1::ApiController
   end
 
   def skipped
+    @skipped = true
     @skipped_videos = Video.joins(:skipped_videos).where(skipped_videos: {user_id: @current_user.id})
   end
 
@@ -64,6 +65,7 @@ class V1::UsersController < V1::ApiController
   end
 
   def seen
+    @seen = true
     @seen_videos = Video.joins(:seen_videos).where(seen_videos: {user_id: @current_user.id})
   end
 

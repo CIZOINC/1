@@ -46,6 +46,10 @@ class Video < ActiveRecord::Base
     update_column(:view_count, view_count.to_i.succ)
   end
 
+  def decrease_view_count!
+    update_column(:view_count, view_count.pred)
+  end
+
   def mark_video_as_seen!(user_id, video_id)
     params = {user_id: user_id, video_id: video_id}
     SeenVideo.find_or_create_by(params)
@@ -68,7 +72,11 @@ class Video < ActiveRecord::Base
 
   def skip!(user_id, video_id)
     params = {user_id: user_id, video_id: video_id}
-    SkippedVideo.find_or_create_by(params)
+    skipped_video = SkippedVideo.find_by(params)
+    if !skipped_video
+      SkippedVideo.create(params)
+      decrease_view_count!
+    end
   end
 
 end

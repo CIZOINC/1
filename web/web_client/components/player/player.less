@@ -1,10 +1,145 @@
+.player {
+
+  &_buttons-layer {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    align-items: stretch;
+    align-content: stretch;
+    flex-direction: column;
+
+    &_top-elements {
+      display: flex;
+      align-items: stretch;
+      align-content: stretch;
+      justify-content: space-between;
+      height: 10%;
+      &_close-button {
+        margin-left: 20px;
+        fill: white;
+      }
+      &_rightside {
+        display: flex;
+        align-items: stretch;
+        align-content: stretch;
+        justify-content: space-between;
+        flex-direction: row;
+        padding-right: 10px;
+        &_buttons {
+          fill: white;
+          stroke-width: 10;
+          stroke: white;
+          margin: 10px;
+          width: 40px;
+        }
+      }
+    }
+
+    &_center-elements {
+      display: flex;
+      align-items: stretch;
+      align-content: stretch;
+      justify-content: center;
+      height: 60%;
+
+      &_play-button {
+        display: flex;
+        min-width: 60px;
+        min-height: 60px;
+        width: 25%;
+        height: 25%;
+        justify-content: center;
+        align-items:center;
+        align-content: flex-start;
+        margin-top: 15%;
+
+        img {
+          width: 60%;
+          height: 60%;
+        }
+      }
+    }
+
+    &_bottom-elements {
+      display: flex;
+      align-items: stretch;
+      align-content: flex-end;
+      justify-content: flex-end;
+      height: 30%;
+      flex-direction: column;
+      &_titles {
+        display: flex;
+        align-items: stretch;
+        align-content: flex-end;
+        justify-content: space-between;
+        flex-direction: row;
+        color: white;
+
+        &--hovered {
+          background-color: #000011;
+          opacity: 0.8;
+          border-left: white solid 5px;
+        }
+
+        &_current {
+          display: flex;
+          align-items: stretch;
+          align-content: flex-end;
+          justify-content: flex-start;
+          flex-direction: row;
+
+          &_category {
+            fill: white;
+            width: 80px;
+            height: 60px;
+            padding: 10px;
+          }
+
+          &_title {
+            display: flex;
+            align-items: stretch;
+            align-content: stretch;
+            justify-content: flex-start;
+            flex-direction: column;
+            font-size: 26px;
+
+            &_created {
+              font-size: 18px;
+            }
+          }
+
+        }
+      }
+
+      &_controls {
+        display: flex;
+        align-items: flex-end;
+        align-content: flex-end;
+        justify-content: space-between;
+        flex-direction: row;
+        color: white;
+        padding: 5px 10px;
+
+        &_expand {
+          fill: white;
+          min-width: 30px;
+          min-height: 26px;
+        }
+      }
+    }
+  }
+
+}
+
 
 @btns-size: 45px;
 
 video {
   object-fit: contain;
 }
-
 
 .player-buttons-common() {
   z-index: 100;
@@ -16,6 +151,8 @@ video {
   }
 }
 
+
+
 player {
 
   margin-top: 10px;
@@ -23,11 +160,9 @@ player {
   .hidden-layer {
     display: none !important;
   }
-
   .no-padding {
     padding: 0;
   }
-
   .container {
     position: relative;
     width: 100%;
@@ -36,57 +171,6 @@ player {
     padding: 0;
   }
 
-  .like-button {
-    position: absolute;
-    left: 0;
-    top: 0;
-    .player-buttons-common();
-  }
-
-  .play-button {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    .player-buttons-common();
-  }
-
-  .info-panel {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    .player-buttons-common();
-    font-size: 25px;
-    text-shadow: 0 0 30px black;
-  }
-
-  .play-button-layer {
-    display: flex;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items:center;
-
-    .play-button-centered {
-      display: flex;
-      border-radius: 50%;
-      background-color: #d9edf7;
-      width: 80px;
-      height: 80px;
-      justify-content: center;
-      align-items:center;
-      opacity: 0.95;
-      box-shadow: 5px 5px 10px #0f1012;
-
-      img {
-        width: 60%;
-        height: 60%;
-        padding-left: 10px;
-      }
-    }
-  }
 
   .text-overlay-layer {
     display: flex;
@@ -106,17 +190,8 @@ player {
         width: 100%;
     }
 
-    img {
-      width: 80px;
-      height: 80px;
-      padding: 10px;
-    }
-
     .overlayText {
-      padding-top: 15px;
-      padding-left: 40px;
-      padding-right: 80px;
-      padding-bottom: 15px;
+      padding: 15px 80px 15px 40px;
       color: black;
     }
   }

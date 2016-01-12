@@ -11,14 +11,6 @@
 
 <div class="container-fluid">
     <div class="row" ng-repeat="videoItem in videosList">
-        <player class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem"></player>
+        <player class="col-xs-12 col-md-8 col-md-offset-2" videos-list="videosList" video="videoItem"></player>
     </div>
 </div>
-
-<!--<div>
-    <div class="btn-group-vertical">
-        <a class="btn btn-default" ui-sref="videos">{{videos}}</a>
-        <a class="btn btn-default">{{categories}}</a>
-        <a class="btn btn-default">{{trending}}</a>
-    </div>
-</div>-->

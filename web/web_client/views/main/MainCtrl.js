@@ -31,8 +31,10 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
         _.each($scope.videosList, (video) => {
             let category = _.find($scope.categoriesList, (category) => {
                 return category.id === video.category_id;
-            })
+            });
             video.categoryName = category.title;
+            video.isWatching = false;
+            video.list = $scope.videosList;
 
         });
     }

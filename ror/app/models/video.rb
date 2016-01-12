@@ -52,19 +52,23 @@ class Video < ActiveRecord::Base
   def mark_video_as_seen!(user_id, video_id)
     params = {user_id: user_id, video_id: video_id}
     SeenVideo.find_or_create_by(params)
+    #TODO
+    # seen_video = SeenVideo.find_by(params)
+    # if !seen_video
+    #   SeenVideo.create(params)
+    #   Video.find(video_id).increase_view_count!
+    # end
     if skipped_video = SkippedVideo.find_by(params)
       skipped_video.destroy
     end
   end
 
   def like!(user_id, video_id)
-    params = {user_id: user_id, video_id: video_id}
-    Like.find_or_create_by(params)
+    Like.find_or_create_by(user_id: user_id, video_id: video_id)
   end
 
   def dislike!(user_id, video_id)
-    params = {user_id: user_id, video_id: video_id}
-    if like = Like.find_by(params)
+    if like = Like.find_by(user_id: user_id, video_id: video_id)
       like.destroy
     end
   end

@@ -1,12 +1,13 @@
 class V1::VideosController < V1::ApiController
   before_action :set_video, only: [:show, :destroy, :update]
-  before_action :set_video_by_video_id, only: [:hero_image, :like, :dislike]
+  before_action :set_video_by_video_id, only: [:hero_image]
   before_action :set_region, only: [:destroy]
 
-  skip_before_action :check_if_logged_in, only:[:index, :show, :create, :update, :destroy, :hero_image, :trending, :featured, :search]
-  skip_before_action :logged_in_as_admin?, only: [:index, :show, :like, :dislike, :trending, :featured, :search]
-  skip_before_action :logged_in_as_user?, only: [:index, :show, :create, :update, :destroy, :hero_image, :trending, :featured, :search]
-  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search], if: :current_user
+  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
+
+  before_action only: [:create, :update, :hero_image, :destroy] do
+    doorkeeper_authorize! :admin
+  end
 
   def index
     conditions = []
@@ -38,7 +39,7 @@ class V1::VideosController < V1::ApiController
     if @current_user && @current_user.is_admin
       @videos = @videos.order(created_at: :desc)
     else
-      @videos = @videos.limit(1000).where(viewable: true)
+      @videos = @videos.order(created_at: :desc).where(viewable: true).limit(1000)
     end
   end
 
@@ -90,21 +91,6 @@ class V1::VideosController < V1::ApiController
     nothing 202
   end
 
-  def like
-    @like = Like.find_or_create_by(user_id: @current_user.id, video_id: @video.id)
-    if @like
-      nothing 204
-    else
-      nothing 404
-    end
-  end
-
-  def dislike
-    @like = Like.find_by(user_id: @current_user.id, video_id: @video.id)
-    @like.destroy if @like
-    nothing 204
-  end
-
   def trending
     @videos = Video.trending
     render :index
@@ -135,7 +121,7 @@ class V1::VideosController < V1::ApiController
   end
 
   def videos_params
-    params.permit(:id, :title, :description, :mpaa_rating, :viewable, :hero_image_link, :liked, :category_id, :tag_list, :featured)
+    params.permit(:id, :title, :description, :mature_content, :viewable, :category_id, :tag_list, :featured)
   end
 
   def set_video
@@ -144,10 +130,6 @@ class V1::VideosController < V1::ApiController
 
   def set_video_by_video_id
     @video = Video.find(params[:video_id])
-  end
-
-  def nothing(status)
-    render nothing: true, status: status
   end
 
 end

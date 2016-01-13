@@ -1,6 +1,9 @@
-angular.module('app.directives', []);
+
+angular.module('app.controls', ['ngSanitize']);
 
 angular.module('app.services', []);
+
+angular.module('app.directives', ['app.services']);
 
 angular.module('templates', []);
 

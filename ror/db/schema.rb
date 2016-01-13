@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151230115922) do
+ActiveRecord::Schema.define(version: 20160112082258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,6 +75,24 @@ ActiveRecord::Schema.define(version: 20151230115922) do
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
+  create_table "seen_videos", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "video_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "seen_videos", ["user_id", "video_id"], name: "index_seen_videos_on_user_id_and_video_id", unique: true, using: :btree
+
+  create_table "skipped_videos", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "video_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "skipped_videos", ["user_id", "video_id"], name: "index_skipped_videos_on_user_id_and_video_id", unique: true, using: :btree
+
   create_table "streams", force: :cascade do |t|
     t.string   "link"
     t.string   "stream_type"
@@ -130,7 +148,6 @@ ActiveRecord::Schema.define(version: 20151230115922) do
   create_table "videos", force: :cascade do |t|
     t.string   "title"
     t.string   "description"
-    t.string   "mpaa_rating"
     t.integer  "category_id"
     t.boolean  "viewable",        default: false
     t.string   "hero_image_link"
@@ -141,6 +158,7 @@ ActiveRecord::Schema.define(version: 20151230115922) do
     t.string   "raw_filename"
     t.string   "hero_image"
     t.boolean  "featured",        default: false
+    t.boolean  "mature_content",  default: false
   end
 
 end

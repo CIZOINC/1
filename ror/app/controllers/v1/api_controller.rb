@@ -1,8 +1,8 @@
 class V1::ApiController < ApplicationController
   before_action :current_user
-  before_action :check_if_logged_in
-  before_action :logged_in_as_user?
-  before_action :logged_in_as_admin?
+  # before_action :check_if_logged_in
+  # before_action :logged_in_as_user?
+  # before_action :logged_in_as_admin?
 
   private
 
@@ -25,4 +25,9 @@ class V1::ApiController < ApplicationController
   def check_if_logged_in
     (render json: {errors: "Should be logged in"}, status: 404) && return if @current_user.nil?
   end
+
+  def nothing(status)
+    render nothing: true, status: status
+  end
+  
 end

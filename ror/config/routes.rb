@@ -23,8 +23,6 @@ Rails.application.routes.draw do
       post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
       post :streams, to: "streams#create"
       post :hero_image
-      put :like, to: "videos#like"
-      delete :like, to: "videos#dislike"
     end
 
     get :featured, to: "videos#featured"
@@ -32,11 +30,20 @@ Rails.application.routes.draw do
 
     resources :categories
 
-    resources :users do
+    resources :users, except: [:destroy] do
       get :me, on: :collection
       delete :me, on: :collection, to: "users#destroy_self_account"
       put :me, on: :collection, to: "users#update_self_account"
-      get 'me/videos/likes',  to: "users#likes", on: :collection
+
+      put 'me/videos/liked/:video_id', to: "users#like_video", on: :collection
+      delete 'me/videos/liked/:video_id', to: "users#dislike_video", on: :collection
+      get 'me/videos/liked',  to: "users#likes", on: :collection
+
+      get 'me/videos/skipped', to: 'users#skipped', on: :collection
+      put 'me/videos/skipped/:video_id', to: 'users#skip_video', on: :collection
+      get 'me/videos/seen', to: 'users#seen', on: :collection
+      get 'me/videos/unseen', to: 'users#unseen', on: :collection
+      put 'me/videos/seen/:video_id', to: 'users#mark_video_as_seen', on: :collection
     end
 
     get :search, to: 'videos#search'

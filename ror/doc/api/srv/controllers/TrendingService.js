@@ -11,7 +11,7 @@ exports.trendingGet = function() {
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-01-11T18:15:37.744+0000",
+    "created_at" : "2016-01-13T22:20:17.290+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
@@ -20,7 +20,7 @@ exports.trendingGet = function() {
     "skipped" : true,
     "mature_content" : true,
     "viewable" : true,
-    "updated_at" : "2016-01-11T18:15:37.744+0000",
+    "updated_at" : "2016-01-13T22:20:17.290+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",

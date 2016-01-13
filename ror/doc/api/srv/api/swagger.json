@@ -433,6 +433,35 @@
     
   } ,
   
+  "/users/guest/videos/skipped/{video-id}": {
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a video as skipped for guest users",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersGuestVideosSkippedVideoIdPut",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Video has been marked as seen."
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
   "/users/me": {
     
     "get": {
@@ -726,6 +755,35 @@
   "schema" : {
     "$ref" : "#/definitions/Error"
   }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/guest/videos/seen/{video-id}": {
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a video as seen for guest users",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersGuestVideosSeenVideoIdPut",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Video has been marked as seen."
 }
         
         
@@ -1401,19 +1459,19 @@
     },
     "liked" : {
       "type" : "boolean",
-      "description" : "Boolean representing whether the current user has liked the video. This property is always false for unauthenticated clients.",
+      "description" : "Boolean representing whether the current user has liked the video. This property is not present for unauthenticated clients.",
       "readOnly" : true,
       "default" : false
     },
     "seen" : {
       "type" : "boolean",
-      "description" : "Boolean representing whether the current user has seen the video. This property is always false for unauthenticated clients.",
+      "description" : "Boolean representing whether the current user has seen the video. This property is not present for unauthenticated clients.",
       "readOnly" : true,
       "default" : false
     },
     "skipped" : {
       "type" : "boolean",
-      "description" : "Boolean representing whether the current user has skipped the video. This property is always false for unauthenticated clients.",
+      "description" : "Boolean representing whether the current user has skipped the video. This property is not present for unauthenticated clients.",
       "readOnly" : true,
       "default" : false
     },

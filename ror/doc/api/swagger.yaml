@@ -1005,6 +1005,12 @@ definitions:
           View count. <b>NOTE</b> This only visible if oauth2 scope is "admin".
         format: int32
         readOnly: true
+      skip_count:
+        type: integer
+        description: >
+          View count. <b>NOTE</b> This only visible if oauth2 scope is "admin".
+        format: int32
+        readOnly: true
   Category:
     type: object
     required:

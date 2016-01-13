@@ -1,52 +1,197 @@
+.player {
 
-@btns-size: 45px;
+  &_buttons-layer {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    align-items: stretch;
+    align-content: stretch;
+    flex-direction: column;
 
-.player-buttons-common() {
-  z-index: 100;
-  color: white;
-  font-size: @btns-size;
-  margin: 15px;
-  span:hover {
-    text-shadow: 0 0 30px #00b3ee;
+    &--fullscreen {
+      z-index: 2147483647;
+    }
+
+    &_top-elements {
+      display: flex;
+      align-items: stretch;
+      align-content: stretch;
+      justify-content: space-between;
+      height: 10%;
+      &_close-button {
+        margin-left: 20px;
+        fill: white;
+      }
+      &_rightside {
+        display: flex;
+        align-items: stretch;
+        align-content: stretch;
+        justify-content: space-between;
+        flex-direction: row;
+        padding-right: 10px;
+        &_buttons {
+          fill: white;
+          stroke-width: 10;
+          stroke: white;
+          margin: 10px;
+          width: 40px;
+        }
+      }
+    }
+
+    &_center-elements {
+      display: flex;
+      align-items: stretch;
+      align-content: stretch;
+      justify-content: center;
+      height: 60%;
+
+      &_play-button {
+        display: flex;
+        min-width: 60px;
+        min-height: 60px;
+        width: 25%;
+        height: 25%;
+        justify-content: center;
+        align-items:center;
+        align-content: flex-start;
+        margin-top: 15%;
+
+        img {
+          width: 60%;
+          height: 60%;
+        }
+      }
+    }
+
+    &_bottom-elements {
+      display: flex;
+      align-items: stretch;
+      align-content: flex-end;
+      justify-content: flex-end;
+      height: 30%;
+      flex-direction: column;
+      &_titles {
+        display: flex;
+        align-items: flex-end;
+        align-content: flex-end;
+        justify-content: space-between;
+        flex-direction: row;
+        color: white;
+
+        &--hovered {
+          background-color: #000011;
+          opacity: 0.8;
+          border-left: white solid 5px;
+        }
+
+        &_current {
+          display: flex;
+          align-items: flex-end;
+          align-content: flex-end;
+          justify-content: flex-end;
+          flex-direction: row;
+
+          &_category {
+            fill: white;
+            width: 80px;
+            height: 60px;
+            padding: 10px;
+          }
+
+          &_title {
+            display: flex;
+            align-items: flex-end;
+            align-content: flex-end;
+            justify-content: flex-end;
+            flex-direction: column;
+            font-size: 26px;
+
+            &_created {
+              font-size: 18px;
+            }
+          }
+
+        }
+
+        &_next {
+          display: flex;
+          align-items: stretch;
+          align-content: flex-end;
+          justify-content: flex-start;
+          flex-direction: row;
+          overflow: hidden;
+          height: 100px;
+          width: 200px;
+          border: solid white 1px;
+          background-size: cover;
+        }
+      }
+
+      &_controls {
+        display: flex;
+        align-items: flex-end;
+        align-content: flex-end;
+        justify-content: space-between;
+        flex-direction: row;
+        color: white;
+        padding: 5px 10px;
+
+        &_expand {
+          fill: white;
+          min-width: 30px;
+          min-height: 26px;
+        }
+
+        &_slider {
+          width: 80%;
+        }
+      }
+    }
   }
+
+}
+
+
+
+
+video {
+  object-fit: contain;
+}
+
+//settings for hiding default controls
+::-webkit-media-controls {
+  display:none !important;
+}
+video::-webkit-media-controls {
+  display:none !important;
+}
+video::-webkit-media-controls-enclosure {
+  display:none !important;
 }
 
 player {
-  .container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
+  margin-top: 10px;
+
+  .hidden-layer {
+    display: none !important;
+  }
+  .no-padding {
     padding: 0;
   }
 
-  video {
-    position: relative;
-    top: 0;
-    left: 0;
 
+  //slider current value
+  span.rz-bubble {
+    display: none !important;
   }
 
-  .like-button {
-    position: absolute;
-    left: 0;
-    top: 0;
-    .player-buttons-common();
-  }
-
-  .play-button {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    .player-buttons-common();
-  }
-
-  .info-panel {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    .player-buttons-common();
-    font-size: 25px;
-    text-shadow: 0 0 30px black;
+  //slider pointer override
+  rzslider .rz-pointer {
+    background-color: white !important;
   }
 }
+

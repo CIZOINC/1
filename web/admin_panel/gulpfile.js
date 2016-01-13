@@ -42,6 +42,7 @@ gulp.task('collect_html', function () {
     "use strict";
     gulp.src([
             '!index.html',
+            '!./temp/**/*.html',
             './**/*.html'
         ])
         .pipe(templateCache())
@@ -68,7 +69,8 @@ gulp.task('DEVELOP_index_compile', function () {
     "use strict";
     gulp.src([
             '!index.html',
-            './**/*.html'
+            './**/*.html',
+            '!./temp/**/*.html'
         ])
         .pipe(templateCache())
         .pipe(gulp.dest('common'));
@@ -77,10 +79,12 @@ gulp.task('DEVELOP_index_compile', function () {
         .pipe(inject(gulp.src(thirdPartyJSLibraries.concat(thirdPartyCSSLibraries),
             {read: false}), {name: 'third_party', addRootSlash: false}))
         .pipe(inject(gulp.src([
-            './**/*.css'
+            './**/*.css',
+            '!./temp/**/*.css'
         ], {read: false}), {name: 'css_common', addRootSlash: false}))
         .pipe(inject(gulp.src([
             '!gulpfile*.js',
+            '!./temp/**/*.js',
             './**/*-compiled.js'
 
         ])

@@ -13,7 +13,8 @@ angular
         'app.wrappers',
         'app.routes',
         'ngSanitize',
-        'templates'])
+        'templates',
+        'rzModule'])
     .controller('AppCtrl', AppCtrl);
 
 

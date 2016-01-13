@@ -30,7 +30,7 @@ Rails.application.routes.draw do
 
     resources :categories
 
-    resources :users do
+    resources :users, except: [:destroy] do
       get :me, on: :collection
       delete :me, on: :collection, to: "users#destroy_self_account"
       put :me, on: :collection, to: "users#update_self_account"

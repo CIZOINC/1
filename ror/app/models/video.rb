@@ -41,78 +41,50 @@ class Video < ActiveRecord::Base
 
   scope :trending, -> (){ where(viewable: true).order(view_count: :desc) }
 
-  def increase_view_count!
-    update_column(:view_count, view_count.to_i.succ)
-  end
-
-  def decrease_view_count!
-    update_column(:view_count, view_count.to_i.pred)
-  end
-
-  # %w(increase decrease).each do |method|
-  #   define_method("#{method}_view_count!") do
-  #     update_column(:view_count, (method.starts_with? 'in' ? view_count.to_i.succ : view_count.to_i.pred))
-  #   end
-  # end
-
-  def mark_video_as_seen!(user_id, video_id)
-    params = {user_id: user_id, video_id: video_id}
-    SeenVideo.find_or_create_by(params)
-    #TODO
-    # seen_video = SeenVideo.find_by(params)
-    # if !seen_video
-    #   SeenVideo.create(params)
-    #   Video.find(video_id).increase_view_count!
-    # end
-    if skipped_video = SkippedVideo.find_by(params)
-      skipped_video.destroy
+  %w(in de).each do |method|
+    define_method("#{method}crease_view_count!") do
+      update_column(:view_count, ((method.eql? 'in') ? self.view_count.to_i.succ : self.view_count.to_i.pred))
     end
   end
 
-  def like!(user_id, video_id)
-    Like.find_or_create_by(user_id: user_id, video_id: video_id)
+  def like!(user_id)
+    @user_id = user_id
+    Like.find_or_create_by(params)
   end
 
-  def dislike!(user_id, video_id)
-    if like = Like.find_by(user_id: user_id, video_id: video_id)
+  def dislike!(user_id)
+    @user_id = user_id
+    if like = Like.find_by(params)
       like.destroy
     end
   end
 
-  def skip!(user_id, video_id)
-    params = {user_id: user_id, video_id: video_id}
+  def skip!(user_id)
+    @user_id = user_id
     skipped_video = SkippedVideo.find_by(params)
     seen_video = SeenVideo.find_by(params)
-    if !seen_video
-      if !skipped_video
+    if !seen_video && !skipped_video
         SkippedVideo.create(params)
         decrease_view_count!
-      end
     end
   end
 
-  def mark_video_as_seen!(user_id, video_id)
-    params = {user_id: user_id, video_id: video_id}
+  def mark_video_as_seen!(user_id)
+    @user_id = user_id
     SeenVideo.find_or_create_by(params)
     #TODO
     # seen_video = SeenVideo.find_by(params)
     # if !seen_video
     #   SeenVideo.create(params)
-    #   Video.find(video_id).increase_view_count!
+    #   increase_view_count!
     # end
     if skipped_video = SkippedVideo.find_by(params)
       skipped_video.destroy
     end
   end
 
-  def like!(user_id, video_id)
-    Like.find_or_create_by(user_id: user_id, video_id: video_id)
-  end
-
-  def dislike!(user_id, video_id)
-    if like = Like.find_by(user_id: user_id, video_id: video_id)
-      like.destroy
-    end
+  def params
+    {user_id: @user_id, video_id: self.id}
   end
 
 end

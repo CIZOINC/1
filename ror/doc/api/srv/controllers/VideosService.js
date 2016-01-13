@@ -11,7 +11,7 @@ exports.videosGet = function(category, tags, createdBefore, createdAfter) {
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-01-13T22:20:17.305+0000",
+    "created_at" : "2016-01-13T23:13:19.678+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
@@ -20,11 +20,12 @@ exports.videosGet = function(category, tags, createdBefore, createdAfter) {
     "skipped" : true,
     "mature_content" : true,
     "viewable" : true,
-    "updated_at" : "2016-01-13T22:20:17.305+0000",
+    "updated_at" : "2016-01-13T23:13:19.678+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",
-    "view_count" : 123
+    "view_count" : 123,
+    "skip_count" : 123
   } ]
 };
   
@@ -41,8 +42,8 @@ exports.videosPost = function(body) {
   examples['application/json'] = {
   "mature_content" : true,
   "category_id" : 123,
-  "updated_at" : "2016-01-13T22:20:17.309+0000",
-  "created_at" : "2016-01-13T22:20:17.309+0000",
+  "updated_at" : "2016-01-13T23:13:19.681+0000",
+  "created_at" : "2016-01-13T23:13:19.681+0000",
   "description" : "aeiou",
   "id" : 123,
   "title" : "aeiou",
@@ -65,7 +66,7 @@ exports.videosVideoIdGet = function(videoId) {
     "link" : "aeiou",
     "stream_type" : "aeiou"
   } ],
-  "created_at" : "2016-01-13T22:20:17.310+0000",
+  "created_at" : "2016-01-13T23:13:19.682+0000",
   "description" : "aeiou",
   "title" : "aeiou",
   "liked" : true,
@@ -74,11 +75,12 @@ exports.videosVideoIdGet = function(videoId) {
   "skipped" : true,
   "mature_content" : true,
   "viewable" : true,
-  "updated_at" : "2016-01-13T22:20:17.310+0000",
+  "updated_at" : "2016-01-13T23:13:19.682+0000",
   "category_id" : 123,
   "id" : 123,
   "hero_image_link" : "aeiou",
-  "view_count" : 123
+  "view_count" : 123,
+  "skip_count" : 123
 };
   
 
@@ -97,7 +99,7 @@ exports.videosVideoIdPut = function(body, videoId) {
     "link" : "aeiou",
     "stream_type" : "aeiou"
   } ],
-  "created_at" : "2016-01-13T22:20:17.311+0000",
+  "created_at" : "2016-01-13T23:13:19.683+0000",
   "description" : "aeiou",
   "title" : "aeiou",
   "liked" : true,
@@ -106,11 +108,12 @@ exports.videosVideoIdPut = function(body, videoId) {
   "skipped" : true,
   "mature_content" : true,
   "viewable" : true,
-  "updated_at" : "2016-01-13T22:20:17.311+0000",
+  "updated_at" : "2016-01-13T23:13:19.683+0000",
   "category_id" : 123,
   "id" : 123,
   "hero_image_link" : "aeiou",
-  "view_count" : 123
+  "view_count" : 123,
+  "skip_count" : 123
 };
   
 

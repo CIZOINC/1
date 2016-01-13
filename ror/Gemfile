@@ -50,11 +50,13 @@ gem "fog"
 gem 'rest-client', '~> 1.8'
 
 gem 'doorkeeper'
-gem 'doorkeeper-grants_assertion', '~> 0.0.1'
+# gem 'doorkeeper-grants_assertion', '~> 0.0.1'
 gem 'devise'
 
-gem 'oauth2', '~> 1.0'
+# gem 'oauth2', '~> 1.0'
 gem 'omniauth'
+gem 'omniauth-facebook'
+
 
 #search
 gem 'pg_search', '~> 1.0', '>= 1.0.5'

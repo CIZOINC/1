@@ -1,8 +1,9 @@
 class User < ActiveRecord::Base
   # Include default devise modules.
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-         
+         :recoverable, :rememberable, :trackable, :validatable,
+         :omniauthable, :omniauth_providers => [:facebook]
+
   birthday_format=/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z\z/
   validates :birthday, presence: true,
                        format:{with: birthday_format,

@@ -1480,6 +1480,12 @@
       "format" : "int32",
       "description" : "View count. <b>NOTE</b> This only visible if oauth2 scope is \"admin\".\n",
       "readOnly" : true
+    },
+    "skip_count" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "View count. <b>NOTE</b> This only visible if oauth2 scope is \"admin\".\n",
+      "readOnly" : true
     }
   }
 },"Category": {

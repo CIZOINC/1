@@ -906,6 +906,34 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /users/guest/videos/seen/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: "Marks a video as seen for guest users"
+      tags:
+        - Users
+      responses:
+        '204':
+          description: "Video has been marked as seen."
+  /users/guest/videos/skipped/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: "Marks a video as skipped for guest users"
+      tags:
+        - Users
+      responses:
+        '204':
+          description: "Video has been marked as seen."          
 definitions:
   Video:
     type: object
@@ -958,17 +986,17 @@ definitions:
         description: Image URL representing the video.
       liked:
         type: boolean
-        description: 'Boolean representing whether the current user has liked the video. This property is always false for unauthenticated clients.'
+        description: 'Boolean representing whether the current user has liked the video. This property is not present for unauthenticated clients.'
         default: false
         readOnly: true
       seen:
         type: boolean
-        description: 'Boolean representing whether the current user has seen the video. This property is always false for unauthenticated clients.'
+        description: 'Boolean representing whether the current user has seen the video. This property is not present for unauthenticated clients.'
         default: false
         readOnly: true
       skipped:
         type: boolean
-        description: 'Boolean representing whether the current user has skipped the video. This property is always false for unauthenticated clients.'
+        description: 'Boolean representing whether the current user has skipped the video. This property is not present for unauthenticated clients.'
         default: false
         readOnly: true
       view_count:

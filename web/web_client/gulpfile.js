@@ -20,11 +20,13 @@ var thirdPartyJS = [
     '../node_modules/ui-router/release/angular-ui-router.js',
     '../node_modules/angular-sanitize/angular-sanitize.js',
     '../node_modules/moment/moment.js',
-    '../node_modules/lodash/index.js'
+    '../node_modules/lodash/index.js',
+    '../node_modules/angularjs-slider/dist/rzslider.js'
 ];
 var thirdPartyCSS = [
     '../node_modules/angular/angular-csp.css',
-    '../node_modules/bootstrap/dist/css/bootstrap.css'
+    '../node_modules/bootstrap/dist/css/bootstrap.css',
+    '../node_modules/angularjs-slider/dist/rzslider.css'
 ];
 
 
@@ -32,7 +34,10 @@ gulp.task('Index_files_gathering', function () {
     "use strict";
     gulp.src('./index.html')
         .pipe(inject(gulp.src( thirdPartyCSS.concat(thirdPartyJS), {read: false}), {name: 'third_party', addRootSlash: false}))
-        .pipe(inject(gulp.src(['./**/*.css'], {read: false}), {name: 'css_common', addRootSlash: false}))
+        .pipe(inject(gulp.src([
+            './**/*.css',
+            '!./temp/**/*.*'
+        ], {read: false}), {name: 'css_common', addRootSlash: false}))
         .pipe(inject(gulp.src([
             '!gulpfile*.js',
             '!./temp/**/*.*',
@@ -51,7 +56,10 @@ gulp.task('Index_files_gathering', function () {
 
 gulp.task('collect_css', function () {
     "use strict";
-    return gulp.src([ './**/*.less' ])
+    return gulp.src([
+        './**/*.less',
+        '../node_modules/angularjs-slider/src/rzslider.less'
+    ])
         .pipe(less())
         .pipe(gulp.dest('./temp'));
 });

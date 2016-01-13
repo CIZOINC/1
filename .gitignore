@@ -206,3 +206,6 @@ web/web_client/**/*.css
 web/web_client/images/Web_Home_Flow/
 web/web_client/images/Web_Search_Flow/
 web/web_client/images/Web_Menu/
+ror/public/web_client/images/Web_Search_Flow/
+ror/public/web_client/images/Web_Home_Flow/
+ror/public/web_client/images/Web_Menu/iconHome.svg

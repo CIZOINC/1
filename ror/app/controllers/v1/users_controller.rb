@@ -40,12 +40,12 @@ class V1::UsersController < V1::ApiController
   end
 
   def like_video
-    @video.like!(@current_user.id, @video.id) if @video
+    @video.like!(@current_user.id) if @video
     nothing 204
   end
 
   def dislike_video
-    @video.dislike!(@current_user.id, @video.id) if @video
+    @video.dislike!(@current_user.id) if @video
     nothing 204
   end
 
@@ -60,7 +60,7 @@ class V1::UsersController < V1::ApiController
   end
 
   def skip_video
-    @video.skip!(@current_user.id, @video.id) if @video
+    @video.skip!(@current_user.id) if @video
     nothing 204
   end
 
@@ -76,7 +76,7 @@ class V1::UsersController < V1::ApiController
   end
 
   def mark_video_as_seen
-    @video.mark_video_as_seen!(@current_user.id, @video.id) if @video
+    @video.mark_video_as_seen!(@current_user.id) if @video
     nothing 204
   end
 

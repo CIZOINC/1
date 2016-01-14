@@ -33,6 +33,34 @@ module.exports.usersPost = function usersPost (req, res, next) {
     res.end();
 };
 
+module.exports.usersGuestVideosSeenVideoIdPut = function usersGuestVideosSeenVideoIdPut (req, res, next) {
+  var videoId = req.swagger.params['video-id'].value;
+  
+
+  var result = Users.usersGuestVideosSeenVideoIdPut(videoId);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersGuestVideosSkippedVideoIdPut = function usersGuestVideosSkippedVideoIdPut (req, res, next) {
+  var videoId = req.swagger.params['video-id'].value;
+  
+
+  var result = Users.usersGuestVideosSkippedVideoIdPut(videoId);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
 module.exports.usersMeGet = function usersMeGet (req, res, next) {
   
 

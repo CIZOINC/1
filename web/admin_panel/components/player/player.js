@@ -1,6 +1,6 @@
 /*global angular*/
 angular
-    .module('app.directives', ['app.services'])
+    .module('app.directives')
     .directive('player', player);
 
 

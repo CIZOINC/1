@@ -1,5 +1,5 @@
 angular
-    .module('app.services', [])
+    .module('app.services')
     .factory('videoServ', videoServ);
 
 /* @ngInject */

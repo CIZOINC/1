@@ -65,6 +65,23 @@
           height: 60%;
         }
       }
+
+      &_pause-button {
+        display: flex;
+        min-width: 60px;
+        min-height: 60px;
+        width: 25%;
+        height: 25%;
+        justify-content: center;
+        align-items:center;
+        align-content: flex-start;
+        margin-top: 15%;
+
+        img {
+          width: 60%;
+          height: 60%;
+        }
+      }
     }
 
     &_bottom-elements {
@@ -82,10 +99,9 @@
         flex-direction: row;
         color: white;
 
-        &--hovered {
+        &--hero-image {
           background-color: #000011;
           opacity: 0.8;
-          border-left: white solid 5px;
         }
 
         &_current {
@@ -104,7 +120,7 @@
 
           &_title {
             display: flex;
-            align-items: flex-end;
+            align-items: flex-start;
             align-content: flex-end;
             justify-content: flex-end;
             flex-direction: column;
@@ -174,8 +190,6 @@ video::-webkit-media-controls-enclosure {
 }
 
 player {
-  margin-top: 10px;
-
   .hidden-layer {
     display: none !important;
   }

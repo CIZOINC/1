@@ -15,15 +15,15 @@
             </div>
 
             <!-- buttons layer-->
-            <div class="player_buttons-layer" ng-mouseenter="imageHover()" ng-mouseleave="imageBlur()" ng-click="toggleControlsVisibility()">
+            <div class="player_buttons-layer" ng-mouseenter="imageHover()" ng-mouseleave="imageBlur()" ng-click="toggleControlsVisibility()" ng-mousemove="mouseMoveOnVideo()">
                 <!-- top buttons-->
                 <div class="player_buttons-layer_top-elements">
 
-                    <svg width="30" preserveAspectRatio="xMinyMin meet" viewBox="0 0 210 200" class="player_buttons-layer_top-elements_close-button">
+                    <svg width="30" preserveAspectRatio="xMinyMin meet" viewBox="0 0 210 200" class="player_buttons-layer_top-elements_close-button hidden-layer">
                         <use xlink:href="#icon-close"></use>
                     </svg>
 
-                    <div class="player_buttons-layer_top-elements_rightside">
+                    <div class="player_buttons-layer_top-elements_rightside hidden-layer">
                         <svg viewBox="-10 -10 380 260" preserveAspectRatio="xMinyMin" class="player_buttons-layer_top-elements_rightside_buttons">
                             <use xlink:href="#icon-favorites"></use>
                         </svg>
@@ -34,11 +34,12 @@
                 </div>
                 <!-- center elements-->
                 <div class="player_buttons-layer_center-elements">
-                    <img src="images/Web_Home_Flow/iconVidPlay.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_play-button">
+                    <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_play-button">
+                    <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_pause-button hidden-layer">
                 </div>
                 <!-- top buttons-->
                 <div class="player_buttons-layer_bottom-elements">
-                    <div class="player_buttons-layer_bottom-elements_titles hidden-layer">
+                    <div class="player_buttons-layer_bottom-elements_titles player_buttons-layer_bottom-elements_titles--hero-image">
                         <div class="player_buttons-layer_bottom-elements_titles_current">
                             <svg viewBox="0 0 350 200" preserveAspectRatio="xMinYMin" class="player_buttons-layer_bottom-elements_titles_current_category">
                                 <use ng-href="#icon-{{::iconTitle}}" xlink:href=""></use>

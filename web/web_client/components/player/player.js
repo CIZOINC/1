@@ -17,19 +17,26 @@ function player($log, moment, _, $sce, $timeout) {
             createdDate: createdTimeHumanized(scope.video.created_at),
             screenList: angular.element(element[0].querySelector('div.video-layer video')),
             screen: angular.element(element[0].querySelector('div.video-layer video'))[0],
+
             titlesOverlayLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_titles`))[0],
             controlsOverlayLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls`))[0],
             topElementsLayer: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements`))[0],
+            topElementsClose: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements_close-button`))[0],
+            topElementsRightSide: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements_rightside`))[0],
+
             buttonLayer: angular.element(element[0].querySelectorAll(`.player_buttons-layer`))[0],
             videoLayer: angular.element(element[0].querySelector(`div.video-layer`))[0],
             nextVideoLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_titles_next`))[0],
             imageLayer: angular.element(element[0].querySelector(`div.hero-image-layer`))[0],
             playButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_play-button`))[0],
+            pauseButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_pause-button`))[0],
             slider: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls_slider`))[0],
 
             togglePlayPause: togglePlayPause,
             imageHover: imageHover,
             imageBlur: imageBlur,
+            mouseMoveOnVideo: mouseMoveOnVideo,
+
             toggleFullScreen: toggleFullScreen,
             toggleControlsVisibility: toggleControlsVisibility,
             nextVideo: getNextVideo()
@@ -101,17 +108,27 @@ function player($log, moment, _, $sce, $timeout) {
         }
 
         function imageHover() {
-            if (!scope.video.isWatching) {
-                scope.titlesOverlayLayer.classList.remove('hidden-layer');
-                scope.titlesOverlayLayer.classList.add('player_buttons-layer_bottom-elements_titles--hovered');
-            }
+            scope.topElementsClose.classList.remove('hidden-layer');
+            scope.topElementsRightSide.classList.remove('hidden-layer');
         }
 
         function imageBlur() {
+            scope.topElementsClose.classList.add('hidden-layer');
+            scope.topElementsRightSide.classList.add('hidden-layer');
+        }
+
+        function mouseMoveOnVideo() {
             if (!scope.video.isWatching) {
-                scope.titlesOverlayLayer.classList.add('hidden-layer');
-                scope.titlesOverlayLayer.classList.remove('player_buttons-layer_bottom-elements_titles--hovered');
+                return;
             }
+
+            const waitTime = 4000;
+            if (scope.fadeControlsTimer) {
+                $timeout.cancel(scope.fadeControlsTimer);
+            }
+            scope.fadeControlsTimer = $timeout(() => {
+                toggleControlsVisibility(false);
+            }, waitTime);
         }
 
         function toggleFullScreen() {
@@ -148,44 +165,51 @@ function player($log, moment, _, $sce, $timeout) {
             }
         }
 
-        function toggleControlsVisibility() {
+        function toggleControlsVisibility(state) {
+            let showControls = state ? state : scope.controlsOverlayLayer.classList.contains('hidden-layer')
+
             $timeout(function () {
                 scope.$broadcast('rzSliderForceRender');
             });
             if (scope.imageLayer.classList.contains('hidden-layer')) {
-                if (scope.controlsOverlayLayer.classList.contains('hidden-layer')) {
+                if (showControls) {
                     scope.titlesOverlayLayer.classList.remove('hidden-layer');
                     scope.controlsOverlayLayer.classList.remove('hidden-layer');
-                    scope.topElementsLayer.classList.remove('hidden-layer');
-                    scope.playButton.classList.remove('hidden-layer');
-
+                    if (scope.screen.paused) {
+                        scope.playButton.classList.remove('hidden-layer');
+                    } else {
+                        scope.pauseButton.classList.remove('hidden-layer');
+                    }
+                    scope.topElementsClose.classList.remove('hidden-layer');
+                    scope.topElementsRightSide.classList.remove('hidden-layer');
                 } else {
                     scope.titlesOverlayLayer.classList.add('hidden-layer');
                     scope.controlsOverlayLayer.classList.add('hidden-layer');
-                    scope.topElementsLayer.classList.add('hidden-layer');
                     scope.playButton.classList.add('hidden-layer');
+                    scope.pauseButton.classList.add('hidden-layer');
+                    scope.topElementsClose.classList.add('hidden-layer');
+                    scope.topElementsRightSide.classList.add('hidden-layer');
                 }
             }
         }
 
         function togglePlayPause(event) {
+            function updateClassBySelector(action, selector, setClass) {
+                _.each(angular.element(document.querySelectorAll(selector)), (item) => {
+                    item.classList[action](setClass);
+                });
+            }
+
             event.stopPropagation();
             if (!scope.video.isWatching) {
-                _.each(angular.element(document.querySelectorAll('player .video-layer')), (item) => {
-                    item.classList.add('hidden-layer');
-                });
-                _.each(angular.element(document.querySelectorAll('player .hero-image-layer')), (item) => {
-                    item.classList.remove('hidden-layer');
-                });
-                _.each(angular.element(document.querySelectorAll('.player_buttons-layer_bottom-elements_titles')), (item) => {
-                    item.classList.add('hidden-layer');
-                });
-                _.each(angular.element(document.querySelectorAll('.player_buttons-layer_bottom-elements_controls')), (item) => {
-                    item.classList.add('hidden-layer');
-                });
-                _.each(angular.element(document.querySelectorAll('.player_buttons-layer_bottom-elements_titles_next')), (item) => {
-                    item.classList.add('hidden-layer');
-                });
+                updateClassBySelector('add', 'player .video-layer', 'hidden-layer');
+                updateClassBySelector('remove', 'player .hero-image-layer', 'hidden-layer');
+                updateClassBySelector('add', '.player_buttons-layer_bottom-elements_titles', 'player_buttons-layer_bottom-elements_titles--hero-image');
+                updateClassBySelector('add', '.player_buttons-layer_bottom-elements_controls', 'hidden-layer');
+                updateClassBySelector('add', '.player_buttons-layer_bottom-elements_titles_next', 'hidden-layer');
+                updateClassBySelector('remove', '.player_buttons-layer_center-elements_play-button', 'hidden-layer');
+                updateClassBySelector('add', '.player_buttons-layer_center-elements_pause-button', 'hidden-layer');
+
                 _.each(angular.element(document.querySelectorAll('video')), (item) => {
                     item.pause();
                 });
@@ -196,7 +220,7 @@ function player($log, moment, _, $sce, $timeout) {
 
                 scope.videoLayer.classList.remove('hidden-layer');
                 scope.imageLayer.classList.add('hidden-layer');
-                scope.titlesOverlayLayer.classList.remove('player_buttons-layer_bottom-elements_titles--hovered');
+                scope.titlesOverlayLayer.classList.remove('player_buttons-layer_bottom-elements_titles--hero-image');
                 scope.titlesOverlayLayer.classList.remove('hidden-layer');
                 scope.controlsOverlayLayer.classList.remove('hidden-layer');
                 scope.nextVideoLayer.classList.remove('hidden-layer');
@@ -208,9 +232,14 @@ function player($log, moment, _, $sce, $timeout) {
             if (scope.screen.paused) {
                 scope.screen.play();
                 $log.info('start playing');
+                scope.pauseButton.classList.remove('hidden-layer');
+                scope.playButton.classList.add('hidden-layer');
+
             } else {
                 scope.screen.pause();
                 $log.info('set to pause');
+                scope.pauseButton.classList.add('hidden-layer');
+                scope.playButton.classList.remove('hidden-layer');
             }
         }
     }
@@ -221,7 +250,8 @@ function player($log, moment, _, $sce, $timeout) {
         link: linkFn,
         transclude: true,
         scope: {
-            video: '=video'
+            video: '=video',
+            filtered: '=filtered'
         }
     }
 }

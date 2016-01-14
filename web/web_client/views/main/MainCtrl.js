@@ -7,6 +7,11 @@ angular
 function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
     "use strict";
 
+    function testCategory(text) {
+        $scope.filterCategory.category_id = text;
+        console.log(text);
+    }
+
     function getCategories() {
         return $q( (resolve) => {
             categoriesServ.getCategoriesList($scope)
@@ -38,8 +43,12 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
 
         });
     }
-
+    $scope.filteredVideoList = [];
     $scope.videosList = [];
+    $scope.testCategory = testCategory;
+    $scope.filterCategory = {
+        category_id: ''
+    };
 
     getCategories()
         .then(getVideos)

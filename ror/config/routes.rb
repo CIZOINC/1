@@ -4,8 +4,9 @@ Rails.application.routes.draw do
        controllers tokens: 'doorkeeper/tokens'
   end
 
-  devise_for :users, controllers: {
-    registrations: "auth/registrations"
+  devise_for :users, defaults: {format: :json}, controllers: {
+    registrations: "auth/registrations",
+    omniauth_callbacks: "auth/omniauth_callbacks"
   }
 
   if Rails.env.development? || Rails.env.staging?

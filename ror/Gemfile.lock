@@ -239,6 +239,11 @@ GEM
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
+    omniauth-facebook (3.0.0)
+      omniauth-oauth2 (~> 1.2)
+    omniauth-oauth2 (1.4.0)
+      oauth2 (~> 1.0)
+      omniauth (~> 1.2)
     orm_adapter (0.5.0)
     pg (0.18.4)
     pg_search (1.0.5)
@@ -355,8 +360,8 @@ DEPENDENCIES
   fog-aws
   jbuilder (~> 2.0)
   jquery-rails
-  oauth2 (~> 1.0)
   omniauth
+  omniauth-facebook
   pg
   pg_search (~> 1.0, >= 1.0.5)
   quiet_assets

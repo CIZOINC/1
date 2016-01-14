@@ -1,6 +1,6 @@
 class V1::UsersController < V1::ApiController
   before_action :set_user, only: [:show, :update, :destroy]
-  before_action :set_video, only: [:like_video, :dislike_video, :mark_video_as_seen, :skip_video]
+  before_action :set_video, only: [:like_video, :dislike_video, :mark_video_as_seen, :skip_video, :guest_skip_video, :guest_mark_video_as_seen]
   before_action only: [:me, :destroy_self_account, :update_self_account, :show, :like_video, :dislike_video, :likes, :skipped, :skip_video, :seen, :unseen, :mark_video_as_seen] do
     doorkeeper_authorize! :user, :admin
   end
@@ -77,6 +77,16 @@ class V1::UsersController < V1::ApiController
 
   def mark_video_as_seen
     @video.mark_video_as_seen!(@current_user.id) if @video
+    nothing 204
+  end
+
+  def guest_mark_video_as_seen
+    @video.increase_view_count! if @video
+    nothing 204
+  end
+
+  def guest_skip_video
+    @video.increase_skip_count! if @video
     nothing 204
   end
 

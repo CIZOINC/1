@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112082258) do
+ActiveRecord::Schema.define(version: 20160114083840) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,10 +140,14 @@ ActiveRecord::Schema.define(version: 20160112082258) do
     t.datetime "updated_at",                             null: false
     t.string   "birthday"
     t.boolean  "is_admin",               default: false
+    t.string   "provider"
+    t.string   "uid"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["provider"], name: "index_users_on_provider", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["uid"], name: "index_users_on_uid", using: :btree
 
   create_table "videos", force: :cascade do |t|
     t.string   "title"
@@ -152,13 +156,14 @@ ActiveRecord::Schema.define(version: 20160112082258) do
     t.boolean  "viewable",        default: false
     t.string   "hero_image_link"
     t.boolean  "liked"
-    t.integer  "view_count"
+    t.integer  "view_count",      default: 0
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
     t.string   "raw_filename"
     t.string   "hero_image"
     t.boolean  "featured",        default: false
     t.boolean  "mature_content",  default: false
+    t.integer  "skip_count",      default: 0
   end
 
 end

@@ -42,9 +42,13 @@ class Video < ActiveRecord::Base
   scope :trending, -> (){ where(viewable: true).order(view_count: :desc) }
 
   %w(in de).each do |method|
-    define_method("#{method}crease_view_count!") do
-      update_column(:view_count, ((method.eql? 'in') ? self.view_count.to_i.succ : self.view_count.to_i.pred))
+    define_method("#{method}crease_skip_count!") do
+      update_column(:skip_count, ((method.eql? 'in') ? self.skip_count.succ : self.skip_count.pred))
     end
+  end
+
+  def increase_view_count!
+    update_column(:view_count, self.view_count.succ)
   end
 
   def like!(user_id)
@@ -61,25 +65,21 @@ class Video < ActiveRecord::Base
 
   def skip!(user_id)
     @user_id = user_id
-    skipped_video = SkippedVideo.find_by(params)
-    seen_video = SeenVideo.find_by(params)
-    if !seen_video && !skipped_video
-        SkippedVideo.create(params)
-        decrease_view_count!
+    if !SeenVideo.find_by(params) && !SkippedVideo.find_by(params)
+      SkippedVideo.create(params)
+      increase_skip_count!
     end
   end
 
   def mark_video_as_seen!(user_id)
     @user_id = user_id
-    SeenVideo.find_or_create_by(params)
-    #TODO
-    # seen_video = SeenVideo.find_by(params)
-    # if !seen_video
-    #   SeenVideo.create(params)
-    #   increase_view_count!
-    # end
+    if !SeenVideo.find_by(params)
+      SeenVideo.create(params)
+      increase_view_count!
+    end
     if skipped_video = SkippedVideo.find_by(params)
       skipped_video.destroy
+      decrease_skip_count!
     end
   end
 

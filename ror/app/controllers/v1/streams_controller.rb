@@ -230,15 +230,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def check_for_requirement
-    if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
-      render json: { error: 'Forbidden video' }, status: 403
-    else
-      increase_view_count
-    end
-  end
-
-  def increase_view_count
-    @video.increase_view_count! if @video
+    render json: { error: 'Forbidden video' }, status: 403 if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
   end
 
 end

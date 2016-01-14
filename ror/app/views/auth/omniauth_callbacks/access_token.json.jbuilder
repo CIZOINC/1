@@ -1,1 +1,2 @@
-json.extract! @access_token, :token, :scopes, :expires_in, :refresh_token
+json.extract! @access_token, :token, :expires_in, :refresh_token
+json.scopes @access_token.scopes.to_s

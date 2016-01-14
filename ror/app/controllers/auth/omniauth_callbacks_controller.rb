@@ -1,14 +1,18 @@
 module Auth
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+    # protect_from_forgery with: :null_session
+    # skip_before_action :verify_authenticity_token
+    before_action :check_if_email_exists, only: [:facebook]
+    before_action :check_if_birthday_exists, only: [:facebook]
+
     def facebook
-      facebook_user = request.env['omniauth.auth']
-      puts "USER_FB #{facebook_user}"
-      raw_info = facebook_user['extra']['raw_info']
+      puts "USER_FB #{auth_hash}"
+      raw_info = auth_hash['extra']['raw_info']
 
       email = raw_info['email']
       birthday = format_date(raw_info['birthday'])
-      provider = facebook_user['provider']
-      uid = facebook_user.uid
+      provider = auth_hash['provider']
+      uid = auth_hash.uid
 
       if user = User.find_by_email(email)
         users_scope = Doorkeeper::AccessToken.find_by(resource_owner_id: user.id).try(:scopes)
@@ -29,10 +33,22 @@ module Auth
     end
 
     def failure
-      redirect_to root_path
+      render json: {errors: 'Login failed'}
     end
 
     private
+
+    def auth_hash
+      request.env['omniauth.auth']
+    end
+
+    %w(email birthday).each do |method|
+      define_method "check_if_#{method}_exists" do
+        if auth_hash.extra.raw_info["#{method}"].blank?
+          redirect_to "/users/auth/facebook?auth_type=rerequest&scope=#{method.gsub('birthday', 'user_birthday')}"
+        end
+      end
+    end
 
     def secret(number, downcase = nil)
       secret = ''

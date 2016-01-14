@@ -1,4 +1,4 @@
-json.extract! video, :id, :created_at, :updated_at, :title, :description, :mature_content, :category_id, :viewable, :hero_image_link, :view_count
+json.extract! video, :id, :created_at, :updated_at, :title, :description, :mature_content, :category_id, :viewable, :hero_image_link, :view_count, :skip_count
 if @current_user
   @likes ? (json.liked true) : (Like.find_by(user_id: @current_user.id, video_id: video.id) ? (json.liked true) : (json.liked false))
   @unseen ? (json.seen false) : (@seen ? (json.seen true) : (SeenVideo.find_by(user_id: @current_user.id, video_id: video.id) ? (json.seen true) : (json.seen false)))

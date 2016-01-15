@@ -79,7 +79,6 @@ class Video < ActiveRecord::Base
     end
     if skipped_video = SkippedVideo.find_by(params)
       skipped_video.destroy
-      decrease_skip_count!
     end
   end
 

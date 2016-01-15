@@ -14,22 +14,40 @@ module Auth
       provider = auth_hash['provider']
       uid = auth_hash.uid
 
-      if user = User.find_by_email(email)
-        users_scope = Doorkeeper::AccessToken.find_by(resource_owner_id: user.id).try(:scopes)
-        @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes:  users_scope || "user", refresh_token: secret(64, true))
-        puts "USER EXISTS: #{user.to_json}"
+      # if user = User.find_by_email(email)
+      #   users_scope = Doorkeeper::AccessToken.find_by(resource_owner_id: user.id).try(:scopes) || "user"
+      #   @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes:  users_scope, refresh_token: secret(64, true))
+      #   puts "USER EXISTS: #{user.to_json}"
+      #   render 'auth/omniauth_callbacks/access_token'
+      # else
+      #   user = User.create(email: email, is_admin: false, birthday: birthday, provider: provider, uid: uid, password: password = secret(9), password_confirmation: password)
+      #   @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes: 'user', refresh_token: secret(64, true)) if user.valid?
+      #   puts "USER CREATED: #{user.to_json}"
+      #   puts user.errors.full_messages
+      #   if @access_token
+      #     render 'auth/omniauth_callbacks/access_token'
+      #   else
+      #     render json: {errors: user.errors.full_messages}
+      #   end
+      # end
+
+      user = User.find_or_create_by(email: email) do |user|
+        user.is_admin = false
+        user.password = (password = secret(9))
+        user.password_confirmation = password
+        user.birthday = birthday
+        user.provider = provider
+        user.uid = uid
+      end
+
+      if user.valid?
+        users_scope = (Doorkeeper::AccessToken.where(resource_owner_id: user.id).pluck(:scopes).include? 'admin') ? 'admin' : 'user'
+        @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes:  users_scope, refresh_token: secret(64, true))
         render 'auth/omniauth_callbacks/access_token'
       else
-        user = User.create(email: email, is_admin: false, birthday: birthday, provider: provider, uid: uid, password: password = secret(9), password_confirmation: password)
-        @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes: 'user', refresh_token: secret(64, true)) if user.valid?
-        puts "USER CREATED: #{user.to_json}"
-        puts user.errors.full_messages
-        if @access_token
-          render 'auth/omniauth_callbacks/access_token'
-        else
-          render json: {errors: user.errors.full_messages}
-        end
+        render json: {errors: user.errors.full_messages}
       end
+
     end
 
     def failure
@@ -61,6 +79,9 @@ module Auth
     end
 
     def format_date(date)
+      date = date.split('/')
+      date.insert(2, date[0]).shift
+      date = date.join('/')
       date.to_time.strftime('%FT%T.%LZ')
     end
 

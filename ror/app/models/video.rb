@@ -41,14 +41,10 @@ class Video < ActiveRecord::Base
 
   scope :trending, -> (){ where(viewable: true).order(view_count: :desc) }
 
-  %w(in de).each do |method|
-    define_method("#{method}crease_skip_count!") do
-      update_column(:skip_count, ((method.eql? 'in') ? self.skip_count.succ : self.skip_count.pred))
+  %w(skip view).each do |i|
+    define_method("increase_#{i}_count!") do
+      update_column("#{i}_count", self["#{i}_count"].succ)
     end
-  end
-
-  def increase_view_count!
-    update_column(:view_count, self.view_count.succ)
   end
 
   def like!(user_id)

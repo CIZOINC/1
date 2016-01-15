@@ -11,31 +11,31 @@
 
 <div class="container-fluid">
     <div class="row categories-panel">
-        <div class="categories-panel_item" ng-click="testCategory()">
+        <div class="categories-panel_item" ng-click="filterByCategory()">
             <svg viewBox="0 0 350 350" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
                 <use ng-href="#icon-all" xlink:href=""></use>
             </svg>
             <div class="categories-panel_item_title">All</div>
         </div>
-        <div class="categories-panel_item" ng-click="testCategory(11)">
+        <div class="categories-panel_item" ng-click="filterByCategory(11)">
             <svg viewBox="0 0 350 200" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
                 <use ng-href="#icon-movies" xlink:href=""></use>
             </svg>
             <div class="categories-panel_item_title">Movies</div>
         </div>
-        <div class="categories-panel_item" ng-click="testCategory(13)">>
+        <div class="categories-panel_item" ng-click="filterByCategory(13)">>
             <svg viewBox="0 0 350 230" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
                 <use ng-href="#icon-games" xlink:href=""></use>
             </svg>
             <div class="categories-panel_item_title">Games</div>
         </div>
-        <div class="categories-panel_item" ng-click="testCategory(12)">
+        <div class="categories-panel_item" ng-click="filterByCategory(12)">
             <svg viewBox="0 0 350 200" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
                 <use ng-href="#icon-tv-shows" xlink:href=""></use>
             </svg>
             <div class="categories-panel_item_title">TV Shows</div>
         </div>
-        <div class="categories-panel_item" ng-click="testCategory(14)">
+        <div class="categories-panel_item" ng-click="filterByCategory(14)">
             <svg viewBox="0 0 350 200" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
                 <use ng-href="#icon-lifestyles" xlink:href=""></use>
             </svg>
@@ -48,7 +48,7 @@
 </div>
 
 <div class="container-fluid">
-    <div class="row" ng-repeat="videoItem in ( filteredVideoList = (videosList | filter:filterCategory))")>
-        <player class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem"></player>
+    <div class="row" ng-repeat="videoItem in filteredVideoList")>
+        <player id="player{{videoItem.id}}"  class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem" filtered-list="filteredVideoList"></player>
     </div>
 </div>

@@ -5,7 +5,7 @@ angular
 
 
 /* @ngInject */
-function player($log, moment, _, $sce, $timeout) {
+function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
     "use strict";
 
     function linkFn(scope, element, attrs) {
@@ -17,6 +17,7 @@ function player($log, moment, _, $sce, $timeout) {
             createdDate: createdTimeHumanized(scope.video.created_at),
             screenList: angular.element(element[0].querySelector('div.video-layer video')),
             screen: angular.element(element[0].querySelector('div.video-layer video'))[0],
+            sliderModel: new SliderModel(),
 
             titlesOverlayLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_titles`))[0],
             controlsOverlayLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls`))[0],
@@ -32,6 +33,9 @@ function player($log, moment, _, $sce, $timeout) {
             pauseButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_pause-button`))[0],
             slider: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls_slider`))[0],
 
+            expandButton: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls_expand`))[0],
+            collapseButton: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls_collapse`))[0],
+
             togglePlayPause: togglePlayPause,
             imageHover: imageHover,
             imageBlur: imageBlur,
@@ -39,27 +43,13 @@ function player($log, moment, _, $sce, $timeout) {
 
             toggleFullScreen: toggleFullScreen,
             toggleControlsVisibility: toggleControlsVisibility,
-            nextVideo: getNextVideo()
+            nextVideo: getNextVideo(),
+            playNextVideo: playNextVideo
         });
 
-        scope.sliderModel = {
-            value: 0,
-            options: {
-                floor: 0,
-                ceil: 500,
-                hideLimitLabels: true,
-                onChange: function () {
-                    console.log('change to ' + scope.sliderModel.value);
-                    scope.screen.currentTime = scope.sliderModel.value;
-                }
-            }
-        };
-        if (scope.nextVideo) {
-            scope.nextVideoBackground = `background-image: url(${scope.nextVideo.hero_image_link})`;
-        } else {
-            scope.nextVideoBackground = `display: none`;
-        }
-
+        ///////////////// setup ////////////////////
+        $anchorScroll.yOffset = 150;
+        updateNextVideo();
 
         scope.screenList.bind('timeupdate', () => {
             scope.timePassed = moment().startOf('year').add(scope.screen.currentTime, 's').format('mm:ss');
@@ -70,25 +60,94 @@ function player($log, moment, _, $sce, $timeout) {
             scope.$apply();
         });
 
+        scope.screenList.bind('ended', () => {
+            if (scope.video.isFullscreen) {
+                toggleFullScreen()
+                    .then(() => {
+                        scope.playNextVideo();
+                    });
+            } else {
+                scope.playNextVideo();
+            }
+        });
 
+        scope.$watch('filteredList', (oldList, newList) => {
+            if (!angular.equals(oldList, newList)) {
+                scope.nextVideo = getNextVideo();
+                updateNextVideo();
 
-
+                let video = _.find(scope.filteredList, (item) => {
+                    return scope.video.id === item.id;
+                });
+                if (video.isWatching) {
+                    scope.togglePlayPause();
+                }
+            }
+        });
+        scope.$watch('video.isWatching', (oldList, newList) => {
+            if (!angular.equals(oldList, newList)) {
+                if (scope.video.isWatching) {
+                    scope.togglePlayPause();
+                }
+            }
+        });
         if (scope.video.streams) {
             let stream = _.find(scope.video.streams, (stream) => stream.stream_type === 'mp4');
             scope.videoLink = $sce.trustAs($sce.RESOURCE_URL, stream.link);
+        }
+
+
+        ////////////////////////////////////////////
+
+        function SliderModel() {
+            return {
+                value: 0,
+                options: {
+                    floor: 0,
+                    ceil: 500,
+                    hideLimitLabels: true,
+                    onChange: function () {
+                        console.log('change to ' + scope.sliderModel.value);
+                        scope.screen.currentTime = scope.sliderModel.value;
+                    }
+                }
+            }
+        }
+
+        function updateNextVideo() {
+            if (scope.nextVideo) {
+                scope.nextVideoBackground = `background-image: url(${scope.nextVideo.hero_image_link})`;
+            } else {
+                scope.nextVideoBackground = `display: none`;
+            }
         }
 
         function getNextVideo() {
             let currentVideoId = scope.video.id;
             let nextVideo;
 
-            let index = _.findIndex(scope.video.list, (item) => {
+            let index = _.findIndex(scope.filteredList, (item) => {
                 return item.id === currentVideoId;
             });
-            if (index + 1 < scope.video.list.length) {
-                nextVideo = scope.video.list[index + 1];
+            if (index + 1 < scope.filteredList.length) {
+                nextVideo = scope.filteredList[index + 1];
             }
             return nextVideo;
+        }
+
+        function playNextVideo(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            let nextVideo = getNextVideo();
+            if (nextVideo) {
+                scope.screen.pause();
+                nextVideo.isFullscreen = scope.video.isFullscreen;
+                updatePlayerItems();
+
+                nextVideo.isWatching = true;
+                $anchorScroll(`player${nextVideo.id}`);
+            }
         }
 
         function categoryIcon(id) {
@@ -131,38 +190,54 @@ function player($log, moment, _, $sce, $timeout) {
             }, waitTime);
         }
 
-        function toggleFullScreen() {
-            if (!document.fullscreenElement &&    // alternative standard method
-                !document.mozFullScreenElement && document.webkitFullscreenElement !== null && !document.msFullscreenElement) {
-                scope.buttonLayer.classList.remove('player_buttons-layer--fullscreen');
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
+        function toggleFullScreen(state) {
+            return $q((resolve) => {
+                let fullscreenState = state || getElementFullscreenState()
+
+                function getElementFullscreenState() {
+                    return (!document.fullscreenElement &&    // alternative standard method
+                    !document.mozFullScreenElement && document.webkitFullscreenElement !== null && !document.msFullscreenElement)
                 }
-                else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
+
+                if (fullscreenState) {
+                    scope.buttonLayer.classList.remove('player_buttons-layer--fullscreen');
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                    else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    }
+                    else if (document.webkitCancelFullScreen) {
+                        document.webkitCancelFullScreen();
+                    }
+                    else if ($document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                    scope.video.isFullscreen = true;
+                    scope.expandButton.classList.remove('hidden-layer');
+                    scope.collapseButton.classList.add('hidden-layer');
+                    resolve();
                 }
-                else if (document.webkitCancelFullScreen) {
-                    document.webkitCancelFullScreen();
+                else {
+                    scope.buttonLayer.classList.add('player_buttons-layer--fullscreen');
+                    if (scope.screen.requestFullscreen) {
+                        scope.screen.requestFullscreen();
+                    }
+                    else if (scope.screen.mozRequestFullScreen) {
+                        scope.screen.mozRequestFullScreen();
+                    }
+                    else if (scope.screen.webkitRequestFullScreen) {
+                        scope.screen.webkitRequestFullScreen();
+                    }
+                    else if (scope.screen.msRequestFullscreen) {
+                        scope.screen.msRequestFullscreen();
+                    }
+                    scope.video.isFullscreen = false;
+                    scope.expandButton.classList.add('hidden-layer');
+                    scope.collapseButton.classList.remove('hidden-layer');
+                    resolve();
                 }
-                else if ($document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-            else {
-                scope.buttonLayer.classList.add('player_buttons-layer--fullscreen');
-                if (scope.screen.requestFullscreen) {
-                    scope.screen.requestFullscreen();
-                }
-                else if (scope.screen.mozRequestFullScreen) {
-                    scope.screen.mozRequestFullScreen();
-                }
-                else if (scope.screen.webkitRequestFullScreen) {
-                    scope.screen.webkitRequestFullScreen();
-                }
-                else if (scope.screen.msRequestFullscreen) {
-                    scope.screen.msRequestFullscreen();
-                }
-            }
+            });
         }
 
         function toggleControlsVisibility(state) {
@@ -193,44 +268,60 @@ function player($log, moment, _, $sce, $timeout) {
             }
         }
 
-        function togglePlayPause(event) {
+        function updatePlayerItems() {
             function updateClassBySelector(action, selector, setClass) {
                 _.each(angular.element(document.querySelectorAll(selector)), (item) => {
                     item.classList[action](setClass);
                 });
             }
+            updateClassBySelector('add', 'player .video-layer', 'hidden-layer');
+            updateClassBySelector('remove', 'player .hero-image-layer', 'hidden-layer');
+            updateClassBySelector('add', '.player_buttons-layer_bottom-elements_titles', 'player_buttons-layer_bottom-elements_titles--hero-image');
+            updateClassBySelector('add', '.player_buttons-layer_bottom-elements_controls', 'hidden-layer');
+            updateClassBySelector('add', '.player_buttons-layer_bottom-elements_titles_next', 'hidden-layer');
+            updateClassBySelector('remove', '.player_buttons-layer_center-elements_play-button', 'hidden-layer');
+            updateClassBySelector('add', '.player_buttons-layer_center-elements_pause-button', 'hidden-layer');
+            updateClassBySelector('remove', '.player_buttons-layer', 'player_buttons-layer--fullscreen');
 
-            event.stopPropagation();
+            _.each(angular.element(document.querySelectorAll('video')), (item) => {
+                item.pause();
+            });
+            _.each(scope.filteredList, (video) => {
+                video.isWatching = false;
+            });
+        }
+
+        function togglePlayPause(event, state) {
+            if (event) {
+                event.stopPropagation();
+            }
             if (!scope.video.isWatching) {
-                updateClassBySelector('add', 'player .video-layer', 'hidden-layer');
-                updateClassBySelector('remove', 'player .hero-image-layer', 'hidden-layer');
-                updateClassBySelector('add', '.player_buttons-layer_bottom-elements_titles', 'player_buttons-layer_bottom-elements_titles--hero-image');
-                updateClassBySelector('add', '.player_buttons-layer_bottom-elements_controls', 'hidden-layer');
-                updateClassBySelector('add', '.player_buttons-layer_bottom-elements_titles_next', 'hidden-layer');
-                updateClassBySelector('remove', '.player_buttons-layer_center-elements_play-button', 'hidden-layer');
-                updateClassBySelector('add', '.player_buttons-layer_center-elements_pause-button', 'hidden-layer');
-
-                _.each(angular.element(document.querySelectorAll('video')), (item) => {
-                    item.pause();
-                });
-                _.each(scope.video.list, (video) => {
-                    video.isWatching = false;
-                });
-                scope.video.isWatching = true;
-
+                updatePlayerItems();
+            }
+            if (scope.videoLayer.classList.contains('hidden-layer')) {
                 scope.videoLayer.classList.remove('hidden-layer');
                 scope.imageLayer.classList.add('hidden-layer');
-                scope.titlesOverlayLayer.classList.remove('player_buttons-layer_bottom-elements_titles--hero-image');
-                scope.titlesOverlayLayer.classList.remove('hidden-layer');
-                scope.controlsOverlayLayer.classList.remove('hidden-layer');
-                scope.nextVideoLayer.classList.remove('hidden-layer');
-                scope.descriptionVisible = true;
-                $timeout(function () {
-                    scope.$broadcast('rzSliderForceRender');
-                });
+                if (!scope.video.isWatching) {
+                    scope.video.isWatching = true;
+                    return;
+                }
             }
+
+            scope.titlesOverlayLayer.classList.remove('player_buttons-layer_bottom-elements_titles--hero-image');
+            scope.titlesOverlayLayer.classList.remove('hidden-layer');
+            scope.controlsOverlayLayer.classList.remove('hidden-layer');
+            scope.nextVideoLayer.classList.remove('hidden-layer');
+            scope.descriptionVisible = true;
+
+
+            //update slider after showing it parent element
+            $timeout(function () {
+                scope.$broadcast('rzSliderForceRender');
+            });
+
             if (scope.screen.paused) {
                 scope.screen.play();
+                //scope.video.isWatching = true;
                 $log.info('start playing');
                 scope.pauseButton.classList.remove('hidden-layer');
                 scope.playButton.classList.add('hidden-layer');
@@ -250,9 +341,9 @@ function player($log, moment, _, $sce, $timeout) {
         link: linkFn,
         transclude: true,
         scope: {
-            video: '=video',
-            filtered: '=filtered'
+            video: '=',
+            filteredList: '='
         }
     }
 }
-player.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout'];
+player.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q'];

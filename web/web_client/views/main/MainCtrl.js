@@ -7,9 +7,29 @@ angular
 function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
     "use strict";
 
-    function testCategory(text) {
-        $scope.filterCategory.category_id = text;
-        console.log(text);
+    $scope = angular.extend($scope, {
+        filteredVideoList: [],
+        videosList: [],
+        filterCategory: {
+            category_id: ''
+        },
+        filterByCategory: filterByCategory
+    });
+
+    getCategories()
+        .then(getVideos)
+        .then(updateVideos);
+
+
+
+    function filterByCategory(id) {
+        $scope.filterCategory.category_id = id;
+
+        if (id) {
+            $scope.filteredVideoList = _.filter($scope.videosList, item => item.category_id === id);
+        } else {
+            $scope.filteredVideoList = $scope.videosList;
+        }
     }
 
     function getCategories() {
@@ -39,20 +59,12 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
             });
             video.categoryName = category.title;
             video.isWatching = false;
-            video.list = $scope.videosList;
-
+            video.isFullscreen = false;
+            filterByCategory();
         });
     }
-    $scope.filteredVideoList = [];
-    $scope.videosList = [];
-    $scope.testCategory = testCategory;
-    $scope.filterCategory = {
-        category_id: ''
-    };
 
-    getCategories()
-        .then(getVideos)
-        .then(updateVideos);
+
 
 }
 MainCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash'];

@@ -5,9 +5,13 @@ Rails.application.routes.draw do
   end
 
   devise_for :users, defaults: {format: :json}, controllers: {
+
     registrations: "auth/registrations",
     omniauth_callbacks: "auth/omniauth_callbacks"
   }
+  devise_scope :user do
+    get 'fetch_user_by_facebook_token', to:"auth/omniauth_callbacks#fetch_user_by_facebook_token"
+  end
 
   if Rails.env.development? || Rails.env.staging?
     get 'api_docs/index'
@@ -47,9 +51,12 @@ Rails.application.routes.draw do
       put 'me/videos/seen/:video_id', to: 'users#mark_video_as_seen', on: :collection
     end
 
+
+
     get :search, to: 'videos#search'
 
   end
+
 
   root 'welcome#index'
   get 'health', to: 'application#health_check'

@@ -12,8 +12,7 @@ module Auth
         # render 'fetch_user_by_facebook_token'
         find_or_create_user_by(@response['email'], @response['birthday'])
       rescue OpenURI::HTTPError => e
-        error = e.as_json(only: 'io')['io']
-        error = error[0].gsub("\\","")
+        error = e.as_json(only: 'io')['io'][0].gsub("\\","")
         render json: error
       end
     end

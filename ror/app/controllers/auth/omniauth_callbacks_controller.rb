@@ -2,13 +2,20 @@ module Auth
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     before_action :check_if_email_exists, only: [:facebook]
     before_action :check_if_birthday_exists, only: [:facebook]
+    before_action :check_for_access_token_presence, only: [:fetch_user_by_facebook_token]
 
     def fetch_user_by_facebook_token
-      uri = "https://graph.facebook.com/me?access_token=" + params[:access_token]
-      @response = JSON.parse(open(uri).read[0..-1])
-      @response['birthday'] = @response['birthday'] ? format_date(@response['birthday']) : time_to_valid_format(Time.now)
-      # render 'get_user_by_facebook_token'
-      find_or_create_user_by(@response['email'], @response['birthday'])
+      begin
+        uri = "https://graph.facebook.com/me?access_token=" + params[:access_token]
+        @response = JSON.parse(open(uri).read[0..-1])
+        @response['birthday'] = @response['birthday'] ? format_date(@response['birthday']) : time_to_valid_format(Time.now)
+        # render 'fetch_user_by_facebook_token'
+        find_or_create_user_by(@response['email'], @response['birthday'])
+      rescue OpenURI::HTTPError => e
+        error = e.as_json(only: 'io')['io']
+        error = error[0].gsub("\\","")
+        render json: error
+      end
     end
 
     def facebook
@@ -79,6 +86,13 @@ module Auth
 
     def time_to_valid_format(date)
       date.to_time.strftime('%FT%T.%LZ')
+    end
+
+    def check_for_access_token_presence
+      if params[:access_token].blank?
+        render json: {error: "access_token is required"}
+        return
+      end
     end
   end
 end

@@ -18,18 +18,15 @@
             <div class="player_buttons-layer" ng-mouseenter="imageHover()" ng-mouseleave="imageBlur()" ng-click="toggleControlsVisibility()" ng-mousemove="mouseMoveOnVideo()">
                 <!-- top buttons-->
                 <div class="player_buttons-layer_top-elements">
+                    <div>
+                        <span class="icon-close player_buttons-layer_top-elements_close-button hidden-layer"></span>
+                    </div>
 
-                    <svg width="30" preserveAspectRatio="xMinyMin meet" viewBox="0 0 210 200" class="player_buttons-layer_top-elements_close-button hidden-layer">
-                        <use xlink:href="#icon-close"></use>
-                    </svg>
 
                     <div class="player_buttons-layer_top-elements_rightside hidden-layer">
-                        <svg viewBox="-10 -10 380 260" preserveAspectRatio="xMinyMin" class="player_buttons-layer_top-elements_rightside_buttons">
-                            <use xlink:href="#icon-favorites"></use>
-                        </svg>
-                        <svg viewBox="-10 -10 290 240" preserveAspectRatio="xMinyMin" class="player_buttons-layer_top-elements_rightside_buttons">
-                            <use xlink:href="#icon-share"></use>
-                        </svg>
+                        <span class="icon-favorites player_buttons-layer_top-elements_rightside_buttons"></span>
+                        <span class="icon-info player_buttons-layer_top-elements_rightside_buttons"></span>
+                        <span class="icon-share player_buttons-layer_top-elements_rightside_buttons"></span>
                     </div>
                 </div>
                 <!-- center elements-->
@@ -37,13 +34,12 @@
                     <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_play-button">
                     <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_pause-button hidden-layer">
                 </div>
-                <!-- top buttons-->
+                <!-- bottom elements-->
                 <div class="player_buttons-layer_bottom-elements">
                     <div class="player_buttons-layer_bottom-elements_titles player_buttons-layer_bottom-elements_titles--hero-image">
                         <div class="player_buttons-layer_bottom-elements_titles_current">
-                            <svg viewBox="0 0 350 200" preserveAspectRatio="xMinYMin" class="player_buttons-layer_bottom-elements_titles_current_category">
-                                <use ng-href="#icon-{{::iconTitle}}" xlink:href=""></use>
-                            </svg>
+                            <div class="player_buttons-layer_bottom-elements_titles_current_category icon-category{{::iconTitle}}"></div>
+
                             <div class="player_buttons-layer_bottom-elements_titles_current_title">
                                 <span class="player_buttons-layer_bottom-elements_titles_current_title_created">
                                     {{::createdDate}}
@@ -55,8 +51,8 @@
                         </div>
 
                         <div class="player_buttons-layer_bottom-elements_titles_next hidden-layer" style="background-image: url({{nextVideo.hero_image_link}})" ng-show="nextVideo" ng-click="playNextVideo($event)">
-                            up next...
-                            {{nextVideo.title}}
+                            <div class="player_buttons-layer_bottom-elements_titles_next_up-text">up next...</div>
+                            <div class="player_buttons-layer_bottom-elements_titles_next_up-title">{{nextVideo.title}}</div>
                         </div>
                     </div>
                     <div class="player_buttons-layer_bottom-elements_controls hidden-layer">
@@ -65,22 +61,16 @@
 
                         <div class="player_buttons-layer_bottom-elements_controls_slider">
                             <rzslider ng-click="$event.stopPropagation()"
-                                      rz-slider-model="sliderModel.value"
+                                      rz-slider-high="sliderModel.value"
+                                      rz-slider-model="sliderModel.start"
                                       rz-slider-options="sliderModel.options"
                                       ></rzslider>
                         </div>
 
-
                         <div class="player_buttons-layer_bottom-elements_controls_duration">{{duration}}</div>
 
-                        <svg viewBox="0 0 300 300"
-                             class="player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen()">
-                            <use xlink:href="#icon-expand"></use>
-                        </svg>
-                        <svg viewBox="0 0 150 150"
-                             class="player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen()">
-                            <use xlink:href="#icon-collapse"></use>
-                        </svg>
+                        <span class="icon-expand player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen()"></span>
+                        <span class="icon-collapse player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen()"></span>
                     </div>
                 </div>
             </div>

@@ -10,6 +10,7 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
     $scope = angular.extend($scope, {
         filteredVideoList: [],
         videosList: [],
+        needFullscreen: false,
         filterCategory: {
             category_id: ''
         },
@@ -57,7 +58,9 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
             let category = _.find($scope.categoriesList, (category) => {
                 return category.id === video.category_id;
             });
-            video.categoryName = category.title;
+            if (category) {
+                video.categoryName = category.title;
+            }
             video.isWatching = false;
             video.isFullscreen = false;
             filterByCategory();

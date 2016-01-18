@@ -1,45 +1,32 @@
-<nav class="navbar">
-    <div class="container-fluid">
-        <div class="row">
-            <span class="glyphicon glyphicon-menu-hamburger col-xs-1">Menu</span>
-            <div class="col-xs-10 text-center">Cizo</div>
-            <span class="glyphicon glyphicon-search col-xs-1">Search</span>
-        </div>
+<nav class="navbar navbar-main">
 
-    </div>
+        <div class="icon-menu navbar-main_button"></div>
+        <div class="icon-search navbar-main_button"></div>
+
 </nav>
 
 <div class="container-fluid">
     <div class="row categories-panel">
         <div class="categories-panel_item" ng-click="filterByCategory()">
-            <svg viewBox="0 0 350 350" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
-                <use ng-href="#icon-all" xlink:href=""></use>
-            </svg>
-            <div class="categories-panel_item_title">All</div>
+            <div class="categories-panel_item_icon icon-all  ">
+            </div>
+            All
         </div>
         <div class="categories-panel_item" ng-click="filterByCategory(11)">
-            <svg viewBox="0 0 350 200" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
-                <use ng-href="#icon-movies" xlink:href=""></use>
-            </svg>
-            <div class="categories-panel_item_title">Movies</div>
+            <div class="categories-panel_item_icon icon-categorymovie" ></div>
+            Movies
         </div>
-        <div class="categories-panel_item" ng-click="filterByCategory(13)">>
-            <svg viewBox="0 0 350 230" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
-                <use ng-href="#icon-games" xlink:href=""></use>
-            </svg>
-            <div class="categories-panel_item_title">Games</div>
+        <div class="categories-panel_item" ng-click="filterByCategory(13)">
+            <div class="categories-panel_item_icon icon-categorygames" ></div>
+            Games
         </div>
         <div class="categories-panel_item" ng-click="filterByCategory(12)">
-            <svg viewBox="0 0 350 200" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
-                <use ng-href="#icon-tv-shows" xlink:href=""></use>
-            </svg>
-            <div class="categories-panel_item_title">TV Shows</div>
+            <div class="categories-panel_item_icon icon-categorytv" ></div>
+            TV Shows
         </div>
         <div class="categories-panel_item" ng-click="filterByCategory(14)">
-            <svg viewBox="0 0 350 200" preserveAspectRatio="xMinYMin" class="categories-panel_item_icon">
-                <use ng-href="#icon-lifestyles" xlink:href=""></use>
-            </svg>
-            <div class="categories-panel_item_title">Lifestyle</div>
+            <div class="categories-panel_item_icon icon-categorylifestyle" ></div>
+            Lifestyle
         </div>
 
 
@@ -49,6 +36,6 @@
 
 <div class="container-fluid">
     <div class="row" ng-repeat="videoItem in filteredVideoList")>
-        <player id="player{{videoItem.id}}"  class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem" filtered-list="filteredVideoList"></player>
+        <player id="player{{videoItem.id}}"  class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem" filtered-list="filteredVideoList" need-fullscreen="needFullscreen"></player>
     </div>
 </div>

@@ -22,8 +22,14 @@
       justify-content: space-between;
       height: 10%;
       &_close-button {
-        margin-left: 20px;
-        fill: white;
+        margin-left: 10px;
+        margin-top: 10px;
+        color: white;
+        font-size: 23px;
+        text-shadow: #000011 3px 3px 10px;
+        &::before {
+          margin-top: 15px;
+        }
       }
       &_rightside {
         display: flex;
@@ -33,11 +39,10 @@
         flex-direction: row;
         padding-right: 10px;
         &_buttons {
-          fill: white;
-          stroke-width: 10;
-          stroke: white;
+          color: white;
+          font-size: 27px;
+          text-shadow: #000011 3px 3px 10px;
           margin: 10px;
-          width: 40px;
         }
       }
     }
@@ -112,10 +117,11 @@
           flex-direction: row;
 
           &_category {
-            fill: white;
             width: 80px;
             height: 60px;
-            padding: 10px;
+            color: white;
+            font-size: 50px;
+            margin-bottom: 10px;
           }
 
           &_title {
@@ -137,13 +143,23 @@
           display: flex;
           align-items: stretch;
           align-content: flex-end;
-          justify-content: flex-start;
-          flex-direction: row;
+          justify-content: flex-end;
+          flex-direction: column;
           overflow: hidden;
           height: 100px;
           width: 200px;
           border: solid white 1px;
           background-size: cover;
+          padding: 5px;
+
+          &_up-text {
+            text-transform: uppercase;
+            color: darkgray;
+          }
+
+          &_up-title {
+            font-size: 24px;
+          }
         }
       }
 
@@ -156,20 +172,29 @@
         color: white;
         padding: 5px 10px;
 
+
         &_expand {
-          fill: white;
-          min-width: 30px;
-          min-height: 26px;
+          color: white;
+          font-size: 23px;
+          text-shadow: #000011 3px 3px 10px;
         }
 
         &_collapse {
-          fill: white;
-          min-width: 30px;
-          min-height: 26px;
+          color: white;
+          font-size: 23px;
+          text-shadow: #000011 3px 3px 10px;
         }
 
         &_slider {
-          width: 80%;
+          width: 85%;
+        }
+
+        &_time-position {
+          margin-bottom: 7px;
+        }
+
+        &_duration {
+          margin-bottom: 7px;
         }
       }
     }
@@ -212,6 +237,30 @@ player {
   //slider pointer override
   rzslider .rz-pointer {
     background-color: white !important;
+    top: -6px !important;
+    width: 16px !important;
+    height: 16px !important;
+    content: normal !important;
+    &:focus {
+      outline: none !important;
+    }
+  }
+  //slider minimal value
+  span.rz-pointer[aria-valuetext = "0"] {
+    display: none !important;
+  }
+  //slider full bar
+  rzslider .rz-bar {
+    background: white !important;
+    opacity: 0.4 !important;
+  }
+  //slider viewed bar
+  rzslider .rz-bar.rz-selection {
+    background: #3cffee !important;
+  }
+  //slider focused point
+  rzslider .rz-pointer:after {
+    display: none !important;
   }
 }
 

@@ -22,7 +22,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
             titlesOverlayLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_titles`))[0],
             controlsOverlayLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls`))[0],
             topElementsLayer: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements`))[0],
-            topElementsClose: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements_close-button`))[0],
+            topElementsClose: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements_close-button`))[0],//player_buttons-layer_top-elements_close-button
             topElementsRightSide: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements_rightside`))[0],
 
             buttonLayer: angular.element(element[0].querySelectorAll(`.player_buttons-layer`))[0],
@@ -62,7 +62,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
 
         scope.screenList.bind('ended', () => {
             if (scope.video.isFullscreen) {
-                toggleFullScreen()
+                toggleFullScreen(true)
                     .then(() => {
                         scope.playNextVideo();
                     });
@@ -88,6 +88,9 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
             if (!angular.equals(oldList, newList)) {
                 if (scope.video.isWatching) {
                     scope.togglePlayPause();
+                    if (scope.needFullscreen) {
+                        toggleFullScreen();
+                    }
                 }
             }
         });
@@ -101,6 +104,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
 
         function SliderModel() {
             return {
+                start: 0,
                 value: 0,
                 options: {
                     floor: 0,
@@ -142,20 +146,28 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
             let nextVideo = getNextVideo();
             if (nextVideo) {
                 scope.screen.pause();
-                nextVideo.isFullscreen = scope.video.isFullscreen;
+                if (getElementFullscreenState()) {
+                    toggleFullScreen(true)
+                        .then(() => {
+                            $anchorScroll(`player${nextVideo.id}`);
+                        });
+                } else {
+                    $anchorScroll(`player${nextVideo.id}`);
+                }
+
                 updatePlayerItems();
 
                 nextVideo.isWatching = true;
-                $anchorScroll(`player${nextVideo.id}`);
+
             }
         }
 
         function categoryIcon(id) {
             let iconMap = {
-                '11': 'movies',
-                '12': 'tv-shows',
+                '11': 'movie',
+                '12': 'tv',
                 '13': 'games',
-                '14': 'lifestyles'
+                '14': 'lifestyle'
             };
             return $sce.trustAsHtml(iconMap[String(id)]);
         }
@@ -167,12 +179,10 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
         }
 
         function imageHover() {
-            scope.topElementsClose.classList.remove('hidden-layer');
             scope.topElementsRightSide.classList.remove('hidden-layer');
         }
 
         function imageBlur() {
-            scope.topElementsClose.classList.add('hidden-layer');
             scope.topElementsRightSide.classList.add('hidden-layer');
         }
 
@@ -190,15 +200,14 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
             }, waitTime);
         }
 
-        function toggleFullScreen(state) {
+        function getElementFullscreenState() {
+            return (!document.fullscreenElement &&    // alternative standard method
+            !document.mozFullScreenElement && document.webkitFullscreenElement !== null && !document.msFullscreenElement)
+        }
+
+        function toggleFullScreen(skipChangeState) {
             return $q((resolve) => {
-                let fullscreenState = state || getElementFullscreenState()
-
-                function getElementFullscreenState() {
-                    return (!document.fullscreenElement &&    // alternative standard method
-                    !document.mozFullScreenElement && document.webkitFullscreenElement !== null && !document.msFullscreenElement)
-                }
-
+                let fullscreenState = getElementFullscreenState();
                 if (fullscreenState) {
                     scope.buttonLayer.classList.remove('player_buttons-layer--fullscreen');
                     if (document.exitFullscreen) {
@@ -213,7 +222,10 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                     else if ($document.msExitFullscreen) {
                         document.msExitFullscreen();
                     }
-                    scope.video.isFullscreen = true;
+                    if (!skipChangeState) {
+                        scope.needFullscreen = false;
+                    }
+
                     scope.expandButton.classList.remove('hidden-layer');
                     scope.collapseButton.classList.add('hidden-layer');
                     resolve();
@@ -232,7 +244,10 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                     else if (scope.screen.msRequestFullscreen) {
                         scope.screen.msRequestFullscreen();
                     }
-                    scope.video.isFullscreen = false;
+                    if (!skipChangeState) {
+                        scope.needFullscreen = true;
+                    }
+
                     scope.expandButton.classList.add('hidden-layer');
                     scope.collapseButton.classList.remove('hidden-layer');
                     resolve();
@@ -241,7 +256,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
         }
 
         function toggleControlsVisibility(state) {
-            let showControls = state ? state : scope.controlsOverlayLayer.classList.contains('hidden-layer')
+            let showControls = state ? state : scope.controlsOverlayLayer.classList.contains('hidden-layer');
 
             $timeout(function () {
                 scope.$broadcast('rzSliderForceRender');
@@ -303,6 +318,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                 scope.imageLayer.classList.add('hidden-layer');
                 if (!scope.video.isWatching) {
                     scope.video.isWatching = true;
+                    scope.topElementsClose.classList.remove('hidden-layer');
                     return;
                 }
             }
@@ -342,7 +358,8 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
         transclude: true,
         scope: {
             video: '=',
-            filteredList: '='
+            filteredList: '=',
+            needFullscreen: '='
         }
     }
 }

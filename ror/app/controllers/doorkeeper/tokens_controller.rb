@@ -40,7 +40,22 @@ module Doorkeeper
       render nothing: true, status: 200
     end
 
-      private
+    def destroy_expired_tokens(user)
+      expired_tokens = Doorkeeper::AccessToken.where('resource_owner_id = ? AND created_at < ?', user.id, 1.week.ago)
+      expired_tokens.destroy_all
+    end
+
+    def destroy_revoked_tokens(user)
+      revoked_tokens = Doorkeeper::AccessToken.where('resource_owner_id = ? AND revoked_at IS NOT ? AND revoked_at < ?', user.id, nil, DateTime.now)
+      revoked_tokens.destroy_all
+    end
+
+    def destroy_useless_tokens(user)
+      destroy_expired_tokens(user)
+      destroy_revoked_tokens(user)
+    end
+
+    private
 
     def revoke_token(token)
       token = AccessToken.by_token(token) || AccessToken.by_refresh_token(token)
@@ -59,21 +74,5 @@ module Doorkeeper
     def authorize_response
       @authorize_response ||= strategy.authorize
     end
-
-    def destroy_expired_tokens(user)
-      expired_tokens = Doorkeeper::AccessToken.where('resource_owner_id = ? AND created_at < ?', user.id, 1.week.ago)
-      expired_tokens.destroy_all
-    end
-
-    def destroy_revoked_tokens(user)
-      revoked_tokens = Doorkeeper::AccessToken.where('resource_owner_id = ? AND revoked_at IS NOT ? AND revoked_at < ?', user.id, nil, DateTime.now)
-      revoked_tokens.destroy_all
-    end
-
-    def destroy_useless_tokens(user)
-      destroy_expired_tokens(user)
-      destroy_revoked_tokens(user)
-    end
-
   end
 end

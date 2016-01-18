@@ -36,7 +36,7 @@ class V1::VideosController < V1::ApiController
       @videos = @videos.tagged_with(params[:tags])
     end
 
-    if @current_user && @current_user.is_admin
+    if @current_user && as_admin?
       @videos = @videos.order(created_at: :desc)
     else
       @videos = @videos.order(created_at: :desc).where(viewable: true).limit(1000)
@@ -98,7 +98,7 @@ class V1::VideosController < V1::ApiController
 
   def search
     if search = params[:search]
-      if @current_user && @current_user.is_admin
+      if @current_user && as_admin?
         @videos = Video.full_search(search)
       else
         @videos = Video.full_search(search).where("viewable = ?", true).limit(1000)
@@ -107,7 +107,7 @@ class V1::VideosController < V1::ApiController
   end
 
   def featured
-    if @current_user && @current_user.is_admin
+    if @current_user && as_admin?
       @videos = Video.where("featured = ?", true).order(created_at: :desc)
     else
       @videos = Video.where("featured = ? AND viewable = ?", true, true).limit(1000)

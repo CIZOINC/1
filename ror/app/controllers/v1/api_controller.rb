@@ -1,6 +1,7 @@
 class V1::ApiController < ApplicationController
   before_action :current_user
   before_action :as_admin?, if: :current_user
+  helper_method :as_admin?
 
   private
 

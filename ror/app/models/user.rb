@@ -9,8 +9,10 @@ class User < ActiveRecord::Base
                        format:{with: birthday_format,
                         message: "format is invalid(example: 2015-12-28T06:11:29.973Z)"
                        }
+  validates :is_admin, allow_nil: false, inclusion: {in: [true, false], message: "must be 'true' or 'false'"}
 
   def user_age_meets_requirement!
     (self.birthday.to_date < 18.years.ago || self.is_admin) ? true : false
   end
+
 end

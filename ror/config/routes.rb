@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     omniauth_callbacks: "auth/omniauth_callbacks"
   }
   devise_scope :user do
-    get 'fetch_user_by_facebook_token', to:"auth/omniauth_callbacks#fetch_user_by_facebook_token"
+    get 'oauth/facebook', to:"auth/omniauth_callbacks#fetch_user_by_facebook_token", defaults: {format: :json}
   end
 
   if Rails.env.development? || Rails.env.staging?

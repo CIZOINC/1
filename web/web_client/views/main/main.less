@@ -1,11 +1,19 @@
 
+@color-lighter: #3cffee;
+@color-lite: #24aabc;
+@color-mid: #356781;
+@color-dark: #2c3d51;
+@color-darker: #1c1f24;
+
 .navbar-main {
+  width: 100%;
+  padding: 10px;
   display: flex;
   flex-direction: row;
   align-items: stretch;
   align-content: stretch;
   justify-content: space-between;
-  background-color: #2c3d51;
+  background-color: @color-dark;
   &_button {
     color: white;
     font-size: 35px;
@@ -26,16 +34,16 @@
     align-items: center;
     align-content: flex-end;
     justify-content: center;
-    color: #375872;
+    color: @color-mid;
     font-size: 20px;
     &:hover {
-      color: #3cffee;
+      color: @color-lighter;
     }
     &_icon {
       font-size: 80px;
-      fill: #375872;
+      margin-bottom: -18px;
       &:hover {
-        fill: #3cffee;
+        fill: @color-lighter;
       }
 
       &--all-icon {

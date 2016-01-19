@@ -196,7 +196,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                 $timeout.cancel(scope.fadeControlsTimer);
             }
             scope.fadeControlsTimer = $timeout(() => {
-                toggleControlsVisibility(false);
+                toggleControlsVisibility(true);
             }, waitTime);
         }
 
@@ -255,8 +255,8 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
             });
         }
 
-        function toggleControlsVisibility(state) {
-            let showControls = state ? state : scope.controlsOverlayLayer.classList.contains('hidden-layer');
+        function toggleControlsVisibility(hideControls) {
+            let showControls = hideControls ? !hideControls : scope.controlsOverlayLayer.classList.contains('hidden-layer');
 
             $timeout(function () {
                 scope.$broadcast('rzSliderForceRender');

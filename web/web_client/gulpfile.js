@@ -129,10 +129,18 @@ gulp.task('copy_bootstrap_fonts', function () {
         .pipe(gulp.dest('./temp/final/fonts'));
 });
 
+gulp.task('copy_icon-fonts', function () {
+    "use strict";
+    return gulp.src([
+        'font/**/*.*'
+    ])
+        .pipe(gulp.dest('./temp/final/font'));
+});
+
 gulp.task('copy_dependencies', function () {
     "use strict";
     return gulp.src([
-            'fonts/**/*.*',
+            //'fonts/**/*.*',
             './images/**/*.svg'
         ])
         .pipe(gulp.dest('./temp/final/images'));
@@ -148,7 +156,8 @@ gulp.task('copy_index_template', function () {
 gulp.task('send_to_ror', function () {
     gulp.src([
         './temp/final/**/*.*',
-        '!./temp/final/**/*.map'
+        '!./temp/final/**/*.map',
+        '!./temp/final/images/**/*.*'
     ]).pipe(gulp.dest('../../ror/public/web_client'));
 });
 
@@ -171,6 +180,7 @@ gulp.task('default', function () {
             'minify_third_party_js',
             'minify_css',
             'copy_dependencies',
+            'copy_icon-fonts',
             'copy_bootstrap_fonts',
             'copy_index_template'
         ],

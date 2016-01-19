@@ -26,6 +26,14 @@ class V1::UsersController < V1::ApiController
     end
   end
 
+  def update_self_account
+    if @current_user.update_attributes(self_params)
+      render :me, status: 200, location: @current_user
+    else
+      render json: {errors: @current_user.errors.full_messages}
+    end
+  end
+
   def show
   end
 
@@ -88,14 +96,6 @@ class V1::UsersController < V1::ApiController
   def guest_skip_video
     @video.increase_skip_count! if @video
     nothing 204
-  end
-
-  def update_self_account
-    if @current_user.update_attributes(self_params)
-      render :me, status: 200, location: @current_user
-    else
-      render json: {errors: @current_user.errors.full_messages}
-    end
   end
 
   private

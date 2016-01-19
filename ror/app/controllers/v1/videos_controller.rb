@@ -48,7 +48,7 @@ class V1::VideosController < V1::ApiController
 
   def update
     if @video.update(videos_params)
-      render :show, status: :created, location: @video
+      render :show, status: :ok, location: @video
     else
       render json: @video.errors, status: :unprocessable_entity
     end

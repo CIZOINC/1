@@ -210,6 +210,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                 let fullscreenState = getElementFullscreenState();
                 if (fullscreenState) {
                     scope.buttonLayer.classList.remove('player_buttons-layer--fullscreen');
+                    scope.topElementsClose.classList.add('hidden-layer');
                     if (document.exitFullscreen) {
                         document.exitFullscreen();
                     }
@@ -232,6 +233,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                 }
                 else {
                     scope.buttonLayer.classList.add('player_buttons-layer--fullscreen');
+                    scope.topElementsClose.classList.remove('hidden-layer');
                     if (scope.screen.requestFullscreen) {
                         scope.screen.requestFullscreen();
                     }
@@ -270,7 +272,9 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                     } else {
                         scope.pauseButton.classList.remove('hidden-layer');
                     }
-                    scope.topElementsClose.classList.remove('hidden-layer');
+                    if (getElementFullscreenState()) {
+                        scope.topElementsClose.classList.remove('hidden-layer');
+                    }
                     scope.topElementsRightSide.classList.remove('hidden-layer');
                 } else {
                     scope.titlesOverlayLayer.classList.add('hidden-layer');
@@ -318,7 +322,6 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                 scope.imageLayer.classList.add('hidden-layer');
                 if (!scope.video.isWatching) {
                     scope.video.isWatching = true;
-                    scope.topElementsClose.classList.remove('hidden-layer');
                     return;
                 }
             }

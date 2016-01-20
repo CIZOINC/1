@@ -32,9 +32,12 @@
         margin-top: 10px;
         color: @color-lighter;
         font-size: 23px;
-        text-shadow: #000011 3px 3px 10px;
         &::before {
           margin-top: 15px;
+        }
+
+        &--fullscreen {
+          display: inline;
         }
       }
       &_rightside {
@@ -47,7 +50,6 @@
         &_buttons {
           color: white;
           font-size: 27px;
-          text-shadow: #000011 3px 3px 10px;
           margin: 10px;
         }
       }
@@ -182,13 +184,11 @@
         &_expand {
           color: @color-lighter;
           font-size: 23px;
-          text-shadow: #000011 3px 3px 10px;
         }
 
         &_collapse {
           color: @color-lighter;
           font-size: 23px;
-          text-shadow: #000011 3px 3px 10px;
         }
 
         &_slider {
@@ -262,7 +262,8 @@ player {
   }
   //slider viewed bar
   rzslider .rz-bar.rz-selection {
-    background: @color-lighter !important;
+    background: white !important;
+    opacity: 1 !important;
   }
   //slider focused point
   rzslider .rz-pointer:after {

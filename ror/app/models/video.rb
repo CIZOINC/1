@@ -19,7 +19,7 @@ class Video < ActiveRecord::Base
   acts_as_taggable
 
   belongs_to :category
-  has_many :streams
+  has_many :streams, dependent: :destroy
   has_many :likes, dependent: :destroy
   has_many :skipped_videos, dependent: :destroy
   has_many :seen_videos, dependent: :destroy
@@ -34,6 +34,16 @@ class Video < ActiveRecord::Base
   scope :trending, -> (){ where(viewable: true).order(view_count: :desc) }
   # scope :created_after, -> (date){where('created_at>?', date) }
   # scope :created_before, -> (date){where('created_at<?', date) }
+
+  after_create :create_streams
+
+  def create_streams
+    ActiveRecord::Base.transaction do
+      %w(hls mp4).each do |type|
+        self.streams.build(stream_type: type).save(validate: false)
+      end
+    end
+  end
 
   %w(skip view).each do |i|
     define_method("increase_#{i}_count!") do

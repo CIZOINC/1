@@ -1,9 +1,22 @@
-
+ 
 @color-lighter: #3cffee;
 @color-lite: #24aabc;
 @color-mid: #356781;
 @color-dark: #2c3d51;
 @color-darker: #1c1f24;
+
+
+
+  .categories-panel--margin {
+    margin: 10px 0 40px 0;
+  }
+
+@categories-margin: 100/12*2%;
+@media all and (min-width: 580px) {
+  .categories-panel--margin {
+    margin: 10px @categories-margin 40px @categories-margin;
+  }
+}
 
 .navbar-main {
   width: 100%;
@@ -27,7 +40,7 @@
   align-items: stretch;
   align-content: stretch;
   justify-content: space-around;
-  margin: 10px 10px 40px 10px;
+
   &_item {
     display: flex;
     flex-direction: column;

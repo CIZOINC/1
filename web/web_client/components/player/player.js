@@ -22,8 +22,10 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
             titlesOverlayLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_titles`))[0],
             controlsOverlayLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls`))[0],
             topElementsLayer: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements`))[0],
-            topElementsClose: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements_close-button`))[0],//player_buttons-layer_top-elements_close-button
+            topElementsClose: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements_close-button`))[0],
             topElementsRightSide: angular.element(element[0].querySelector(`.player_buttons-layer_top-elements_rightside`))[0],
+            currentTitle: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_titles_current_title`))[0],
+            currentBlock: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_titles_current`))[0],
 
             buttonLayer: angular.element(element[0].querySelectorAll(`.player_buttons-layer`))[0],
             videoLayer: angular.element(element[0].querySelector(`div.video-layer`))[0],
@@ -293,6 +295,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                     item.classList[action](setClass);
                 });
             }
+            updateClassBySelector('remove', 'player', 'player--play-state');
             updateClassBySelector('add', 'player .video-layer', 'hidden-layer');
             updateClassBySelector('remove', 'player .hero-image-layer', 'hidden-layer');
             updateClassBySelector('add', '.player_buttons-layer_bottom-elements_titles', 'player_buttons-layer_bottom-elements_titles--hero-image');
@@ -301,6 +304,8 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
             updateClassBySelector('remove', '.player_buttons-layer_center-elements_play-button', 'hidden-layer');
             updateClassBySelector('add', '.player_buttons-layer_center-elements_pause-button', 'hidden-layer');
             updateClassBySelector('remove', '.player_buttons-layer', 'player_buttons-layer--fullscreen');
+            updateClassBySelector('remove', '.player_buttons-layer_bottom-elements_titles_current_title', 'player_buttons-layer_bottom-elements_titles_current_title--play-state');
+            updateClassBySelector('remove', '.player_buttons-layer_bottom-elements_titles_current', 'player_buttons-layer_bottom-elements_titles_current--play-state');
 
             _.each(angular.element(document.querySelectorAll('video')), (item) => {
                 item.pause();
@@ -326,6 +331,9 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                 }
             }
 
+            element[0].classList.add('player--play-state');
+            scope.currentTitle.classList.add('player_buttons-layer_bottom-elements_titles_current_title--play-state');
+            scope.currentBlock.classList.add('player_buttons-layer_bottom-elements_titles_current--play-state');
             scope.titlesOverlayLayer.classList.remove('player_buttons-layer_bottom-elements_titles--hero-image');
             scope.titlesOverlayLayer.classList.remove('hidden-layer');
             scope.controlsOverlayLayer.classList.remove('hidden-layer');

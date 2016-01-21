@@ -37,9 +37,18 @@ class V1::VideosController < V1::ApiController
     end
 
     if @current_user && as_admin?
-      @videos = @videos.order(created_at: :desc)
+      if params[:visible] == 'false'
+        @videos = @videos.order(created_at: :desc).where(visible: false)
+      else
+        @videos = @videos.order(created_at: :desc)
+      end
     else
-      @videos = @videos.order(created_at: :desc).where(viewable: true).limit(1000)
+      if params[:visible] == 'false'
+        @show_invisible = true
+        @videos = @videos.order(created_at: :desc).where('visible = ? AND viewable = ?', false, true)
+      else
+        @videos = @videos.order(created_at: :desc).where('visible = ? AND viewable = ?', true, true).limit(1000)
+      end
     end
   end
 

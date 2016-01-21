@@ -59,15 +59,15 @@ class V1::VideosController < V1::ApiController
       if params[:visible] == 'false'
         conditions.push('visible = :visible')
         arguments[:visible] = false
-        conditions_str = conditions.join(" AND ")
         @show_invisible = true
       end
 
       if params[:deleted] == 'true'
         conditions.push('deleted_at IS NOT NULL')
-        conditions_str = conditions.join(" AND ")
         @show_deleted = true
       end
+      
+      conditions_str = conditions.join(" AND ")
       @videos = Video.where(conditions_str, arguments).desc_order
     end
 

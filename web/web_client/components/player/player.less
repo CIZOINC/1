@@ -6,6 +6,35 @@
 
 .player {
 
+  @media (min-width: 992px) {
+    &--play-state {
+      margin-left: 10%;
+      width: 79.8%;
+    }
+  }
+
+  &_hero-image-layer {
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+
+    &:before {
+      display: block;
+      content: '';
+      width: 100%;
+      padding-top: 56.25%;
+    }
+
+    & > .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      object-fit: cover;
+    }
+  }
+
   &_buttons-layer {
     display: flex;
     position: absolute;
@@ -30,7 +59,7 @@
       &_close-button {
         margin-left: 10px;
         margin-top: 10px;
-        color: @color-lighter;
+        color: white;
         font-size: 23px;
         &::before {
           margin-top: 15px;
@@ -49,7 +78,7 @@
         padding-right: 10px;
         &_buttons {
           color: white;
-          font-size: 27px;
+          font-size: 32px;
           margin: 10px;
         }
       }
@@ -113,7 +142,7 @@
         color: white;
 
         &--hero-image {
-          background-color: #000011;
+          background-color: #1d1d1d;
           opacity: 0.8;
         }
 
@@ -124,12 +153,14 @@
           justify-content: flex-end;
           flex-direction: row;
 
+          &--play-state {
+            margin-bottom: -20px;
+          }
+
           &_category {
-            width: 80px;
-            height: 60px;
             color: @color-lighter;
-            font-size: 50px;
-            margin-bottom: 10px;
+            font-size: 65px;
+            margin-bottom: 5px;
           }
 
           &_title {
@@ -138,10 +169,19 @@
             align-content: flex-end;
             justify-content: flex-end;
             flex-direction: column;
-            font-size: 26px;
+            font-size: 38px;
+            font-family: 'main-cizo';
+            padding-bottom: 7px;
+
+            &--play-state {
+              //padding-bottom: 0;
+            }
 
             &_created {
-              font-size: 18px;
+              font-size: 16px;
+              font-family: 'main-cizo';
+              text-transform: uppercase;
+              margin-bottom: -10px;
             }
           }
 
@@ -149,6 +189,7 @@
 
         &_next {
           display: flex;
+          position: relative;
           align-items: stretch;
           align-content: flex-end;
           justify-content: flex-end;
@@ -158,15 +199,31 @@
           width: 200px;
           border: solid @color-lighter 1px;
           background-size: cover;
-          padding: 5px;
+          padding: 10px;
+          margin-right: 20px;
+
+          &_image {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-size: cover;
+            opacity: 0.6;
+
+          }
 
           &_up-text {
+            font-family: 'main-cizo';
             text-transform: uppercase;
             color: @color-lite;
+            z-index: 10;
           }
 
           &_up-title {
+            font-family: 'main-cizo';
             font-size: 24px;
+            z-index: 10;
           }
         }
       }
@@ -177,18 +234,18 @@
         align-content: flex-end;
         justify-content: space-between;
         flex-direction: row;
-        color: @color-lighter;
+        color: white;
         padding: 5px 10px;
 
 
         &_expand {
-          color: @color-lighter;
-          font-size: 23px;
+          color: white;
+          font-size: 35px;
         }
 
         &_collapse {
-          color: @color-lighter;
-          font-size: 23px;
+          color: white;
+          font-size: 35px;
         }
 
         &_slider {
@@ -196,11 +253,13 @@
         }
 
         &_time-position {
-          margin-bottom: 7px;
+          font-family: 'main-cizo';
+          margin: 15px 15px 7px 10px;
         }
 
         &_duration {
-          margin-bottom: 7px;
+          font-family: 'main-cizo';
+          margin: 15px 10px 7px 15px;
         }
       }
     }
@@ -262,7 +321,7 @@ player {
   }
   //slider viewed bar
   rzslider .rz-bar.rz-selection {
-    background: white !important;
+    background: @color-lighter !important;
     opacity: 1 !important;
   }
   //slider focused point

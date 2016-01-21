@@ -1,6 +1,7 @@
 <nav class="navbar">
     <div class="navbar-main">
         <div class="icon-menu navbar-main_button"></div>
+        <img class="navbar-main_logo" src="images/splashLogo.png">
         <div class="icon-search navbar-main_button"></div>
     </div>
 </nav>
@@ -8,21 +9,21 @@
 <div>
     <div class="categories-panel categories-panel--margin">
         <div class="categories-panel_item" ng-click="filterByCategory()">
-            <div class="categories-panel_item_icon icon-all  ">
+            <div class="categories-panel_item_icon categories-panel_item_icon--all-icon icon-all  ">
             </div>
-            All
+            <div class="categories-panel_item_title">All</div>
         </div>
         <div class="categories-panel_item" ng-click="filterByCategory(11)">
             <div class="categories-panel_item_icon icon-categorymovie" ></div>
             Movies
         </div>
-        <div class="categories-panel_item" ng-click="filterByCategory(13)">
-            <div class="categories-panel_item_icon icon-categorygames" ></div>
-            Games
-        </div>
         <div class="categories-panel_item" ng-click="filterByCategory(12)">
             <div class="categories-panel_item_icon icon-categorytv" ></div>
             TV Shows
+        </div>
+        <div class="categories-panel_item" ng-click="filterByCategory(13)">
+            <div class="categories-panel_item_icon icon-categorygames" ></div>
+            Games
         </div>
         <div class="categories-panel_item" ng-click="filterByCategory(14)">
             <div class="categories-panel_item_icon icon-categorylifestyle" ></div>
@@ -31,7 +32,7 @@
     </div>
 </div>
 
-<div class="container-fluid">
+<div class="container-fluid player-list">
     <div class="row" ng-repeat="videoItem in filteredVideoList")>
         <player id="player{{videoItem.id}}"  class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem" filtered-list="filteredVideoList" need-fullscreen="needFullscreen"></player>
     </div>

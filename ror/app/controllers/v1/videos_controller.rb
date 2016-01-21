@@ -27,19 +27,52 @@ class V1::VideosController < V1::ApiController
       conditions.push("category_id = (SELECT id FROM categories WHERE title = :category)")
       arguments[:category] = params[:category]
     end
-    conditions = conditions.join(" AND ")
 
+    conditions_str = conditions.join(" AND ")
 
-    @videos = Video.where(conditions, arguments)
+    @videos = Video.where(conditions_str, arguments).desc_order
 
     unless params[:tags].blank?
       @videos = @videos.tagged_with(params[:tags])
     end
 
     if @current_user && as_admin?
-      @videos = @videos.order(created_at: :desc)
+      if params[:visible] == 'false'
+        conditions.push('visible = :visible')
+        arguments[:visible] = false
+        conditions_str = conditions.join(" AND ")
+        @videos = Video.where(conditions_str, arguments).desc_order
+        # @videos = @videos.order(created_at: :desc).where(visible: false)
+      else
+        @videos = @videos.order(created_at: :desc)
+      end
+
+      if params[:deleted] == 'true'
+        conditions.push('deleted_at IS NOT NULL')
+        conditions_str = conditions.join(" AND ")
+        @videos = Video.where(conditions_str, arguments).desc_order
+      end
     else
-      @videos = @videos.order(created_at: :desc).where(viewable: true).limit(1000)
+      conditions.push('viewable = :viewable')
+      arguments[:viewable] = true
+
+      if params[:visible] == 'false'
+        conditions.push('visible = :visible')
+        arguments[:visible] = false
+        @show_invisible = true
+      end
+
+      if params[:deleted] == 'true'
+        conditions.push('deleted_at IS NOT NULL')
+        @show_deleted = true
+      end
+      
+      conditions_str = conditions.join(" AND ")
+      @videos = Video.where(conditions_str, arguments).desc_order
+    end
+
+    unless params[:tags].blank?
+      @videos = @videos.tagged_with(params[:tags])
     end
   end
 
@@ -60,7 +93,7 @@ class V1::VideosController < V1::ApiController
     raw_folder = Rails.env.production? ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
     stream_folder = Rails.env.production? ? "production/stream/#{@video.id}" : "staging/stream/#{@video.id}"
     hero_image = Rails.env.production? ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
-    if @video.destroy
+    if !@video.deleted_at && @video.update_column(:deleted_at, Time.now)
       bucket.objects(prefix: raw_folder).batch_delete!
       bucket.objects(prefix: stream_folder).batch_delete!
       if hero_image
@@ -87,25 +120,25 @@ class V1::VideosController < V1::ApiController
   end
 
   def trending
-    @videos = Video.trending
+    @videos = Video.trending.desc_order
     render :index
   end
 
   def search
     if search = params[:search]
       if @current_user && as_admin?
-        @videos = Video.full_search(search)
+        @videos = Video.where(deleted_at: nil).full_search(search).desc_order
       else
-        @videos = Video.full_search(search).where("viewable = ?", true).limit(1000)
+        @videos = Video.where("viewable = ? AND visible = ? deleted_at IS NULL", true, true).full_search(search).limit(1000).desc_order
       end
     end
   end
 
   def featured
     if @current_user && as_admin?
-      @videos = Video.where("featured = ?", true).order(created_at: :desc)
+      @videos = Video.where("featured = ? AND deleted_at IS NULL", true).desc_order
     else
-      @videos = Video.where("featured = ? AND viewable = ?", true, true).limit(1000)
+      @videos = Video.where("featured = ? AND viewable = ? AND visible = ? AND deleted_at IS NULL", true, true, true).limit(1000).desc_order
     end
   end
 

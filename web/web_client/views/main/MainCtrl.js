@@ -47,7 +47,7 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
         return $q( (resolve) => {
             videoServ.getVideosList($scope)
                 .then( (response) => {
-                    $scope.videosList = response.data.data;
+                    $scope.videosList = _.filter(response.data.data, item => item.hero_image_link && item.streams.length)  ;
                     resolve();
                 });
         });

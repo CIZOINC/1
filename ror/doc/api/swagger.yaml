@@ -22,7 +22,7 @@ produces:
 paths:
   /videos:
     get:
-      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null."
+      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'visible' set to true. <b>NOTE</b>  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null."
       tags:
         - Videos
       parameters:
@@ -48,6 +48,16 @@ paths:
           required: false
           type: string
           format: date-time
+        - name: visible
+          in: query
+          description: Filter videos that are marked as not visible. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the "id" attribute of each video. 
+          required: false
+          type: boolean
+        - name: deleted
+          in: query
+          description: Filter videos that have been deleted. The videos returned will only contain the "id" attribute of each video.
+          required: false
+          type: boolean
       responses:
         '200':
           description: An list of videos
@@ -169,7 +179,7 @@ paths:
             type: object
             $ref: '#/definitions/Video'
         '403':
-          description: "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's viewable property is not set to true"
+          description: "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's visible property is not set to true"
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -388,6 +398,49 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /featured/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: 'Marks a video as featured.'
+      tags:
+        - Featured
+      security:
+        - oauth:
+          - admin
+      responses:
+        '204':
+          description: "Video has been marked as featured"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: "Removes a video as featured."
+      tags:
+        - Featured
+      security:
+        - oauth:
+          - admin
+      responses:
+        '204':
+          description: "Featured has been removed"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -879,7 +932,7 @@ paths:
           - user
       responses:
         '204':
-          description: "Video has been marked as likes"
+          description: "Video has been marked as liked"
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
           schema:
@@ -969,9 +1022,9 @@ definitions:
         type: integer
         format: int32
         description: 'Unique identifier of category'
-      viewable:
+      visible:
         type: boolean
-        description: Whether a video is viewable. This property is only visible to clients with an oauth2 scope of 'admin'
+        description: Whether a video is visible. This property is only visible to clients with an oauth2 scope of 'admin'
       tags:
         type: array
         items:
@@ -1081,4 +1134,3 @@ definitions:
         format: int32
       message:
         type: string
-

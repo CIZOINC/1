@@ -29,9 +29,12 @@ Rails.application.routes.draw do
       post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
       post :streams, to: "streams#create"
       post :hero_image
+
     end
 
     get :featured, to: "videos#featured"
+    put 'featured/:video_id', to: "videos#add_featured"
+    delete 'featured/:video_id', to: 'videos#remove_featured'
     get :trending, to: "videos#trending"
     get :search, to: 'videos#search'
 

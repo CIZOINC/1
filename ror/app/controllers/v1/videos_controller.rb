@@ -3,9 +3,9 @@ class V1::VideosController < V1::ApiController
   before_action :set_video_by_video_id, only: [:hero_image]
   before_action :set_region, only: [:destroy]
 
-  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
+  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :add_featured, :remove_featured, :search, :update], if: :current_user
 
-  before_action only: [:create, :update, :hero_image, :destroy] do
+  before_action only: [:create, :update, :hero_image, :destroy,:add_featured, :remove_featured] do
     doorkeeper_authorize! :admin
   end
 
@@ -140,6 +140,16 @@ class V1::VideosController < V1::ApiController
     else
       @videos = Video.where("featured = ? AND viewable = ? AND visible = ? AND deleted_at IS NULL", true, true, true).limit(1000).desc_order
     end
+  end
+
+  def add_featured
+    @video.add_featured! if @video
+    nothing 204
+  end
+
+  def remove_featured
+    @video.remove_featured! if @video
+    nothing 204
   end
 
   private

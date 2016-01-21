@@ -52,6 +52,14 @@ class Video < ActiveRecord::Base
     end
   end
 
+  def add_featured!
+    update_column(:featured, true)
+  end
+
+  def remove_featured!
+    update_column(:featured, false)
+  end
+
   def like!(user_id)
     @user_id = user_id
     Like.find_or_create_by(params)

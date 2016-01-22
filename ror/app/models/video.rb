@@ -35,6 +35,7 @@ class Video < ActiveRecord::Base
   # scope :created_after, -> (date){where('created_at>?', date) }
   # scope :created_before, -> (date){where('created_at<?', date) }
   scope :desc_order, ->(){ order(created_at: :desc)}
+  scope :order_by_featured, ->(){order(featured_order: :desc)}
 
   after_create :create_streams
 
@@ -49,6 +50,19 @@ class Video < ActiveRecord::Base
   %w(skip view).each do |i|
     define_method("increase_#{i}_count!") do
       update_column("#{i}_count", self["#{i}_count"].succ)
+    end
+  end
+
+  def add_featured!(f_o = nil)
+    update_column(:featured, true) && (puts "SET FEATURED TO TRUE") if !featured
+    set_featured_order(f_o) if f_o
+  end
+
+  def remove_featured!
+    if featured
+      update_column(:featured, false)
+      update_column(:featured_order, nil) if featured_order
+      puts "REMOVE FEATURED"
     end
   end
 
@@ -85,6 +99,30 @@ class Video < ActiveRecord::Base
 
   def params
     {user_id: @user_id, video_id: self.id}
+  end
+
+  def set_featured_order(f_o)
+    @video = Video.find_by_featured_order(f_o)
+    if @video
+      find_last_video(f_o)
+    else
+      update_column(:featured_order, f_o)
+    end
+  end
+
+  def find_last_video(f_o)
+    v = Video.find_by_featured_order(f_o)
+    if v.nil?
+      last_featured_order = f_o - 1
+      array = []
+      last_featured_order.downto(@video.featured_order) do |i|
+        array << i
+        Video.find_by_featured_order(i).update_column(:featured_order, i+1)
+      end
+      self.update_column(:featured_order, @video.featured_order)
+      return
+    end
+    find_last_video(f_o + 1)
   end
 
 end

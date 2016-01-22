@@ -1,7 +1,8 @@
 if @show_invisible || @show_deleted
   json.extract! video, :id
 else
-  json.extract! video, :id, :created_at, :updated_at, :title, :description, :mature_content, :category_id, :visible, :hero_image_link
+  json.extract! video, :id, :created_at, :updated_at, :title, :description, :mature_content, :category_id, :visible, :hero_image_link, :featured
+  json.featured_order video.featured_order if @featured
   if @current_user
     json.deleted_at video.deleted_at if as_admin?
     %w(view skip).each {|i| json.set! "#{i}_count", video["#{i}_count"] }  if as_admin?

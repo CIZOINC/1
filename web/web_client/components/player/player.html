@@ -15,7 +15,13 @@
             </div>
 
             <!-- buttons layer-->
-            <div class="player_buttons-layer" ng-mouseenter="imageHover()" ng-mouseleave="imageBlur()" ng-click="toggleControlsVisibility()" ng-mousemove="mouseMoveOnVideo()">
+            <div class="player_buttons-layer"
+                 ng-mouseenter="imageHover()"
+                 ng-mouseleave="imageBlur()"
+                 ng-click="toggleControlsVisibility()"
+                 ng-mousemove="mouseMoveOnVideo()"
+                 ng-dblclick="toggleFullScreen()"
+                    >
                 <!-- top buttons-->
                 <div class="player_buttons-layer_top-elements">
                     <div>
@@ -30,7 +36,7 @@
                     </div>
                 </div>
                 <!-- center elements-->
-                <div class="player_buttons-layer_center-elements">
+                <div class="player_buttons-layer_center-elements stop-selection">
                     <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_play-button">
                     <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_pause-button hidden-layer">
                 </div>

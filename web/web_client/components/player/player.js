@@ -182,10 +182,17 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
 
         function imageHover() {
             scope.topElementsRightSide.classList.remove('hidden-layer');
+            if (getElementFullscreenState()) {
+                scope.buttonLayer.classList.remove('player_buttons-layer--hover');
+            } else {
+                scope.buttonLayer.classList.add('player_buttons-layer--hover');
+            }
+
         }
 
         function imageBlur() {
             scope.topElementsRightSide.classList.add('hidden-layer');
+            scope.buttonLayer.classList.remove('player_buttons-layer--hover');
         }
 
         function mouseMoveOnVideo() {
@@ -235,6 +242,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                 }
                 else {
                     scope.buttonLayer.classList.add('player_buttons-layer--fullscreen');
+                    scope.buttonLayer.classList.remove('player_buttons-layer--hover');
                     scope.topElementsClose.classList.remove('hidden-layer');
                     if (scope.screen.requestFullscreen) {
                         scope.screen.requestFullscreen();
@@ -278,6 +286,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                         scope.topElementsClose.classList.remove('hidden-layer');
                     }
                     scope.topElementsRightSide.classList.remove('hidden-layer');
+                    scope.buttonLayer.classList.add('player_buttons-layer--show-buttons');
                 } else {
                     scope.titlesOverlayLayer.classList.add('hidden-layer');
                     scope.controlsOverlayLayer.classList.add('hidden-layer');
@@ -285,6 +294,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
                     scope.pauseButton.classList.add('hidden-layer');
                     scope.topElementsClose.classList.add('hidden-layer');
                     scope.topElementsRightSide.classList.add('hidden-layer');
+                    scope.buttonLayer.classList.remove('player_buttons-layer--show-buttons');
                 }
             }
         }

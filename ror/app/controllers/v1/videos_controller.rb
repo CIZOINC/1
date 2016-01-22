@@ -31,7 +31,7 @@ class V1::VideosController < V1::ApiController
 
     if params[:deleted] == 'true'
       conditions.push('deleted_at IS NOT NULL')
-      @show_deleted = true unless @current_user && as_admin?
+      @show_deleted = true #unless @current_user && as_admin?
     else
       conditions.push('deleted_at IS NULL')
     end

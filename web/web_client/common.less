@@ -24,6 +24,13 @@ body {
   background: linear-gradient(45deg, @screen_gradient_start, @screen_gradient_finish);
 }
 
+.stop-selection {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
+}
+
 
 [class^="icon-"]:before, [class*=" icon-"]:before {
   font-family: "cizo";
@@ -62,9 +69,9 @@ body {
 .icon-all:before { content: '\61'; } /* 'a' */
 .icon-categorymovie:before { content: '\62'; } /* 'b' */
 .icon-categorygames:before { content: '\63'; } /* 'c' */
-.icon-categorylifestyle:before { content: '\64'; } /* 'd' */
+.icon-lifestyle:before { content: '\64'; } /* 'd' */
 .icon-categorytv:before { content: '\65'; } /* 'e' */
-.icon-share-old:before { content: '\66'; } /* 'f' */
+.icon-share-1:before { content: '\66'; } /* 'f' */
 .icon-info:before { content: '\67'; } /* 'g' */
 .icon-favorites:before { content: '\68'; } /* 'h' */
 .icon-play:before { content: '\69'; } /* 'i' */
@@ -75,3 +82,9 @@ body {
 .icon-search:before { content: '\6f'; } /* 'o' */
 .icon-menu:before { content: '\70'; } /* 'p' */
 .icon-share:before { content: '\73'; } /* 's' */
+.icon-forward:before { content: '\74'; } /* 't' */
+.icon-home:before { content: '\75'; } /* 'u' */
+.icon-skipped:before { content: '\76'; } /* 'v' */
+.icon-unseen:before { content: '\77'; } /* 'w' */
+.icon-profile:before { content: '\78'; } /* 'x' */
+.icon-seen:before { content: '\79'; } /* 'y' */

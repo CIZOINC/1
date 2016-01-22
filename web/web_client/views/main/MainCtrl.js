@@ -4,17 +4,19 @@ angular
     .controller('MainCtrl', MainCtrl);
 
 /* @ngInject */
-function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
+function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
     "use strict";
 
     $scope = angular.extend($scope, {
         filteredVideoList: [],
         videosList: [],
         needFullscreen: false,
+        isMenuVisible: false,
         filterCategory: {
             category_id: ''
         },
-        filterByCategory: filterByCategory
+        filterByCategory: filterByCategory,
+        toggleMenu: toggleMenu
     });
 
     getCategories()
@@ -30,6 +32,29 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
             $scope.filteredVideoList = _.filter($scope.videosList, item => item.category_id === id);
         } else {
             $scope.filteredVideoList = $scope.videosList;
+        }
+    }
+
+    function toggleMenu(state) {
+        let isVisible = typeof state !== 'undefined' ? state : $scope.isMenuVisible;
+
+        let menuContainer = document.querySelector('.menu_container');
+        let navbar = document.querySelector('.navbar');
+        let menuContainerOuter = document.querySelector('.menu_container_outer');
+        let categoriesPanel = document.querySelector('.categories-panel');
+
+        if (isVisible) {
+            $scope.isMenuVisible = false;
+            menuContainer.classList.remove('menu_container--menu-visible');
+            navbar.classList.remove('navbar--menu-visible');
+            menuContainerOuter.classList.remove('menu_container_outer--menu-visible');
+            categoriesPanel.classList.remove('categories-panel--menu-visible');
+        } else {
+            $scope.isMenuVisible = true;
+            menuContainer.classList.add('menu_container--menu-visible');
+            navbar.classList.add('navbar--menu-visible');
+            menuContainerOuter.classList.add('menu_container_outer--menu-visible');
+            categoriesPanel.classList.add('categories-panel--menu-visible');
         }
     }
 
@@ -70,4 +95,4 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _) {
 
 
 }
-MainCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash'];
+MainCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', '$document'];

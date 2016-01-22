@@ -1,5 +1,6 @@
 class V1::VideosController < V1::ApiController
-  before_action :set_video, only: [:show, :destroy, :update]
+  before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted]
+  before_action :check_if_video_deleted, only: [:show]
   before_action :set_video_by_video_id, only: [:hero_image]
   before_action :set_region, only: [:destroy]
 
@@ -28,52 +29,26 @@ class V1::VideosController < V1::ApiController
       arguments[:category] = params[:category]
     end
 
-    conditions_str = conditions.join(" AND ")
+    if params[:deleted] == 'true'
+      conditions.push('deleted_at IS NOT NULL')
+      @show_deleted = true unless @current_user && as_admin?
+    else
+      conditions.push('deleted_at IS NULL')
+    end
 
+    if params[:visible] == 'false'
+      conditions.push('visible = :visible')
+      arguments[:visible] = false
+      @show_invisible = true unless @current_user && as_admin?
+    else
+      (conditions.push('visible = :visible') && arguments[:visible] = true) unless (@current_user && as_admin?) || params[:deleted] == 'true'
+    end
+
+    conditions_str = conditions.join(" AND ")
     @videos = Video.where(conditions_str, arguments).desc_order
 
-    unless params[:tags].blank?
-      @videos = @videos.tagged_with(params[:tags])
-    end
+    @videos = @videos.tagged_with(params[:tags]) unless params[:tags].blank?
 
-    if @current_user && as_admin?
-      if params[:visible] == 'false'
-        conditions.push('visible = :visible')
-        arguments[:visible] = false
-        conditions_str = conditions.join(" AND ")
-        @videos = Video.where(conditions_str, arguments).desc_order
-        # @videos = @videos.order(created_at: :desc).where(visible: false)
-      else
-        @videos = @videos.order(created_at: :desc)
-      end
-
-      if params[:deleted] == 'true'
-        conditions.push('deleted_at IS NOT NULL')
-        conditions_str = conditions.join(" AND ")
-        @videos = Video.where(conditions_str, arguments).desc_order
-      end
-    else
-      conditions.push('viewable = :viewable')
-      arguments[:viewable] = true
-
-      if params[:visible] == 'false'
-        conditions.push('visible = :visible')
-        arguments[:visible] = false
-        @show_invisible = true
-      end
-
-      if params[:deleted] == 'true'
-        conditions.push('deleted_at IS NOT NULL')
-        @show_deleted = true
-      end
-      
-      conditions_str = conditions.join(" AND ")
-      @videos = Video.where(conditions_str, arguments).desc_order
-    end
-
-    unless params[:tags].blank?
-      @videos = @videos.tagged_with(params[:tags])
-    end
   end
 
   def show
@@ -129,7 +104,7 @@ class V1::VideosController < V1::ApiController
       if @current_user && as_admin?
         @videos = Video.where(deleted_at: nil).full_search(search).desc_order
       else
-        @videos = Video.where("viewable = ? AND visible = ? deleted_at IS NULL", true, true).full_search(search).limit(1000).desc_order
+        @videos = Video.where("visible = ? deleted_at IS NULL", true).full_search(search).limit(1000).desc_order
       end
     end
   end
@@ -138,18 +113,22 @@ class V1::VideosController < V1::ApiController
     if @current_user && as_admin?
       @videos = Video.where("featured = ? AND deleted_at IS NULL", true).desc_order
     else
-      @videos = Video.where("featured = ? AND viewable = ? AND visible = ? AND deleted_at IS NULL", true, true, true).limit(1000).desc_order
+      @videos = Video.where("featured = ? AND visible = ? AND deleted_at IS NULL", true, true).limit(1000).desc_order
     end
   end
 
   private
+
+  def check_if_video_deleted
+    nothing 404 if @video.deleted_at
+  end
 
   def set_region
     @region = "us-east-1"
   end
 
   def videos_params
-    params.permit(:id, :title, :description, :mature_content, :viewable, :category_id, :tag_list, :featured)
+    params.permit(:id, :title, :description, :mature_content, :visible, :category_id, :tag_list, :featured)
   end
 
   def set_video

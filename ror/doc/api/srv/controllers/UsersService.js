@@ -6,7 +6,7 @@ exports.usersGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
-    "birthday" : "2016-01-13T23:13:19.664+0000",
+    "birthday" : "2016-01-21T17:57:59.123+0000",
     "password" : "aeiou",
     "id" : 123,
     "email" : "aeiou"
@@ -24,7 +24,7 @@ exports.usersPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-01-13T23:13:19.665+0000",
+  "birthday" : "2016-01-21T17:57:59.123+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -55,7 +55,7 @@ exports.usersMeGet = function() {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-01-13T23:13:19.667+0000",
+  "birthday" : "2016-01-21T17:57:59.125+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -72,7 +72,7 @@ exports.usersMePut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-01-13T23:13:19.668+0000",
+  "birthday" : "2016-01-21T17:57:59.126+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -97,12 +97,13 @@ exports.usersMeVideosLikedGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
+    "visible" : true,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-01-13T23:13:19.670+0000",
+    "created_at" : "2016-01-21T17:57:59.127+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
@@ -110,8 +111,7 @@ exports.usersMeVideosLikedGet = function() {
     "tags" : [ "aeiou" ],
     "skipped" : true,
     "mature_content" : true,
-    "viewable" : true,
-    "updated_at" : "2016-01-13T23:13:19.670+0000",
+    "updated_at" : "2016-01-21T17:57:59.127+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",
@@ -146,12 +146,13 @@ exports.usersMeVideosSeenGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
+    "visible" : true,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-01-13T23:13:19.672+0000",
+    "created_at" : "2016-01-21T17:57:59.129+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
@@ -159,8 +160,7 @@ exports.usersMeVideosSeenGet = function() {
     "tags" : [ "aeiou" ],
     "skipped" : true,
     "mature_content" : true,
-    "viewable" : true,
-    "updated_at" : "2016-01-13T23:13:19.672+0000",
+    "updated_at" : "2016-01-21T17:57:59.129+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",
@@ -188,12 +188,13 @@ exports.usersMeVideosSkippedGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
+    "visible" : true,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-01-13T23:13:19.673+0000",
+    "created_at" : "2016-01-21T17:57:59.130+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
@@ -201,8 +202,7 @@ exports.usersMeVideosSkippedGet = function() {
     "tags" : [ "aeiou" ],
     "skipped" : true,
     "mature_content" : true,
-    "viewable" : true,
-    "updated_at" : "2016-01-13T23:13:19.673+0000",
+    "updated_at" : "2016-01-21T17:57:59.130+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",
@@ -230,12 +230,13 @@ exports.usersMeVideosUnseenGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
+    "visible" : true,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-01-13T23:13:19.675+0000",
+    "created_at" : "2016-01-21T17:57:59.132+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
@@ -243,8 +244,7 @@ exports.usersMeVideosUnseenGet = function() {
     "tags" : [ "aeiou" ],
     "skipped" : true,
     "mature_content" : true,
-    "viewable" : true,
-    "updated_at" : "2016-01-13T23:13:19.675+0000",
+    "updated_at" : "2016-01-21T17:57:59.132+0000",
     "category_id" : 123,
     "id" : 123,
     "hero_image_link" : "aeiou",
@@ -264,7 +264,7 @@ exports.usersUserIdGet = function(userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-01-13T23:13:19.675+0000",
+  "birthday" : "2016-01-21T17:57:59.133+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -281,7 +281,7 @@ exports.usersUserIdPut = function(body, userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-01-13T23:13:19.676+0000",
+  "birthday" : "2016-01-21T17:57:59.133+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"

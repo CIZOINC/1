@@ -7,4 +7,13 @@ namespace :change_default do
     end
     puts "Completed"
   end
+
+  desc "Change video featured_order to random value"
+  task featured_value: :environment do
+    videos_count = Video.all.count
+    featured_order = (1..videos_count).to_a.shuffle
+    Video.all.each do |video|
+      video.update_column(:featured_order, featured_order.shift) if video.featured
+    end
+  end
 end

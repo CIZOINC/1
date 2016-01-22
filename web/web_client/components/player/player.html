@@ -15,7 +15,13 @@
             </div>
 
             <!-- buttons layer-->
-            <div class="player_buttons-layer" ng-mouseenter="imageHover()" ng-mouseleave="imageBlur()" ng-click="toggleControlsVisibility()" ng-mousemove="mouseMoveOnVideo()">
+            <div class="player_buttons-layer"
+                 ng-mouseenter="imageHover()"
+                 ng-mouseleave="imageBlur()"
+                 ng-click="toggleControlsVisibility()"
+                 ng-mousemove="mouseMoveOnVideo()"
+                 ng-dblclick="toggleFullScreen()"
+                    >
                 <!-- top buttons-->
                 <div class="player_buttons-layer_top-elements">
                     <div>

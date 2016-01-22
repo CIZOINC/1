@@ -31,7 +31,7 @@ class Video < ActiveRecord::Base
                            length: {maximum: 25},
                            allow_blank: true
 
-  scope :trending, -> (){ where("viewable = ? AND visible = ? AND deleted_at IS NULL", true, true).order(view_count: :desc) }
+  scope :trending, -> (){ where("visible = ? AND deleted_at IS NULL", true).order(view_count: :desc) }
   # scope :created_after, -> (date){where('created_at>?', date) }
   # scope :created_before, -> (date){where('created_at<?', date) }
   scope :desc_order, ->(){ order(created_at: :desc)}

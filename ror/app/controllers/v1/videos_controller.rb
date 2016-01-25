@@ -69,6 +69,7 @@ class V1::VideosController < V1::ApiController
     stream_folder = Rails.env.production? ? "production/stream/#{@video.id}" : "staging/stream/#{@video.id}"
     hero_image = Rails.env.production? ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
     if !@video.deleted_at && @video.update_column(:deleted_at, Time.now)
+      @video.set_param_to_nil(:featured, :featured_order)
       bucket.objects(prefix: raw_folder).batch_delete!
       bucket.objects(prefix: stream_folder).batch_delete!
       if hero_image

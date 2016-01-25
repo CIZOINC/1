@@ -1,10 +1,15 @@
 <nav class="navbar">
     <div class="navbar-main">
         <div class="icon-menu navbar-main_button" ng-click="toggleMenu()"></div>
-        <img class="navbar-main_logo" src="images/splashLogo.png">
+        <img class="navbar-main_logo" src="images/logo.svg">
         <div class="icon-search navbar-main_button"></div>
     </div>
 </nav>
+
+<div class="featured">
+    <div  style="background-image: url({{::featured.hero_image_link}})" ng-repeat="featured in featuredList" class="featured_hero-image" ></div>
+</div>
+
 
 <div class="menu">
     <div class="menu_container">
@@ -50,7 +55,6 @@
 </div>
 
 
-
     <div class="categories-panel categories-panel--margin">
         <div class="categories-panel_item" ng-click="filterByCategory()" ng-class="categories[0].cssClass">
             <div class="categories-panel_item_icon categories-panel_item_icon--all-icon icon-all  "></div>
@@ -75,8 +79,11 @@
     </div>
 
 
+<player id="player-featured"  class="col-xs-12 col-md-8 col-md-offset-2" video="featuredItem" filtered-list="filteredVideoList"></player>
+
+
 <div class="container-fluid player-list">
     <div class="row" ng-repeat="videoItem in filteredVideoList")>
-        <player id="player{{videoItem.id}}"  class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem" filtered-list="filteredVideoList" need-fullscreen="needFullscreen"></player>
+        <player id="player{{videoItem.id}}"  class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem" filtered-list="filteredVideoList"></player>
     </div>
 </div>

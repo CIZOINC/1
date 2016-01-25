@@ -13,10 +13,10 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
         scope = angular.extend(scope, {
 
             isIntermissionState: false,
+            iconTitle: scope.video && scope.video.category_id ? categoryIcon(scope.video.category_id) : '',
+            createdDate: scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined,
             intermissionCountdownValue: 0,
             intermissionCountdownMax: 100,
-            iconTitle: categoryIcon(scope.video.category_id),
-            createdDate: createdTimeHumanized(scope.video.created_at),
             screenList: angular.element(element[0].querySelector('div.video-layer video')),
             screen: angular.element(element[0].querySelector('div.video-layer video'))[0],
             sliderModel: new SliderModel(),
@@ -114,7 +114,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
                 }
             }
         });
-        if (scope.video.streams) {
+        if (scope.video && scope.video.streams) {
             let stream = _.find(scope.video.streams, (stream) => stream.stream_type === 'mp4');
             scope.videoLink = $sce.trustAs($sce.RESOURCE_URL, stream.link);
         }
@@ -179,6 +179,11 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
         }
 
         function getNextVideo() {
+
+            if (!scope.video) {
+                return;
+            }
+
             let currentVideoId = scope.video.id;
             let nextVideo;
 

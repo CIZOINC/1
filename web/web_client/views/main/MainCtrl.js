@@ -12,6 +12,7 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
 
     $scope = angular.extend($scope, {
         filteredVideoList: [],
+        featuredList: [],
         videosList: [],
 
         categories: {
@@ -54,7 +55,7 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
         .then(getVideos)
         .then(updateVideos);
 
-
+    getFeaturedList();
 
     function filterByCategory(id) {
         $scope.filterCategory.category_id = id;
@@ -132,7 +133,16 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
         });
     }
 
-
+    function getFeaturedList() {
+        return $q( (resolve) => {
+            videoServ.getFeaturedList($scope)
+                .then( (response) => {
+                    $scope.featuredList = response.data.data;
+                    $scope.featuredItem = $scope.featuredList[0];
+                    resolve();
+                });
+        });
+    }
 
 }
 MainCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', '$document'];

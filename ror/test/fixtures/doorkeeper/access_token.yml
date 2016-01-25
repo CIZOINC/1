@@ -1,0 +1,11 @@
+one:
+  resource_owner_id: 1
+  token: admin_access_token
+
+two:
+  resource_owner_id: 2
+  token: user_access_token
+
+three:
+  resource_owner_id: 3
+  token: young_user_access_token  

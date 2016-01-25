@@ -6,28 +6,11 @@ exports.usersGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
+    "birthday" : "2016-01-21T17:57:59.123+0000",
+    "password" : "aeiou",
     "id" : 123,
-    "birthday" : "2015-11-29T23:41:27.327+0000",
-    "email" : "aeiou",
-    "password" : "aeiou"
+    "email" : "aeiou"
   } ]
-};
-  
-
-  
-  if(Object.keys(examples).length > 0)
-    return examples[Object.keys(examples)[0]];
-  
-}
-exports.usersPut = function(body) {
-
-  var examples = {};
-  
-  examples['application/json'] = {
-  "id" : 123,
-  "birthday" : "2015-11-29T23:41:27.331+0000",
-  "email" : "aeiou",
-  "password" : "aeiou"
 };
   
 
@@ -41,10 +24,10 @@ exports.usersPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
+  "birthday" : "2016-01-21T17:57:59.123+0000",
+  "password" : "aeiou",
   "id" : 123,
-  "birthday" : "2015-11-29T23:41:27.333+0000",
-  "email" : "aeiou",
-  "password" : "aeiou"
+  "email" : "aeiou"
 };
   
 
@@ -53,15 +36,29 @@ exports.usersPost = function(body) {
     return examples[Object.keys(examples)[0]];
   
 }
+exports.usersGuestVideosSeenVideoIdPut = function(videoId) {
+
+  var examples = {};
+  
+
+  
+}
+exports.usersGuestVideosSkippedVideoIdPut = function(videoId) {
+
+  var examples = {};
+  
+
+  
+}
 exports.usersMeGet = function() {
 
   var examples = {};
   
   examples['application/json'] = {
+  "birthday" : "2016-01-21T17:57:59.125+0000",
+  "password" : "aeiou",
   "id" : 123,
-  "birthday" : "2015-11-29T23:41:27.335+0000",
-  "email" : "aeiou",
-  "password" : "aeiou"
+  "email" : "aeiou"
 };
   
 
@@ -75,10 +72,10 @@ exports.usersMePut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
+  "birthday" : "2016-01-21T17:57:59.126+0000",
+  "password" : "aeiou",
   "id" : 123,
-  "birthday" : "2015-11-29T23:41:27.337+0000",
-  "email" : "aeiou",
-  "password" : "aeiou"
+  "email" : "aeiou"
 };
   
 
@@ -87,29 +84,207 @@ exports.usersMePut = function(body) {
     return examples[Object.keys(examples)[0]];
   
 }
-exports.usersMeVideosLikesGet = function() {
+exports.usersMeDelete = function() {
+
+  var examples = {};
+  
+
+  
+}
+exports.usersMeVideosLikedGet = function() {
 
   var examples = {};
   
   examples['application/json'] = {
   "data" : [ {
-    "tags" : [ "aeiou" ],
-    "id" : 123,
-    "title" : "aeiou",
-    "viewable" : true,
-    "updated_at" : "2015-11-29T23:41:27.338+0000",
-    "description" : "aeiou",
-    "category_id" : 123,
-    "created_at" : "2015-11-29T23:41:27.338+0000",
+    "visible" : true,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
-      "type" : "aeiou"
+      "stream_type" : "aeiou"
     } ],
+    "created_at" : "2016-01-21T17:57:59.127+0000",
+    "description" : "aeiou",
+    "title" : "aeiou",
+    "liked" : true,
+    "seen" : true,
+    "tags" : [ "aeiou" ],
+    "skipped" : true,
+    "mature_content" : true,
+    "updated_at" : "2016-01-21T17:57:59.127+0000",
+    "category_id" : 123,
+    "id" : 123,
     "hero_image_link" : "aeiou",
     "view_count" : 123,
-    "mpaa_rating" : "aeiou"
+    "skip_count" : 123
   } ]
+};
+  
+
+  
+  if(Object.keys(examples).length > 0)
+    return examples[Object.keys(examples)[0]];
+  
+}
+exports.usersMeVideosLikedVideoIdPut = function(videoId) {
+
+  var examples = {};
+  
+
+  
+}
+exports.usersMeVideosLikedVideoIdDelete = function(videoId) {
+
+  var examples = {};
+  
+
+  
+}
+exports.usersMeVideosSeenGet = function() {
+
+  var examples = {};
+  
+  examples['application/json'] = {
+  "data" : [ {
+    "visible" : true,
+    "streams" : [ {
+      "transcode_status" : "aeiou",
+      "link" : "aeiou",
+      "stream_type" : "aeiou"
+    } ],
+    "created_at" : "2016-01-21T17:57:59.129+0000",
+    "description" : "aeiou",
+    "title" : "aeiou",
+    "liked" : true,
+    "seen" : true,
+    "tags" : [ "aeiou" ],
+    "skipped" : true,
+    "mature_content" : true,
+    "updated_at" : "2016-01-21T17:57:59.129+0000",
+    "category_id" : 123,
+    "id" : 123,
+    "hero_image_link" : "aeiou",
+    "view_count" : 123,
+    "skip_count" : 123
+  } ]
+};
+  
+
+  
+  if(Object.keys(examples).length > 0)
+    return examples[Object.keys(examples)[0]];
+  
+}
+exports.usersMeVideosSeenVideoIdPut = function(videoId) {
+
+  var examples = {};
+  
+
+  
+}
+exports.usersMeVideosSkippedGet = function() {
+
+  var examples = {};
+  
+  examples['application/json'] = {
+  "data" : [ {
+    "visible" : true,
+    "streams" : [ {
+      "transcode_status" : "aeiou",
+      "link" : "aeiou",
+      "stream_type" : "aeiou"
+    } ],
+    "created_at" : "2016-01-21T17:57:59.130+0000",
+    "description" : "aeiou",
+    "title" : "aeiou",
+    "liked" : true,
+    "seen" : true,
+    "tags" : [ "aeiou" ],
+    "skipped" : true,
+    "mature_content" : true,
+    "updated_at" : "2016-01-21T17:57:59.130+0000",
+    "category_id" : 123,
+    "id" : 123,
+    "hero_image_link" : "aeiou",
+    "view_count" : 123,
+    "skip_count" : 123
+  } ]
+};
+  
+
+  
+  if(Object.keys(examples).length > 0)
+    return examples[Object.keys(examples)[0]];
+  
+}
+exports.usersMeVideosSkippedVideoIdPut = function(videoId) {
+
+  var examples = {};
+  
+
+  
+}
+exports.usersMeVideosUnseenGet = function() {
+
+  var examples = {};
+  
+  examples['application/json'] = {
+  "data" : [ {
+    "visible" : true,
+    "streams" : [ {
+      "transcode_status" : "aeiou",
+      "link" : "aeiou",
+      "stream_type" : "aeiou"
+    } ],
+    "created_at" : "2016-01-21T17:57:59.132+0000",
+    "description" : "aeiou",
+    "title" : "aeiou",
+    "liked" : true,
+    "seen" : true,
+    "tags" : [ "aeiou" ],
+    "skipped" : true,
+    "mature_content" : true,
+    "updated_at" : "2016-01-21T17:57:59.132+0000",
+    "category_id" : 123,
+    "id" : 123,
+    "hero_image_link" : "aeiou",
+    "view_count" : 123,
+    "skip_count" : 123
+  } ]
+};
+  
+
+  
+  if(Object.keys(examples).length > 0)
+    return examples[Object.keys(examples)[0]];
+  
+}
+exports.usersUserIdGet = function(userId) {
+
+  var examples = {};
+  
+  examples['application/json'] = {
+  "birthday" : "2016-01-21T17:57:59.133+0000",
+  "password" : "aeiou",
+  "id" : 123,
+  "email" : "aeiou"
+};
+  
+
+  
+  if(Object.keys(examples).length > 0)
+    return examples[Object.keys(examples)[0]];
+  
+}
+exports.usersUserIdPut = function(body, userId) {
+
+  var examples = {};
+  
+  examples['application/json'] = {
+  "birthday" : "2016-01-21T17:57:59.133+0000",
+  "password" : "aeiou",
+  "id" : 123,
+  "email" : "aeiou"
 };
   
 

@@ -4,17 +4,17 @@ info:
   description: API for Cizo
   version: 1.0.0
 host: api.cizo.com
+basePath: /
 schemes:
   - https
-securityDefinitions: 
+securityDefinitions:
   oauth:
     type: oauth2
     flow: implicit
     authorizationUrl: https://api.cizo.com/oauth/authorize
     scopes:
       admin: Grants read/write access to all resources
-      user: Grants read access to videos that have a MPAA rating greater than PG
-basePath: /v1
+      user: Grants read access to videos that marked as mature content is the user is 18 years old or older. Grants read/write access to user resource owned by that user. 
 consumes:
   - application/json
 produces:
@@ -22,7 +22,7 @@ produces:
 paths:
   /videos:
     get:
-      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'viewable' set to true. <b>NOTE</b>  If the user is unauthenticated and the mpaa_rating is greater than 'PG' or is not of the age required for the mpaa_rating, streams will be null."
+      description: "Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'visible' set to true. <b>NOTE</b>  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null."
       tags:
         - Videos
       parameters:
@@ -38,7 +38,7 @@ paths:
           type: string
         - name: created_before
           in: query
-          description: Filters videos by created_at date. Videos that have a date before the one specified will be returned.
+          description: Filters videos by created_at date. Videos that have a date before the one specified will be returned.`
           required: false
           type: string
           format: date-time
@@ -48,6 +48,16 @@ paths:
           required: false
           type: string
           format: date-time
+        - name: visible
+          in: query
+          description: Filter videos that are marked as not visible. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the "id" attribute of each video. 
+          required: false
+          type: boolean
+        - name: deleted
+          in: query
+          description: Filter videos that have been deleted. The videos returned will only contain the "id" attribute of each video.
+          required: false
+          type: boolean
       responses:
         '200':
           description: An list of videos
@@ -56,7 +66,7 @@ paths:
             properties:
               data:
                 type: array
-                items: 
+                items:
                   $ref: '#/definitions/Video'
         default:
           description: Unexpected error
@@ -64,8 +74,10 @@ paths:
             $ref: '#/definitions/Error'
     post:
       description: 'Creates a video'
+      tags:
+        - Videos
       security:
-        - oauth: 
+        - oauth:
           - admin
       parameters:
         - name: body
@@ -76,7 +88,7 @@ paths:
               - title
               - category_id
               - description
-              - mpaa_rating
+              - mature_content
             properties:
               title:
                 type: string
@@ -88,15 +100,10 @@ paths:
               description:
                 type: string
                 description: Description of video.
-              mpaa_rating:
-                type: string
-                description: 'MPAA rating of video. This must be one of the following strings: "G", "PG", "PG-13", "R", "NC-17"'
-                enum:
-                  - "G"
-                  - "PG"
-                  - "PG-13"
-                  - "R"
-                  - "NC-17"
+              mature_content:
+                type: boolean
+                description: 'Boolean indicating if the video contains mature content'
+                default: false
               tags:
                 description: Tags associated with video.
                 type: array
@@ -114,7 +121,6 @@ paths:
               - updated_at
               - title
               - description
-              - mpaa_rating
             properties:
               id:
                 type: integer
@@ -132,22 +138,17 @@ paths:
               updated_at:
                 type: string
                 format: date-time
-                readOnly: true    
+                readOnly: true
               title:
                 type: string
                 description: Title of video.
               description:
                 type: string
                 description: Description of video.
-              mpaa_rating:
-                type: string
-                description: 'MPAA rating of video. This must be one of the following strings: "G", "PG", "PG-13", "R", "NC-17"'
-                enum:
-                  - "G"
-                  - "PG"
-                  - "PG-13"
-                  - "R"
-                  - "NC-17"
+              mature_content:
+                type: boolean
+                description: 'Boolean indicating if the video contains mature content'
+                default: false
               tags:
                 type: array
                 items:
@@ -168,7 +169,7 @@ paths:
         type: integer
         required: true
     get:
-      description: "Returns a video for the given ID. If the user is unauthenticated and the mpaa_rating is greater than PG or is not the age required for the mpaa_rating, streams will be null."
+      description: "Returns a video for the given ID. If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null."
       tags:
         - Videos
       responses:
@@ -177,8 +178,8 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/Video'
-        '403': 
-          description: "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's viewable property is not set to true"
+        '403':
+          description: "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's visible property is not set to true"
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -214,7 +215,7 @@ paths:
       responses:
         '204':
           description: Successfully deleted
-        '403': 
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
@@ -222,19 +223,24 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /videos/{video-id}/stream_transcode_request:
+  /videos/{video-id}/raw_stream_upload_request:
     parameters:
       - name: video-id
         in: path
         description: Video ID
         type: integer
         required: true
+      - name: filename
+        in: query
+        description: 'Filename of file to be uploaded. Must contain only lowercase letters, numbers, hyphens (-), and periods (.). Must start and end with a letter or number. Max length of 25.'
+        required: true
+        type: string
     get:
-      description: "This endpoint returns the S3 upload details for client side uploading of a stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
+      description: "This endpoint returns the S3 upload details for client side uploading of a raw stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
       tags:
-        - Videos
+        - Streams
       security:
-        - oauth: 
+        - oauth:
           - admin
       responses:
         '200':
@@ -251,13 +257,13 @@ paths:
               key:
                 type: string
                 description: "Upload key. S3 bucket key to store uploaded video in"
-              aws_access_key_id: 
+              aws_access_key_id:
                 type: string
                 description: "Upload AWS access key id"
-              acl: 
+              acl:
                 type: string
                 description: "Upload acl"
-              policy: 
+              policy:
                 type: string
                 description: "Upload policy"
               signature:
@@ -279,11 +285,11 @@ paths:
         type: integer
         required: true
     post:
-      description: "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'complete', 'canceled', or 'error' for the update to succeed"
+      description: "Creates or updates a set of video streams and initiates transcoding for those stream. <b>NOTE</b> The video specified by the 'raw_video_key' must be present in S3. Usually, this matches the 'key' returned by */videos/{video-id}/stream_transcode_request*. <b>NOTE</b> If stream of the specified type already exists, the stream's status must be either 'completed', 'canceled', or 'error' for the update to succeed"
       tags:
-        - Videos
+        - Streams
       security:
-        - oauth: 
+        - oauth:
           - admin
       parameters:
         - name: body
@@ -294,11 +300,6 @@ paths:
               key:
                 type: string
                 description: "S3 bucket key for raw video."
-              types:
-                type: array
-                description: "Target stream types. Only 'hls' and 'mp4' are supported."
-                items:
-                  type: string
       responses:
         '202':
           description: "Stream has been accepted for transcoding"
@@ -308,6 +309,51 @@ paths:
             $ref: '#/definitions/Error'
         '409':
           description: "Error occuring when a stream of that type for that video is in a 'pending' state"
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /videos/streams/transcode_notification:
+    post:
+      description: "Handles a transcode notification. This includes update the status of the stream for which the notification is for. See <a href='http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/notifications.html'>Elastic Transcoder's SNS documentation</a> for POST body."
+      tags:
+        - Streams
+      responses:
+        '202':
+          description: "Image has been created or updated"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /videos/{video-id}/streams/{stream-type}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+      - name: stream-type
+        in: path
+        description: Stream Type
+        type: string
+        enum:
+          - hls
+          - mp4
+        required: true
+    get:
+      description: "This endpoint redirects to the location of the stream. Prior to redirecting, it validates that the user meets the age requirements for streaming a video and increases the view count of a video."
+      tags:
+        - Streams
+      security:
+        - oauth:
+          - admin
+      responses:
+        '302':
+          description: "Redirect to stream location"
+        '403':
+          description: "Forbidden. This is returned if the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old."
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -326,9 +372,9 @@ paths:
       tags:
         - Videos
       security:
-        - oauth: 
+        - oauth:
           - admin
-      consumes: 
+      consumes:
         - multipart/form-data
       responses:
         '202':
@@ -337,7 +383,26 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /videos/{video-id}/like:
+  /featured:
+    get:
+      description: "Returns a list of featured videos"
+      tags:
+        - Featured
+      responses:
+        '200':
+          description: A list of videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /featured/{video-id}:
     parameters:
       - name: video-id
         in: path
@@ -345,17 +410,17 @@ paths:
         type: integer
         required: true
     put:
-      description: "Set a like on a video."
+      description: 'Marks a video as featured.'
       tags:
-        - Videos
+        - Featured
       security:
-        - oauth: 
-          - user
+        - oauth:
+          - admin
       responses:
         '204':
-          description: "Video has been liked"
+          description: "Video has been marked as featured"
         '403':
-          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
         default:
@@ -363,27 +428,71 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     delete:
-      description: "Remove a like on a video."
+      description: "Removes a video as featured."
       tags:
-        - Videos
+        - Featured
       security:
-        - oauth: 
-          - user
+        - oauth:
+          - admin
       responses:
         '204':
-          description: "Like has been removed"
+          description: "Featured has been removed"
         '403':
-          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /search:
+    get:
+      description: "Searches using the specfied parameter and returns a list of matching videos."
+      tags:
+        - Search
+      parameters:
+        - name: search
+          in: query
+          description: Phrase to search by
+          required: false
+          type: string
+      responses:
+        '200':
+          description: A list of videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /trending:
+    get:
+      description: "Returns a list of trending videos"
+      tags:
+        - Trending
+      responses:
+        '200':
+          description: A list of videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /categories:
-    get: 
+    get:
       description: "Returns a list of categories"
-      tags: 
+      tags:
         - Categories
       responses:
         '200':
@@ -393,7 +502,7 @@ paths:
             properties:
               data:
                 type: array
-                items: 
+                items:
                   $ref: '#/definitions/Category'
         default:
           description: Unexpected error
@@ -401,7 +510,7 @@ paths:
             $ref: '#/definitions/Error'
     post:
       description: "Creates a category. Title must be unique"
-      tags: 
+      tags:
         - Categories
       security:
         - oauth:
@@ -473,11 +582,11 @@ paths:
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
-            $ref: '#/definitions/Error'             
+            $ref: '#/definitions/Error'
         '409':
           description: 'Error occurring when a Category with that title already exists'
           schema:
-            $ref: '#/definitions/Error'      
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
@@ -492,7 +601,7 @@ paths:
       responses:
         '204':
           description: Successfully deleted
-        '403': 
+        '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
             $ref: '#/definitions/Error'
@@ -506,7 +615,7 @@ paths:
       tags:
         - Users
       security:
-        - oauth: 
+        - oauth:
           - admin
       tags:
         - Users
@@ -537,7 +646,11 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/User'
       responses:
         '200':
           description: A user
@@ -552,6 +665,27 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /users/{user-id}:
+    parameters:
+      - name: user-id
+        in: path
+        description: User ID
+        type: integer
+        required: true
+    get:
+      description: "Returns a user for the given ID."
+      tags:
+        - Users
+      responses:
+        '200':
+          description: A user
+          schema:
+            type: object
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
     put:
       description: 'Updates a user.'
       tags:
@@ -561,7 +695,11 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/User'
       responses:
         '200':
           description: A user
@@ -579,7 +717,7 @@ paths:
   /users/me:
     get:
       description: 'Gets the current user'
-      tags: 
+      tags:
         - Users
       security:
         - oauth:
@@ -603,7 +741,11 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/User'
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/User'
       responses:
         '200':
           description: A user
@@ -618,10 +760,144 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /users/me/videos/likes:
+    delete:
+      description: "Deletes the current user. All oauth2 tokens for the user will be revoked"
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '204':
+          description: "User has been removed"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/seen:
+    get:
+      description: 'Gets a list of videos seen by the current user'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '200':
+          description: Seen videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        '404':
+          description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/seen/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: "Marks a video as seen. The video's skipped parameter will be set to false and removed from the skipped resource if present."
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '204':
+          description: "Video has been marked as seen."
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/unseen:
+    get:
+      description: 'Gets a list of videos unseen by the current user'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '200':
+          description: Unseen videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        '404':
+          description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/skipped:
+    get:
+      description: 'Gets a list of videos skipped by the current user'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '200':
+          description: Skipped videos
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Video'
+        '404':
+          description: User is not logged in
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/skipped/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: 'Marks a video as skipped.'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '204':
+          description: "Video has been marked as skipped"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/me/videos/liked:
     get:
       description: 'Gets a list of videos liked by the current user'
-      tags: 
+      tags:
         - Users
       security:
         - oauth:
@@ -640,13 +916,83 @@ paths:
           description: User is not logged in
           schema:
             $ref: '#/definitions/Error'
+  /users/me/videos/liked/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: 'Marks a video as liked.'
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '204':
+          description: "Video has been marked as liked"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      description: "Removes a like on a video."
+      tags:
+        - Users
+      security:
+        - oauth:
+          - user
+      responses:
+        '204':
+          description: "Like has been removed"
+        '403':
+          description: 'Forbidden. This is returned if the oauth2 scope is anything other than "user"'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /users/guest/videos/seen/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: "Marks a video as seen for guest users"
+      tags:
+        - Users
+      responses:
+        '204':
+          description: "Video has been marked as seen."
+  /users/guest/videos/skipped/{video-id}:
+    parameters:
+      - name: video-id
+        in: path
+        description: Video ID
+        type: integer
+        required: true
+    put:
+      description: "Marks a video as skipped for guest users"
+      tags:
+        - Users
+      responses:
+        '204':
+          description: "Video has been marked as seen."          
 definitions:
   Video:
     type: object
     required:
       - title
       - description
-      - mpaa_rating
       - category_id
     properties:
       id:
@@ -661,29 +1007,24 @@ definitions:
       updated_at:
         type: string
         format: date-time
-        readOnly: true    
+        readOnly: true
       title:
         type: string
         description: Title of video.
       description:
         type: string
         description: Description of video.
-      mpaa_rating:
-        type: string
-        description: 'MPAA rating of video. This must be one of the following strings: "G", "PG", "PG-13", "R", "NC-17"'
-        enum:
-          - "G"
-          - "PG"
-          - "PG-13"
-          - "R"
-          - "NC-17"
+      mature_content:
+        type: boolean
+        description: 'Boolean indicating if the video contains mature content'
+        default: false
       category_id:
         type: integer
         format: int32
         description: 'Unique identifier of category'
-      viewable: 
+      visible:
         type: boolean
-        description: Whether a video is viewable. This property is only visible to clients with an oauth2 scope of 'admin'
+        description: Whether a video is visible. This property is only visible to clients with an oauth2 scope of 'admin'
       tags:
         type: array
         items:
@@ -696,7 +1037,28 @@ definitions:
       hero_image_link:
         type: string
         description: Image URL representing the video.
+      liked:
+        type: boolean
+        description: 'Boolean representing whether the current user has liked the video. This property is not present for unauthenticated clients.'
+        default: false
+        readOnly: true
+      seen:
+        type: boolean
+        description: 'Boolean representing whether the current user has seen the video. This property is not present for unauthenticated clients.'
+        default: false
+        readOnly: true
+      skipped:
+        type: boolean
+        description: 'Boolean representing whether the current user has skipped the video. This property is not present for unauthenticated clients.'
+        default: false
+        readOnly: true
       view_count:
+        type: integer
+        description: >
+          View count. <b>NOTE</b> This only visible if oauth2 scope is "admin".
+        format: int32
+        readOnly: true
+      skip_count:
         type: integer
         description: >
           View count. <b>NOTE</b> This only visible if oauth2 scope is "admin".
@@ -719,13 +1081,13 @@ definitions:
     type: object
     required:
       - link
-      - type
+      - stream_type
       - transcode_status
     properties:
       link:
         type: string
         description: 'URL of stream.'
-      type:
+      stream_type:
         type: string
         description: 'Type of stream.'
         enum:
@@ -736,9 +1098,10 @@ definitions:
         description: 'Transcode status. This property is only visible to oauth2 scope of "admin"'
         readOnly: true
         enum:
+          - 'pending'
           - 'submitted'
           - 'progressing'
-          - 'complete'
+          - 'completed'
           - 'canceled'
           - 'error'
   User:
@@ -755,7 +1118,7 @@ definitions:
         readOnly: true
       email:
         type: string
-        description: Email of user       
+        description: Email of user
       password:
         type: string
         description: Password of user. This is omitted from any endpoint returns

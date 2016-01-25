@@ -1,28 +1,53 @@
 'use strict';
 
-exports.videosGet = function(category, tags, createdBefore, createdAfter) {
+exports.videosGet = function(category, tags, createdBefore, createdAfter, visible, deleted) {
 
   var examples = {};
   
   examples['application/json'] = {
   "data" : [ {
-    "tags" : [ "aeiou" ],
-    "id" : 123,
-    "title" : "aeiou",
-    "viewable" : true,
-    "updated_at" : "2015-11-29T23:41:27.340+0000",
-    "description" : "aeiou",
-    "category_id" : 123,
-    "created_at" : "2015-11-29T23:41:27.340+0000",
+    "visible" : true,
     "streams" : [ {
       "transcode_status" : "aeiou",
       "link" : "aeiou",
-      "type" : "aeiou"
+      "stream_type" : "aeiou"
     } ],
+    "created_at" : "2016-01-21T17:57:59.134+0000",
+    "description" : "aeiou",
+    "title" : "aeiou",
+    "liked" : true,
+    "seen" : true,
+    "tags" : [ "aeiou" ],
+    "skipped" : true,
+    "mature_content" : true,
+    "updated_at" : "2016-01-21T17:57:59.134+0000",
+    "category_id" : 123,
+    "id" : 123,
     "hero_image_link" : "aeiou",
     "view_count" : 123,
-    "mpaa_rating" : "aeiou"
+    "skip_count" : 123
   } ]
+};
+  
+
+  
+  if(Object.keys(examples).length > 0)
+    return examples[Object.keys(examples)[0]];
+  
+}
+exports.videosPost = function(body) {
+
+  var examples = {};
+  
+  examples['application/json'] = {
+  "mature_content" : true,
+  "category_id" : 123,
+  "updated_at" : "2016-01-21T17:57:59.138+0000",
+  "created_at" : "2016-01-21T17:57:59.138+0000",
+  "description" : "aeiou",
+  "id" : 123,
+  "title" : "aeiou",
+  "tags" : [ "aeiou" ]
 };
   
 
@@ -36,22 +61,26 @@ exports.videosVideoIdGet = function(videoId) {
   var examples = {};
   
   examples['application/json'] = {
-  "tags" : [ "aeiou" ],
-  "id" : 123,
-  "title" : "aeiou",
-  "viewable" : true,
-  "updated_at" : "2015-11-29T23:41:27.348+0000",
-  "description" : "aeiou",
-  "category_id" : 123,
-  "created_at" : "2015-11-29T23:41:27.348+0000",
+  "visible" : true,
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
-    "type" : "aeiou"
+    "stream_type" : "aeiou"
   } ],
+  "created_at" : "2016-01-21T17:57:59.140+0000",
+  "description" : "aeiou",
+  "title" : "aeiou",
+  "liked" : true,
+  "seen" : true,
+  "tags" : [ "aeiou" ],
+  "skipped" : true,
+  "mature_content" : true,
+  "updated_at" : "2016-01-21T17:57:59.140+0000",
+  "category_id" : 123,
+  "id" : 123,
   "hero_image_link" : "aeiou",
   "view_count" : 123,
-  "mpaa_rating" : "aeiou"
+  "skip_count" : 123
 };
   
 
@@ -65,22 +94,26 @@ exports.videosVideoIdPut = function(body, videoId) {
   var examples = {};
   
   examples['application/json'] = {
-  "tags" : [ "aeiou" ],
-  "id" : 123,
-  "title" : "aeiou",
-  "viewable" : true,
-  "updated_at" : "2015-11-29T23:41:27.350+0000",
-  "description" : "aeiou",
-  "category_id" : 123,
-  "created_at" : "2015-11-29T23:41:27.350+0000",
+  "visible" : true,
   "streams" : [ {
     "transcode_status" : "aeiou",
     "link" : "aeiou",
-    "type" : "aeiou"
+    "stream_type" : "aeiou"
   } ],
+  "created_at" : "2016-01-21T17:57:59.141+0000",
+  "description" : "aeiou",
+  "title" : "aeiou",
+  "liked" : true,
+  "seen" : true,
+  "tags" : [ "aeiou" ],
+  "skipped" : true,
+  "mature_content" : true,
+  "updated_at" : "2016-01-21T17:57:59.141+0000",
+  "category_id" : 123,
+  "id" : 123,
   "hero_image_link" : "aeiou",
   "view_count" : 123,
-  "mpaa_rating" : "aeiou"
+  "skip_count" : 123
 };
   
 
@@ -97,45 +130,6 @@ exports.videosVideoIdDelete = function(videoId) {
   
 }
 exports.videosVideoIdHeroImagePost = function(videoId) {
-
-  var examples = {};
-  
-
-  
-}
-exports.videosVideoIdLikePut = function(videoId) {
-
-  var examples = {};
-  
-
-  
-}
-exports.videosVideoIdLikeDelete = function(videoId) {
-
-  var examples = {};
-  
-
-  
-}
-exports.videosVideoIdStreamTranscodeRequestGet = function(videoId) {
-
-  var examples = {};
-  
-  examples['application/json'] = {
-  "aws_access_key_id" : "aeiou",
-  "acl" : "aeiou",
-  "policy" : "aeiou",
-  "key" : "aeiou",
-  "signature" : "aeiou"
-};
-  
-
-  
-  if(Object.keys(examples).length > 0)
-    return examples[Object.keys(examples)[0]];
-  
-}
-exports.videosVideoIdStreamsPost = function(body, videoId) {
 
   var examples = {};
   

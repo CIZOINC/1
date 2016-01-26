@@ -136,13 +136,16 @@
     &:hover {
       color: @color-lighter;
     }
+
+    &--selected {
+      color: @color-lighter;
+      &:hover {
+        text-shadow: @color-darker 3px 3px;
+      }
+    }
     &_icon {
       font-size: 80px;
       margin-bottom: -15px;
-      &:hover {
-        fill: @color-lighter;
-      }
-
       &--all-icon {
         &::before {
           font-size: 60px;

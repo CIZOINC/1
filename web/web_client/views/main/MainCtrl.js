@@ -7,9 +7,40 @@ angular
 function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
     "use strict";
 
+    const selectedMenuItemCSSClass = 'categories-panel_item categories-panel_item--selected';
+    const baseMenuItemCSSClass = 'categories-panel_item';
+
     $scope = angular.extend($scope, {
         filteredVideoList: [],
         videosList: [],
+
+        categories: {
+            0: {
+                icon: 'all',
+                selected: true,
+                cssClass: selectedMenuItemCSSClass
+            },
+            11: {
+                icon: 'categorymovie',
+                selected: false,
+                cssClass: baseMenuItemCSSClass
+            },
+            12: {
+                icon: 'categorytv',
+                selected: false,
+                cssClass: baseMenuItemCSSClass
+            },
+            13: {
+                icon: 'categorygames',
+                selected: false,
+                cssClass: baseMenuItemCSSClass
+            },
+            14: {
+                icon: 'categorylifestyle',
+                selected: false,
+                cssClass: baseMenuItemCSSClass
+            }
+        },
         needFullscreen: false,
         isMenuVisible: false,
         filterCategory: {
@@ -27,6 +58,15 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
 
     function filterByCategory(id) {
         $scope.filterCategory.category_id = id;
+        let categoryId = id ? id : 0;
+        _.each($scope.categories, (category) => {
+            category.selected = false;
+            category.cssClass = baseMenuItemCSSClass;
+        });
+        if ($scope.categories && $scope.categories[categoryId]) {
+            $scope.categories[categoryId].selected = true;
+            $scope.categories[categoryId].cssClass = selectedMenuItemCSSClass;
+        }
 
         if (id) {
             $scope.filteredVideoList = _.filter($scope.videosList, item => item.category_id === id);

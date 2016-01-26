@@ -1,7 +1,7 @@
 class V1::StreamsController < V1::ApiController
   before_action :set_video, only: [:show, :create, :raw_stream_upload_request]
   before_action :set_stream, only: :show
-  before_action :set_region, only: [:raw_stream_upload_request, :create, :destroy, :transcode_notification]
+  # before_action :set_region, only: [:raw_stream_upload_request, :create, :destroy, :transcode_notification]
   before_action :set_pipeline, only: [:create, :transcode_notification]
   before_action :check_for_requirement, only: :show
   before_action only: [:raw_stream_upload_request, :create ] do
@@ -16,16 +16,17 @@ class V1::StreamsController < V1::ApiController
   end
 
   def raw_stream_upload_request
-    s3 = Aws::S3::Resource.new(region: @region)
+    s3 = Aws::S3::Resource.new(region: region)
     bucket = s3.bucket(bucket_name)
     file_folder = Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
 
-    if (filename = params[:filename]).blank?
-      render json: {errors:"filename required"}, status: 403
-      return
-    end
 
-    apply_format!(filename)
+    # if (filename = params[:filename]).blank?
+    #   render json: {errors:"filename required"}, status: 403
+    #   return
+    # end
+
+    # apply_format!(filename)
     unless @video.update(raw_filename: filename)
       render json: {errors: @video.errors.full_messages}
       return
@@ -45,12 +46,16 @@ class V1::StreamsController < V1::ApiController
   end
 
   def create
-    input_key_prefix = Rails.env.production? ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
+    s3 = Aws::S3::Resource.new(region: region)
+    bucket = s3.bucket(bucket_name)
+    input_key_prefix = Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
+    # input_key = bucket.objects(prefix: input_key_prefix).collect(&:key).delete_if{|x| x == input_key_prefix}[0]#.map{|x| x.gsub(prefix, '')}[0]
+    # puts input_key
     input_key = Rails.env.production? ? "production/raw/#{@video.id}/#{@video.raw_filename}" : "staging/raw/#{@video.id}/#{@video.raw_filename}"
     prefix = Rails.env.production? ? "http://api.cizo.com/" : "http://staging.cizo.com/"
-    transcoder_client = Aws::ElasticTranscoder::Client.new(region: @region)
+    transcoder_client = Aws::ElasticTranscoder::Client.new(region: region)
     input = { key: input_key }
-    obj = Aws::S3::Object.new(bucket_name: bucket_name, key: input_key, region: @region)
+    obj = Aws::S3::Object.new(bucket_name: bucket_name, key: input_key, region: region)
 
     #check if file exists on bucket
     unless obj.exists?
@@ -82,13 +87,14 @@ class V1::StreamsController < V1::ApiController
       outputs: outputs_hls,
       playlists: [ playlist ])[:job]
 
-    object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_prefix_hls + 'index.m3u8')
+    object = Aws::S3::Object.new(bucket_name: bucket_name, region: region, key: output_key_prefix_hls + 'index.m3u8')
     @hls_stream.update_columns(link: prefix + "videos/#{@video.id}/streams/#{@hls_stream.stream_type}", job_id: job.id, transcode_status: 'submitted') if @hls_stream
 
     #MP4
     web_preset_id = '1351620000001-100070'
     output_key_prefix_mp4 =  Rails.env.production? ? "production/stream/#{@video.id}/mp4/" : "staging/stream/#{@video.id}/mp4/"
-    output_key_mp4 = Rails.env.production? ? output_key_prefix_mp4 + "video.mp4" : output_key_prefix_mp4 + "video.mp4"
+    # output_key_mp4 = Rails.env.production? ? output_key_prefix_mp4 + "video.mp4" : output_key_prefix_mp4 + "video.mp4"
+    output_key_mp4 = output_key_prefix_mp4 + "video.mp4"
     @mp4_stream = @video.streams.find_by(stream_type: "mp4")
     web = {
      key: output_key_mp4,
@@ -102,7 +108,7 @@ class V1::StreamsController < V1::ApiController
      input: input,
      outputs: outputs_mp4)[:job]
 
-    object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_mp4)
+    object = Aws::S3::Object.new(bucket_name: bucket_name, region: region, key: output_key_mp4)
 
     @mp4_stream.update_columns(link: prefix + "videos/#{@video.id}/streams/#{@mp4_stream.stream_type}", job_id: job.id, transcode_status: 'submitted') if @mp4_stream
     nothing 202
@@ -120,11 +126,11 @@ class V1::StreamsController < V1::ApiController
 
     #Give access to the key if job completed
     if @stream.transcode_status == 'completed'
-      client = Aws::S3::Client.new(region: @region)
+      client = Aws::S3::Client.new(region: region)
       if @stream.stream_type == 'mp4'
         client.put_object_acl(acl:'public-read', bucket: bucket_name, key: params[:outputs][0][:key])
       elsif @stream.stream_type == "hls"
-        bucket = Aws::S3::Bucket.new(region: @region, name: 'cizo-assets')
+        bucket = Aws::S3::Bucket.new(region: region, name: 'cizo-assets')
         bucket.objects(prefix: params[:outputKeyPrefix]).each do |obj|
           client.put_object_acl(acl:'public-read', bucket: bucket.name, key: obj.key)
         end
@@ -133,7 +139,7 @@ class V1::StreamsController < V1::ApiController
 
     #delete input file from bucket if no jobs connected with input key
     if no_more_jobs_for(params[:input][:key])
-      object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: params[:input][:key])
+      object = Aws::S3::Object.new(bucket_name: bucket_name, region: region, key: params[:input][:key])
       object.delete
     end
     nothing 202
@@ -147,44 +153,55 @@ class V1::StreamsController < V1::ApiController
   end
 
   def define_hls_presets
-    output_key_hls = @video.raw_filename
-    hls_160k_audio_preset_id = '1448047928709-h3supp';
-    hls_464k_preset_id       = '1448047049441-dkgwlg';
-    hls_664k_preset_id       = '1448047415455-oufocx';
-    hls_3596k_preset_id      = '1448393146722-1iu5sc';
-    hls_6628k_preset_id      = '1448048034864-8f527z';
-    segment_duration = '10'
+    @output_key_hls = @video.raw_filename
+    # output_key_hls = filename
+    @hls_160k_preset_id = '1448047928709-h3supp';
+    @hls_464k_preset_id       = '1448047049441-dkgwlg';
+    @hls_664k_preset_id       = '1448047415455-oufocx';
+    @hls_3596k_preset_id      = '1448393146722-1iu5sc';
+    @hls_6628k_preset_id      = '1448048034864-8f527z';
+    @segment_duration = '10'
 
-    hls_160k = {
-      key: 'hls_160k_' + output_key_hls,
-      preset_id: hls_160k_audio_preset_id,
-      segment_duration: segment_duration
-    }
-
-    hls_464k = {
-      key: 'hls_464k_' + output_key_hls,
-      preset_id: hls_464k_preset_id,
-      segment_duration: segment_duration
-    }
-
-    hls_664k = {
-      key: 'hls_664k_' + output_key_hls,
-      preset_id: hls_664k_preset_id,
-      segment_duration: segment_duration
-    }
-
-    hls_3596k = {
-      key: 'hls_3596k_' + output_key_hls,
-      preset_id: hls_3596k_preset_id,
-      segment_duration: segment_duration
-    }
-
-    hls_6628k = {
-      key: 'hls_6628k_' + output_key_hls,
-      preset_id: hls_6628k_preset_id,
-      segment_duration: segment_duration
-    }
+    # hls_160k = {
+    #   key: 'hls_160k_' + output_key_hls,
+    #   preset_id: hls_160k_preset_id,
+    #   segment_duration: segment_duration
+    # }
+    #
+    # hls_464k = {
+    #   key: 'hls_464k_' + output_key_hls,
+    #   preset_id: hls_464k_preset_id,
+    #   segment_duration: segment_duration
+    # }
+    #
+    # hls_664k = {
+    #   key: 'hls_664k_' + output_key_hls,
+    #   preset_id: hls_664k_preset_id,
+    #   segment_duration: segment_duration
+    # }
+    #
+    # hls_3596k = {
+    #   key: 'hls_3596k_' + output_key_hls,
+    #   preset_id: hls_3596k_preset_id,
+    #   segment_duration: segment_duration
+    # }
+    #
+    # hls_6628k = {
+    #   key: 'hls_6628k_' + output_key_hls,
+    #   preset_id: hls_6628k_preset_id,
+    #   segment_duration: segment_duration
+    # }
     [ hls_464k, hls_664k, hls_3596k, hls_6628k, hls_160k ]
+  end
+
+  %w(hls_464k hls_664k hls_3596k hls_6628k hls_160k).each do |preset|
+    define_method(preset) do
+      {
+        key: preset + '_'+ @output_key_hls,
+        preset_id: eval("@#{preset}_preset_id"),
+        segment_duration: @segment_duration
+      }
+    end
   end
 
   def stream_meets_requirements?
@@ -196,7 +213,7 @@ class V1::StreamsController < V1::ApiController
 
   #check if no progressing jobs for this input
   def no_more_jobs_for(raw_file)
-    client = Aws::ElasticTranscoder::Client.new(region: @region)
+    client = Aws::ElasticTranscoder::Client.new(region: region)
     jobs = client.list_jobs_by_pipeline(pipeline_id: @pipeline_id).jobs.select{|i| i.input.key == raw_file}
     jobs.select{|job| job.output.status == "Progressing"}.empty?
   end
@@ -205,9 +222,9 @@ class V1::StreamsController < V1::ApiController
     @video = Video.find_by(id: params[:video_id])
   end
 
-  def set_region
-    @region = "us-east-1"
-  end
+  # def set_region
+  #   @region = "us-east-1"
+  # end
 
   def set_pipeline
     @pipeline_id = Rails.env.production? ? '1449264108808-yw3pko' : '1448045831910-jsofcg'
@@ -215,6 +232,10 @@ class V1::StreamsController < V1::ApiController
 
   def bucket_name
     'cizo-assets'
+  end
+
+  def region
+    "us-east-1"
   end
 
   def host
@@ -227,6 +248,10 @@ class V1::StreamsController < V1::ApiController
 
   def set_stream
     @stream = @video.streams.find_by(stream_type: params[:stream_type])
+  end
+
+  def filename
+    "custom_filename" #this should be changed
   end
 
   def check_for_requirement

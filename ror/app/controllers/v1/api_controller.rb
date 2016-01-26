@@ -3,7 +3,13 @@ class V1::ApiController < ApplicationController
   before_action :as_admin?, if: :current_user
   helper_method :as_admin?
 
+
+
   private
+
+  def check_if_video_deleted
+    nothing 404 if @video.deleted_at
+  end
 
   def user_age_meets_requirement
     @user_age_meets_requirement = @current_user.is_admin ? true : @current_user.user_age_meets_requirement!

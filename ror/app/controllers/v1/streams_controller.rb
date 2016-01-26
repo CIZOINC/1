@@ -1,12 +1,14 @@
 class V1::StreamsController < V1::ApiController
+  before_action only: [:raw_stream_upload_request, :create ] do
+    doorkeeper_authorize! :admin
+  end
   before_action :set_video, only: [:show, :create, :raw_stream_upload_request]
+  before_action :check_if_video_deleted, only: [:show, :raw_stream_upload_request, :create]
   before_action :set_stream, only: :show
   before_action :set_region, only: [:raw_stream_upload_request, :create, :destroy, :transcode_notification]
   before_action :set_pipeline, only: [:create, :transcode_notification]
   before_action :check_for_requirement, only: :show
-  before_action only: [:raw_stream_upload_request, :create ] do
-    doorkeeper_authorize! :admin
-  end
+
 
   def show
     request.headers['Authorization'].clear if request.headers['Authorization']

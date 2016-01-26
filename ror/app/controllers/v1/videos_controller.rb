@@ -105,7 +105,7 @@ class V1::VideosController < V1::ApiController
       if @current_user && as_admin?
         @videos = Video.where(deleted_at: nil).full_search(search).desc_order
       else
-        @videos = Video.where("visible = ? deleted_at IS NULL", true).full_search(search).limit(1000).desc_order
+        @videos = Video.where("visible = ? AND deleted_at IS NULL", true).full_search(search).limit(1000).desc_order
       end
     end
   end

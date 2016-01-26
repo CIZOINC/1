@@ -60,7 +60,8 @@ paths:
           type: boolean
         - name: count
           in: query
-          desription: Specifies the number of videos to try and retrieve up to a maximum of 200. 
+          description: Specifies the number of videos to try and retrieve, up to a maximum of 200. 
+          required: false
           type: integer
       responses:
         '200':
@@ -779,6 +780,24 @@ paths:
       description: 'Gets a list of videos seen by the current user'
       tags:
         - Users
+      parameters:
+        - name: created_before
+          in: query
+          description: Filters videos by created_at date. Videos that have a date before the one specified will be returned.
+          required: false
+          type: string
+          format: date-time
+        - name: created_after
+          in: query
+          description: Filters videos by created_at date. Videos that have a date after the one specified will be returned.
+          required: false
+          type: string
+          format: date-time
+        - name: count
+          in: query
+          description: Specifies the number of videos to try and retrieve up to a maximum of 200. 
+          required: false
+          type: integer
       security:
         - oauth:
           - user
@@ -826,6 +845,24 @@ paths:
       description: 'Gets a list of videos unseen by the current user'
       tags:
         - Users
+      parameters:
+        - name: created_before
+          in: query
+          description: Filters videos by created_at date. Videos that have a date before the one specified will be returned.
+          required: false
+          type: string
+          format: date-time
+        - name: created_after
+          in: query
+          description: Filters videos by created_at date. Videos that have a date after the one specified will be returned.
+          required: false
+          type: string
+          format: date-time
+        - name: count
+          in: query
+          description: Specifies the number of videos to try and retrieve up to a maximum of 200. 
+          required: false
+          type: integer
       security:
         - oauth:
           - user
@@ -848,6 +885,24 @@ paths:
       description: 'Gets a list of videos skipped by the current user'
       tags:
         - Users
+      parameters:
+        - name: created_before
+          in: query
+          description: Filters videos by created_at date. Videos that have a date before the one specified will be returned.
+          required: false
+          type: string
+          format: date-time
+        - name: created_after
+          in: query
+          description: Filters videos by created_at date. Videos that have a date after the one specified will be returned.
+          required: false
+          type: string
+          format: date-time
+        - name: count
+          in: query
+          description: Specifies the number of videos to try and retrieve up to a maximum of 200. 
+          required: false
+          type: integer
       security:
         - oauth:
           - user
@@ -895,6 +950,24 @@ paths:
       description: 'Gets a list of videos liked by the current user'
       tags:
         - Users
+      parameters:
+        - name: created_before
+          in: query
+          description: Filters videos by created_at date. Videos that have a date before the one specified will be returned.
+          required: false
+          type: string
+          format: date-time
+        - name: created_after
+          in: query
+          description: Filters videos by created_at date. Videos that have a date after the one specified will be returned.
+          required: false
+          type: string
+          format: date-time
+        - name: count
+          in: query
+          description: Specifies the number of videos to try and retrieve up to a maximum of 200. 
+          required: false
+          type: integer
       security:
         - oauth:
           - user

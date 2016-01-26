@@ -494,6 +494,32 @@
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
       "operationId": "usersMeVideosUnseenGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
       "responses": {
         "200": {
   "description" : "Unseen videos",
@@ -824,6 +850,32 @@
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
       "operationId": "usersMeVideosLikedGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
       "responses": {
         "200": {
   "description" : "Liked videos",
@@ -882,6 +934,32 @@
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
       "operationId": "usersMeVideosSkippedGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
       "responses": {
         "200": {
   "description" : "Skipped videos",
@@ -954,6 +1032,32 @@
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
       "operationId": "usersMeVideosSeenGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
       "responses": {
         "200": {
   "description" : "Seen videos",
@@ -1257,6 +1361,7 @@
         {
   "name" : "count",
   "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve, up to a maximum of 200.",
   "required" : false,
   "type" : "integer"
 }

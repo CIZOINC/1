@@ -102,9 +102,12 @@ module.exports.usersMeDelete = function usersMeDelete (req, res, next) {
 };
 
 module.exports.usersMeVideosLikedGet = function usersMeVideosLikedGet (req, res, next) {
+  var createdBefore = req.swagger.params['created_before'].value;
+  var createdAfter = req.swagger.params['created_after'].value;
+  var count = req.swagger.params['count'].value;
   
 
-  var result = Users.usersMeVideosLikedGet();
+  var result = Users.usersMeVideosLikedGet(createdBefore, createdAfter, count);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');
@@ -143,9 +146,12 @@ module.exports.usersMeVideosLikedVideoIdDelete = function usersMeVideosLikedVide
 };
 
 module.exports.usersMeVideosSeenGet = function usersMeVideosSeenGet (req, res, next) {
+  var createdBefore = req.swagger.params['created_before'].value;
+  var createdAfter = req.swagger.params['created_after'].value;
+  var count = req.swagger.params['count'].value;
   
 
-  var result = Users.usersMeVideosSeenGet();
+  var result = Users.usersMeVideosSeenGet(createdBefore, createdAfter, count);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');
@@ -170,9 +176,12 @@ module.exports.usersMeVideosSeenVideoIdPut = function usersMeVideosSeenVideoIdPu
 };
 
 module.exports.usersMeVideosSkippedGet = function usersMeVideosSkippedGet (req, res, next) {
+  var createdBefore = req.swagger.params['created_before'].value;
+  var createdAfter = req.swagger.params['created_after'].value;
+  var count = req.swagger.params['count'].value;
   
 
-  var result = Users.usersMeVideosSkippedGet();
+  var result = Users.usersMeVideosSkippedGet(createdBefore, createdAfter, count);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');
@@ -197,9 +206,12 @@ module.exports.usersMeVideosSkippedVideoIdPut = function usersMeVideosSkippedVid
 };
 
 module.exports.usersMeVideosUnseenGet = function usersMeVideosUnseenGet (req, res, next) {
+  var createdBefore = req.swagger.params['created_before'].value;
+  var createdAfter = req.swagger.params['created_after'].value;
+  var count = req.swagger.params['count'].value;
   
 
-  var result = Users.usersMeVideosUnseenGet();
+  var result = Users.usersMeVideosUnseenGet(createdBefore, createdAfter, count);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

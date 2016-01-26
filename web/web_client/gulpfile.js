@@ -11,6 +11,7 @@ var less = require('gulp-less');
 var babel = require('gulp-babel');
 var rimraf = require('gulp-rimraf');
 var rename = require('gulp-rename');
+var replace = require('gulp-replace');
 var runSequence = require('run-sequence');
 
 var thirdPartyJS = [
@@ -73,6 +74,7 @@ gulp.task('collect_html', function () {
         .pipe(templateCache())
         .pipe(gulp.dest('common'));
 });
+
 
 gulp.task('compile_js', function () {
     "use strict";
@@ -149,8 +151,13 @@ gulp.task('copy_dependencies', function () {
 
 gulp.task('copy_index_template', function () {
     "use strict";
+    let postfix = Math.round(Math.random() * 100000000) ;
+
     return gulp.src(['./index_template.html'])
         .pipe(rename('index.html'))
+        .pipe(replace('all.min.css', 'all.min.css?' + postfix))
+        .pipe(replace('3d-party.min.js', '3d-party.min.js?' + postfix))
+        .pipe(replace('ng.min.js', 'ng.min.js?' + postfix))
         .pipe(gulp.dest('./temp/final'));
 });
 

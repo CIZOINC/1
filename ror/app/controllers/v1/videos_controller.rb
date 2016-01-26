@@ -1,14 +1,12 @@
 class V1::VideosController < V1::ApiController
-  before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted]
-  before_action :check_if_video_deleted, only: [:show]
-  before_action :set_video_by_video_id, only: [:hero_image,:add_featured, :remove_featured]
-  before_action :set_region, only: [:destroy]
-
-  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
-
   before_action only: [:create, :update, :hero_image, :destroy,:add_featured, :remove_featured] do
     doorkeeper_authorize! :admin
   end
+  before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted,:hero_image,:add_featured, :remove_featured]
+  before_action :check_if_video_deleted, only: [:show, :update, :destroy, :hero_image, :add_featured, :remove_featured]
+  before_action :set_region, only: [:destroy]
+  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
+
 
   def index
     conditions = []
@@ -69,6 +67,7 @@ class V1::VideosController < V1::ApiController
     stream_folder = Rails.env.production? ? "production/stream/#{@video.id}" : "staging/stream/#{@video.id}"
     hero_image = Rails.env.production? ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
     if !@video.deleted_at && @video.update_column(:deleted_at, Time.now)
+      @video.set_param_to_nil(:featured, :featured_order)
       bucket.objects(prefix: raw_folder).batch_delete!
       bucket.objects(prefix: stream_folder).batch_delete!
       if hero_image
@@ -104,7 +103,7 @@ class V1::VideosController < V1::ApiController
       if @current_user && as_admin?
         @videos = Video.where(deleted_at: nil).full_search(search).desc_order
       else
-        @videos = Video.where("visible = ? deleted_at IS NULL", true).full_search(search).limit(1000).desc_order
+        @videos = Video.where("visible = ? AND deleted_at IS NULL", true).full_search(search).limit(1000).desc_order
       end
     end
   end
@@ -135,10 +134,6 @@ class V1::VideosController < V1::ApiController
 
   private
 
-  def check_if_video_deleted
-    nothing 404 if @video.deleted_at
-  end
-
   def set_region
     @region = "us-east-1"
   end
@@ -148,11 +143,8 @@ class V1::VideosController < V1::ApiController
   end
 
   def set_video
-    @video = Video.find(params[:id])
-  end
-
-  def set_video_by_video_id
-    @video = Video.find(params[:video_id])
+    @video = Video.find(params[:id]) if params[:id]
+    @video = Video.find(params[:video_id]) if params[:video_id]
   end
 
 end

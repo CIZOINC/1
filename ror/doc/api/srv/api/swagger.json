@@ -1537,11 +1537,9 @@
       "type" : "boolean",
       "description" : "Whether a video is visible. This property is only visible to clients with an oauth2 scope of 'admin'"
     },
-    "tags" : {
-      "type" : "array",
-      "items" : {
-        "type" : "string"
-      }
+    "tag_list" : {
+      "type" : "string",
+      "description" : "Comma seperated list of tags associated with video."
     },
     "streams" : {
       "type" : "array",
@@ -1719,12 +1717,9 @@
       "description" : "Boolean indicating if the video contains mature content",
       "default" : false
     },
-    "tags" : {
-      "type" : "array",
-      "description" : "Tags associated with video.",
-      "items" : {
-        "type" : "string"
-      }
+    "tag_list" : {
+      "type" : "string",
+      "description" : "Comma seperated list of tags associated with video."
     }
   }
 },"inline_response_201": {
@@ -1744,6 +1739,10 @@
       "format" : "date-time",
       "readOnly" : true
     },
+    "tag_list" : {
+      "type" : "string",
+      "description" : "Comma seperated list of tags associated with video."
+    },
     "created_at" : {
       "type" : "string",
       "format" : "date-time",
@@ -1762,12 +1761,6 @@
     "title" : {
       "type" : "string",
       "description" : "Title of video."
-    },
-    "tags" : {
-      "type" : "array",
-      "items" : {
-        "type" : "string"
-      }
     }
   }
 },"inline_response_200_3": {

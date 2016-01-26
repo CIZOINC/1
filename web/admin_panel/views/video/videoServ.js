@@ -47,7 +47,7 @@ function videoServ($http, $q, $log) {
             function success(response) {
                 $log.info('video data created');
                 resolve(response);
-            }
+            } 
 
             function error(response) {
                 $log.info(`video data creation error with status ${response.status}`);

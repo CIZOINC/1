@@ -9,9 +9,9 @@
   "host": "localhost:8080",
   "basePath": "/",
   "paths": {
-  
+
   "/categories/{category-id}": {
-    
+
     "get": {
       "summary": "",
       "description":"Returns a category for the given ID.",
@@ -26,7 +26,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -42,11 +42,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "put": {
       "summary": "",
       "description":"Updates a category. Title must be unique.",
@@ -69,7 +69,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -99,11 +99,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "delete": {
       "summary": "",
       "description":"Deletes a category",
@@ -118,7 +118,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
@@ -138,15 +138,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/categories": {
-    
+
     "get": {
       "summary": "",
       "description":"Returns a list of categories",
@@ -167,11 +167,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "post": {
       "summary": "",
       "description":"Creates a category. Title must be unique",
@@ -187,7 +187,7 @@
     "$ref" : "#/definitions/Category"
   }
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -217,16 +217,16 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
-  
+
+
   "/search": {
-    
+
     "get": {
       "summary": "",
       "description":"Searches using the specfied parameter and returns a list of matching videos.",
@@ -241,7 +241,7 @@
   "required" : false,
   "type" : "string"
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -257,16 +257,16 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
-  
+
+
   "/featured": {
-    
+
     "get": {
       "summary": "",
       "description":"Returns a list of featured videos",
@@ -287,15 +287,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/featured/{video-id}": {
-    
+
     "put": {
       "summary": "",
       "description":"Marks a video as featured.",
@@ -310,7 +310,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
@@ -330,11 +330,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "delete": {
       "summary": "",
       "description":"Removes a video as featured.",
@@ -349,7 +349,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
@@ -369,16 +369,16 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
-  
+
+
   "/trending": {
-    
+
     "get": {
       "summary": "",
       "description":"Returns a list of trending videos",
@@ -399,16 +399,16 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
-  
+
+
   "/users": {
-    
+
     "get": {
       "summary": "",
       "description":"Returns a list of all users.",
@@ -436,11 +436,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "post": {
       "summary": "",
       "description":"Creates a user.",
@@ -456,7 +456,7 @@
     "$ref" : "#/definitions/body"
   }
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -479,15 +479,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/me/videos/unseen": {
-    
+
     "get": {
       "summary": "",
       "description":"Gets a list of videos unseen by the current user",
@@ -508,15 +508,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/guest/videos/skipped/{video-id}": {
-    
+
     "put": {
       "summary": "",
       "description":"Marks a video as skipped for guest users",
@@ -531,21 +531,21 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
   "description" : "Video has been marked as seen."
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/me": {
-    
+
     "get": {
       "summary": "",
       "description":"Gets the current user",
@@ -566,11 +566,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "put": {
       "summary": "",
       "description":"Updates the current user.",
@@ -586,7 +586,7 @@
     "$ref" : "#/definitions/body_1"
   }
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -609,11 +609,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "delete": {
       "summary": "",
       "description":"Deletes the current user. All oauth2 tokens for the user will be revoked",
@@ -638,15 +638,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/me/videos/liked/{video-id}": {
-    
+
     "put": {
       "summary": "",
       "description":"Marks a video as liked.",
@@ -661,7 +661,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
@@ -681,11 +681,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "delete": {
       "summary": "",
       "description":"Removes a like on a video.",
@@ -700,7 +700,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
@@ -720,15 +720,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/{user-id}": {
-    
+
     "get": {
       "summary": "",
       "description":"Returns a user for the given ID.",
@@ -743,7 +743,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -759,11 +759,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "put": {
       "summary": "",
       "description":"Updates a user.",
@@ -786,7 +786,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -809,15 +809,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/me/videos/liked": {
-    
+
     "get": {
       "summary": "",
       "description":"Gets a list of videos liked by the current user",
@@ -838,15 +838,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/guest/videos/seen/{video-id}": {
-    
+
     "put": {
       "summary": "",
       "description":"Marks a video as seen for guest users",
@@ -861,21 +861,21 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
   "description" : "Video has been marked as seen."
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/me/videos/skipped": {
-    
+
     "get": {
       "summary": "",
       "description":"Gets a list of videos skipped by the current user",
@@ -896,15 +896,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/me/videos/skipped/{video-id}": {
-    
+
     "put": {
       "summary": "",
       "description":"Marks a video as skipped.",
@@ -919,7 +919,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
@@ -939,15 +939,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/me/videos/seen": {
-    
+
     "get": {
       "summary": "",
       "description":"Gets a list of videos seen by the current user",
@@ -968,15 +968,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/users/me/videos/seen/{video-id}": {
-    
+
     "put": {
       "summary": "",
       "description":"Marks a video as seen. The video&#39;s skipped parameter will be set to false and removed from the skipped resource if present.",
@@ -991,7 +991,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
@@ -1011,16 +1011,16 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
-  
+
+
   "/videos/{video-id}/streams/{stream-type}": {
-    
+
     "get": {
       "summary": "",
       "description":"This endpoint redirects to the location of the stream. Prior to redirecting, it validates that the user meets the age requirements for streaming a video and increases the view count of a video.",
@@ -1043,7 +1043,7 @@
   "type" : "string",
   "enum" : [ "hls", "mp4" ]
 }
-        
+
       ],
       "responses": {
         "302": {
@@ -1063,15 +1063,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/videos/streams/transcode_notification": {
-    
+
     "post": {
       "summary": "",
       "description":"Handles a transcode notification. This includes update the status of the stream for which the notification is for. See &lt;a href=&#39;http://docs.aws.amazon.com/elastictranscoder/latest/developerguide/notifications.html&#39;&gt;Elastic Transcoder&#39;s SNS documentation&lt;/a&gt; for POST body.",
@@ -1089,15 +1089,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/videos/{video-id}/streams": {
-    
+
     "post": {
       "summary": "",
       "description":"Creates or updates a set of video streams and initiates transcoding for those stream. &lt;b&gt;NOTE&lt;/b&gt; The video specified by the &#39;raw_video_key&#39; must be present in S3. Usually, this matches the &#39;key&#39; returned by */videos/{video-id}/stream_transcode_request*. &lt;b&gt;NOTE&lt;/b&gt; If stream of the specified type already exists, the stream&#39;s status must be either &#39;completed&#39;, &#39;canceled&#39;, or &#39;error&#39; for the update to succeed",
@@ -1120,7 +1120,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "202": {
@@ -1147,15 +1147,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/videos/{video-id}/raw_stream_upload_request": {
-    
+
     "get": {
       "summary": "",
       "description":"This endpoint returns the S3 upload details for client side uploading of a raw stream video for transcoding. See &lt;a href=&#39;http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html&#39;&gt;AWS&#39;s browser based upload documentation&lt;/a&gt; for more details.",
@@ -1177,7 +1177,7 @@
   "required" : true,
   "type" : "string"
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -1200,16 +1200,16 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
-  
+
+
   "/videos": {
-    
+
     "get": {
       "summary": "",
       "description":"Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of &#39;admin&#39;, this includes all videos. For oauth2 scope of &#39;user&#39; or unauthenticated clients, this includes only videos with &#39;visible&#39; set to true. &lt;b&gt;NOTE&lt;/b&gt;  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null.",
@@ -1261,7 +1261,7 @@
   "required" : false,
   "type" : "boolean"
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -1277,11 +1277,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "post": {
       "summary": "",
       "description":"Creates a video",
@@ -1297,7 +1297,7 @@
     "$ref" : "#/definitions/body_3"
   }
 }
-        
+
       ],
       "responses": {
         "201": {
@@ -1320,15 +1320,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/videos/{video-id}/hero_image": {
-    
+
     "post": {
       "summary": "",
       "description":"Creates or updates the hero image for a video. This is a multipart/form-data POST.",
@@ -1343,7 +1343,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "202": {
@@ -1356,15 +1356,15 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
+    }
+
   } ,
-  
+
   "/videos/{video-id}": {
-    
+
     "get": {
       "summary": "",
       "description":"Returns a video for the given ID. If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null.",
@@ -1379,7 +1379,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -1402,11 +1402,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "put": {
       "summary": "",
       "description":"Updates a video. The &#39;streams&#39; and &#39;hero_image_link&#39; properties are ignored.",
@@ -1429,7 +1429,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "200": {
@@ -1449,11 +1449,11 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
     } ,
-    
+
     "delete": {
       "summary": "",
       "description":"Deletes a video",
@@ -1468,7 +1468,7 @@
   "required" : true,
   "type" : "integer"
 }
-        
+
       ],
       "responses": {
         "204": {
@@ -1488,13 +1488,13 @@
     "$ref" : "#/definitions/Error"
   }
 }
-        
-        
+
+
       }
-    } 
-    
-  } 
-  
+    }
+
+  }
+
   }, "definitions": {
   "Video": {
   "required" : [ "category_id", "description", "title" ],
@@ -1537,8 +1537,8 @@
       "type" : "boolean",
       "description" : "Whether a video is visible. This property is only visible to clients with an oauth2 scope of 'admin'"
     },
-    "tags" : {
-      "type" : "array",
+    "tag_list" : {
+      "type" : "string",
       "items" : {
         "type" : "string"
       }
@@ -1719,8 +1719,8 @@
       "description" : "Boolean indicating if the video contains mature content",
       "default" : false
     },
-    "tags" : {
-      "type" : "array",
+    "tag_list" : {
+      "type" : "string",
       "description" : "Tags associated with video.",
       "items" : {
         "type" : "string"
@@ -1763,8 +1763,8 @@
       "type" : "string",
       "description" : "Title of video."
     },
-    "tags" : {
-      "type" : "array",
+    "tag_list" : {
+      "type" : "string",
       "items" : {
         "type" : "string"
       }

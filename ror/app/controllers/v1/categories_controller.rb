@@ -1,8 +1,8 @@
 class V1::CategoriesController < V1::ApiController
   before_action :set_category, only: [:show, :update, :destroy]
-  skip_before_action :check_if_logged_in, only:[:index, :create, :update, :destroy]
-  skip_before_action :logged_in_as_admin?, only: [:index]
-  skip_before_action :logged_in_as_user?, only: [:index, :create, :update, :destroy]
+  before_action except: [:index] do
+    doorkeeper_authorize! :admin
+  end
 
   def show
   end

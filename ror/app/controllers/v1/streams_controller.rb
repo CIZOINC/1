@@ -1,11 +1,12 @@
 class V1::StreamsController < V1::ApiController
+  before_action only: [:raw_stream_upload_request, :create ] do
+    doorkeeper_authorize! :admin
+  end
   before_action :set_video, only: [:show, :create, :raw_stream_upload_request]
+  before_action :check_if_video_deleted, only: [:show, :raw_stream_upload_request, :create]
   before_action :set_stream, only: :show
   before_action :set_region, only: [:raw_stream_upload_request, :create, :destroy, :transcode_notification]
   before_action :set_pipeline, only: [:create, :transcode_notification]
-  skip_before_action :check_if_logged_in, only: [:show, :create, :raw_stream_upload_request, :transcode_notification]
-  skip_before_action :logged_in_as_admin?, only: [:show, :transcode_notification]
-  skip_before_action :logged_in_as_user?, only: [:show, :create, :raw_stream_upload_request, :transcode_notification]
   before_action :check_for_requirement, only: :show
 
 
@@ -106,14 +107,14 @@ class V1::StreamsController < V1::ApiController
     object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: output_key_mp4)
 
     @mp4_stream.update_columns(link: prefix + "videos/#{@video.id}/streams/#{@mp4_stream.stream_type}", job_id: job.id, transcode_status: 'submitted') if @mp4_stream
-    render nothing: true, status: 202
+    nothing 202
   end
 
   def transcode_notification
     @stream = Stream.find_by(job_id: params[:jobId])
 
     if @stream.nil?
-      render nothing: true, status: 404
+      nothing 404
       return
     end
 
@@ -137,7 +138,7 @@ class V1::StreamsController < V1::ApiController
       object = Aws::S3::Object.new(bucket_name: bucket_name, region: @region, key: params[:input][:key])
       object.delete
     end
-    render nothing: true, status: 202
+    nothing 202
   end
 
   private
@@ -231,15 +232,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def check_for_requirement
-    if (@video.mpaa_rating > "G" && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
-      render json: { error: 'Forbidden video' }, status: 403
-    else
-      increase_view_count
-    end
-  end
-
-  def increase_view_count
-    @video.increase_view_count! if @video
+    render json: { error: 'Forbidden video' }, status: 403 if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
   end
 
 end

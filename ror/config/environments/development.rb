@@ -39,7 +39,7 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
-  Rails.logger = Logger.new(STDOUT)
+  # Rails.logger = Logger.new(STDOUT)
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true

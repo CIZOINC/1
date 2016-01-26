@@ -1,5 +1,5 @@
 /*global angular*/
-angular
+angular 
     .module('app.directives')
     .directive('sidebar', sidebar);
 

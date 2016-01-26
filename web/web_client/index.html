@@ -7,62 +7,42 @@
     <!-- third_party:css -->
     <link rel="stylesheet" href="../node_modules/angular/angular-csp.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../node_modules/angularjs-slider/dist/rzslider.css">
     <!-- endinject -->
 
     <!-- css_common:css -->
+    <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="components/player/player.css">
+    <link rel="stylesheet" href="views/main/main.css">
     <!-- endinject -->
 </head>
 <body ng-controller="AppCtrl">
 
-{{title}}
-
 <div ui-view></div>
 
 <!-- third_party:js -->
-
 <script src="../node_modules/angular/angular.js"></script>
-
 <script src="../node_modules/jquery/dist/jquery.js"></script>
-
 <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
-
 <script src="../node_modules/ui-router/release/angular-ui-router.js"></script>
-
 <script src="../node_modules/angular-sanitize/angular-sanitize.js"></script>
-
 <script src="../node_modules/moment/moment.js"></script>
-
+<script src="../node_modules/lodash/index.js"></script>
+<script src="../node_modules/angularjs-slider/dist/rzslider.js"></script>
 <!-- endinject -->
 
 <!-- inject:js -->
-
-<script src="views/main/MainCtrl-compiled.js"></script>
-
-<script src="views/watch/WatchCtrl-compiled.js"></script>
-
-<script src="views/videos/videoServ-compiled.js"></script>
-
-<script src="views/videos/VideosCtrl-compiled.js"></script>
-
-<script src="components/player/player-compiled.js"></script>
-
-<script src="common/router/routes-compiled.js"></script>
-
-<script src="common/router/routeHelper-compiled.js"></script>
-
-<script src="wrappers/moment-compiled.js"></script>
-
-<script src="common/init_templates-compiled.js"></script>
-
-<script src="common/templates-compiled.js"></script>
-
-<script src="common/templates-compiled-compiled.js"></script>
-
-<script src="common/recursionHelper-compiled.js"></script>
-
 <script src="AppCtrl-compiled.js"></script>
-
+<script src="views/videos/videoServ-compiled.js"></script>
+<script src="views/main/MainCtrl-compiled.js"></script>
+<script src="components/player/player-compiled.js"></script>
+<script src="common/storage/storageServ-compiled.js"></script>
+<script src="common/router/routes-compiled.js"></script>
+<script src="common/router/routeHelper-compiled.js"></script>
+<script src="wrappers/lodash-compiled.js"></script>
+<script src="wrappers/moment-compiled.js"></script>
+<script src="common/templates-compiled.js"></script>
+<script src="common/categoriesServ-compiled.js"></script>
 <!-- endinject -->
 
 <script>

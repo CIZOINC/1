@@ -104,11 +104,9 @@ paths:
                 type: boolean
                 description: 'Boolean indicating if the video contains mature content'
                 default: false
-              tags:
-                description: Tags associated with video.
-                type: array
-                items:
-                  type: string
+              tag_list:
+                description: Comma seperated list of tags associated with video.
+                type: string
       responses:
         '201':
           description: A video
@@ -149,10 +147,9 @@ paths:
                 type: boolean
                 description: 'Boolean indicating if the video contains mature content'
                 default: false
-              tags:
-                type: array
-                items:
-                  type: string
+              tag_list:
+                description: Comma seperated list of tags associated with video.
+                type: string
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
           schema:
@@ -1025,10 +1022,9 @@ definitions:
       visible:
         type: boolean
         description: Whether a video is visible. This property is only visible to clients with an oauth2 scope of 'admin'
-      tags:
-        type: array
-        items:
-          type: string
+      tag_list:
+        description: Comma seperated list of tags associated with video.
+        type: string
       streams:
         type: array
         readOnly: true

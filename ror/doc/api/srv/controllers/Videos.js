@@ -13,9 +13,10 @@ module.exports.videosGet = function videosGet (req, res, next) {
   var createdAfter = req.swagger.params['created_after'].value;
   var visible = req.swagger.params['visible'].value;
   var deleted = req.swagger.params['deleted'].value;
+  var count = req.swagger.params['count'].value;
   
 
-  var result = Videos.videosGet(category, tags, createdBefore, createdAfter, visible, deleted);
+  var result = Videos.videosGet(category, tags, createdBefore, createdAfter, visible, deleted, count);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

@@ -26,10 +26,6 @@ class Video < ActiveRecord::Base
 
   validates :title, :description, :category_id, presence: true
   filename_regexp = /\A^[0-9a-z]+[0-9a-z\-\.\_]+[0-9a-z]$\z/
-  validates :raw_filename, format: {with: filename_regexp,
-                                    message: 'must contain only lowercase letters, numbers, hyphens (-), and periods (.). It must start and end with letters or numbers'},
-                           length: {maximum: 25},
-                           allow_blank: true
 
   scope :trending, -> (){ where("visible = ? AND deleted_at IS NULL", true).order(view_count: :desc) }
   # scope :created_after, -> (date){where('created_at>?', date) }
@@ -156,6 +152,10 @@ class Video < ActiveRecord::Base
     params.each do |param|
       update_column(param, nil) if self["#{param}"]
     end
+  end
+
+  def reset_streams
+    streams.map {|stream| stream.update_column(:transcode_status, 'pending')}
   end
 
 end

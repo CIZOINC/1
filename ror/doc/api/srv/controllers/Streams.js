@@ -19,21 +19,6 @@ module.exports.videosStreamsTranscodeNotificationPost = function videosStreamsTr
     res.end();
 };
 
-module.exports.videosVideoIdRawStreamUploadRequestGet = function videosVideoIdRawStreamUploadRequestGet (req, res, next) {
-  var videoId = req.swagger.params['video-id'].value;
-  var filename = req.swagger.params['filename'].value;
-  
-
-  var result = Streams.videosVideoIdRawStreamUploadRequestGet(videoId, filename);
-
-  if(typeof result !== 'undefined') {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(result || {}, null, 2));
-  }
-  else
-    res.end();
-};
-
 module.exports.videosVideoIdStreamsPost = function videosVideoIdStreamsPost (req, res, next) {
   var body = req.swagger.params['body'].value;
   var videoId = req.swagger.params['video-id'].value;
@@ -55,6 +40,21 @@ module.exports.videosVideoIdStreamsStreamTypeGet = function videosVideoIdStreams
   
 
   var result = Streams.videosVideoIdStreamsStreamTypeGet(videoId, streamType);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.videosVideoIdUploadTicketGet = function videosVideoIdUploadTicketGet (req, res, next) {
+  var videoId = req.swagger.params['video-id'].value;
+  var filename = req.swagger.params['filename'].value;
+  
+
+  var result = Streams.videosVideoIdUploadTicketGet(videoId, filename);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

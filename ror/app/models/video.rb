@@ -125,4 +125,8 @@ class Video < ActiveRecord::Base
     find_last_video(f_o + 1)
   end
 
+  def reset_streams
+    streams.map {|stream| stream.update_column(:transcode_status, 'pending')}
+  end
+
 end

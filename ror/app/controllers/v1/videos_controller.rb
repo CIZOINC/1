@@ -1,14 +1,13 @@
-class V1::VideosController < V1::ApiController
+class V1::VideosController < V1::ApiController+
+  before_action only: [:create, :update, :hero_image, :destroy,:add_featured, :remove_featured] do
+    doorkeeper_authorize! :admin
+  end
   before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted]
   before_action :check_if_video_deleted, only: [:show]
   before_action :set_video_by_video_id, only: [:hero_image,:add_featured, :remove_featured]
   before_action :set_region, only: [:destroy]
 
   before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
-
-  before_action only: [:create, :update, :hero_image, :destroy,:add_featured, :remove_featured] do
-    doorkeeper_authorize! :admin
-  end
 
   def index
     conditions = []

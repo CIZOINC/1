@@ -494,6 +494,32 @@
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
       "operationId": "usersMeVideosUnseenGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
       "responses": {
         "200": {
   "description" : "Unseen videos",
@@ -824,6 +850,32 @@
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
       "operationId": "usersMeVideosLikedGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
       "responses": {
         "200": {
   "description" : "Liked videos",
@@ -882,6 +934,32 @@
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
       "operationId": "usersMeVideosSkippedGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
       "responses": {
         "200": {
   "description" : "Skipped videos",
@@ -954,6 +1032,32 @@
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
       "operationId": "usersMeVideosSeenGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
       "responses": {
         "200": {
   "description" : "Seen videos",
@@ -1070,6 +1174,52 @@
     
   } ,
   
+  "/videos/{video-id}/upload_ticket": {
+    
+    "get": {
+      "summary": "",
+      "description":"This endpoint returns the S3 upload details for client side uploading of a raw stream video for transcoding. See &lt;a href=&#39;http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html&#39;&gt;AWS&#39;s browser based upload documentation&lt;/a&gt; for more details.",
+      "x-swagger-router-controller": "Streams",
+      "tags": ["Streams"],
+      "operationId": "videosVideoIdUploadTicketGet",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "S3 upload details",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_3"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
   "/videos/streams/transcode_notification": {
     
     "post": {
@@ -1154,65 +1304,12 @@
     
   } ,
   
-  "/videos/{video-id}/raw_stream_upload_request": {
-    
-    "get": {
-      "summary": "",
-      "description":"This endpoint returns the S3 upload details for client side uploading of a raw stream video for transcoding. See &lt;a href=&#39;http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html&#39;&gt;AWS&#39;s browser based upload documentation&lt;/a&gt; for more details.",
-      "x-swagger-router-controller": "Streams",
-      "tags": ["Streams"],
-      "operationId": "videosVideoIdRawStreamUploadRequestGet",
-      "parameters": [
-        {
-  "name" : "video-id",
-  "in" : "path",
-  "description" : "Video ID",
-  "required" : true,
-  "type" : "integer"
-},
-        {
-  "name" : "filename",
-  "in" : "query",
-  "description" : "Filename of file to be uploaded. Must contain only lowercase letters, numbers, hyphens (-), and periods (.). Must start and end with a letter or number. Max length of 25.",
-  "required" : true,
-  "type" : "string"
-}
-        
-      ],
-      "responses": {
-        "200": {
-  "description" : "S3 upload details",
-  "schema" : {
-    "$ref" : "#/definitions/inline_response_200_3"
-  }
-}
-        ,
-        "403": {
-  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        ,
-        "default": {
-  "description" : "Unexpected error",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        
-        
-      }
-    } 
-    
-  } ,
-  
   
   "/videos": {
     
     "get": {
       "summary": "",
-      "description":"Returns a list of videos ordered by created_at. At most 1000 videos will be returned. For an oauth2 scope of &#39;admin&#39;, this includes all videos. For oauth2 scope of &#39;user&#39; or unauthenticated clients, this includes only videos with &#39;visible&#39; set to true. &lt;b&gt;NOTE&lt;/b&gt;  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null.",
+      "description":"Returns a list of videos ordered by created_at. At most 200 videos will be returned. For an oauth2 scope of &#39;admin&#39;, this includes all videos. For oauth2 scope of &#39;user&#39; or unauthenticated clients, this includes only videos with &#39;visible&#39; set to true. &lt;b&gt;NOTE&lt;/b&gt;  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null.",
       "x-swagger-router-controller": "Videos",
       "tags": ["Videos"],
       "operationId": "videosGet",
@@ -1234,7 +1331,7 @@
         {
   "name" : "created_before",
   "in" : "query",
-  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.`",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
   "required" : false,
   "type" : "string",
   "format" : "date-time"
@@ -1260,6 +1357,13 @@
   "description" : "Filter videos that have been deleted. The videos returned will only contain the \"id\" attribute of each video.",
   "required" : false,
   "type" : "boolean"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve, up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
 }
         
       ],
@@ -1537,11 +1641,9 @@
       "type" : "boolean",
       "description" : "Whether a video is visible. This property is only visible to clients with an oauth2 scope of 'admin'"
     },
-    "tags" : {
-      "type" : "array",
-      "items" : {
-        "type" : "string"
-      }
+    "tag_list" : {
+      "type" : "string",
+      "description" : "Comma seperated list of tags associated with video."
     },
     "streams" : {
       "type" : "array",
@@ -1719,12 +1821,9 @@
       "description" : "Boolean indicating if the video contains mature content",
       "default" : false
     },
-    "tags" : {
-      "type" : "array",
-      "description" : "Tags associated with video.",
-      "items" : {
-        "type" : "string"
-      }
+    "tag_list" : {
+      "type" : "string",
+      "description" : "Comma seperated list of tags associated with video."
     }
   }
 },"inline_response_201": {
@@ -1744,6 +1843,10 @@
       "format" : "date-time",
       "readOnly" : true
     },
+    "tag_list" : {
+      "type" : "string",
+      "description" : "Comma seperated list of tags associated with video."
+    },
     "created_at" : {
       "type" : "string",
       "format" : "date-time",
@@ -1762,12 +1865,13 @@
     "title" : {
       "type" : "string",
       "description" : "Title of video."
-    },
-    "tags" : {
-      "type" : "array",
-      "items" : {
-        "type" : "string"
-      }
+    }
+  }
+},"body_4": {
+  "properties" : {
+    "key" : {
+      "type" : "string",
+      "description" : "S3 bucket key for raw video."
     }
   }
 },"inline_response_200_3": {
@@ -1791,13 +1895,6 @@
     "policy" : {
       "type" : "string",
       "description" : "Upload policy"
-    }
-  }
-},"body_4": {
-  "properties" : {
-    "key" : {
-      "type" : "string",
-      "description" : "S3 bucket key for raw video."
     }
   }
 }

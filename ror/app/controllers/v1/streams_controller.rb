@@ -3,6 +3,7 @@ class V1::StreamsController < V1::ApiController
     doorkeeper_authorize! :admin
   end
   before_action :set_video, only: [:show, :create, :raw_stream_upload_request]
+  before_action :check_if_video_deleted, only: [:show, :raw_stream_upload_request, :create]
   before_action :set_stream, only: :show
   before_action :check_if_key_presents_in_params, only: :create
   before_action :check_if_filename_presents_in_params, only: :raw_stream_upload_request

@@ -45,7 +45,7 @@ class V1::VideosController < V1::ApiController
     @videos = Video.where(conditions_str, arguments).desc_order
     @videos = @videos.tagged_with(params[:tags]) unless params[:tags].blank?
 
-    (@current_user && as_admin?) ? (@videos = @videos.limit(limited_videos)) : (@videos = @videos.limit(limited_videos(5)))
+    (@current_user && as_admin?) ? (@videos = @videos.limit(limited_videos)) : (@videos = @videos.limit(limited_videos(200)))
 
   end
 
@@ -135,7 +135,7 @@ class V1::VideosController < V1::ApiController
   private
 
   def limited_videos(limit = nil)
-    params[:count].blank? ? limit : (params[:count].to_i > 5 ? 5 : params[:count].to_i)
+    params[:count].blank? ? limit : (params[:count].to_i > 200 ? 200 : params[:count].to_i)
   end
 
   def set_region

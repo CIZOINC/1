@@ -1,16 +1,14 @@
 class V1::StreamsController < V1::ApiController
-  before_action only: [:raw_stream_upload_request, :create ] do
+  before_action only: [:upload_ticket, :create ] do
     doorkeeper_authorize! :admin
   end
-  before_action :set_video, only: [:show, :create, :raw_stream_upload_request]
-  before_action :check_if_video_deleted, only: [:show, :raw_stream_upload_request, :create]
+  before_action :set_video, only: [:show, :create, :upload_ticket]
+  before_action :check_if_video_deleted, only: [:show, :upload_ticket, :create]
   before_action :set_stream, only: :show
   before_action :check_if_key_presents_in_params, only: :create
-  before_action :check_if_filename_presents_in_params, only: :raw_stream_upload_request
+  before_action :check_if_filename_presents_in_params, only: :upload_ticket
   before_action :check_if_stream_meets_requirements?, only: :create
-  before_action :set_bucket, only: [:raw_stream_upload_request, :create]
-  # before_action :set_region, only: [:raw_stream_upload_request, :create, :destroy, :transcode_notification]
-  before_action :set_pipeline, only: [:create, :transcode_notification]
+  before_action :set_bucket, only: [:upload_ticket, :create]
   before_action :check_for_requirement, only: :show
 
 
@@ -21,12 +19,7 @@ class V1::StreamsController < V1::ApiController
     redirect_to @location, status: 302
   end
 
-  def raw_stream_upload_request
-    file_folder = Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
-
-
-
-
+  def upload_ticket
     apply_format!(@filename)
     valid_filename?(@filename)
     @form = @bucket.presigned_post(key: file_folder + @filename, expires: Time.now + 300)
@@ -46,30 +39,11 @@ class V1::StreamsController < V1::ApiController
     obj = @bucket.object(@key)
     transcoder_client = Aws::ElasticTranscoder::Client.new(region: region)
     input = { key: @key }
-    check_if_object_exists(obj)
-    #key = 'staging/raw/#{@video.id}/movie.mov'
+    return if check_if_object_exists(obj)
+    @bucket.objects(prefix: params[:key].gsub('raw', 'stream').split('/').take(3).join('/')).batch_delete!
 
-    # input_key_prefix = Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
-    # input_key = bucket.objects(prefix: input_key_prefix).collect(&:key).delete_if{|x| x == input_key_prefix}[0]#.map{|x| x.gsub(prefix, '')}[0]
-    # puts input_key
-    # input_key = Rails.env.production? ? "production/raw/#{@video.id}/#{@video.raw_filename}" : "staging/raw/#{@video.id}/#{@video.raw_filename}"
-
-
-
-    # obj = Aws::S3::Object.new(bucket_name: bucket_name, key: input_key, region: region)
-
-    #check if file exists on bucket
-
-
-
-    #check for stream's status
-    # check_if_stream_meets_requirements?
-
-
-    bucket.objects(prefix: params[:key].gsub('raw', 'stream').split('/').take(3).join('/')).batch_delete!
     #HLS
-    @hls_stream = @video.streams.find_by(stream_type: "hls")
-
+    hls_stream = @video.streams.find_by(stream_type: "hls")
     define_hls_presets
     outputs_hls = [ define_hls_presets[0], define_hls_presets[1], define_hls_presets[2], define_hls_presets[3], define_hls_presets[4] ]
     playlist = {
@@ -79,32 +53,27 @@ class V1::StreamsController < V1::ApiController
     }
 
     job = transcoder_client.create_job(
-      pipeline_id: @pipeline_id,
+      pipeline_id: pipeline_id,
       input: input,
       output_key_prefix: output_key_prefix_hls,
       outputs: outputs_hls,
       playlists: [ playlist ])[:job]
 
-    @hls_stream.update_columns(link: prefix + "videos/#{@video.id}/streams/#{@hls_stream.stream_type}", job_id: job.id, transcode_status: 'submitted') if @hls_stream
+    hls_stream.update_columns(link: prefix + link(hls_stream), job_id: job.id, transcode_status: 'submitted') if hls_stream
 
     #MP4
-
-    # output_key_mp4 = Rails.env.production? ? output_key_prefix_mp4 + "video.mp4" : output_key_prefix_mp4 + "video.mp4"
-    output_key_mp4 = output_key_prefix_mp4 + "video.mp4"
-    @mp4_stream = @video.streams.find_by(stream_type: "mp4")
+    mp4_stream = @video.streams.find_by(stream_type: "mp4")
     web = {
-     key: output_key_mp4,
+     key: output_key_prefix_mp4 + "video.mp4",
      preset_id: web_preset_id
     }
 
-    outputs_mp4 = [ web ]
-
     job = transcoder_client.create_job(
-     pipeline_id: @pipeline_id,
+     pipeline_id: pipeline_id,
      input: input,
-     outputs: outputs_mp4)[:job]
+     outputs: [web])[:job]
 
-    @mp4_stream.update_columns(link: prefix + "videos/#{@video.id}/streams/#{@mp4_stream.stream_type}", job_id: job.id, transcode_status: 'submitted') if @mp4_stream
+    mp4_stream.update_columns(link: prefix + link(mp4_stream), job_id: job.id, transcode_status: 'submitted') if mp4_stream
     nothing 202
   end
 
@@ -124,7 +93,7 @@ class V1::StreamsController < V1::ApiController
       if @stream.stream_type == 'mp4'
         client.put_object_acl(acl:'public-read', bucket: bucket_name, key: params[:outputs][0][:key])
       elsif @stream.stream_type == "hls"
-        bucket = Aws::S3::Bucket.new(region: region, name: 'cizo-assets')
+        bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
         bucket.objects(prefix: params[:outputKeyPrefix]).each do |obj|
           client.put_object_acl(acl:'public-read', bucket: bucket.name, key: obj.key)
         end
@@ -154,10 +123,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def check_if_object_exists(obj)
-    unless obj.exists?
-      render json: { error: 'Input key does not exist on S3 bucket' }, status: 400
-      return
-    end
+    render json: { error: 'Input key does not exist on S3 bucket' }, status: 400 unless obj.exists?
   end
 
   %w(key filename).each do |param|
@@ -183,8 +149,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def define_hls_presets
-    # @output_key_hls = @video.raw_filename
-    @output_key_hls = params[:key].split('/').last.gsub('.','_')
+    @output_key_hls = params[:key].split('/').last.gsub('.','_') # here we can use common name such as 'video', 'output', 'video_output or something similar to avoid this computing
     [ hls_464k, hls_664k, hls_3596k, hls_6628k, hls_160k ]
   end
 
@@ -216,8 +181,12 @@ class V1::StreamsController < V1::ApiController
     @video = Video.find_by(id: params[:video_id])
   end
 
-  def set_pipeline
-    @pipeline_id = Rails.env.production? ? '1449264108808-yw3pko' : '1448045831910-jsofcg'
+  def pipeline_id
+    Rails.env.production? ? '1449264108808-yw3pko' : '1448045831910-jsofcg'
+  end
+
+  def file_folder
+    Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
   end
 
   def bucket_name
@@ -269,6 +238,9 @@ class V1::StreamsController < V1::ApiController
     '10'
   end
 
+  def link(stream)
+    "videos/#{@video.id}/streams/#{stream.stream_type}"
+  end
   %w(hls mp4).each do |format|
     define_method("output_key_prefix_#{format}") do
       Rails.env.production? ? "production/stream/#{@video.id}/#{format}/" : "staging/stream/#{@video.id}/#{format}/"

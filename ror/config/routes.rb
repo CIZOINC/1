@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
     resources :categories
     resources :videos do
-      get :raw_stream_upload_request, to: "streams#raw_stream_upload_request"
+      get :upload_ticket, to: "streams#upload_ticket"
       get 'streams/:stream_type', to: 'streams#show', param: :stream_type, constraints: {stream_type: /hls|mp4/}
       post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
       post :streams, to: "streams#create"

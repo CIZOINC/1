@@ -156,6 +156,7 @@ class Video < ActiveRecord::Base
     params.each do |param|
       update_column(param, nil) if self["#{param}"]
     end
+  end
 
   def reset_streams
     streams.map {|stream| stream.update_column(:transcode_status, 'pending')}

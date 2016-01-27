@@ -7,7 +7,6 @@ class V1::VideosController < V1::ApiController
   before_action :set_region, only: [:destroy]
   before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
 
-
   def index
     conditions = []
     arguments = {}
@@ -44,8 +43,9 @@ class V1::VideosController < V1::ApiController
 
     conditions_str = conditions.join(" AND ")
     @videos = Video.where(conditions_str, arguments).desc_order
-
     @videos = @videos.tagged_with(params[:tags]) unless params[:tags].blank?
+
+    (@current_user && as_admin?) ? (@videos = @videos.limit(limited_videos)) : (@videos = @videos.limit(limited_videos(200)))
 
   end
 
@@ -94,7 +94,7 @@ class V1::VideosController < V1::ApiController
   end
 
   def trending
-    @videos = Video.trending.desc_order
+    @videos = Video.trending.desc_order.limit(200)
     render :index
   end
 
@@ -103,7 +103,7 @@ class V1::VideosController < V1::ApiController
       if @current_user && as_admin?
         @videos = Video.where(deleted_at: nil).full_search(search).desc_order
       else
-        @videos = Video.where("visible = ? AND deleted_at IS NULL", true).full_search(search).limit(1000).desc_order
+        @videos = Video.where("visible = ? AND deleted_at IS NULL", true).full_search(search).limit(200).desc_order
       end
     end
   end
@@ -113,7 +113,7 @@ class V1::VideosController < V1::ApiController
     if @current_user && as_admin?
       @videos = Video.where("featured = ? AND deleted_at IS NULL", true).order_by_featured
     else
-      @videos = Video.where("featured = ? AND visible = ? AND deleted_at IS NULL", true, true).limit(1000).order_by_featured
+      @videos = Video.where("featured = ? AND visible = ? AND deleted_at IS NULL", true, true).limit(200).order_by_featured
     end
   end
 
@@ -133,6 +133,10 @@ class V1::VideosController < V1::ApiController
   end
 
   private
+
+  def limited_videos(limit = nil)
+    params[:count].blank? ? limit : (params[:count].to_i > 200 ? 200 : params[:count].to_i)
+  end
 
   def set_region
     @region = "us-east-1"

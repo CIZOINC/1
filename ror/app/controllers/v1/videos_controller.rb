@@ -7,7 +7,6 @@ class V1::VideosController < V1::ApiController
   before_action :set_region, only: [:destroy]
   before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
 
-
   def index
     conditions = []
     arguments = {}

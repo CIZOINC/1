@@ -232,6 +232,11 @@ paths:
         description: Video ID
         type: integer
         required: true
+      - name: filename
+        in: query
+        description: 'Filename of file to be uploaded. Must contain only lowercase letters, numbers, hyphens (-), and periods (.). Must start and end with a letter or number. Max length of 25.'
+        required: true
+        type: string
     get:
       description: "This endpoint returns the S3 upload details for client side uploading of a raw stream video for transcoding. See <a href='http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingHTTPPOST.html'>AWS's browser based upload documentation</a> for more details."
       tags:

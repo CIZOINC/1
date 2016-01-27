@@ -29,7 +29,7 @@ exports.videosVideoIdStreamsStreamTypeGet = function(videoId, streamType) {
     return examples[Object.keys(examples)[0]];
   
 }
-exports.videosVideoIdUploadTicketGet = function(videoId) {
+exports.videosVideoIdUploadTicketGet = function(videoId, filename) {
 
   var examples = {};
   

@@ -51,9 +51,10 @@ module.exports.videosVideoIdStreamsStreamTypeGet = function videosVideoIdStreams
 
 module.exports.videosVideoIdUploadTicketGet = function videosVideoIdUploadTicketGet (req, res, next) {
   var videoId = req.swagger.params['video-id'].value;
+  var filename = req.swagger.params['filename'].value;
   
 
-  var result = Streams.videosVideoIdUploadTicketGet(videoId);
+  var result = Streams.videosVideoIdUploadTicketGet(videoId, filename);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

@@ -1189,6 +1189,13 @@
   "description" : "Video ID",
   "required" : true,
   "type" : "integer"
+},
+        {
+  "name" : "filename",
+  "in" : "query",
+  "description" : "Filename of file to be uploaded. Must contain only lowercase letters, numbers, hyphens (-), and periods (.). Must start and end with a letter or number. Max length of 25.",
+  "required" : true,
+  "type" : "string"
 }
         
       ],

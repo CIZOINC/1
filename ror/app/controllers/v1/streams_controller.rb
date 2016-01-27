@@ -22,7 +22,7 @@ class V1::StreamsController < V1::ApiController
   def upload_ticket
     apply_format!(@filename)
     valid_filename?(@filename)
-    @form = @bucket.presigned_post(key: file_folder + @filename, expires: Time.now + 300)
+    @form = @bucket.presigned_post(key: file_folder + "#{SecureRandom.uuid}/" + @filename, expires: Time.now + 300)
 
     # obj = bucket.object(file_folder+filename)
     # @url = URI.parse(obj.presigned_url(:put, key: file_folder + filename))
@@ -40,7 +40,7 @@ class V1::StreamsController < V1::ApiController
     transcoder_client = Aws::ElasticTranscoder::Client.new(region: region)
     input = { key: @key }
     return if check_if_object_exists(obj)
-    @bucket.objects(prefix: params[:key].gsub('raw', 'stream').split('/').take(3).join('/')).batch_delete!
+    @bucket.objects(prefix: stream_folder).batch_delete!
 
     #HLS
     hls_stream = @video.streams.find_by(stream_type: "hls")
@@ -238,9 +238,14 @@ class V1::StreamsController < V1::ApiController
     '10'
   end
 
+  def stream_folder
+    Rails.env.production? ? "production/stream/#{@video.id}/" : "staging/stream/#{@video.id}/"
+  end
+
   def link(stream)
     "videos/#{@video.id}/streams/#{stream.stream_type}"
   end
+
   %w(hls mp4).each do |format|
     define_method("output_key_prefix_#{format}") do
       Rails.env.production? ? "production/stream/#{@video.id}/#{format}/" : "staging/stream/#{@video.id}/#{format}/"

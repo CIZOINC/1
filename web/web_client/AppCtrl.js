@@ -2,6 +2,7 @@ angular.module('app.controls', ['ngSanitize']);
 angular.module('app.wrappers', []);
 angular.module('app.services', []);
 angular.module('app.directives', ['app.services']);
+angular.module('app.routerHelper', ['ui.router', 'app.wrappers']);
 angular.module('templates', []);
 
 angular

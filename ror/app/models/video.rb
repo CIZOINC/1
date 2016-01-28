@@ -20,7 +20,7 @@ class Video < ActiveRecord::Base
 
   belongs_to :category
   has_many :streams, dependent: :destroy
-  has_many :likes, dependent: :destroy
+  has_many :liked_videos, dependent: :destroy
   has_many :skipped_videos, dependent: :destroy
   has_many :seen_videos, dependent: :destroy
 

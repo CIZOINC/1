@@ -45,7 +45,7 @@ Rails.application.routes.draw do
 
       put 'me/videos/liked/:video_id', to: "users#like_video", on: :collection
       delete 'me/videos/liked/:video_id', to: "users#dislike_video", on: :collection
-      get 'me/videos/liked',  to: "users#likes", on: :collection
+      get 'me/videos/liked',  to: "users#liked", on: :collection
 
       put 'guest/videos/seen/:video_id', to: 'users#guest_mark_video_as_seen', on: :collection
       put 'guest/videos/skipped/:video_id', to: 'users#guest_skip_video', on: :collection

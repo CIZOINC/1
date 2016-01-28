@@ -18,14 +18,5 @@ angular
                 controller: 'VideosCtrl',
                 controllerAs: 'videos'
             }
-        },
-        {
-            state: 'watch',
-            config: {
-                url: '/watch/:link',
-                templateUrl: 'views/watch/watch.html',
-                controller: 'WatchCtrl',
-                controllerAs: 'watch'
-            }
         }
     ]);

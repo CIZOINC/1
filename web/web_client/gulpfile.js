@@ -22,7 +22,8 @@ var thirdPartyJS = [
     '../node_modules/angular-sanitize/angular-sanitize.js',
     '../node_modules/moment/moment.js',
     '../node_modules/lodash/index.js',
-    '../node_modules/angularjs-slider/dist/rzslider.js'
+    '../node_modules/angularjs-slider/dist/rzslider.js',
+    '../node_modules/angular-svg-round-progressbar/build/roundProgress.js'
 ];
 var thirdPartyCSS = [
     '../node_modules/angular/angular-csp.css',

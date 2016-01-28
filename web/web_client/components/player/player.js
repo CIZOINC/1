@@ -33,6 +33,8 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
             imageLayer: angular.element(element[0].querySelector(`div.hero-image-layer`))[0],
             playButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_play-button`))[0],
             pauseButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_pause-button`))[0],
+            prevButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_prev`))[0],
+            nextButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_next`))[0],
             slider: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls_slider`))[0],
 
             expandButton: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_controls_expand`))[0],
@@ -45,6 +47,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
 
             toggleFullScreen: toggleFullScreen,
             toggleControlsVisibility: toggleControlsVisibility,
+            setIntermission: setIntermission,
             nextVideo: getNextVideo(),
             playNextVideo: playNextVideo
         });
@@ -126,6 +129,10 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q) {
             } else {
                 scope.nextVideoBackground = `display: none`;
             }
+        }
+
+        function setIntermission() {
+
         }
 
         function getNextVideo() {

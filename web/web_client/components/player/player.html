@@ -15,7 +15,7 @@
             </div>
 
             <!-- buttons layer-->
-            <div class="player_buttons-layer"
+            <div class="player_buttons-layer player_buttons-layer--intermission"
                  ng-mouseenter="imageHover()"
                  ng-mouseleave="imageBlur()"
                  ng-click="toggleControlsVisibility()"
@@ -37,8 +37,52 @@
                 </div>
                 <!-- center elements-->
                 <div class="player_buttons-layer_center-elements stop-selection">
-                    <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_play-button">
-                    <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_pause-button hidden-layer">
+
+                    <div class="player_buttons-layer_center-elements_group">
+                        <div class="player_buttons-layer_center-elements_group_title">
+                            Up next
+                            <div class="player_buttons-layer_center-elements_group_title_caption">{{nextVideo.title}}</div>
+                        </div>
+                        <div class="player_buttons-layer_center-elements_group_controls">
+
+                            <span class="icon-back player_buttons-layer_center-elements_prev"></span>
+                            <div class="player_buttons-layer_center-elements_group_controls_wrapper">
+                                <div  class="player_buttons-layer_center-elements_group_controls_progress"
+                                      round-progress
+                                      max="100"
+                                      current="80"
+                                      color="url(#progress-gradient)"
+                                      bgcolor="#eaeaea"
+                                      stroke="20"
+                                      semi="false"
+                                      round="100"
+                                      rounded="false"
+                                      clockwise="true"
+                                      responsive="false"
+                                      duration="800"
+                                      animation="easeInOutQuart"
+                                      animation-delay="0">
+                                    <svg>
+                                        <linearGradient id="progress-gradient" x1="0" x2="0" y1="0" y2="1">
+                                            <stop offset="5%"  stop-color="#24abbc"/>
+                                            <stop offset="95%" stop-color="#3bfcec"/>
+                                        </linearGradient>
+                                    </svg>
+                                </div>
+                                <div class="player_buttons-layer_center-elements_group_controls_wrapper-play-pause">
+                                    <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_play-button">
+                                    <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="player_buttons-layer_center-elements_pause-button hidden-layer">
+                                </div>
+
+                            </div>
+
+                            <span class="icon-forward player_buttons-layer_center-elements_next"></span>
+                        </div>
+                        <div class="player_buttons-layer_center-elements_group_bottom">
+                            <span class="player_buttons-layer_center-elements_pause-intermission">Pause</span>
+                        </div>
+                    </div>
+
                 </div>
                 <!-- bottom elements-->
                 <div class="player_buttons-layer_bottom-elements">
@@ -84,12 +128,6 @@
             </div>
         </div>
     </div>
-    <!--<div class="row" ng-show="video.isWatching">
-        <div class="description" style="color: white">
-            <h4>{{::video.title}}</h4>
-            {{::video.description}}
-        </div>
-    </div>-->
 
 
 </div>

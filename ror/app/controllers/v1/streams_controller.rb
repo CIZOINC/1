@@ -128,7 +128,7 @@ class V1::StreamsController < V1::ApiController
 
   %w(key filename).each do |param|
     define_method("check_if_#{param}_presents_in_params") do
-      unless instance_variable_set("@#{param}", params[param])#eval("@#{param}") = params[param].blank?
+      unless !params[param].blank? && instance_variable_set("@#{param}", params[param])#eval("@#{param}") = params[param].blank?
         render json: {errors:"#{param.capitalize} is required"}, status: 403
         return
       end

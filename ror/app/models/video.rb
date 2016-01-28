@@ -57,7 +57,10 @@ class Video < ActiveRecord::Base
   def remove_featured!
     if featured
       update_column(:featured, false)
-      update_column(:featured_order, nil) if featured_order
+      if featured_order
+        ActiveRecord::Base.connection.execute(sql_query(true))
+        update_column(:featured_order, nil)
+      end
       puts "REMOVE FEATURED"
     end
   end
@@ -108,42 +111,18 @@ class Video < ActiveRecord::Base
 
   def find_last_video(f_o)
     #TODO Add unique: true to featured_order index
-
+    return if f_o == featured_order
     self.update_column(:featured_order, nil) if featured_order
     v = Video.find_by_featured_order(f_o)
     if v.nil?
       last_featured_order = f_o - 1
-      array = []
+      @array = []
       last_featured_order.downto(@video.featured_order) do |i|
-        array << i
+        @array << i
       end
-      sql = "UPDATE videos
-             SET featured_order = (featured_order+1)
-             WHERE id IN (
-               SELECT id
-               FROM videos
-               WHERE featured_order in (#{array.join(', ')})
-             )"
-      ActiveRecord::Base.connection.execute(sql)
+      ActiveRecord::Base.connection.execute(sql_query)
       self.update_column(:featured_order, @video.featured_order)
       return
-      # sql2 = "DROP INDEX
-      #       WITH    custom_videos AS
-      #                 (
-      #                 SELECT  ID, (featured_order+1) as featured_order
-      #                 FROM    videos
-      #                 WHERE   featured_order in (#{array.join(', ')})
-      #                 ORDER BY featured_order DESC
-      #                 )
-      #                 UPDATE videos AS v
-      #                 SET featured_order = cv.featured_order
-      #                 from custom_videos AS cv
-      #                 where cv.id = v.id
-      #                 "
-      # # sql = "WITH videos AS (SELECT ID FROM videos WHERE featured_order in (#{array.join(', ')}) ORDER BY featured_order DESC) UPDATE videos SET featured_order = (featured_order+1)"
-      # puts sql
-
-      # self.update_column(:featured_order, @video.featured_order)
     end
     find_last_video(f_o + 1)
   end
@@ -156,6 +135,26 @@ class Video < ActiveRecord::Base
 
   def reset_streams
     streams.map {|stream| stream.update_column(:transcode_status, 'pending')}
+  end
+
+  def sql_query(delete_featured = nil)
+    if delete_featured
+      "UPDATE videos
+            SET featured_order = (featured_order-1)
+            WHERE id IN (
+              SELECT id
+              FROM videos
+              WHERE featured_order > #{featured_order}
+            )"
+    else
+      "UPDATE videos
+             SET featured_order = (featured_order+1)
+             WHERE id IN (
+               SELECT id
+               FROM videos
+               WHERE featured_order in (#{@array.join(', ')})
+             )"
+    end
   end
 
 end

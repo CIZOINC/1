@@ -1,1 +1,1 @@
-json.partial! 'v1/videos/videos',  videos: @unseen_videos
+json.partial! 'v1/videos/videos',  videos: @videos

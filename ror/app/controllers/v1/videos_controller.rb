@@ -41,8 +41,8 @@ class V1::VideosController < V1::ApiController
       (conditions.push('visible = :visible') && arguments[:visible] = true) unless (@current_user && as_admin?) || params[:deleted] == 'true'
     end
 
-    conditions_str = conditions.join(" AND ")
-    @videos = Video.where(conditions_str, arguments).desc_order
+    conditions = conditions.join(" AND ")
+    @videos = Video.where(conditions, arguments).desc_order
     @videos = @videos.tagged_with(params[:tags]) unless params[:tags].blank?
 
     (@current_user && as_admin?) ? (@videos = @videos.limit(limited_videos)) : (@videos = @videos.limit(limited_videos(200)))
@@ -133,10 +133,6 @@ class V1::VideosController < V1::ApiController
   end
 
   private
-
-  def limited_videos(limit = nil)
-    params[:count].blank? ? limit : (params[:count].to_i > 200 ? 200 : params[:count].to_i)
-  end
 
   def set_region
     @region = "us-east-1"

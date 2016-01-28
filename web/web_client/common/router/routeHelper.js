@@ -1,5 +1,5 @@
 angular
-    .module('app.routerHelper', ['ui.router'])
+    .module('app.routerHelper')
     .provider('routerHelper', routerHelperProvider);
 
 routerHelperProvider.$inject = ['$locationProvider', '$stateProvider', '$urlRouterProvider'];
@@ -23,9 +23,10 @@ function routerHelperProvider($locationProvider, $stateProvider, $urlRouterProvi
         ///////////////
 
         function configureStates(states, otherwisePath) {
-            states.forEach(function(state) {
-                $stateProvider.state(state.state, state.config);
-            });
+
+            for (let i=0; i < states.length; i++) {
+                $stateProvider.state(states[i].state, states[i].config);
+            }
             if (otherwisePath && !hasOtherwise) {
                 hasOtherwise = true;
                 $urlRouterProvider.otherwise(otherwisePath);

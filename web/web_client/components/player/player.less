@@ -76,6 +76,8 @@
         margin-top: 10px;
         color: white;
         font-size: 23px;
+        cursor: pointer;
+        cursor: hand;
         &::before {
           margin-top: 15px;
         }
@@ -95,6 +97,8 @@
           color: white;
           font-size: 32px;
           margin: 10px;
+          cursor: pointer;
+          cursor: hand;
         }
       }
     }
@@ -112,6 +116,7 @@
         align-content: stretch;
         justify-content: center;
         flex-direction: column;
+        margin-top: 70px;
 
         &_title {
           display: flex;
@@ -180,16 +185,16 @@
 
       &_play-button {
         display: flex;
-        min-width: 60px;
-        min-height: 60px;
-        width: 55%;
-        height: 55%;
+        width: 120px;
+        height: 120px;
         justify-content: center;
         align-items:center;
         align-content: flex-start;
         margin-top: 15%;
         margin-left: 15px;
         user-select: none;
+        cursor: pointer;
+        cursor: hand;
 
         img {
           width: 60%;
@@ -199,15 +204,15 @@
 
       &_pause-button {
         display: flex;
-        min-width: 60px;
-        min-height: 60px;
-        width: 55%;
-        height: 55%;
+        width: 120px;
+        height: 120px;
         justify-content: center;
         align-items:center;
         align-content: flex-start;
         margin-top: 15%;
         user-select: none;
+        cursor: pointer;
+        cursor: hand;
 
         img {
           width: 60%;
@@ -215,18 +220,32 @@
         }
       }
 
+      &_prev-next-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items:center;
+        align-content: center;
+
+        margin-top: 3%;
+        width: 250px;
+      }
+
       &_next {
         color: white;
         font-size: 55px;
-        margin-top: 18%;
+        //margin-top: 18%;
         margin-left: 30px;
+        cursor: pointer;
+        cursor: hand;
       }
 
       &_prev {
         color: white;
         font-size: 55px;
-        margin-top: 18%;
+        //margin-top: 18%;
         margin-right: 30px;
+        cursor: pointer;
+        cursor: hand;
       }
 
       &_pause-intermission {
@@ -353,15 +372,21 @@
         &_expand {
           color: white;
           font-size: 35px;
+          cursor: pointer;
+          cursor: hand;
         }
 
         &_collapse {
           color: white;
           font-size: 35px;
+          cursor: pointer;
+          cursor: hand;
         }
 
         &_slider {
           width: 85%;
+          cursor: pointer;
+          cursor: hand;
         }
 
         &_time-position {

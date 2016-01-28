@@ -36,17 +36,15 @@ module Auth
     def find_or_create_user_by(email, birthday)
       user = User.find_or_create_by(email: email) do |user|
         user.is_admin = false
-        user.password = (password = secret(9))
+        user.password = (password = secret(9, true))
         user.password_confirmation = password
         user.birthday = birthday
-        # user.provider = provider if defined? provider
-        # user.uid = uid if defined? uid
       end
 
       if user.valid?
         #if user has been logged in as admin at least once - he'll get admin's access token - maybe this functionality should be changed
         users_scope = (Doorkeeper::AccessToken.where(resource_owner_id: user.id).pluck(:scopes).include? 'admin') ? 'admin' : 'user'
-        @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes:  users_scope, refresh_token: secret(64, true))
+        @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes:  users_scope, refresh_token: secret(32))
         Doorkeeper::TokensController.new.destroy_useless_tokens(user)
         render 'auth/omniauth_callbacks/access_token'
       else
@@ -66,14 +64,9 @@ module Auth
       end
     end
 
-    def secret(number, downcase = nil)
-      secret = ''
-      number.times do |i|
-        secret << [*('a'..'z'), *('A'..'Z'), *('0'..'9')].shuffle[0]
-      end
-      secret.downcase! if downcase
-      secret(number, downcase = false) if Doorkeeper::AccessToken.find_by_refresh_token(secret)
-      secret
+    def secret(number, password=nil)
+      password ? random = SecureRandom.hex(number) : (secret(number) while (Doorkeeper::AccessToken.find_by_refresh_token(random = SecureRandom.hex(number))))
+      random
     end
 
     def format_date(date)

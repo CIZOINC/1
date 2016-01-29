@@ -50,15 +50,47 @@ class Video < ActiveRecord::Base
   end
 
   def add_featured!(f_o = nil)
-    update_column(:featured, true) && (puts "SET FEATURED TO TRUE") if !featured
-    set_featured_order(f_o) if f_o
+    # @video = Video.find_by_featured_order(f_o) if f_o
+    if self.featured_order
+      puts "VIDEO HAS FO #{featured_order}"
+      if f_o
+        @start_fo = self.featured_order
+        @finish_fo = f_o
+
+        if @start_fo < @finish_fo
+          puts "Start less than finish"
+          ActiveRecord::Base.connection.execute(sql_query('start_fo_less_than_finish_fo'))
+                      update_column(:featured_order, @finish_fo)
+        elsif @start_fo > @finish_fo
+          puts "Start more than finish"
+          ActiveRecord::Base.connection.execute(sql_query('start_fo_more_than_finish_fo'))
+          update_column(:featured_order, @finish_fo)
+        else
+          return
+        end
+        puts "FO: #{f_o}"
+      end
+    else
+      puts "VIDEO HAS NO FO"
+      if f_o
+        puts "NEED TO SET FO :#{f_o}"
+          @f_o = f_o
+          ActiveRecord::Base.connection.execute(sql_query('featured_order_not_presents_yet')) if Video.find_by_featured_order(f_o)
+          update_column(:featured_order, f_o)
+          update_column(:featured, true) if !featured
+      else
+        max_featured_order = Video.where(featured: true).pluck(:featured_order).max.to_i
+        update_column(:featured_order, max_featured_order + 1)
+        update_column(:featured, true) if !featured
+      end
+    end
   end
 
   def remove_featured!
     if featured
       update_column(:featured, false)
       if featured_order
-        ActiveRecord::Base.connection.execute(sql_query(true))
+        ActiveRecord::Base.connection.execute(sql_query('delete_featured'))
         update_column(:featured_order, nil)
       end
       puts "REMOVE FEATURED"
@@ -100,33 +132,6 @@ class Video < ActiveRecord::Base
     {user_id: @user_id, video_id: self.id}
   end
 
-  def set_featured_order(f_o)
-    @video = Video.find_by_featured_order(f_o)
-    if @video
-      find_last_video(f_o)
-    else
-      update_column(:featured_order, f_o)
-    end
-  end
-
-  def find_last_video(f_o)
-    #TODO Add unique: true to featured_order index
-    return if f_o == featured_order
-    self.update_column(:featured_order, nil) if featured_order
-    v = Video.find_by_featured_order(f_o)
-    if v.nil?
-      last_featured_order = f_o - 1
-      @array = []
-      last_featured_order.downto(@video.featured_order) do |i|
-        @array << i
-      end
-      ActiveRecord::Base.connection.execute(sql_query)
-      self.update_column(:featured_order, @video.featured_order)
-      return
-    end
-    find_last_video(f_o + 1)
-  end
-
   def set_param_to_nil(*params)
     params.each do |param|
       update_column(param, nil) if self["#{param}"]
@@ -137,23 +142,40 @@ class Video < ActiveRecord::Base
     streams.map {|stream| stream.update_column(:transcode_status, 'pending')}
   end
 
-  def sql_query(delete_featured = nil)
-    if delete_featured
-      "UPDATE videos
-            SET featured_order = (featured_order-1)
-            WHERE id IN (
-              SELECT id
-              FROM videos
-              WHERE featured_order > #{featured_order}
-            )"
-    else
-      "UPDATE videos
-             SET featured_order = (featured_order+1)
-             WHERE id IN (
-               SELECT id
-               FROM videos
-               WHERE featured_order in (#{@array.join(', ')})
-             )"
+  def sql_query(sql)
+    case sql
+      when 'delete_featured'
+        "UPDATE videos
+              SET featured_order = (featured_order-1)
+              WHERE id IN (
+                SELECT id
+                FROM videos
+                WHERE featured_order > #{featured_order}
+              )"
+      when 'featured_order_not_presents_yet'
+        "UPDATE videos
+              SET featured_order = (featured_order+1)
+              WHERE id IN (
+                SELECT id
+                FROM videos
+                WHERE featured_order >= #{@f_o}
+              )"
+      when 'start_fo_less_than_finish_fo'
+        "UPDATE videos
+                    SET featured_order = (featured_order-1)
+                    WHERE id IN (
+                      SELECT id
+                      FROM videos
+                      WHERE featured_order > #{@start_fo} AND featured_order <= #{@finish_fo}
+                    ) "
+       when 'start_fo_more_than_finish_fo'
+         "UPDATE videos
+                    SET featured_order = (featured_order+1)
+                    WHERE id IN (
+                      SELECT id
+                      FROM videos
+                      WHERE featured_order < #{@start_fo} AND featured_order >= #{@finish_fo}
+                    ) "
     end
   end
 

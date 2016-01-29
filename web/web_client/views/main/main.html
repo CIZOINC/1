@@ -53,25 +53,48 @@
 <div>
     <div class="categories-panel categories-panel--margin">
             <div class="categories-panel_item_icon categories-panel_item_icon--all-icon icon-all  ">
-            </div>
-            <div class="categories-panel_item_title">All</div>
         </div>
-        <div class="categories-panel_item" ng-click="filterByCategory(11)" ng-class="categories[11].cssClass">
-            <div class="categories-panel_item_icon icon-{{categories[11].icon}}" ></div>
-            Movies
+        <div class="menu_item">
+            <span class="menu_item_icon icon-favorites"></span>
+            <span class="menu_item_title">Favorites</span>
+            <span class="menu_item_counter"></span>
+            <span class="menu_item_next icon-forward"></span>
         </div>
-        <div class="categories-panel_item" ng-click="filterByCategory(13)">
-            <div class="categories-panel_item_icon icon-categorygames" ></div>
-        <div class="categories-panel_item" ng-click="filterByCategory(12)" ng-class="categories[12].cssClass">
-            <div class="categories-panel_item_icon icon-{{categories[12].icon}}" ></div>
-            TV Shows
-        </div>
-            Games
-        </div>
-            <div class="categories-panel_item_icon icon-categorylifestyle" ></div>
-            Lifestyle
+        <div class="menu_item">
+            <span class="menu_item_icon icon-profile"></span>
+            <span class="menu_item_title">Sign in</span>
+            <span class="menu_item_counter"></span>
+            <span class="menu_item_next icon-forward"></span>
         </div>
     </div>
+    <div class="menu_container_outer"  ng-click="toggleMenu(true)"></div>
+
+    <div>
+        <div class="categories-panel categories-panel--margin">
+            <div class="categories-panel_item" ng-click="filterByCategory()" ng-class="categories[0].cssClass">
+                <div class="categories-panel_item_icon categories-panel_item_icon--all-icon icon-all  "></div>
+                <div class="categories-panel_item_title">All</div>
+            </div>
+            <div class="categories-panel_item" ng-click="filterByCategory(11)" ng-class="categories[11].cssClass">
+                <div class="categories-panel_item_icon icon-{{categories[11].icon}}" ></div>
+                Movies
+            </div>
+        <div class="categories-panel_item" ng-click="filterByCategory(13)" ng-class="categories[13].cssClass">
+            <div class="categories-panel_item_icon icon-{{categories[13].icon}}" ></div>
+                Games
+            </div>
+            <div class="categories-panel_item" ng-click="filterByCategory(12)" ng-class="categories[12].cssClass">
+                <div class="categories-panel_item_icon icon-{{categories[12].icon}}" ></div>
+                TV Shows
+            </div>
+        <div class="categories-panel_item" ng-click="filterByCategory(14)" ng-class="categories[14].cssClass">
+            <div class="categories-panel_item_icon icon-{{categories[14].icon}}" ></div>
+            <div class="categories-panel_item_icon icon-categorylifestyle" ></div>
+                Lifestyle
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div class="container-fluid player-list">

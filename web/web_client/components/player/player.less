@@ -36,6 +36,28 @@
     }
   }
 
+  &_hero-image-layer-next {
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+
+    &:before {
+      display: block;
+      content: '';
+      width: 100%;
+      padding-top: 56.25%;
+    }
+
+    & > .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      object-fit: cover;
+    }
+  }
+
   &_buttons-layer {
     display: flex;
     user-select: none;

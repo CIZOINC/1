@@ -13,6 +13,10 @@
             <div class="col-xs-12 no-padding hero-image-layer player_hero-image-layer" style="background-image: url({{::video.hero_image_link}})">
             </div>
 
+            <!-- next hero image layer -->
+            <div class="col-xs-12 no-padding hero-image-layer player_hero-image-layer-next hidden-layer" style="background-image: url({{::nextVideo.hero_image_link}})">
+            </div>
+
             <!-- buttons layer-->
             <div class="player_buttons-layer"
                  ng-mouseenter="imageHover()"
@@ -44,7 +48,7 @@
                         </div>
                         <div class="player_buttons-layer_center-elements_group_controls">
                             <div class="icon-forward player_buttons-layer_center-elements_prev-next-wrapper">.
-                                <span class="icon-back player_buttons-layer_center-elements_prev hidden-layer"></span>
+                                <span class="icon-back player_buttons-layer_center-elements_prev hidden-layer" ng-click="playPreviousVideo($event)"  ng-show="getPreviousVideo()"></span>
                             </div>
 
                             <div class="player_buttons-layer_center-elements_group_controls_wrapper">

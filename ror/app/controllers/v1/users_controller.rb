@@ -48,12 +48,26 @@ class V1::UsersController < V1::ApiController
     end
   end
 
-  %w(like dislike skip).each do |method|
-    define_method("#{method}_video") do
-      @video.send "#{method}!".to_sym, @current_user.id
-      nothing 204
-    end
+  def like_video
+    @video.like!(@current_user.id) if @video
+    nothing 204
   end
+
+  def dislike_video
+    @video.dislike!(@current_user.id) if @video
+    nothing 204
+  end
+
+  def skip_video
+    @video.skip!(@current_user.id) if @video
+    nothing 204
+  end
+  #
+  # %w(like dislike skip).each do |method|
+  #   define_method("#{method}_video") do
+  #     @video send skip!(@current_user.id) if @video
+  #   end
+  # end
 
   %w(seen skipped liked).each do |method|
     define_method(method) do

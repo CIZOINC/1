@@ -30,4 +30,12 @@ class V1::ApiController < ApplicationController
     render nothing: true, status: status
   end
 
+  def bucket_name
+    'cizo-assets'
+  end
+
+  def region
+    "us-east-1"
+  end
+
 end

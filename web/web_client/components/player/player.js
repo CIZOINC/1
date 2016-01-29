@@ -34,6 +34,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             nextVideoLayer: angular.element(element[0].querySelector(`.player_buttons-layer_bottom-elements_titles_next`))[0],
             imageLayer: angular.element(element[0].querySelector(`div.hero-image-layer`))[0],
             imageNextLayer: angular.element(element[0].querySelector(`div.player_hero-image-layer-next`))[0],
+            descriptionLayer: angular.element(element[0].querySelector(`div.player_description-layer`))[0],
             playButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_play-button`))[0],
             pauseButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_pause-button`))[0],
 
@@ -56,6 +57,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
 
             toggleFullScreen: toggleFullScreen,
             toggleControlsVisibility: toggleControlsVisibility,
+            toggleDescription: toggleDescription,
             setIntermission: setIntermission,
             pauseIntermissionFinish: pauseIntermissionFinish,
             nextVideo: getNextVideo(),
@@ -142,6 +144,13 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             } else {
                 scope.nextVideoBackground = `display: none`;
             }
+        }
+
+        function toggleDescription(event, state) {
+            if (event) {
+                event.stopPropagation();
+            }
+            setDescriptionState(state);
         }
 
         function setIntermission() {
@@ -384,6 +393,8 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             updateClassBySelector('add', '.player_buttons-layer_center-elements_group_title', 'hidden-layer');
             updateClassBySelector('add', '.player_buttons-layer_center-elements_group_bottom', 'hidden-layer');
             updateClassBySelector('add', '.player_hero-image-layer-next', 'hidden-layer');
+            updateClassBySelector('add', '.player_description-layer', 'hidden-layer');
+            updateClassBySelector('remove', '.player_buttons-layer_bottom-elements_titles', 'hidden-layer');
 
             _.each(angular.element(document.querySelectorAll('video')), (item) => {
                 item.pause();
@@ -464,6 +475,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
         }
 
         function setFullscreenState(isFullscreen) {
+            scope.descriptionLayer.classList[_classAdd(isFullscreen)]('player_description-layer--fullscreen');
             scope.buttonLayer.classList[_classAdd(isFullscreen)]('player_buttons-layer--fullscreen');
             scope.buttonLayer.classList[_classAdd(!isFullscreen)]('player_buttons-layer--hover');
             scope.topElementsClose.classList[_classAdd(!isFullscreen)]('hidden-layer');
@@ -485,6 +497,34 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             scope.imageNextLayer.classList[_classAdd(!isIntermission)]('hidden-layer');
             scope.videoLayer.classList[_classAdd(isIntermission)]('hidden-layer');
 
+        }
+
+        function setDescriptionState(isDescription) {
+            scope.descriptionLayer.classList[_classAdd(!isDescription)]('hidden-layer');
+            scope.titlesOverlayLayer.classList[_classAdd(isDescription)]('hidden-layer');
+            if (getElementFullscreenState()) {
+                scope.buttonLayer.classList[_classAdd(!isDescription)]('player_buttons-layer--fullscreen');
+            } else {
+                scope.buttonLayer.classList[_classAdd(false)]('player_buttons-layer--fullscreen');
+            }
+
+            if (scope.video.isWatching) {
+                scope.controlsOverlayLayer.classList[_classAdd(isDescription)]('hidden-layer');
+            } else {
+                scope.controlsOverlayLayer.classList[_classAdd(true)]('hidden-layer');
+            }
+
+            scope.topElementsRightSide.classList[_classAdd(isDescription)]('hidden-layer');
+            if (!isDescription) {
+                if (scope.screen.paused ) {
+                    setPlayPauseState(false);
+                } else {
+                    setPlayPauseState(true);
+                }
+            } else {
+                scope.playButton.classList[_classAdd(isDescription)]('hidden-layer');
+                scope.pauseButton.classList[_classAdd(isDescription)]('hidden-layer');
+            }
         }
     }
 

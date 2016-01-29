@@ -36,6 +36,28 @@
     }
   }
 
+  &_hero-image-layer-next {
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+
+    &:before {
+      display: block;
+      content: '';
+      width: 100%;
+      padding-top: 56.25%;
+    }
+
+    & > .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      object-fit: cover;
+    }
+  }
+
   &_buttons-layer {
     display: flex;
     user-select: none;
@@ -48,6 +70,11 @@
     align-content: stretch;
     flex-direction: column;
     background: transparent;
+
+    &--intermission {
+      background-color: rgba(0,0,0,.8);
+    }
+
     &--hover {
       background: linear-gradient(to bottom, rgba(0,0,0,.53) 0%, rgba(2,2,2,0) 30%, rgba(2,2,2,0) 70%, rgba(0,0,0,.53) 100%);
     }
@@ -71,6 +98,8 @@
         margin-top: 10px;
         color: white;
         font-size: 23px;
+        cursor: pointer;
+        cursor: hand;
         &::before {
           margin-top: 15px;
         }
@@ -90,6 +119,8 @@
           color: white;
           font-size: 32px;
           margin: 10px;
+          cursor: pointer;
+          cursor: hand;
         }
       }
     }
@@ -101,17 +132,91 @@
       justify-content: center;
       height: 60%;
 
+      &_group {
+        display: flex;
+        align-items: stretch;
+        align-content: stretch;
+        justify-content: center;
+        flex-direction: column;
+        margin-top: 70px;
+
+        &_title {
+          display: flex;
+          align-items: center;
+          align-content: center;
+          justify-content: center;
+          flex-direction: column;
+          text-transform: uppercase;
+          color: @color-mid;
+          font-size: 20px;
+
+          &_caption {
+            color: white;
+            font-size: 35px;
+            text-transform: none;
+          }
+        }
+
+        &_controls {
+          display: flex;
+          align-items: stretch;
+          align-content: stretch;
+          justify-content: center;
+          flex-direction: row;
+
+          &_wrapper {
+            position: relative;
+            display: flex;
+            align-items: stretch;
+            align-content: stretch;
+            justify-content: center;
+            flex-direction: row;
+          }
+
+          &_wrapper-play-pause {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+          }
+
+          &_progress {
+            margin-top: 10%;
+            position: absolute;
+            padding-bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+          }
+        }
+
+        &_bottom {
+          display: flex;
+          align-items: stretch;
+          align-content: stretch;
+          justify-content: center;
+          flex-direction: row;
+        }
+      }
+
       &_play-button {
         display: flex;
-        min-width: 60px;
-        min-height: 60px;
-        width: 25%;
-        height: 25%;
+        width: 120px;
+        height: 120px;
         justify-content: center;
         align-items:center;
         align-content: flex-start;
         margin-top: 15%;
+        margin-left: 15px;
         user-select: none;
+        cursor: pointer;
+        cursor: hand;
 
         img {
           width: 60%;
@@ -121,20 +226,56 @@
 
       &_pause-button {
         display: flex;
-        min-width: 60px;
-        min-height: 60px;
-        width: 25%;
-        height: 25%;
+        width: 120px;
+        height: 120px;
         justify-content: center;
         align-items:center;
         align-content: flex-start;
         margin-top: 15%;
         user-select: none;
+        cursor: pointer;
+        cursor: hand;
 
         img {
           width: 60%;
           height: 60%;
         }
+      }
+
+      &_prev-next-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items:center;
+        align-content: center;
+
+        margin-top: 3%;
+        width: 250px;
+      }
+
+      &_next {
+        color: white;
+        font-size: 55px;
+        //margin-top: 18%;
+        margin-left: 30px;
+        cursor: pointer;
+        cursor: hand;
+      }
+
+      &_prev {
+        color: white;
+        font-size: 55px;
+        //margin-top: 18%;
+        margin-right: 30px;
+        cursor: pointer;
+        cursor: hand;
+      }
+
+      &_pause-intermission {
+        color: white;
+        text-transform: uppercase;
+        font-family: 'main-cizo';
+        margin-top: 30px;
+        font-size: 28px;
       }
     }
 
@@ -253,15 +394,21 @@
         &_expand {
           color: white;
           font-size: 35px;
+          cursor: pointer;
+          cursor: hand;
         }
 
         &_collapse {
           color: white;
           font-size: 35px;
+          cursor: pointer;
+          cursor: hand;
         }
 
         &_slider {
           width: 85%;
+          cursor: pointer;
+          cursor: hand;
         }
 
         &_time-position {

@@ -58,6 +58,94 @@
     }
   }
 
+  &_description-layer {
+    display: flex;
+    user-select: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    align-items: stretch;
+    align-content: stretch;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: transparent;
+    z-index: 100;
+
+    &--fullscreen {
+      z-index: 2147483680;
+    }
+
+    &_container {
+      position: relative;
+      background-color: #1d1d1d;
+      opacity: 0.8;
+      padding: 15px 50px;
+      color: white;
+
+      display: flex;
+      align-items: flex-start;
+      align-content: stretch;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      &_close-container {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        &_button {
+          font-size: 20px;
+        }
+      }
+
+      &_titles {
+        display: flex;
+        align-items: flex-end;
+        align-content: flex-end;
+        justify-content: space-between;
+        flex-direction: row;
+        color: white;
+        &_category {
+          color: white;
+          font-size: 45px;
+          margin-bottom: 5px;
+          margin-left: -10px;
+        }
+
+        &_labels {
+          display: flex;
+          align-items: flex-start;
+          align-content: flex-end;
+          justify-content: flex-end;
+          flex-direction: column;
+          font-size: 30px;
+          font-family: 'main-cizo';
+          padding-bottom: 7px;
+          &_created {
+            font-size: 13px;
+            font-family: 'main-cizo';
+            text-transform: uppercase;
+            margin-bottom: -10px;
+          }
+
+        }
+      }
+
+      &_text {
+        color: white;
+        font-family: 'main-cizo';
+        font-size: 20px;
+        opacity: 1;
+      }
+    }
+  }
+
   &_buttons-layer {
     display: flex;
     user-select: none;

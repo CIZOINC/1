@@ -1,15 +1,16 @@
 class V1::UsersController < V1::ApiController
-  before_action :set_user, only: [:show, :update, :destroy]
-  before_action :set_video, only: [:like_video, :dislike_video, :mark_video_as_seen, :skip_video, :guest_skip_video, :guest_mark_video_as_seen]
-  before_action only: [:me, :destroy_self_account, :update_self_account, :show, :like_video, :dislike_video, :likes, :skipped, :skip_video, :seen, :unseen, :mark_video_as_seen] do
+  before_action only: [:me, :destroy_self_account, :update_self_account, :show, :like_video, :dislike_video, :liked, :skipped, :skip_video, :seen, :unseen, :mark_video_as_seen] do
     doorkeeper_authorize! :user, :admin
   end
 
   before_action only: [:index, :update, :show] do
     doorkeeper_authorize! :admin
   end
+  before_action :set_params_to_query, only: [:liked, :skipped, :seen, :unseen]
+  before_action :set_user, only: [:show, :update]
+  before_action :set_video, only: [:like_video, :dislike_video, :mark_video_as_seen, :skip_video, :guest_skip_video, :guest_mark_video_as_seen]
+  before_action :user_age_meets_requirement, only: [:liked, :seen, :skipped, :unseen]
 
-  before_action :user_age_meets_requirement, only: [:likes, :seen, :skipped, :unseen]
 
   def index
     @users = User.all
@@ -57,30 +58,36 @@ class V1::UsersController < V1::ApiController
     nothing 204
   end
 
-  def likes
-    @likes = true
-    @videos = Video.joins(:likes).where(likes: {user_id: @current_user.id})
-  end
-
-  def skipped
-    @skipped = true
-    @skipped_videos = Video.joins(:skipped_videos).where(skipped_videos: {user_id: @current_user.id})
-  end
-
   def skip_video
     @video.skip!(@current_user.id) if @video
     nothing 204
   end
+  #
+  # %w(like dislike skip).each do |method|
+  #   define_method("#{method}_video") do
+  #     @video send skip!(@current_user.id) if @video
+  #   end
+  # end
 
-  def seen
-    @seen = true
-    @seen_videos = Video.joins(:seen_videos).where(seen_videos: {user_id: @current_user.id})
+  %w(seen skipped liked).each do |method|
+    define_method(method) do
+      instance_variable_set("@#{method}", true)
+      @arguments["#{method}_user_id".to_sym] = @current_user.id
+      @conditions.push("#{method}_videos.user_id = :#{method}_user_id AND deleted_at IS NULL")
+      @conditions = @conditions.join(" AND ")
+      @videos = Video.joins("#{method}_videos".to_sym).where(@conditions, @arguments)
+      limit_videos!
+    end
   end
 
   def unseen
     @unseen = true
     seen_videos_ids = Video.joins(:seen_videos).where(seen_videos: {user_id: @current_user.id}).pluck(:id)
-    @unseen_videos = seen_videos_ids.empty? ? Video.all : Video.where("id not in (?)", seen_videos_ids)
+    @arguments[:seen_videos_ids] = seen_videos_ids
+    @conditions.push("id not in (:seen_videos_ids)")
+    @conditions = @conditions.join(" AND ")
+    @videos = seen_videos_ids.empty? ? Video.all : Video.where(@conditions, @arguments)
+    limit_videos!
   end
 
   def mark_video_as_seen
@@ -99,6 +106,10 @@ class V1::UsersController < V1::ApiController
   end
 
   private
+
+  def limit_videos!
+    as_admin? ? (@videos = @videos.limit(limited_videos)) : (@videos = @videos.limit(limited_videos(200)))
+  end
 
   def set_scopes!(tokens, scope)
     ActiveRecord::Base.transaction do
@@ -120,6 +131,26 @@ class V1::UsersController < V1::ApiController
 
   def set_video
     @video = Video.find(params[:video_id])
+  end
+
+  def set_params_to_query
+    @conditions = []
+    @arguments = {}
+
+    unless params[:created_before].blank?
+      action_name == 'unseen' ? @conditions.push("created_at <= :created_before") : @conditions.push("#{action_name}_videos.created_at <= :created_before")
+      @arguments[:created_before] = params[:created_before]
+    end
+
+    unless params[:created_after].blank?
+      action_name == 'unseen' ? @conditions.push("created_at >= :created_after") : @conditions.push("#{action_name}_videos.created_at >= :created_after")
+      @arguments[:created_after] = params[:created_after]
+    end
+
+    unless as_admin?
+      @conditions.push('visible = :visible')
+      @arguments[:visible] = true
+    end
   end
 
 end

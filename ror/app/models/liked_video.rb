@@ -1,4 +1,4 @@
-class Like < ActiveRecord::Base
+class LikedVideo < ActiveRecord::Base
   belongs_to :users
   belongs_to :videos
 end

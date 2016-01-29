@@ -49,7 +49,7 @@
 
 
 .menu {
-
+  z-index: 2147483690;
   &_container {
     display: none;
     &--menu-visible {
@@ -74,7 +74,7 @@
       bottom: 0;
       background-color: black;
       opacity: 0.7;
-      z-index: 2147483660;
+      z-index: 2147483690;
     }
 
   }
@@ -136,13 +136,16 @@
     &:hover {
       color: @color-lighter;
     }
+
+    &--selected {
+      color: @color-lighter;
+      &:hover {
+        text-shadow: @color-darker 3px 3px;
+      }
+    }
     &_icon {
       font-size: 80px;
       margin-bottom: -15px;
-      &:hover {
-        fill: @color-lighter;
-      }
-
       &--all-icon {
         &::before {
           font-size: 60px;

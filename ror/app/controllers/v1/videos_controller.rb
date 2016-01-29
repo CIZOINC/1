@@ -4,7 +4,6 @@ class V1::VideosController < V1::ApiController
   end
   before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted,:hero_image,:add_featured, :remove_featured]
   before_action :check_if_video_deleted, only: [:show, :update, :destroy, :hero_image, :add_featured, :remove_featured]
-  before_action :set_region, only: [:destroy]
   before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
 
   def index
@@ -33,6 +32,17 @@ class V1::VideosController < V1::ApiController
       conditions.push('deleted_at IS NULL')
     end
 
+    unless params[:max_id].blank?
+       conditions.push('id < :max_id')
+       arguments[:max_id] = params[:max_id].to_i
+    end
+
+    unless params[:since_id].blank?
+      conditions.push('id > :since_id')
+      arguments[:since_id] = params[:since_id].to_i
+    end
+
+
     if params[:visible] == 'false'
       conditions.push('visible = :visible')
       arguments[:visible] = false
@@ -42,6 +52,7 @@ class V1::VideosController < V1::ApiController
     end
 
     conditions = conditions.join(" AND ")
+    puts "CONDITIONS: #{conditions}"
     @videos = Video.where(conditions, arguments).desc_order
     @videos = @videos.tagged_with(params[:tags]) unless params[:tags].blank?
 
@@ -61,18 +72,14 @@ class V1::VideosController < V1::ApiController
   end
 
   def destroy
-    s3 = Aws::S3::Resource.new(region: @region)
-    bucket = s3.bucket('cizo-assets')
-    raw_folder = Rails.env.production? ? "production/raw/#{@video.id}" : "staging/raw/#{@video.id}"
+    s3 = Aws::S3::Resource.new(region: region)
+    bucket = s3.bucket(bucket_name)
     stream_folder = Rails.env.production? ? "production/stream/#{@video.id}" : "staging/stream/#{@video.id}"
     hero_image = Rails.env.production? ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
     if !@video.deleted_at && @video.update_column(:deleted_at, Time.now)
       @video.set_param_to_nil(:featured, :featured_order)
-      bucket.objects(prefix: raw_folder).batch_delete!
       bucket.objects(prefix: stream_folder).batch_delete!
-      if hero_image
-        bucket.objects(prefix: hero_image).batch_delete!
-      end
+      bucket.objects(prefix: hero_image).batch_delete! if hero_image
     end
     head :no_content
   end
@@ -133,10 +140,6 @@ class V1::VideosController < V1::ApiController
   end
 
   private
-
-  def set_region
-    @region = "us-east-1"
-  end
 
   def videos_params
     params.permit(:id, :title, :description, :mature_content, :visible, :category_id, :tag_list, :featured)

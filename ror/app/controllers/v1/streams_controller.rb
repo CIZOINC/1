@@ -189,13 +189,9 @@ class V1::StreamsController < V1::ApiController
     Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
   end
 
-  def bucket_name
-    'cizo-assets'
-  end
 
-  def region
-    "us-east-1"
-  end
+
+
 
   def host
     'https://s3.amazonaws.com/'

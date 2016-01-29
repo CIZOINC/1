@@ -62,7 +62,7 @@ class V1::UsersController < V1::ApiController
     @video.skip!(@current_user.id) if @video
     nothing 204
   end
-  # 
+  #
   # %w(like dislike skip).each do |method|
   #   define_method("#{method}_video") do
   #     @video send skip!(@current_user.id) if @video

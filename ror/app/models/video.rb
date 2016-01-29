@@ -67,12 +67,12 @@ class Video < ActiveRecord::Base
 
   def like!(user_id)
     @user_id = user_id
-    Like.find_or_create_by(params)
+    LikedVideo.find_or_create_by(params)
   end
 
   def dislike!(user_id)
     @user_id = user_id
-    if like = Like.find_by(params)
+    if like = LikedVideo.find_by(params)
       like.destroy
     end
   end

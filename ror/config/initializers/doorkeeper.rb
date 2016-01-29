@@ -9,6 +9,10 @@ Doorkeeper.configure do
      user if user && user.valid_for_authentication? { user.valid_password?(params[:password]) }
   end
 
+  admin_authenticator do |routes|
+    render json: {error: "Access denied"}, status: 403
+  end
+
   access_token_expires_in 1.week
   use_refresh_token
 

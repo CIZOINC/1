@@ -119,11 +119,10 @@ class V1::VideosController < V1::ApiController
 
   def add_featured
     featured_order = params[:featured_order].try(:to_i)
-    if featured_order && ((@video.featured_order && featured_order > Video.where(featured: true).count) || (!@video.featured_order && featured_order > Video.where(featured: true).count + 1))
+    if featured_order && ((@video.featured_order && featured_order > Video.where(featured: true).count) || (!@video.featured_order && featured_order > Video.where(featured: true).count + 1)) || featured_order<=0
       nothing 400
       return
     end
-
     @video.add_featured!(featured_order) if @video
     nothing 204
   end

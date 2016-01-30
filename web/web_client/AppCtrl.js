@@ -1,7 +1,9 @@
 angular.module('app.controls', ['ngSanitize']);
 angular.module('app.wrappers', []);
+angular.module('app.routerHelper', ['ui.router', 'app.wrappers']);
 angular.module('app.services', []);
 angular.module('app.directives', ['app.services']);
+angular.module('app.routerHelper', ['ui.router', 'app.wrappers']);
 angular.module('templates', []);
 
 angular
@@ -14,7 +16,9 @@ angular
         'app.routes',
         'ngSanitize',
         'templates',
-        'rzModule'])
+        'rzModule',
+        'angular-svg-round-progress'
+    ])
     .controller('AppCtrl', AppCtrl);
 
 

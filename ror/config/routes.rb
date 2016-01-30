@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   use_doorkeeper do
        controllers tokens: 'doorkeeper/tokens'
+       skip_controllers :authorizations, :applications, :authorized_applications
   end
 
   devise_for :users, defaults: {format: :json}, controllers: {
@@ -24,7 +25,7 @@ Rails.application.routes.draw do
 
     resources :categories
     resources :videos do
-      get :raw_stream_upload_request, to: "streams#raw_stream_upload_request"
+      get :upload_ticket, to: "streams#upload_ticket"
       get 'streams/:stream_type', to: 'streams#show', param: :stream_type, constraints: {stream_type: /hls|mp4/}
       post 'streams/transcode_notification', to: 'streams#transcode_notification', on: :collection
       post :streams, to: "streams#create"
@@ -45,7 +46,7 @@ Rails.application.routes.draw do
 
       put 'me/videos/liked/:video_id', to: "users#like_video", on: :collection
       delete 'me/videos/liked/:video_id', to: "users#dislike_video", on: :collection
-      get 'me/videos/liked',  to: "users#likes", on: :collection
+      get 'me/videos/liked',  to: "users#liked", on: :collection
 
       put 'guest/videos/seen/:video_id', to: 'users#guest_mark_video_as_seen', on: :collection
       put 'guest/videos/skipped/:video_id', to: 'users#guest_skip_video', on: :collection

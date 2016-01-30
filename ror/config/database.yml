@@ -9,15 +9,10 @@ default: &default
   encoding: unicode
   pool: 5
   timeout: 5000
-
-  username: postgres
-  host: postgres
+  username: karetnikov_kirill
   password: password
-  port: 5432
-  # username: karetnikov_kirill
-  # password: password
-  # host: ror_postgres_1
-  # port: 5433
+  host: ror_postgres_1
+  port: 5433
 
 development:
   <<: *default

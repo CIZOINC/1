@@ -25,7 +25,7 @@ class Video < ActiveRecord::Base
   has_many :seen_videos, dependent: :destroy
 
   validates :title, :description, :category_id, presence: true
-  validates :featured_order, numericality: {greater_than_or_equal_to: 1}
+  validates :featured_order, numericality: {greater_than_or_equal_to: 1}, allow_nil: true
 
   scope :trending, -> (){ where("visible = ? AND deleted_at IS NULL", true).order(view_count: :desc) }
   scope :desc_order, ->(){ order(created_at: :desc)}
@@ -105,7 +105,7 @@ class Video < ActiveRecord::Base
   end
 
  protected
- 
+
   def params
     {user_id: @user_id, video_id: self.id}
   end

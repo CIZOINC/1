@@ -60,7 +60,7 @@ class Video < ActiveRecord::Base
         ActiveRecord::Base.connection.execute(sql_query('featured_order_not_presents_yet')) if Video.find_by_featured_order(@f_o)
         update_self_params
       else
-        @new_featured_order = Video.where(featured: true).pluck(:featured_order).max.to_i + 1
+        @new_featured_order = Video.where(featured: true).pluck(:featured_order).compact.max.to_i + 1
         update_self_params
       end
     end

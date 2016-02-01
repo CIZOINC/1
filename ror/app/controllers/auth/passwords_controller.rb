@@ -8,7 +8,8 @@ module Auth
         render json: {error: 'Email can\'t be blank' }, status: 400
         return
       end
-      
+      V1::ResetPasswordMailer.send_reset_password_url(@user).deliver_later! if @user
+
       render nothing: true, status: 200
     end
   end

@@ -374,7 +374,7 @@ DEPENDENCIES
   doorkeeper
   fog
   fog-aws
-  haml-rails
+  haml-rails (~> 0.9.0)
   jbuilder (~> 2.0)
   jquery-rails
   omniauth

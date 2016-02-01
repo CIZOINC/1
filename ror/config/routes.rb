@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   }
   devise_scope :user do
     get 'oauth/facebook', to:"auth/omniauth_callbacks#fetch_user_by_facebook_token", defaults: {format: :json}
-    post 'users/password_reset', to: 'auth/passwords#password_reset', defaults: {format: :json}
+    post 'users/password_reset', to: 'auth/passwords#password_reset'#, defaults: {format: :json}
   end
 
   if Rails.env.development? || Rails.env.staging?

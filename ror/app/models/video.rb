@@ -104,16 +104,16 @@ class Video < ActiveRecord::Base
     end
   end
 
- protected
-
-  def params
-    {user_id: @user_id, video_id: self.id}
-  end
-
   def set_param_to_nil(*params)
     params.each do |param|
       update_column(param, nil) if self["#{param}"]
     end
+  end
+
+ protected
+
+  def params
+    {user_id: @user_id, video_id: self.id}
   end
 
   def reset_streams

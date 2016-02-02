@@ -486,6 +486,251 @@
     
   } ,
   
+  "/users/{user-id}": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a user for the given ID.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersUserIdGet",
+      "parameters": [
+        {
+  "name" : "user-id",
+  "in" : "path",
+  "description" : "User ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A user",
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Updates a user.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersUserIdPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/body_2"
+  }
+},
+        {
+  "name" : "user-id",
+  "in" : "path",
+  "description" : "User ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A user",
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/password_reset": {
+    
+    "post": {
+      "summary": "",
+      "description":"Sends email with reset password instructions",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersPasswordResetPost",
+      "parameters": [
+        {
+  "name" : "email",
+  "in" : "query",
+  "description" : "Valid email",
+  "required" : true,
+  "type" : "string"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "Email with reset password instructions has been sent."
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/guest/videos/seen/{video-id}": {
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a video as seen for guest users",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersGuestVideosSeenVideoIdPut",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Video has been marked as seen."
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/me/videos/skipped": {
+    
+    "get": {
+      "summary": "",
+      "description":"Gets a list of videos skipped by the current user",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeVideosSkippedGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "Skipped videos",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_1"
+  }
+}
+        ,
+        "404": {
+  "description" : "User is not logged in",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/me/videos/skipped/{video-id}": {
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a video as skipped.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeVideosSkippedVideoIdPut",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Video has been marked as skipped"
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
   "/users/me/videos/unseen": {
     
     "get": {
@@ -753,87 +998,71 @@
     
   } ,
   
-  "/users/{user-id}": {
+  "/users/password": {
     
-    "get": {
+    "put": {
       "summary": "",
-      "description":"Returns a user for the given ID.",
+      "description":"Update user&#39;s password",
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
-      "operationId": "usersUserIdGet",
+      "operationId": "usersPasswordPut",
       "parameters": [
         {
-  "name" : "user-id",
-  "in" : "path",
-  "description" : "User ID",
+  "name" : "password",
+  "in" : "query",
+  "description" : "New valid password.",
   "required" : true,
-  "type" : "integer"
+  "type" : "string"
+},
+        {
+  "name" : "reset_password_token",
+  "in" : "query",
+  "description" : "Valid reset_password_token",
+  "required" : true,
+  "type" : "string"
 }
         
       ],
       "responses": {
         "200": {
-  "description" : "A user",
-  "schema" : {
-    "$ref" : "#/definitions/User"
-  }
+  "description" : "Password has been changed"
 }
         ,
-        "default": {
-  "description" : "Unexpected error",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
+        "400": {
+  "description" : "Invalid password or/and invalid reset_password_token"
 }
         
         
       }
-    } ,
+    } 
     
-    "put": {
+  } ,
+  
+  "/users/password/edit": {
+    
+    "get": {
       "summary": "",
-      "description":"Updates a user.",
+      "description":"Returns valid reset_password_token",
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
-      "operationId": "usersUserIdPut",
+      "operationId": "usersPasswordEditGet",
       "parameters": [
         {
-  "in" : "body",
-  "name" : "body",
+  "name" : "reset_password_token",
+  "in" : "query",
+  "description" : "Valid reset_password_token from email.",
   "required" : true,
-  "schema" : {
-    "$ref" : "#/definitions/body_2"
-  }
-},
-        {
-  "name" : "user-id",
-  "in" : "path",
-  "description" : "User ID",
-  "required" : true,
-  "type" : "integer"
+  "type" : "string"
 }
         
       ],
       "responses": {
         "200": {
-  "description" : "A user",
-  "schema" : {
-    "$ref" : "#/definitions/User"
-  }
+  "description" : "Email with reset password instructions has been sent."
 }
         ,
-        "403": {
-  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        ,
-        "default": {
-  "description" : "Unexpected error",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
+        "400": {
+  "description" : "Token is expired or invalid"
 }
         
         
@@ -886,133 +1115,6 @@
         ,
         "404": {
   "description" : "User is not logged in",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        
-        
-      }
-    } 
-    
-  } ,
-  
-  "/users/guest/videos/seen/{video-id}": {
-    
-    "put": {
-      "summary": "",
-      "description":"Marks a video as seen for guest users",
-      "x-swagger-router-controller": "Users",
-      "tags": ["Users"],
-      "operationId": "usersGuestVideosSeenVideoIdPut",
-      "parameters": [
-        {
-  "name" : "video-id",
-  "in" : "path",
-  "description" : "Video ID",
-  "required" : true,
-  "type" : "integer"
-}
-        
-      ],
-      "responses": {
-        "204": {
-  "description" : "Video has been marked as seen."
-}
-        
-        
-      }
-    } 
-    
-  } ,
-  
-  "/users/me/videos/skipped": {
-    
-    "get": {
-      "summary": "",
-      "description":"Gets a list of videos skipped by the current user",
-      "x-swagger-router-controller": "Users",
-      "tags": ["Users"],
-      "operationId": "usersMeVideosSkippedGet",
-      "parameters": [
-        {
-  "name" : "created_before",
-  "in" : "query",
-  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
-  "required" : false,
-  "type" : "string",
-  "format" : "date-time"
-},
-        {
-  "name" : "created_after",
-  "in" : "query",
-  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
-  "required" : false,
-  "type" : "string",
-  "format" : "date-time"
-},
-        {
-  "name" : "count",
-  "in" : "query",
-  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
-  "required" : false,
-  "type" : "integer"
-}
-        
-      ],
-      "responses": {
-        "200": {
-  "description" : "Skipped videos",
-  "schema" : {
-    "$ref" : "#/definitions/inline_response_200_1"
-  }
-}
-        ,
-        "404": {
-  "description" : "User is not logged in",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        
-        
-      }
-    } 
-    
-  } ,
-  
-  "/users/me/videos/skipped/{video-id}": {
-    
-    "put": {
-      "summary": "",
-      "description":"Marks a video as skipped.",
-      "x-swagger-router-controller": "Users",
-      "tags": ["Users"],
-      "operationId": "usersMeVideosSkippedVideoIdPut",
-      "parameters": [
-        {
-  "name" : "video-id",
-  "in" : "path",
-  "description" : "Video ID",
-  "required" : true,
-  "type" : "integer"
-}
-        
-      ],
-      "responses": {
-        "204": {
-  "description" : "Video has been marked as skipped"
-}
-        ,
-        "403": {
-  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        ,
-        "default": {
-  "description" : "Unexpected error",
   "schema" : {
     "$ref" : "#/definitions/Error"
   }

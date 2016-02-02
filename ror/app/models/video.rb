@@ -26,6 +26,7 @@ class Video < ActiveRecord::Base
 
   validates :title, :description, :category_id, presence: true
   validates :featured_order, numericality: {greater_than_or_equal_to: 1}, allow_nil: true
+  validates_with VideoCustomValidator
 
   scope :trending, -> (){ where("visible = ? AND deleted_at IS NULL", true).order(view_count: :desc) }
   scope :desc_order, ->(){ order(created_at: :desc)}
@@ -51,7 +52,10 @@ class Video < ActiveRecord::Base
     if self.featured_order
       if f_o
         return if f_o == featured_order
-        conditions = {'>' => "start_fo_more_than_finish_fo", '<' => 'start_fo_less_than_finish_fo'}
+        conditions = {
+          '>' => "start_fo_more_than_finish_fo",
+          '<' => 'start_fo_less_than_finish_fo'
+        }
         conditions.keys.each { |key| execute_sql_for conditions[key] if eval("(@start_fo ||= self.featured_order) #{key} (@finish_fo ||= f_o)")}
       end
     else
@@ -121,8 +125,8 @@ class Video < ActiveRecord::Base
   end
 
   def update_self_params
-    update_column(:featured_order, @f_o || @new_featured_order)
-    update_column(:featured, true) if !featured
+      update_column(:featured_order, @f_o || @new_featured_order)
+      update_column(:featured, true) if !featured
   end
 
   def execute_sql_for(custom_case)

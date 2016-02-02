@@ -14,7 +14,7 @@ securityDefinitions:
     authorizationUrl: https://api.cizo.com/oauth/authorize
     scopes:
       admin: Grants read/write access to all resources
-      user: Grants read access to videos that marked as mature content is the user is 18 years old or older. Grants read/write access to user resource owned by that user. 
+      user: Grants read access to videos that marked as mature content is the user is 18 years old or older. Grants read/write access to user resource owned by that user.
 consumes:
   - application/json
 produces:
@@ -50,7 +50,7 @@ paths:
           format: date-time
         - name: visible
           in: query
-          description: Filter videos that are marked as not visible. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the "id" attribute of each video. 
+          description: Filter videos that are marked as not visible. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the "id" attribute of each video.
           required: false
           type: boolean
         - name: deleted
@@ -60,7 +60,7 @@ paths:
           type: boolean
         - name: count
           in: query
-          description: Specifies the number of videos to try and retrieve, up to a maximum of 200. 
+          description: Specifies the number of videos to try and retrieve, up to a maximum of 200.
           required: false
           type: integer
       responses:
@@ -800,7 +800,7 @@ paths:
           format: date-time
         - name: count
           in: query
-          description: Specifies the number of videos to try and retrieve up to a maximum of 200. 
+          description: Specifies the number of videos to try and retrieve up to a maximum of 200.
           required: false
           type: integer
       security:
@@ -865,7 +865,7 @@ paths:
           format: date-time
         - name: count
           in: query
-          description: Specifies the number of videos to try and retrieve up to a maximum of 200. 
+          description: Specifies the number of videos to try and retrieve up to a maximum of 200.
           required: false
           type: integer
       security:
@@ -905,7 +905,7 @@ paths:
           format: date-time
         - name: count
           in: query
-          description: Specifies the number of videos to try and retrieve up to a maximum of 200. 
+          description: Specifies the number of videos to try and retrieve up to a maximum of 200.
           required: false
           type: integer
       security:
@@ -970,7 +970,7 @@ paths:
           format: date-time
         - name: count
           in: query
-          description: Specifies the number of videos to try and retrieve up to a maximum of 200. 
+          description: Specifies the number of videos to try and retrieve up to a maximum of 200.
           required: false
           type: integer
       security:
@@ -1060,7 +1060,58 @@ paths:
         - Users
       responses:
         '204':
-          description: "Video has been marked as seen."          
+          description: "Video has been marked as seen."
+  /users/password_reset:
+    parameters:
+      - name: email
+        in: query
+        description: Valid email
+        type: string
+        required: true
+    post:
+      description: "Sends email with reset password instructions"
+      tags:
+        - Users
+      responses:
+        '200':
+          description: "Email with reset password instructions has been sent."
+  /users/password/edit:
+    parameters:
+      - name: reset_password_token
+        in: query
+        description: Valid reset_password_token from email.
+        type: string
+        required: true
+    get:
+      description: "Returns valid reset_password_token"
+      tags:
+        - Users
+      responses:
+        '200':
+          description: "Email with reset password instructions has been sent."
+        '400':
+          description: "Token is expired or invalid"
+  /users/password:
+    parameters:
+      - name: password
+        in: query
+        description: New valid password.
+        type: string
+        required: true
+      - name: reset_password_token
+        in: query
+        description: Valid reset_password_token
+        type: string
+        required: true
+    put:
+      description: "Update user's password"
+      tags:
+        - Users
+      responses:
+        '200':
+          description: "Password has been changed"
+        '400':
+          description: "Invalid password or/and invalid reset_password_token"         
 definitions:
   Video:
     type: object

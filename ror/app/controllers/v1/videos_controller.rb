@@ -42,7 +42,6 @@ class V1::VideosController < V1::ApiController
       arguments[:since_id] = params[:since_id].to_i
     end
 
-
     if params[:visible] == 'false'
       conditions.push('visible = :visible')
       arguments[:visible] = false
@@ -52,7 +51,6 @@ class V1::VideosController < V1::ApiController
     end
 
     conditions = conditions.join(" AND ")
-    puts "CONDITIONS: #{conditions}"
     @videos = Video.where(conditions, arguments).desc_order
     @videos = @videos.tagged_with(params[:tags]) unless params[:tags].blank?
 
@@ -142,7 +140,7 @@ class V1::VideosController < V1::ApiController
   private
 
   def videos_params
-    params.permit(:id, :title, :description, :mature_content, :visible, :category_id, :tag_list, :featured)
+    params.permit(:id, :title, :description, :mature_content, :visible, :category_id, :tag_list)
   end
 
   def set_video

@@ -1,17 +1,17 @@
 module Auth
   class PasswordsController < Devise::PasswordsController
+    before_action :assert_reset_token_passed, only: :update
+    
     def password_reset
       email = params[:email]
       unless email.blank?
         if valid_email?(email)
           @user = User.find_by_email(email)
         else
-          error_400 'Invalid email'
-          return
+          error_400 'Invalid email' and return
         end
       else
-        error_400 'Email can\'t be blank'
-        return
+        error_400 'Email can\'t be blank' and return
       end
       @user.send_reset_password_instructions if @user
       render nothing: true, status: 200
@@ -48,6 +48,12 @@ module Auth
     end
 
     private
+
+    def assert_reset_token_passed
+      if params[:reset_password_token].blank?
+          error_400 'reset_password_token is required' and return
+      end
+    end
 
     def valid_email?(email)
       /\A[^@\s]+@([^@\s]+\.)+[^@\W]+\z/ =~ email

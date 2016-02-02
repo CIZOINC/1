@@ -79,23 +79,17 @@ class V1::StreamsController < V1::ApiController
 
   def transcode_notification
     @stream = Stream.find_by(job_id: params[:jobId])
-
-    if @stream.nil?
-      nothing 404
-      return
-    end
-
+    nothing 404 and return if @stream.nil?
     @stream.update_attribute(:transcode_status, params[:state].downcase )
 
     #Give access to the key if job completed
     if @stream.transcode_status == 'completed'
-      client = Aws::S3::Client.new(region: region)
+      @client = Aws::S3::Client.new(region: region)
       if @stream.stream_type == 'mp4'
-        client.put_object_acl(acl:'public-read', bucket: bucket_name, key: params[:outputs][0][:key])
+        make_public(params[:outputs][0][:key])
       elsif @stream.stream_type == "hls"
-        bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
-        bucket.objects(prefix: params[:outputKeyPrefix]).each do |obj|
-          client.put_object_acl(acl:'public-read', bucket: bucket.name, key: obj.key)
+        set_bucket.objects(prefix: params[:outputKeyPrefix]).each do |obj|
+          make_public(obj.key)
         end
       end
     end
@@ -110,9 +104,12 @@ class V1::StreamsController < V1::ApiController
 
   private
 
+  def make_public(object_key)
+    @client.put_object_acl(acl:'public-read', bucket: bucket_name, key: object_key)
+  end
+
   def set_bucket
-    s3 = Aws::S3::Resource.new(region: region)
-    @bucket = s3.bucket(bucket_name)
+    @bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
   end
 
   def check_if_stream_meets_requirements?
@@ -189,10 +186,6 @@ class V1::StreamsController < V1::ApiController
     Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
   end
 
-
-
-
-
   def host
     'https://s3.amazonaws.com/'
   end
@@ -251,7 +244,6 @@ class V1::StreamsController < V1::ApiController
   def set_stream
     @stream = @video.streams.find_by(stream_type: params[:stream_type])
   end
-
 
   def check_for_requirement
     render json: { error: 'Forbidden video' }, status: 403 if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))

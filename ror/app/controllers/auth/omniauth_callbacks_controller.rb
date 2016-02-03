@@ -13,7 +13,7 @@ module Auth
         find_or_create_user_by(@response['email'], @response['birthday'])
       rescue OpenURI::HTTPError => e
         error = e.as_json(only: 'io')['io'][0].gsub("\\","")
-        render json: error
+        render json: error, status: 400
       end
     end
 
@@ -28,7 +28,7 @@ module Auth
     end
 
     def failure
-      render json: {errors: 'Login failed'}
+      render json: {errors: 'Login failed'}, status: 400
     end
 
     private

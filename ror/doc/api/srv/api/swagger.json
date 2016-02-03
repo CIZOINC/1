@@ -10,6 +10,130 @@
   "basePath": "/",
   "paths": {
   
+  "/users/auth/facebook": {
+    
+    "get": {
+      "summary": "",
+      "description":"Redirects to facebook page. Access to email and birthday is required. Then redirects back to application and sign in.",
+      "x-swagger-router-controller": "Authorization",
+      "tags": ["Authorization"],
+      "operationId": "usersAuthFacebookGet",
+      "responses": {
+        "200": {
+  "description" : "Returns access_token and refresh_token",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_2"
+  }
+}
+        ,
+        "400": {
+  "description" : "Login failed, user didn't want to give access."
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/oauth/facebook": {
+    
+    "get": {
+      "summary": "",
+      "description":"Log in with facebook",
+      "x-swagger-router-controller": "Authorization",
+      "tags": ["Authorization"],
+      "operationId": "oauthFacebookGet",
+      "parameters": [
+        {
+  "name" : "access_token",
+  "in" : "query",
+  "description" : "Must give access to user's email and birthday. Can be generated <a href = 'here'>https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Did%2Cname%2Cbirthday%2Cemail&version=v2.5<a>",
+  "required" : true,
+  "type" : "string"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "Returns access_token and refresh_token",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_2"
+  }
+}
+        ,
+        "400": {
+  "description" : "Bad request. This is returned if access_token is invalid or expired"
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/oauth/token": {
+    
+    "post": {
+      "summary": "",
+      "description":"description",
+      "x-swagger-router-controller": "Authorization",
+      "tags": ["Authorization"],
+      "operationId": "oauthTokenPost",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : false,
+  "schema" : {
+    "$ref" : "#/definitions/body"
+  }
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "Returns access_token and refresh_token",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_3"
+  }
+}
+        ,
+        "400": {
+  "description" : "Bad request. This is returned if grant_type is anything other than \"password\" or \"refresh_token\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "401": {
+  "description" : "Unauthorized. This is returned if wrong credentials or invalid refresh_token or invalid scope(anything but the \"admin\" or \"user\") have been sent",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "422": {
+  "description" : "Unprocessable untity. This is returned if username is blank",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  
   "/categories/{category-id}": {
     
     "get": {
@@ -419,7 +543,7 @@
         "200": {
   "description" : "A list of users",
   "schema" : {
-    "$ref" : "#/definitions/inline_response_200_2"
+    "$ref" : "#/definitions/inline_response_200_4"
   }
 }
         ,
@@ -453,7 +577,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body"
+    "$ref" : "#/definitions/body_1"
   }
 }
         
@@ -535,7 +659,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_2"
+    "$ref" : "#/definitions/body_3"
   }
 },
         {
@@ -854,7 +978,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_1"
+    "$ref" : "#/definitions/body_2"
   }
 }
         
@@ -1305,7 +1429,7 @@
         "200": {
   "description" : "S3 upload details",
   "schema" : {
-    "$ref" : "#/definitions/inline_response_200_3"
+    "$ref" : "#/definitions/inline_response_200_5"
   }
 }
         ,
@@ -1369,7 +1493,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_4"
+    "$ref" : "#/definitions/body_5"
   }
 },
         {
@@ -1507,7 +1631,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_3"
+    "$ref" : "#/definitions/body_4"
   }
 }
         
@@ -1881,18 +2005,90 @@
   }
 },"inline_response_200_2": {
   "properties" : {
+    "access_token" : {
+      "type" : "string",
+      "description" : "Uniq access_token"
+    },
+    "refresh_token" : {
+      "type" : "string",
+      "description" : "Uniq refresh_token, can be used when access_token expires."
+    },
+    "scope" : {
+      "type" : "string",
+      "description" : "Scope."
+    },
+    "created_at" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "expires_in" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Access_token expiration in seconds"
+    }
+  }
+},"body": {
+  "required" : [ "grant_type", "password", "username" ],
+  "properties" : {
+    "grant_type" : {
+      "type" : "string",
+      "format" : "string",
+      "description" : "grant type, can be password or refresh_token",
+      "enum" : [ "password", "refresh_token" ]
+    },
+    "username" : {
+      "type" : "string",
+      "description" : "User's email. Required if grant_type is password."
+    },
+    "password" : {
+      "type" : "string",
+      "description" : "User's password. Required if grant_type is password."
+    },
+    "scope" : {
+      "type" : "string",
+      "description" : "Authorization scope. Can be sent if grant_type is password.",
+      "enum" : [ "user", "admin" ]
+    },
+    "refresh_token" : {
+      "type" : "string",
+      "description" : "User's refresh token. Required if grant_type is refresh_token."
+    }
+  }
+},"inline_response_200_3": {
+  "properties" : {
+    "access_token" : {
+      "type" : "string",
+      "description" : "Uniq access_token"
+    },
+    "refresh_token" : {
+      "type" : "string",
+      "description" : "Uniq refresh_token, can be used when access_token expires."
+    },
+    "scope" : {
+      "type" : "string",
+      "description" : "Scope."
+    },
+    "created_at" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "token_type" : {
+      "type" : "string",
+      "description" : "Token type, Default - bearer"
+    },
+    "expires_in" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Access_token expiration in seconds"
+    }
+  }
+},"inline_response_200_4": {
+  "properties" : {
     "data" : {
       "type" : "array",
       "items" : {
         "$ref" : "#/definitions/User"
       }
-    }
-  }
-},"body": {
-  "type" : "object",
-  "properties" : {
-    "user" : {
-      "$ref" : "#/definitions/User"
     }
   }
 },"body_1": {
@@ -1910,7 +2106,14 @@
     }
   }
 },"body_3": {
-  "required" : [ "category_id", "description", "mature_content", "title" ],
+  "type" : "object",
+  "properties" : {
+    "user" : {
+      "$ref" : "#/definitions/User"
+    }
+  }
+},"body_4": {
+  "required" : [ "category_id", "description", "title" ],
   "properties" : {
     "title" : {
       "type" : "string",
@@ -1976,14 +2179,14 @@
       "description" : "Title of video."
     }
   }
-},"body_4": {
+},"body_5": {
   "properties" : {
     "key" : {
       "type" : "string",
       "description" : "S3 bucket key for raw video."
     }
   }
-},"inline_response_200_3": {
+},"inline_response_200_5": {
   "properties" : {
     "aws_access_key_id" : {
       "type" : "string",

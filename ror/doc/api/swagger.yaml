@@ -107,11 +107,11 @@ paths:
       tags:
         - Authorization
       parameters:
-        - name:
-          access_token: string
+        - name: access_token
+          type: string
           in: query
           required: true
-          description: Must give access to user's email and birthday. Can be generated <a href = 'here'>https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Did%2Cname%2Cbirthday%2Cemail&version=v2.5<a>
+          description: "Must give access to user's email and birthday. Can be generated <a href = 'here'>https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Did%2Cname%2Cbirthday%2Cemail&version=v2.5<a>"
       responses:
         '200':
           description: Returns access_token and refresh_token
@@ -334,7 +334,6 @@ paths:
         '200':
           description: A video
           schema:
-            type: object
             $ref: '#/definitions/Video'
         '403':
           description: "Forbidden. This is returned if the client is unauthenticated or has a 'user' scope and the video's visible property is not set to true"
@@ -358,7 +357,6 @@ paths:
         '200':
           description: A video
           schema:
-            type: object
             $ref: '#/definitions/Video'
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
@@ -683,7 +681,6 @@ paths:
         '200':
           description: A category
           schema:
-            type: object
             $ref: '#/definitions/Category'
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
@@ -712,7 +709,6 @@ paths:
         '200':
           description: A category
           schema:
-            type: object
             $ref: '#/definitions/Category'
         default:
           description: Unexpected error
@@ -735,7 +731,6 @@ paths:
         '200':
           description: A category
           schema:
-            type: object
             $ref: '#/definitions/Category'
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
@@ -807,13 +802,11 @@ paths:
             type: object
             properties:
               user:
-                type: object
                 $ref: '#/definitions/User'
       responses:
         '200':
           description: A user
           schema:
-            type: object
             $ref: '#/definitions/User'
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
@@ -838,7 +831,6 @@ paths:
         '200':
           description: A user
           schema:
-            type: object
             $ref: '#/definitions/User'
         default:
           description: Unexpected error
@@ -856,13 +848,11 @@ paths:
             type: object
             properties:
               user:
-                type: object
                 $ref: '#/definitions/User'
       responses:
         '200':
           description: A user
           schema:
-            type: object
             $ref: '#/definitions/User'
         '403':
           description: 'Forbidden. This is returned if the oauth2 scope is anything other than "admin"'
@@ -884,7 +874,6 @@ paths:
         '200':
           description: The user object
           schema:
-            type: object
             $ref: '#/definitions/User'
         '404':
           description: User is not logged in
@@ -902,13 +891,11 @@ paths:
             type: object
             properties:
               user:
-                type: object
                 $ref: '#/definitions/User'
       responses:
         '200':
           description: A user
           schema:
-            type: object
             $ref: '#/definitions/User'
         '404':
           description: User is not logged in

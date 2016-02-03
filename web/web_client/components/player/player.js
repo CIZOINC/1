@@ -53,13 +53,12 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             togglePlayPause: togglePlayPause,
             imageHover: imageHover,
             imageBlur: imageBlur,
-            mouseMoveOnVideo: mouseMoveOnVideo,
 
             toggleFullScreen: toggleFullScreen,
             toggleControlsVisibility: toggleControlsVisibility,
             toggleDescription: toggleDescription,
             setIntermission: setIntermission,
-            pauseIntermissionFinish: pauseIntermissionFinish,
+            pauseIntermissionToggle: pauseIntermissionToggle,
             nextVideo: getNextVideo(),
             playNextVideo: playNextVideo,
             getNextVideo: getNextVideo,
@@ -84,10 +83,14 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             if (scope.video.isFullscreen) {
                 toggleFullScreen(true)
                     .then(() => {
-                        scope.setIntermission();
+                        if (scope.nextVideo) {
+                            scope.setIntermission();
+                        }
                     });
             } else {
-                scope.setIntermission();
+                if (scope.nextVideo) {
+                    scope.setIntermission();
+                }
             }
         });
 
@@ -169,12 +172,32 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             }, 50);
         }
 
-        function pauseIntermissionFinish(event) {
+        function pauseIntermissionToggle(event, isForced) {
             if (event) {
                 event.stopPropagation();
             }
-            if (scope.intermissionStopTimer) {
-                $interval.cancel(scope.intermissionStopTimer);
+
+            if (isForced) {
+                scope.isIntermissionPaused = false;
+                if (scope.intermissionStopTimer) {
+                    $interval.cancel(scope.intermissionStopTimer);
+                }
+            }
+
+            if (scope.isIntermissionPaused) {
+                scope.intermissionStopTimer = $interval(() => {
+                    scope.intermissionCountdownValue++;
+                    if (scope.intermissionCountdownValue > scope.intermissionCountdownMax) {
+                        $interval.cancel(scope.intermissionStopTimer);
+                        scope.playNextVideo();
+                    }
+                }, 50);
+                scope.isIntermissionPaused = false;
+            } else {
+                if (scope.intermissionStopTimer) {
+                    $interval.cancel(scope.intermissionStopTimer);
+                }
+                scope.isIntermissionPaused = true;
             }
         }
 
@@ -200,7 +223,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             if (event) {
                 event.stopPropagation();
             }
-            pauseIntermissionFinish();
+            pauseIntermissionToggle(undefined, true);
             let nextVideo = getNextVideo();
             if (nextVideo) {
                 scope.screen.pause();
@@ -224,7 +247,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             if (event) {
                 event.stopPropagation();
             }
-            pauseIntermissionFinish();
+            pauseIntermissionToggle(undefined, true);
             let prevVideo = getPreviousVideo();
             if (prevVideo) {
                 scope.screen.pause();
@@ -274,6 +297,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
         }
 
         function imageHover() {
+            toggleControlsVisibility(false);
             scope.topElementsRightSide.classList.remove('hidden-layer');
             if (getElementFullscreenState() || scope.isIntermissionState) {
                 scope.buttonLayer.classList.remove('player_buttons-layer--hover');
@@ -284,22 +308,9 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
         }
 
         function imageBlur() {
+            toggleControlsVisibility(true);
             scope.topElementsRightSide.classList.add('hidden-layer');
             scope.buttonLayer.classList.remove('player_buttons-layer--hover');
-        }
-
-        function mouseMoveOnVideo() {
-            const waitTime = 4000;
-            if (scope.fadeControlsTimer) {
-                $timeout.cancel(scope.fadeControlsTimer);
-            }
-            if (!scope.video.isWatching || scope.isIntermissionState) {
-                return;
-            }
-
-            scope.fadeControlsTimer = $timeout(() => {
-                toggleControlsVisibility(true);
-            }, waitTime);
         }
 
         function getElementFullscreenState() {
@@ -307,9 +318,17 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             !document.mozFullScreenElement && document.webkitFullscreenElement !== null && !document.msFullscreenElement)
         }
 
-        function toggleFullScreen(skipChangeState) {
+        function toggleFullScreen(event) {
+            if (event) {
+                event.stopPropagation();
+            }
             return $q((resolve) => {
                 let fullscreenState = getElementFullscreenState();
+
+                if (!scope.video.isWatching) {
+                    return;
+                }
+
                 if (fullscreenState) {
                     setFullscreenState(false);
                     if (document.exitFullscreen) {
@@ -323,9 +342,6 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
                     }
                     else if ($document.msExitFullscreen) {
                         document.msExitFullscreen();
-                    }
-                    if (!skipChangeState) {
-                        scope.needFullscreen = false;
                     }
                     resolve();
                 }
@@ -343,9 +359,6 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
                     else if (scope.screen.msRequestFullscreen) {
                         scope.screen.msRequestFullscreen();
                     }
-                    if (!skipChangeState) {
-                        scope.needFullscreen = true;
-                    }
                     resolve();
                 }
             });
@@ -355,7 +368,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             if (scope.isIntermissionState) {
                 return;
             }
-            let showControls = hideControls ? !hideControls : scope.controlsOverlayLayer.classList.contains('hidden-layer');
+            let showControls = typeof hideControls !== 'undefined' ? !hideControls : scope.controlsOverlayLayer.classList.contains('hidden-layer');
 
             $timeout(function () {
                 scope.$broadcast('rzSliderForceRender');
@@ -413,8 +426,12 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             if (event) {
                 event.stopPropagation();
             }
-            scope.isIntermissionState = false;
-            pauseIntermissionFinish();
+            if (scope.isIntermissionState) {
+                scope.isIntermissionState = false;
+                pauseIntermissionToggle(undefined, true);
+                playNextVideo();
+                return;
+            }
             if (!scope.video.isWatching) {
                 updatePlayerItems();
             }

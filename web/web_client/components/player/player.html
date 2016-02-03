@@ -45,8 +45,7 @@
             <div class="player_buttons-layer"
                  ng-mouseenter="imageHover()"
                  ng-mouseleave="imageBlur()"
-                 ng-click="toggleControlsVisibility()"
-                 ng-mousemove="mouseMoveOnVideo()"
+                 ng-click="togglePlayPause()"
                  ng-dblclick="toggleFullScreen()"
                     >
                 <!-- top buttons-->
@@ -110,7 +109,7 @@
 
                         </div>
                         <div class="player_buttons-layer_center-elements_group_bottom hidden-layer">
-                            <span class="player_buttons-layer_center-elements_pause-intermission" ng-click="pauseIntermissionFinish($event)">Pause</span>
+                            <span class="player_buttons-layer_center-elements_pause-intermission" ng-click="pauseIntermissionToggle($event)">{{isIntermissionPaused ? 'Continue' : 'Pause'}}</span>
                         </div>
                     </div>
 
@@ -152,8 +151,8 @@
 
                         <div class="player_buttons-layer_bottom-elements_controls_duration">{{duration}}</div>
 
-                        <span class="icon-expand player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen()"></span>
-                        <span class="icon-collapse player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen()"></span>
+                        <span class="icon-expand player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen($event)"></span>
+                        <span class="icon-collapse player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen($event)"></span>
                     </div>
                 </div>
             </div>

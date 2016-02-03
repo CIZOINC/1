@@ -39,14 +39,13 @@
             <div class="featured-player_buttons-layer"
                  ng-mouseenter="imageHover()"
                  ng-mouseleave="imageBlur()"
-                 ng-click="toggleControlsVisibility()"
-                 ng-mousemove="mouseMoveOnVideo()"
+                 ng-click="togglePlayPause()"
                  ng-dblclick="toggleFullScreen()"
                     >
                 <!-- top buttons-->
                 <div class="featured-player_buttons-layer_top-elements">
                     <div>
-                        <span class="icon-close featured-player_buttons-layer_top-elements_close-button"></span>
+                        <div class="icon-close featured-player_buttons-layer_top-elements_close-button" ng-click="closeFeatured($event)"></div>
                     </div>
 
 
@@ -87,8 +86,8 @@
                                       animation-delay="0">
                                     <svg>
                                         <linearGradient id="progress-gradient" x1="0" x2="0" y1="0" y2="1">
-                                            <stop offset="5%"  stop-color="#24abbc"/>
-                                            <stop offset="95%" stop-color="#3bfcec"/>
+                                            <stop offset="5%"  stop-color="#24abbc"></stop>
+                                            <stop offset="95%" stop-color="#3bfcec"></stop>
                                         </linearGradient>
                                     </svg>
                                 </div>
@@ -104,7 +103,7 @@
 
                         </div>
                         <div class="featured-player_buttons-layer_center-elements_group_bottom hidden-layer">
-                            <span class="featured-player_buttons-layer_center-elements_pause-intermission" ng-click="pauseIntermissionFinish($event)">Pause</span>
+                            <span class="featured-player_buttons-layer_center-elements_pause-intermission" ng-click="pauseIntermissionToggle($event)">{{isIntermissionPaused ? 'Continue' : 'Pause'}}</span>
                         </div>
                     </div>
 
@@ -147,8 +146,8 @@
 
                         <div class="featured-player_buttons-layer_bottom-elements_controls_duration">{{duration}}</div>
 
-                        <span class="icon-expand featured-player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen()"></span>
-                        <span class="icon-collapse featured-player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen()"></span>
+                        <span class="icon-expand featured-player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen($event)"></span>
+                        <span class="icon-collapse featured-player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen($event)"></span>
                     </div>
                 </div>
             </div>

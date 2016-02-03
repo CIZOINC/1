@@ -19,11 +19,29 @@
 }
 
 .navbar {
+  margin-bottom: 0;
   &--menu-visible {
     z-index: 1500;
     top: 0;
     position: fixed;
     width: 100%;
+
+  }
+}
+
+.featured {
+  white-space: nowrap;
+  overflow-x: scroll;
+
+  &_hero-image {
+    margin: 0 5px;
+    display: inline-block;
+    width: 600px;
+    height: 300px;
+    background-size: cover;
+  }
+  &::-webkit-scrollbar {
+    width: 3px;
   }
 }
 
@@ -161,4 +179,8 @@
 
 .player-list {
   margin-bottom: 40px;
+}
+
+.hidden-layer {
+  display: none;
 }

@@ -4,7 +4,7 @@ angular
     .controller('MainCtrl', MainCtrl);
 
 /* @ngInject */
-function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
+function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout) {
     "use strict";
 
     const selectedMenuItemCSSClass = 'categories-panel_item categories-panel_item--selected';
@@ -12,7 +12,9 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
 
     $scope = angular.extend($scope, {
         filteredVideoList: [],
+        featuredList: [],
         videosList: [],
+        isFeaturedScrolled: false,
 
         categories: {
             0: {
@@ -47,14 +49,19 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
             category_id: ''
         },
         filterByCategory: filterByCategory,
-        toggleMenu: toggleMenu
+        toggleMenu: toggleMenu,
+
+        featuredMouseDown: featuredMouseDown,
+        featuredMouseUp: featuredMouseUp,
+        featuredMouseMove: featuredMouseMove,
+        featuredPlay: featuredPlay
     });
 
     getCategories()
         .then(getVideos)
         .then(updateVideos);
 
-
+    getFeaturedList();
 
     function filterByCategory(id) {
         $scope.filterCategory.category_id = id;
@@ -98,6 +105,50 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
         }
     }
 
+    function featuredMouseDown(event) {
+        $scope.isFeaturedScrolled = true;
+        $scope.featuredScrollLeft = event.pageX;
+        console.log('mouse down');
+    }
+
+    function featuredMouseUp() {
+        $scope.isFeaturedScrolled = false;
+        console.log('mouse up');
+    }
+
+    function featuredMouseMove(event) {
+        if (!$scope.isFeaturedScrolled) {
+            return;
+        }
+        let featured = document.querySelectorAll('.featured')[0];
+        featured.scrollLeft = featured.scrollLeft - (event.pageX - $scope.featuredScrollLeft) / 20;
+    }
+
+    function featuredPlay(event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        else {
+            return;
+        }
+        let featureId = parseInt(event.target.id.replace('featured-', ''));
+        let featuredIndex = _.findIndex($scope.featuredList, video => video.id === featureId);
+
+        let firstVideo = angular.extend({}, $scope.featuredList[featuredIndex]);
+        $scope.featuredList.splice(featuredIndex, 1);
+        $scope.featuredList.unshift(firstVideo);
+        let featured = document.querySelectorAll('.featured')[0];
+
+        let featuredPlayer = document.querySelectorAll('featured-player')[0];
+        featuredPlayer.classList.remove('hidden-layer');
+        featured.scrollLeft = 0;
+
+        $timeout(function () {
+            $scope.featuredItem = $scope.featuredList[0];
+        });
+    }
+
+
     function getCategories() {
         return $q( (resolve) => {
             categoriesServ.getCategoriesList($scope)
@@ -132,7 +183,16 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document) {
         });
     }
 
-
+    function getFeaturedList() {
+        return $q( (resolve) => {
+            videoServ.getFeaturedList($scope)
+                .then( (response) => {
+                    $scope.featuredList = response.data.data;
+                    $scope.featuredItem = $scope.featuredList[0];
+                    resolve();
+                });
+        });
+    }
 
 }
-MainCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', '$document'];
+MainCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', '$document', '$timeout'];

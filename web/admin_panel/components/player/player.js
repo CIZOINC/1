@@ -46,7 +46,7 @@ function player($log, moment) {
 
     return {
         restrict: 'E',
-        templateUrl: 'components/player/player.html',
+        templateUrl: 'components/player/featuredPlayer.html',
         link: linkFn,
         transclude: true,
         scope: {

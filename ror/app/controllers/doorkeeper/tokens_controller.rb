@@ -2,6 +2,8 @@ module Doorkeeper
   class TokensController < Doorkeeper::ApplicationsController
     skip_before_action :verify_authenticity_token
     protect_from_forgery with: :null_session
+    before_action :check_for_grant_type, only: :create
+    before_action :check_for_username, only: :create, if: :grant_type_password?
 
     def create
       response = authorize_response
@@ -11,8 +13,7 @@ module Doorkeeper
       username = params[:username]
       grant_type = params[:grant_type]
       scope = params[:scope]
-      puts scope
-      if grant_type == 'password'
+      if grant_type_password?
         if !scope || scope == 'user' || scope.blank?
           user = User.find_by_email(username)
           destroy_useless_tokens(user) if user
@@ -24,7 +25,7 @@ module Doorkeeper
             destroy_useless_tokens(user) if user
           end
         end
-      elsif grant_type == 'refresh_token'
+      elsif grant_type_refresh_token?
         previous_refresh_token = params[:refresh_token]
         if token = Doorkeeper::AccessToken.find_by_refresh_token(previous_refresh_token)
           user = User.find_by(id: token.resource_owner_id)
@@ -56,6 +57,18 @@ module Doorkeeper
     end
 
     private
+
+    GRANT_TYPES = %w(password refresh_token)
+
+    GRANT_TYPES.each { |method| define_method("grant_type_#{method}?") { params[:grant_type] == method }}
+
+    def check_for_grant_type
+      render json: {error: "Invalid grant_type"}, status: 400 and return unless params[:grant_type].in?(GRANT_TYPES)
+    end
+
+    def check_for_username
+      render json: {error: "Username is required"}, status: 422 and return if params[:username].blank?
+    end
 
     def revoke_token(token)
       token = AccessToken.by_token(token) || AccessToken.by_refresh_token(token)

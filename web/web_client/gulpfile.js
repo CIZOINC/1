@@ -12,6 +12,7 @@ var babel = require('gulp-babel');
 var rimraf = require('gulp-rimraf');
 var rename = require('gulp-rename');
 var replace = require('gulp-replace');
+var htmlmin = require('gulp-html-minifier');
 var runSequence = require('run-sequence');
 
 var thirdPartyJS = [

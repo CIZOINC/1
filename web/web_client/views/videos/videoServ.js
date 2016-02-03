@@ -14,6 +14,8 @@ function videoServ($http, $q, $log) {
         setVideo: setVideo,
         deleteVideo: deleteVideo,
 
+        getFeaturedList: getFeaturedList,
+
         uploadHeroImage: uploadHeroImage,
 
         sendStreams: sendStreams
@@ -111,6 +113,25 @@ function videoServ($http, $q, $log) {
 
             function error(response) {
                 $log.info(`video data deleting error with status ${response.status}`);
+                reject(response);
+            }
+        });
+    }
+
+    function getFeaturedList(scope) {
+        return $q( (resolve, reject) => {
+            $http({
+                method: 'GET',
+                url: `${scope.hostName}/featured`
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('video list obtained');
+                resolve(response);
+            }
+
+            function error(response) {
+                $log.info(`video list obtaining error with status ${response.status}`);
                 reject(response);
             }
         });

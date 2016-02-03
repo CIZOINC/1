@@ -11,7 +11,7 @@ securityDefinitions:
   oauth:
     type: oauth2
     flow: implicit
-    authorizationUrl: https://api.cizo.com/oauth/authorize
+    authorizationUrl: https://api.cizo.com/oauth/token
     scopes:
       admin: Grants read/write access to all resources
       user: Grants read access to videos that marked as mature content is the user is 18 years old or older. Grants read/write access to user resource owned by that user.
@@ -20,6 +20,163 @@ consumes:
 produces:
   - application/json
 paths:
+  /oauth/token:
+    post:
+      description: "description"
+      tags:
+        - Authorization
+      parameters:
+        - name: body
+          in: body
+          schema:
+            required:
+              - grant_type
+              - username
+              - password
+            properties:
+              grant_type:
+                type: string
+                description: grant type, can be password or refresh_token
+                format: string
+                enum: [password, refresh_token]
+              username:
+                type: string
+                description: User's email. Required if grant_type is password.
+              password:
+                type: string
+                description: User's password. Required if grant_type is password.
+              scope:
+                description: Authorization scope. Can be sent if grant_type is password.
+                type: string
+                enum: [ user, admin ]
+              refresh_token:
+                description: User's refresh token. Required if grant_type is refresh_token.
+                type: string
+      responses:
+        '200':
+          description: Returns access_token and refresh_token
+          schema:
+            type: object
+            required:
+              - access_token
+              - token_type
+              - expires_in
+              - refresh_token
+              - scope
+              - created_at
+            properties:
+              access_token:
+                type: string
+                description: Uniq access_token
+              token_type:
+                type: string
+                description: Token type, Default - bearer
+              expires_in:
+                type: integer
+                format: int32
+                description: Access_token expiration in seconds
+              refresh_token:
+                type: string
+                description: Uniq refresh_token, can be used when access_token expires.
+              scope:
+                type: string
+                description: Scope.
+              created_at:
+                type: string
+                format: date-time
+
+        '400':
+          description: 'Bad request. This is returned if grant_type is anything other than "password" or "refresh_token"'
+          schema:
+            $ref: '#/definitions/Error'
+        '422':
+          description: 'Unprocessable untity. This is returned if username is blank'
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: 'Unauthorized. This is returned if wrong credentials or invalid refresh_token or invalid scope(anything but the "admin" or "user") have been sent'
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /oauth/facebook:
+    get:
+      description: "Log in with facebook"
+      tags:
+        - Authorization
+      parameters:
+        - name:
+          access_token: string
+          in: query
+          required: true
+          description: Must give access to user's email and birthday. Can be generated <a href = 'here'>https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Did%2Cname%2Cbirthday%2Cemail&version=v2.5<a>
+      responses:
+        '200':
+          description: Returns access_token and refresh_token
+          schema:
+            type: object
+            required:
+              - access_token
+              - expires_in
+              - refresh_token
+              - scope
+              - created_at
+            properties:
+              access_token:
+                type: string
+                description: Uniq access_token
+              expires_in:
+                type: integer
+                format: int32
+                description: Access_token expiration in seconds
+              refresh_token:
+                type: string
+                description: Uniq refresh_token, can be used when access_token expires.
+              scope:
+                type: string
+                description: Scope.
+              created_at:
+                type: string
+                format: date-time
+        '400':
+          description: 'Bad request. This is returned if access_token is invalid or expired'
+  /users/auth/facebook:
+    get:
+      description: Redirects to facebook page. Access to email and birthday is required. Then redirects back to application and sign in.
+      tags:
+        - Authorization
+      responses:
+        '200':
+          description: Returns access_token and refresh_token
+          schema:
+            type: object
+            required:
+              - access_token
+              - expires_in
+              - refresh_token
+              - scope
+              - created_at
+            properties:
+              access_token:
+                type: string
+                description: Uniq access_token
+              expires_in:
+                type: integer
+                format: int32
+                description: Access_token expiration in seconds
+              refresh_token:
+                type: string
+                description: Uniq refresh_token, can be used when access_token expires.
+              scope:
+                type: string
+                description: Scope.
+              created_at:
+                type: string
+                format: date-time
+        '400':
+          description: Login failed, user didn't want to give access.                
   /videos:
     get:
       description: "Returns a list of videos ordered by created_at. At most 200 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'visible' set to true. <b>NOTE</b>  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null."
@@ -93,7 +250,6 @@ paths:
               - title
               - category_id
               - description
-              - mature_content
             properties:
               title:
                 type: string
@@ -1111,7 +1267,7 @@ paths:
         '200':
           description: "Password has been changed"
         '400':
-          description: "Invalid password or/and invalid reset_password_token"         
+          description: "Invalid password or/and invalid reset_password_token"
 definitions:
   Video:
     type: object

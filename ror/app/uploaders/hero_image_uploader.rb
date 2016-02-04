@@ -14,12 +14,12 @@ class HeroImageUploader < CarrierWave::Uploader::Base
     end
   end
 
-  version :large do
-    process resize_to_fill: [1000, 1000]
+  version :large_banner do
+    process resize_to_fill: [1000, 476]
   end
 
-  version :medium do
-    process resize_to_fill: [500, 500]
+  version :medium_banner do
+    process resize_to_fill: [500, 238]
   end
 
   version :thumb do

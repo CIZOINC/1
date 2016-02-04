@@ -42,10 +42,8 @@ class V1::UsersController < V1::ApiController
   end
 
   def destroy_self_account
-    if @current_user.destroy
-      Doorkeeper::AccessToken.where(resource_owner_id: @current_user.id).destroy_all
-      head :no_content
-    end
+    @current_user.destroy
+    head :no_content
   end
 
   %w(like dislike skip).each do |method|

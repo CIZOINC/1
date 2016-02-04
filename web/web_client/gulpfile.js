@@ -153,7 +153,7 @@ gulp.task('copy_dependencies', function () {
 
 gulp.task('copy_index_template', function () {
     "use strict";
-    let postfix = Math.round(Math.random() * 100000000) ;
+    var postfix = Math.round(Math.random() * 100000000) ;
 
     return gulp.src(['./index_template.html'])
         .pipe(rename('index.html'))

@@ -5,7 +5,7 @@ angular
 
 
 /* @ngInject */
-function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
+function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, storageServ) {
     "use strict";
 
     function linkFn(scope, element, attrs) {
@@ -77,6 +77,8 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             scope.sliderModel.value = scope.screen.currentTime;
             scope.sliderModel.options.ceil = scope.screen.duration;
             scope.$apply();
+
+            checkForSeenStatus(scope.screen.currentTime, scope.screen.duration);
         });
 
         scope.screenList.bind('ended', () => {
@@ -139,6 +141,18 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
                     }
                 }
             }
+        }
+
+        function checkForSeenStatus(currentTime, duration) {
+            if (!scope.video.isSeen) {
+                const seenTriggerTime = 10;
+                if (currentTime >= duration - seenTriggerTime) {
+                    scope.video.isSeen = true;
+                    storageServ.setItem('seen', )
+                }
+            }
+
+
         }
 
         function updateNextVideo() {
@@ -558,8 +572,8 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
         scope: {
             video: '=',
             filteredList: '=',
-            needFullscreen: '='
+            storage: '='
         }
     }
 }
-player.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval'];
+player.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'storageServ'];

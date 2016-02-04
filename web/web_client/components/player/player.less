@@ -19,6 +19,10 @@
     overflow: hidden;
     background-size: cover;
 
+    &--replay {
+      background-color: rgba(125,125,125,.8);
+    }
+
     &:before {
       display: block;
       content: '';
@@ -163,6 +167,10 @@
       background-color: rgba(0,0,0,.8);
     }
 
+    &--replay {
+      background-color: rgba(28,31,36,.8);
+    }
+
     &--hover {
       background: linear-gradient(to bottom, rgba(0,0,0,.53) 0%, rgba(2,2,2,0) 30%, rgba(2,2,2,0) 70%, rgba(0,0,0,.53) 100%);
     }
@@ -293,7 +301,7 @@
         }
       }
 
-      &_play-button {
+      .control-buttons-mixin {
         display: flex;
         width: 120px;
         height: 120px;
@@ -305,28 +313,31 @@
         user-select: none;
         cursor: pointer;
         cursor: hand;
+      }
 
+      .control-buttons-image-mixin {
+        width: 60%;
+        height: 60%;
+      }
+
+      &_play-button {
+        .control-buttons-mixin;
         img {
-          width: 60%;
-          height: 60%;
+          .control-buttons-image-mixin;
         }
       }
 
       &_pause-button {
-        display: flex;
-        width: 120px;
-        height: 120px;
-        justify-content: center;
-        align-items:center;
-        align-content: flex-start;
-        margin-top: 15%;
-        user-select: none;
-        cursor: pointer;
-        cursor: hand;
-
+        .control-buttons-mixin;
         img {
-          width: 60%;
-          height: 60%;
+          .control-buttons-image-mixin;
+        }
+      }
+
+      &_replay-button {
+        .control-buttons-mixin;
+        img {
+          .control-buttons-image-mixin;
         }
       }
 

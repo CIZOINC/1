@@ -6,11 +6,11 @@ class V1::UsersController < V1::ApiController
   before_action only: [:index, :update, :show] do
     doorkeeper_authorize! :admin
   end
+
   before_action :set_params_to_query, only: [:liked, :skipped, :seen, :unseen]
   before_action :set_user, only: [:show, :update]
   before_action :set_video, only: [:like_video, :dislike_video, :mark_video_as_seen, :skip_video, :guest_skip_video, :guest_mark_video_as_seen]
   before_action :user_age_meets_requirement, only: [:liked, :seen, :skipped, :unseen]
-
 
   def index
     @users = User.all

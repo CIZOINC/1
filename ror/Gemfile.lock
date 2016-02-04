@@ -303,6 +303,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
+    rmagick (2.15.4)
     ruby_parser (3.7.1)
       sexp_processor (~> 4.1)
     sass (3.4.20)
@@ -385,6 +386,7 @@ DEPENDENCIES
   rack-cors
   rails (= 4.2.5)
   rest-client (~> 1.8)
+  rmagick (~> 2.15, >= 2.15.4)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   spring

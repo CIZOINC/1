@@ -108,10 +108,6 @@ class V1::StreamsController < V1::ApiController
     @client.put_object_acl(acl:'public-read', bucket: bucket_name, key: object_key)
   end
 
-  def set_bucket
-    @bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
-  end
-
   def check_if_stream_meets_requirements?
     unless stream_meets_requirements?
       render json: { error: 'Transcode in progess' }, status: 409
@@ -225,10 +221,6 @@ class V1::StreamsController < V1::ApiController
 
   def segment_duration
     '10'
-  end
-
-  def stream_folder
-    Rails.env.production? ? "production/stream/#{@video.id}/" : "staging/stream/#{@video.id}/"
   end
 
   def link(stream)

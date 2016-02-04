@@ -5,6 +5,8 @@ class V1::VideosController < V1::ApiController
   before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted,:hero_image,:add_featured, :remove_featured]
   before_action :check_if_video_deleted, only: [:show, :update, :destroy, :hero_image, :add_featured, :remove_featured]
   before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
+  before_action :check_for_file, only: [:hero_image]
+  before_action :set_bucket, only: [:destroy]
 
   def index
     conditions = []
@@ -70,14 +72,10 @@ class V1::VideosController < V1::ApiController
   end
 
   def destroy
-    s3 = Aws::S3::Resource.new(region: region)
-    bucket = s3.bucket(bucket_name)
-    stream_folder = Rails.env.production? ? "production/stream/#{@video.id}" : "staging/stream/#{@video.id}"
-    hero_image = Rails.env.production? ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
     if !@video.deleted_at && @video.update_column(:deleted_at, Time.now)
       @video.set_param_to_nil(:featured, :featured_order)
-      bucket.objects(prefix: stream_folder).batch_delete!
-      bucket.objects(prefix: hero_image).batch_delete! if hero_image
+      @bucket.objects(prefix: stream_folder).batch_delete!
+      @bucket.objects(prefix: hero_image_path).batch_delete! if hero_image_path
     end
     head :no_content
   end
@@ -87,15 +85,13 @@ class V1::VideosController < V1::ApiController
     if @video.save
       render :show, status: :created, location: @video
     else
-      render json: @video.errors, status: :unprocessable_entity
+      render json: @video.errors, status: 422
     end
   end
 
   def hero_image
-    @video.hero_image = params[:file]
-    @video.save(validate: false)
-    @video.update_column(:hero_image_link, @video.hero_image.url)
-    nothing 202
+    @video.update(hero_image: params[:file])
+    @video.update(hero_image_link: @video.hero_image.url) ? nothing(202) : (render json: {errors: @video.errors}, status: 422)
   end
 
   def trending
@@ -146,6 +142,14 @@ class V1::VideosController < V1::ApiController
   def set_video
     @video = Video.find(params[:id]) if params[:id]
     @video = Video.find(params[:video_id]) if params[:video_id]
+  end
+
+  def check_for_file
+    render json: {error: 'File is required'}, status: 400 and return unless params[:file]
+  end
+
+  def hero_image_path
+    Rails.env.production? ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
   end
 
 end

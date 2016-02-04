@@ -22,8 +22,6 @@ module Auth
       raw_info = auth_hash['extra']['raw_info']
       email = raw_info['email']
       birthday = format_date(raw_info['birthday'])
-      # provider = auth_hash['provider']
-      # uid = auth_hash.uid
       find_or_create_user_by(email, birthday)
     end
 

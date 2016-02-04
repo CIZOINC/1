@@ -1,8 +1,14 @@
 class V1::VideosController < V1::ApiController
+  before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted,:hero_image,:add_featured, :remove_featured]
+
   before_action only: [:create, :update, :hero_image, :destroy,:add_featured, :remove_featured] do
     doorkeeper_authorize! :admin
   end
-  before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted,:hero_image,:add_featured, :remove_featured]
+  
+  before_action only: [:show], if: :video_is_invisible? do
+    doorkeeper_authorize! :admin
+  end
+
   before_action :check_if_video_deleted, only: [:show, :update, :destroy, :hero_image, :add_featured, :remove_featured]
   before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
   before_action :check_for_file, only: [:hero_image]
@@ -146,6 +152,10 @@ class V1::VideosController < V1::ApiController
 
   def check_for_file
     render json: {error: 'File is required'}, status: 400 and return unless params[:file]
+  end
+
+  def video_is_invisible?
+    !@video.visible?
   end
 
   def hero_image_path

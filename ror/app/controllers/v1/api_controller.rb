@@ -38,4 +38,12 @@ class V1::ApiController < ApplicationController
     "us-east-1"
   end
 
+  def stream_folder
+    Rails.env.production? ? "production/stream/#{@video.id}/" : "staging/stream/#{@video.id}/"
+  end
+
+  def set_bucket
+    @bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
+  end
+
 end

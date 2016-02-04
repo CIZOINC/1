@@ -49,6 +49,7 @@ gem 'aws-sdk', '~> 2'
 gem 'versionist'
 
 gem 'carrierwave'
+gem 'rmagick', '~> 2.15', '>= 2.15.4'
 gem "fog-aws"
 gem "fog"
 

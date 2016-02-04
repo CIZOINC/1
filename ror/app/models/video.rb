@@ -28,6 +28,8 @@ class Video < ActiveRecord::Base
   validates :featured_order, numericality: {greater_than_or_equal_to: 1}, allow_nil: true
   validates_with VideoCustomValidator
 
+
+
   scope :trending, -> (){ where("visible = ? AND deleted_at IS NULL", true).order(view_count: :desc) }
   scope :desc_order, ->(){ order(created_at: :desc)}
   scope :order_by_featured, ->(){order(featured_order: :asc)}

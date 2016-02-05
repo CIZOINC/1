@@ -4,7 +4,7 @@ angular
     .controller('MainCtrl', MainCtrl);
 
 /* @ngInject */
-function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout) {
+function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout, storageServ) {
     "use strict";
 
     const selectedMenuItemCSSClass = 'categories-panel_item categories-panel_item--selected';
@@ -59,7 +59,8 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout)
 
     getCategories()
         .then(getVideos)
-        .then(updateVideos);
+        .then(updateVideos)
+        .then(updateVideosSeenStatus);
 
     getFeaturedList();
 
@@ -170,16 +171,19 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout)
     }
 
     function updateVideos() {
-        _.each($scope.videosList, (video) => {
-            let category = _.find($scope.categoriesList, (category) => {
-                return category.id === video.category_id;
+        return $q( (resolve) => {
+            _.each($scope.videosList, (video) => {
+                let category = _.find($scope.categoriesList, (category) => {
+                    return category.id === video.category_id;
+                });
+                if (category) {
+                    video.categoryName = category.title;
+                }
+                video.isWatching = false;
+                video.isFullscreen = false;
+                filterByCategory();
             });
-            if (category) {
-                video.categoryName = category.title;
-            }
-            video.isWatching = false;
-            video.isFullscreen = false;
-            filterByCategory();
+            resolve($scope.videosList);
         });
     }
 
@@ -194,5 +198,16 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout)
         });
     }
 
+    function updateVideosSeenStatus(videosList) {
+        return $q( (resolve) => {
+            $scope.storage.seenItems = storageServ.getItem($scope.storage.storageSeenKey) || [];
+
+            _.each(videosList, (video) => {
+                video.isSeen = _.contains($scope.storage.seenItems, video.id);   //!!$scope.storage.seenItems[video.id];
+            });
+            resolve();
+        });
+    }
+
 }
-MainCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', '$document', '$timeout'];
+MainCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', '$document', '$timeout', 'storageServ'];

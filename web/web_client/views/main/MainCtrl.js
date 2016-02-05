@@ -200,9 +200,10 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
 
     function updateVideosSeenStatus(videosList) {
         return $q( (resolve) => {
-            let $scope.storage.seenItems = storageServ.getItem($scope.storage.storageSeenKey) || [];
+            $scope.storage.seenItems = storageServ.getItem($scope.storage.storageSeenKey) || [];
+
             _.each(videosList, (video) => {
-                video.isSeen = !!seenItems[video.id];
+                video.isSeen = _.contains($scope.storage.seenItems, video.id);   //!!$scope.storage.seenItems[video.id];
             });
             resolve();
         });

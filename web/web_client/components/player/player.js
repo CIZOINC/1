@@ -5,7 +5,7 @@ angular
 
 
 /* @ngInject */
-function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
+function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, storageServ) {
     "use strict";
 
     function linkFn(scope, element, attrs) {
@@ -37,6 +37,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             descriptionLayer: angular.element(element[0].querySelector(`div.player_description-layer`))[0],
             playButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_play-button`))[0],
             pauseButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_pause-button`))[0],
+            replayButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_replay-button`))[0],
 
             // intermission elements
             prevButton: angular.element(element[0].querySelector(`.player_buttons-layer_center-elements_prev`))[0],
@@ -77,11 +78,13 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             scope.sliderModel.value = scope.screen.currentTime;
             scope.sliderModel.options.ceil = scope.screen.duration;
             scope.$apply();
+
+            checkForSeenStatus(scope.screen.currentTime, scope.screen.duration);
         });
 
         scope.screenList.bind('ended', () => {
-            if (scope.video.isFullscreen) {
-                toggleFullScreen(true)
+            if (getElementFullscreenState()) {
+                toggleFullScreen()
                     .then(() => {
                         if (scope.nextVideo) {
                             scope.setIntermission();
@@ -122,6 +125,8 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             scope.videoLink = $sce.trustAs($sce.RESOURCE_URL, stream.link);
         }
 
+        setReplayState(scope.video.isSeen);
+
 
         ////////////////////////////////////////////
 
@@ -139,6 +144,19 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
                     }
                 }
             }
+        }
+
+        function checkForSeenStatus(currentTime, duration) {
+            if (!scope.video.isSeen) {
+                const seenTriggerTime = 10;
+                if (currentTime >= duration - seenTriggerTime) {
+                    scope.video.isSeen = true;
+                    scope.storage.seenItems.push(scope.video.id);
+                    storageServ.setItem( scope.storage.storageSeenKey, scope.storage.seenItems );
+                }
+            }
+
+
         }
 
         function updateNextVideo() {
@@ -319,7 +337,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
         }
 
         function toggleFullScreen(event) {
-            if (event) {
+            if (event && event.stopPropagation) {
                 event.stopPropagation();
             }
             return $q((resolve) => {
@@ -419,10 +437,26 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             });
             _.each(scope.filteredList, (video) => {
                 video.isWatching = false;
+
+                let btnLayer = document.querySelectorAll(`#player${video.id} .player_buttons-layer`)[0];
+                let playButton =  angular.element(btnLayer.querySelector(`.player_buttons-layer_center-elements_play-button`))[0];
+                let pauseButton = angular.element(btnLayer.querySelector(`.player_buttons-layer_center-elements_pause-button`))[0];
+                let replayButton = angular.element(btnLayer.querySelector(`.player_buttons-layer_center-elements_replay-button`))[0];
+
+                if (video.isSeen) {
+                    btnLayer.classList.add('player_buttons-layer--replay');
+                    playButton.classList.add('hidden-layer');
+                    pauseButton.classList.add('hidden-layer');
+                    replayButton.classList.remove('hidden-layer');
+
+                } else {
+                    btnLayer.classList.remove('player_buttons-layer--replay');
+                    replayButton.classList.add('hidden-layer');
+                }
             });
         }
 
-        function togglePlayPause(event, state) {
+        function togglePlayPause(event) {
             if (event) {
                 event.stopPropagation();
             }
@@ -480,6 +514,9 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             scope.titlesOverlayLayer.classList[_classAdd(!isWatched)]('hidden-layer');
             scope.controlsOverlayLayer.classList[_classAdd(!isWatched)]('hidden-layer');
             scope.nextVideoLayer.classList[_classAdd(!isWatched)]('hidden-layer');
+
+            scope.replayButton.classList[_classAdd(isWatched)]('hidden-layer');
+            scope.buttonLayer.classList[_classAdd(!isWatched)]('player_buttons-layer--replay');
         }
 
         function setShowHideControlsState(isShowed) {
@@ -518,6 +555,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
             scope.controlsOverlayLayer.classList[_classAdd(isIntermission)]('hidden-layer');
             scope.imageNextLayer.classList[_classAdd(!isIntermission)]('hidden-layer');
             scope.videoLayer.classList[_classAdd(isIntermission)]('hidden-layer');
+            setPlayPauseState(false);
 
         }
 
@@ -538,16 +576,42 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
 
             scope.topElementsRightSide.classList[_classAdd(isDescription)]('hidden-layer');
             if (!isDescription) {
-                if (scope.screen.paused ) {
-                    setPlayPauseState(false);
+                if (scope.video.isSeen) {
+                    scope.replayButton.classList[_classAdd(false)]('hidden-layer');
                 } else {
-                    setPlayPauseState(true);
+                    if (scope.screen.paused ) {
+                        setPlayPauseState(false);
+                    } else {
+                        setPlayPauseState(true);
+                    }
                 }
             } else {
                 scope.playButton.classList[_classAdd(isDescription)]('hidden-layer');
                 scope.pauseButton.classList[_classAdd(isDescription)]('hidden-layer');
+                scope.replayButton.classList[_classAdd(isDescription)]('hidden-layer');
             }
         }
+
+        function setReplayState(isSeen) {
+            scope.buttonLayer.classList[_classAdd(isSeen)]('player_buttons-layer--replay');
+            if (scope.isWatching) {
+                scope.replayButton.classList[_classAdd(true)]('hidden-layer');
+            } else {
+                scope.replayButton.classList[_classAdd(!isSeen)]('hidden-layer');
+
+                if (isSeen) {
+                    scope.playButton.classList[_classAdd(true)]('hidden-layer');
+                    scope.pauseButton.classList[_classAdd(true)]('hidden-layer');
+                } else {
+                    if (scope.screen.paused ) {
+                        setPlayPauseState(false);
+                    } else {
+                        setPlayPauseState(true);
+                    }
+                }
+            }
+        }
+
     }
 
     return {
@@ -558,8 +622,8 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval) {
         scope: {
             video: '=',
             filteredList: '=',
-            needFullscreen: '='
+            storage: '='
         }
     }
 }
-player.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval'];
+player.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'storageServ'];

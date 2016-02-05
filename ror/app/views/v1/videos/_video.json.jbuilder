@@ -5,8 +5,8 @@ else
   if video.hero_image.url
     json.hero_image_link video.hero_image.url
     json.set! :hero_images do
-      json.hero_image_link Rails.configuration.path_to_hero_images + "#{video.id}" + "/original_filename.jpeg"
-      %w(large medium thumb).each { |size| json.set! "hero_image_link_#{size}_banner", Rails.configuration.path_to_hero_images + "#{video.id}" + "/#{size}_banner_original_filename.jpeg"}
+      json.hero_image_link video.hero_image.url
+      %w(large_banner medium_banner thumb_banner).each { |size| json.set! "hero_image_link_#{size}", video.hero_image.url(size.to_sym) }
     end
   end
   json.featured_order video.featured_order if @featured

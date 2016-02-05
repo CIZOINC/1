@@ -23,10 +23,21 @@ angular
 
 /* @ngInject */
 function AppCtrl($scope, routerHelper, routesList, $state) {
-    $scope.title = 'Cizo';
-    $scope.hostName = `http://staging.cizo.com`;
 
-    $scope.categoriesList = [];
+    $scope = angular.extend($scope, {
+        title: 'Cizo',
+        hostName: `http://staging.cizo.com`,
+        categoriesList: [],
+
+        storage: {
+            storageSeenKey: 'seen',
+
+            seenItems: []
+        }
+
+    });
+
+
 
     applicationStart(routerHelper, routesList, $state);
 }

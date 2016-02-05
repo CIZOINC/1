@@ -82,8 +82,8 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         });
 
         scope.screenList.bind('ended', () => {
-            if (scope.video.isFullscreen) {
-                toggleFullScreen(true)
+            if (playerServ.getElementFullscreenState()) {
+                toggleFullScreen()
                     .then(() => {
                         scope.setIntermission();
                     });
@@ -430,6 +430,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.controlsOverlayLayer.classList[_classAdd(isIntermission)]('hidden-layer');
             scope.imageNextLayer.classList[_classAdd(!isIntermission)]('hidden-layer');
             scope.videoLayer.classList[_classAdd(isIntermission)]('hidden-layer');
+            setPlayPauseState(false);
 
         }
 

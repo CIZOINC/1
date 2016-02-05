@@ -4,7 +4,7 @@ class V1::VideosController < V1::ApiController
   before_action only: [:create, :update, :hero_image, :destroy,:add_featured, :remove_featured] do
     doorkeeper_authorize! :admin
   end
-  
+
   before_action only: [:show], if: :video_is_invisible? do
     doorkeeper_authorize! :admin
   end
@@ -96,8 +96,8 @@ class V1::VideosController < V1::ApiController
   end
 
   def hero_image
-    @video.update(hero_image: params[:file])
-    @video.update(hero_image_link: @video.hero_image.url) ? nothing(202) : (render json: {errors: @video.errors}, status: 422)
+    @video.update(hero_image: params[:file]) ? nothing(202) : (render json: {errors: @video.errors}, status: 422)
+    # puts params[:file].tempfile
   end
 
   def trending

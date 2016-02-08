@@ -13,6 +13,7 @@ class V1::VideosController < V1::ApiController
   before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
   before_action :check_for_file, only: [:hero_image]
   before_action :set_bucket, only: [:destroy]
+  before_action :able_to_be_featured?, only: [:add_featured]
 
   def index
     conditions = []
@@ -97,7 +98,6 @@ class V1::VideosController < V1::ApiController
 
   def hero_image
     @video.update(hero_image: params[:file]) ? nothing(202) : (render json: {errors: @video.errors}, status: 422)
-    # puts params[:file].tempfile
   end
 
   def trending
@@ -126,9 +126,12 @@ class V1::VideosController < V1::ApiController
 
   def add_featured
     featured_order = params[:featured_order].try(:to_i)
-    if (featured_order && ((@video.featured_order && featured_order > Video.where(featured: true).count) || (!@video.featured_order && featured_order > Video.where(featured: true).count + 1))) || (featured_order && featured_order<=0)
-      nothing 400
-      return
+    featured_videos_count = Video.where('featured = ? AND visible = ? AND deleted_at IS NULL', true, true).count
+    if featured_order
+      if ((@video.featured_order && featured_order > featured_videos_count) || (!@video.featured_order && featured_order > featured_videos_count + 1)) || featured_order<=0
+        nothing 400
+        return
+      end
     end
     @video.add_featured!(featured_order) if @video
     nothing 204
@@ -142,7 +145,7 @@ class V1::VideosController < V1::ApiController
   private
 
   def videos_params
-    params.permit(:id, :title, :description, :mature_content, :visible, :category_id, :tag_list)
+    params.permit(:title, :description, :mature_content, :visible, :category_id, :tag_list)
   end
 
   def set_video
@@ -156,6 +159,10 @@ class V1::VideosController < V1::ApiController
 
   def video_is_invisible?
     !@video.visible?
+  end
+
+  def able_to_be_featured?
+    render json: {error: 'Invisible videos can not be marked as featured'}, status: 400 and return if video_is_invisible?
   end
 
   def hero_image_path

@@ -14,8 +14,6 @@ class HeroImageUploader < CarrierWave::Uploader::Base
     end
   end
 
-  process :get_dimensions
-
   version :large_banner do
     process resize_to_fill: [1000, 476]
   end
@@ -32,20 +30,17 @@ class HeroImageUploader < CarrierWave::Uploader::Base
     %w(jpg jpeg png bmp)
   end
 
-  def filename
-    "original_filename.jpeg" if original_filename.present?
-  end
+  # def filename
+  #   "original_filename.jpeg" if original_filename.present?
+  # end
 
-  def get_dimensions
-    if file && model
-      width, height = `identify -format "%wx%h" #{file.path}`.split(/x/)
-      if width >= height
-        puts 'Landscape'
-      else
-        puts 'Portrait'
-      end
-    end
-  end
+  # def get_dimensions
+  #   if file && model
+  #     width, height = `identify -format "%wx%h" #{file.path}`.split(/x/).map(&:to_i)
+  #     $portrait = true if height > width
+  #     puts "GV portrait is setted at #{Time.now}"
+  #   end
+  # end
 
 
 

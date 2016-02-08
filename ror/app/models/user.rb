@@ -13,6 +13,10 @@ class User < ActiveRecord::Base
   validates :password_confirmation, presence: true, on: :create
   validates :is_admin, allow_nil: false, inclusion: {in: [true, false], message: "must be 'true' or 'false'"}
 
+  has_many :liked_videos, dependent: :destroy
+  has_many :skipped_videos, dependent: :destroy
+  has_many :seen_videos, dependent: :destroy
+
   after_destroy :destroy_self_tokens
 
   def user_age_meets_requirement!

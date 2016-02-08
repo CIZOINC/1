@@ -25,3 +25,11 @@ en:
       public: 'Access your public data'
       write: 'Update your information'
       admin: 'Change your preferences'
+
+  invalid_email: Invalid email
+  blank_email: Email can't be blank
+  expired_rpt: reset_password_token has expired, please request a new one
+  invalid_rpt: Token is not valid, please generate a new one
+  rpt_required: reset_password_token is required
+  at_required: access_token is required
+  login_failed: Login failed

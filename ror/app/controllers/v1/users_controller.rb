@@ -23,7 +23,7 @@ class V1::UsersController < V1::ApiController
       end
       render :show, status: 200, location: @user
     else
-      render json: {errors: @user.errors.full_messages}, status: 403
+      render json: {errors: @user.errors.full_messages}, status: 422
     end
   end
 
@@ -31,7 +31,7 @@ class V1::UsersController < V1::ApiController
     if @current_user.update_attributes(self_params)
       render :me, status: 200, location: @current_user
     else
-      render json: {errors: @current_user.errors.full_messages}
+      render json: {errors: @current_user.errors.full_messages}, status: 422
     end
   end
 
@@ -102,11 +102,11 @@ class V1::UsersController < V1::ApiController
   end
 
   def users_params
-    params.require(:user).permit(:id, :email, :birthday, :password, :password_confirmation, :is_admin)
+    params.require(:user).permit(:is_admin)
   end
 
   def self_params
-    params.require(:user).permit(:id, :email, :birthday, :password, :password_confirmation)
+    params.require(:user).permit(:email, :birthday, :password, :password_confirmation)
   end
 
   def set_user

@@ -11,7 +11,7 @@ module Auth
       if resource.save
         render 'v1/registrations/show', status: 200
       else
-        render json:{errors: resource.errors.full_messages}, status: 500
+        render json:{errors: resource.errors.full_messages}, status: 422
       end
     end
 

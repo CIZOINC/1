@@ -163,7 +163,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, s
 
         function updateNextVideo() {
             if (scope.nextVideo) {
-                scope.nextVideoBackground = `background-image: url(${scope.nextVideo.hero_image_link})`;
+                scope.nextVideoBackground = `background-image: url(${scope.nextVideo.hero_images.hero_image_link})`;
             } else {
                 scope.nextVideoBackground = `display: none`;
             }

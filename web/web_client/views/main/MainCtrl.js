@@ -164,7 +164,7 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
         return $q( (resolve) => {
             videoServ.getVideosList($scope)
                 .then( (response) => {
-                    $scope.videosList = _.filter(response.data.data, item => item.hero_image_link && item.streams && item.streams.length)  ;
+                    $scope.videosList = _.filter(response.data.data, item => item.hero_images && item.hero_images.hero_image_link && item.streams && item.streams.length)  ;
                     resolve();
                 });
         });

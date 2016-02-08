@@ -20,6 +20,7 @@ function menu($http, $q, $log, $sce) {
 
             mainMenu: document.querySelector('.navbar-main'),
             searchMenu: document.querySelector('.navbar_search'),
+            searchResults: document.querySelector('.search-results'),
 
             backToMainButton: document.querySelector('.navbar_search_back'),
             searchInput: document.querySelector('.navbar_search_input'),
@@ -66,7 +67,9 @@ function menu($http, $q, $log, $sce) {
 
         function toggleMenuType(isSearch) {
             _applyClass(!isSearch, scope.searchMenu, 'hidden-layer');
+            _applyClass(!isSearch, scope.searchResults, 'hidden-layer');
             _applyClass(isSearch, scope.mainMenu, 'hidden-layer');
+
             if (isSearch) {
                 scope.searchInput.focus();
             }

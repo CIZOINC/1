@@ -5,7 +5,7 @@
      ng-mouseup="featuredMouseUp()"
      ng-mousemove="featuredMouseMove($event)"
      >
-    <div  style="background-image: url({{::featured.hero_image_link}})"
+    <div  style="background-image: url({{::featured.hero_images.hero_image_link}})"
           ng-attr-id="{{ 'featured-' + featured.id }}"
           ng-repeat="featured in featuredList"
           class="featured_hero-image"

@@ -26,7 +26,7 @@ module Auth
     end
 
     def failure
-      render json: {errors: 'Login failed'}, status: 400
+      render json: {errors: t(:login_failed)}, status: 400
     end
 
     private
@@ -80,7 +80,7 @@ module Auth
 
     def check_for_access_token_presence
       if params[:access_token].blank?
-        render json: {error: "access_token is required"}
+        render json: {error: t(:at_required)}, status: 422
         return
       end
     end

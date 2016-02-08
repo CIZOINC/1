@@ -1,6 +1,6 @@
 class V1::CategoriesController < V1::ApiController
   before_action :set_category, only: [:show, :update, :destroy]
-  before_action except: [:index] do
+  before_action except: [:index, :show] do
     doorkeeper_authorize! :admin
   end
 
@@ -16,7 +16,7 @@ class V1::CategoriesController < V1::ApiController
     if @category.save
       render :show, status: 200, location: @category
     elsif @category.errors.added?(:title, blank)
-      error 500
+      error 422
     elsif @category.errors.added?(:title, taken)
       error 409
     end
@@ -26,7 +26,7 @@ class V1::CategoriesController < V1::ApiController
     if @category.update_attributes(categories_params)
       render :show, status: 200, location: @category
     elsif @category.errors.added?(:title, blank)
-      error 500
+      error 422
     elsif @category.errors.added?(:title, taken)
       error 409
     end

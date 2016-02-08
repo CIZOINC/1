@@ -85,4 +85,3 @@ To enable SSL, the following needs to be done:
 - Deploy to production using `eb deploy cizo-production`
 - Validate production
 
-

@@ -32,9 +32,9 @@ class HeroImageUploader < CarrierWave::Uploader::Base
     %w(jpg jpeg png bmp)
   end
 
-  def filename
-    "original_filename.jpeg" if original_filename.present?
-  end
+  # def filename
+  #   "original_filename.jpeg" if original_filename.present?
+  # end
 
   def get_dimensions
     if file && model

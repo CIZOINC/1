@@ -15,6 +15,9 @@ module Auth
       end
       @user.send_reset_password_instructions if @user
       render nothing: true, status: 200
+      # ResetPasswordMailer.send_reset_password_url(@user).deliver_later!(wait: 1.minute) if @user
+
+
     end
 
     def edit

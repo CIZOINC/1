@@ -6,10 +6,22 @@ angular
 /* @ngInject */
 function menu($http, $q, $log, $sce) {
     "use strict";
+
+    return {
+        restrict: 'E',
+        templateUrl: 'components/menu/menu.html',
+        link: linkFn,
+        transclude: false,
+        scope: {
+            host: '=',
+            searchedVideo: '='
+        }
+    };
+
     function linkFn(scope) {
         const debounceSearchWaitTime = 600;
         scope = angular.extend(scope, {
-            isMenuVisible: true,
+            isMenuVisible: false,
             searchText: '',
             searchResult: [],
 
@@ -28,6 +40,8 @@ function menu($http, $q, $log, $sce) {
 
             toggleMenu: toggleMenu,
             toggleMenuType: toggleMenuType,
+
+            searchItemClick: searchItemClick,
             clearSearchInput: clearSearchInput,
             searchInputUpdate: searchInputUpdate,
             categoryIconMap: categoryIconMap,
@@ -63,6 +77,13 @@ function menu($http, $q, $log, $sce) {
                 scope.menuContainerOuter.classList.add('menu_container_outer--menu-visible');
                 scope.categoriesPanel.classList.add('categories-panel--menu-visible');
             }
+        }
+
+        function searchItemClick(video) {
+            scope.searchText = '';
+            scope.searchResult = [];
+            scope.searchedVideo = video;
+            toggleMenuType(false);
         }
 
         function toggleMenuType(isSearch) {
@@ -117,15 +138,7 @@ function menu($http, $q, $log, $sce) {
         }
 
 }
-    return {
-        restrict: 'E',
-        templateUrl: 'components/menu/menu.html',
-        link: linkFn,
-        transclude: false,
-        scope: {
-            host: '='
-        }
-    }
+
 }
 
 menu.$inject = ['$http', '$q', '$log', '$sce'];

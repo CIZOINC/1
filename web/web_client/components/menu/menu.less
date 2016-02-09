@@ -37,6 +37,7 @@ menu {
     color: white;
     font-size: 35px;
     margin: 10px;
+    cursor: pointer;
   }
 
   &_logo {
@@ -72,6 +73,7 @@ menu {
 
   &_buttons {
     margin: 10px;
+    cursor: pointer;
   }
 
 }
@@ -155,7 +157,13 @@ menu {
     justify-content: space-between;
     color: white;
     padding: 10px;
-    background-color: #202035;
+    background-color: #1c1f24;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #353a43;
+      color: @color-lighter;
+    }
 
     &_category {
       font-size: 38px;

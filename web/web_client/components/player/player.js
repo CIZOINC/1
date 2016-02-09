@@ -8,6 +8,18 @@ angular
 function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, storageServ) {
     "use strict";
 
+    return {
+        restrict: 'E',
+        templateUrl: 'components/player/player.html',
+        link: linkFn,
+        transclude: true,
+        scope: {
+            video: '=',
+            filteredList: '=',
+            storage: '='
+        }
+    };
+
     function linkFn(scope, element, attrs) {
 
         scope = angular.extend(scope, {
@@ -632,18 +644,6 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, s
             }
         }
 
-    }
-
-    return {
-        restrict: 'E',
-        templateUrl: 'components/player/player.html',
-        link: linkFn,
-        transclude: true,
-        scope: {
-            video: '=',
-            filteredList: '=',
-            storage: '='
-        }
     }
 }
 player.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'storageServ'];

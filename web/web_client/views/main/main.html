@@ -1,4 +1,4 @@
-<menu host="hostName"></menu>
+<menu host="hostName" searched-video="searchedVideo"></menu>
 
 <div class="featured"
      ng-mousedown="featuredMouseDown($event)"
@@ -36,6 +36,8 @@
     </div>
 </div>
 
+
+<searched-player id="search-player" class="col-xs-12 col-md-8 col-md-offset-2 searched-video hidden-layer" video="searchedVideo"></searched-player>
 
 <featured-player class="col-xs-12 col-md-8 col-md-offset-2 hidden-layer" id="featured-player" video="featuredItem" filtered-list="featuredList" feed-list="filteredVideoList"></featured-player>
 

@@ -8,6 +8,18 @@ angular
 function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ) {
     "use strict";
 
+    return {
+        restrict: 'E',
+        templateUrl: 'components/featured-player/featuredPlayer.html',
+        link: linkFn,
+        transclude: true,
+        scope: {
+            video: '=',
+            filteredList: '=',
+            feedList: '='
+        }
+    };
+
     function linkFn(scope, element, attrs) {
 
         scope = angular.extend(scope, {
@@ -101,6 +113,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 });
                 scope.iconTitle = scope.video && scope.video.category_id ? categoryIcon(scope.video.category_id) : '';
                 scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
+                scope.nextVideo = getNextVideo();
 
                 $timeout( () => {
                     if (!scope.featuredPlayer.classList.contains('hidden-layer')) {
@@ -480,18 +493,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 scope.playButton.classList[_classAdd(isDescription)]('hidden-layer');
                 scope.pauseButton.classList[_classAdd(isDescription)]('hidden-layer');
             }
-        }
-    }
-
-    return {
-        restrict: 'E',
-        templateUrl: 'components/featured-player/featuredPlayer.html',
-        link: linkFn,
-        transclude: true,
-        scope: {
-            video: '=',
-            filteredList: '=',
-            feedList: '='
         }
     }
 }

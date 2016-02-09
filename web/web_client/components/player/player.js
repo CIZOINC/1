@@ -8,6 +8,18 @@ angular
 function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, storageServ) {
     "use strict";
 
+    return {
+        restrict: 'E',
+        templateUrl: 'components/player/player.html',
+        link: linkFn,
+        transclude: true,
+        scope: {
+            video: '=',
+            filteredList: '=',
+            storage: '='
+        }
+    };
+
     function linkFn(scope, element, attrs) {
 
         scope = angular.extend(scope, {
@@ -64,7 +76,9 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, s
             playNextVideo: playNextVideo,
             getNextVideo: getNextVideo,
             playPreviousVideo: playPreviousVideo,
-            getPreviousVideo: getPreviousVideo
+            getPreviousVideo: getPreviousVideo,
+
+            showControlsOnMove: showControlsOnMove
         });
 
         ///////////////// setup ////////////////////
@@ -161,7 +175,7 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, s
 
         function updateNextVideo() {
             if (scope.nextVideo) {
-                scope.nextVideoBackground = `background-image: url(${scope.nextVideo.hero_image_link})`;
+                scope.nextVideoBackground = `background-image: url(${scope.nextVideo.hero_images.hero_image_link})`;
             } else {
                 scope.nextVideoBackground = `display: none`;
             }
@@ -296,6 +310,24 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, s
                 prevVideo = scope.filteredList[index - 1];
             }
             return prevVideo;
+        }
+
+        function  showControlsOnMove() {
+            const waitTime = 3000; //ms for hiding controls
+
+            if (scope.waitingTimer) {
+                $timeout.cancel(scope.waitingTimer);
+            }
+
+            toggleControlsVisibility(false);
+            scope.topElementsRightSide.classList.remove('hidden-layer');
+            scope.buttonLayer.classList.add('player_buttons-layer--hover');
+
+            scope.waitingTimer = $timeout(() => {
+                toggleControlsVisibility(true);
+                scope.topElementsRightSide.classList.add('hidden-layer');
+                scope.buttonLayer.classList.remove('player_buttons-layer--hover');
+            }, waitTime)
         }
 
         function categoryIcon(id) {
@@ -612,18 +644,6 @@ function player($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, s
             }
         }
 
-    }
-
-    return {
-        restrict: 'E',
-        templateUrl: 'components/player/player.html',
-        link: linkFn,
-        transclude: true,
-        scope: {
-            video: '=',
-            filteredList: '=',
-            storage: '='
-        }
     }
 }
 player.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'storageServ'];

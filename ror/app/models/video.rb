@@ -2,18 +2,21 @@ class Video < ActiveRecord::Base
   include PgSearch
   pg_search_scope :full_search,
                   associated_against: {tags: :name},
-                  against: [:title, :description],
+                  against: {
+                    title: 'A',
+                    description: 'B'
+                  },
                   using: {
                     tsearch: {
                       prefix: true,
                       negation: true,
                       any_word: true
                     },
-                    dmetaphone: {
-                      any_word: true
-                    },
-                    trigram:{}
-                  }
+                    dmetaphone: {},
+                    trigram:{},
+
+                  },
+                  ranked_by: ":tsearch + 0.5 * :dmetaphone "
 
   mount_uploader :hero_image, HeroImageUploader
   acts_as_taggable

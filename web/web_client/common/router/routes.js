@@ -11,11 +11,11 @@ angular
             }
         },
         {
-            state: 'videos',
+            state: 'register',
             config: {
-                url: '/videos',
-                templateUrl: 'views/videos/videos.html',
-                controller: 'VideosCtrl',
+                url: '/register',
+                templateUrl: 'views/register/register.html',
+                controller: 'RegisterCtrl',
                 controllerAs: 'videos'
             }
         }

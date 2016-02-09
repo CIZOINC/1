@@ -1,0 +1,27 @@
+<nav class="navbar">
+    <div class="navbar-register">
+        <img class="navbar-register_logo" src="images/logo.svg">
+    </div>
+</nav>
+
+<div class="register-form">
+    <div class="register-form_facebook-login">Continue with Facebook</div>
+
+    <div class="register-form_title">Or, sign up with your email address</div>
+
+    <input ng-model="register.email" class="register-form_input" placeholder="Email Address">
+    <input ng-model="register.password" class="register-form_input" placeholder="Password">
+    <div>
+        <input ng-model="register.month" class="register-form_input--date" placeholder="Month">
+        <input ng-model="register.day" class="register-form_input--date" placeholder="Day">
+        <input ng-model="register.year" class="register-form_input--date" placeholder="Year">
+    </div>
+
+    <div class="register-form_description">
+        By clicking on Sign Up, you agree to<br>
+        <div class="register-form_terms">Cizo's terms of use</div> and <div class="register-form_terms">privacy policy</div>
+    </div>
+
+    <div class="register-form_sign-up">Sign up</div>
+
+</div>

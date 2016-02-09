@@ -33,3 +33,4 @@ en:
   rpt_required: reset_password_token is required
   at_required: access_token is required
   login_failed: Login failed
+  last_admin: Your account can not be destroyed because you are the last admin on the project.

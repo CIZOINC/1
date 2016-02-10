@@ -68,6 +68,10 @@ gem 'omniauth-facebook'
 gem 'pg_search', '~> 1.0', '>= 1.0.5'
 # gem 'textacular', '~> 3.0'
 
+#background jobs
+gem 'delayed_job_active_record'
+gem 'daemons'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
@@ -80,10 +84,6 @@ group :development do
 
   # DRY logs
   gem 'quiet_assets'
-
-  #background jobs
-  gem 'delayed_job_active_record'
-  gem 'daemons'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'

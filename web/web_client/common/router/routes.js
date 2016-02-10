@@ -18,5 +18,14 @@ angular
                 controller: 'RegisterCtrl',
                 controllerAs: 'videos'
             }
+        },
+        {
+            state: 'login',
+            config: {
+                url: '/login',
+                templateUrl: 'views/login/login.html',
+                controller: 'LoginCtrl',
+                controllerAs: 'login'
+            }
         }
     ]);

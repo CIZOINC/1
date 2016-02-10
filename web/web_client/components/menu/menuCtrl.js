@@ -19,7 +19,7 @@ function menu($http, $q, $log, $sce, $state) {
     };
 
     function linkFn(scope) {
-        const debounceSearchWaitTime = 600;
+        const debounceSearchWaitTime = 300;
         scope = angular.extend(scope, {
             isMenuVisible: false,
             searchText: '',
@@ -141,7 +141,7 @@ function menu($http, $q, $log, $sce, $state) {
 
 
         function signInClick() {
-            $state.go('register');
+            $state.go('login');
         }
 }
 

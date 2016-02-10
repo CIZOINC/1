@@ -9,7 +9,7 @@ form {
   flex-direction: column;
 }
 
-.navbar-register {
+.navbar-login {
   padding: 10px;
   display: flex;
   flex-direction: row;
@@ -31,7 +31,7 @@ form {
   }
 }
 
-.register-form {
+.login-form {
   display: flex;
   flex-direction: column;
 
@@ -70,29 +70,6 @@ form {
     &::-webkit-input-placeholder {
       color: @color-mid;
     }
-
-    &_date {
-      display: flex;
-      flex-direction: row;
-      align-content: space-between;
-      justify-content: space-between;
-    }
-
-    &--date {
-      .date_mix;
-      width: 20%;
-      &::-webkit-input-placeholder {
-        color: @color-mid;
-      }
-    }
-
-    &--date-month {
-      .date_mix;
-      width: 40%;
-      &::-webkit-input-placeholder {
-        color: @color-mid;
-      }
-    }
   }
 
   &_description {
@@ -102,32 +79,26 @@ form {
     text-align: center;
   }
 
-  &_terms {
-    font-size: 18px;
-    color: @color-mid;
-    text-align: center;
-  }
-
-  &_sign-up {
+  &_login {
     background-color: #25aabd;
     font-size: 30px;
     text-transform: uppercase;
     padding: 15px;
     text-align: center;
     margin-bottom: 50px;
+    margin-top: 30px;
     outline: none;
     border: none;
   }
+
+  &_forgot-password {
+    font-size: 16px;
+    color: @color-mid;
+    text-align: center;
+  }
 }
 
-option {
-  color: @color-mid;
-}
-.opt_selected {
-  color: black;
-}
-
-.have-account {
+.want-account {
   font-family: main-cizo;
   display: flex;
   align-items: center;

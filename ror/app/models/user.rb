@@ -24,6 +24,15 @@ class User < ActiveRecord::Base
     (self.birthday.to_date < 18.years.ago || self.is_admin) ? true : false
   end
 
+  def set_reset_password_token
+    raw, enc = Devise.token_generator.generate(self.class, :reset_password_token)
+
+    self.reset_password_token   = enc
+    self.reset_password_sent_at = Time.now.utc
+    self.save(validate: false)
+    raw
+  end
+
   protected
 
   def destroy_self_tokens
@@ -35,7 +44,6 @@ class User < ActiveRecord::Base
   end
 
   def update_tokens
-    puts "UPDATE TOKENS"
     if tokens = Doorkeeper::AccessToken.where(resource_owner_id: self.id)
       self.is_admin ? set_scopes!(tokens, 'admin') : set_scopes!(tokens, 'user')
     end

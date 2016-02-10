@@ -13,8 +13,11 @@ module Auth
       else
         error 422, :blank_email and return
       end
-      @user.send_reset_password_instructions if @user
+      # @user.send_reset_password_instructions if @user
       render nothing: true, status: 200
+      ResetPasswordMailer.reset_password_instructions(@user, @user.set_reset_password_token).deliver_later if @user
+
+
     end
 
     def edit
@@ -46,6 +49,8 @@ module Auth
         error 400, :invalid_rpt
       end
     end
+
+
 
     private
 

@@ -10,8 +10,7 @@ class Video < ActiveRecord::Base
                     tsearch: {
                       prefix: true,
                       negation: true
-                    },
-                    dmetaphone: {}
+                    }
                   }
 
   mount_uploader :hero_image, HeroImageUploader

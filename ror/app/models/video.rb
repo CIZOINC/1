@@ -9,14 +9,10 @@ class Video < ActiveRecord::Base
                   using: {
                     tsearch: {
                       prefix: true,
-                      negation: true,
-                      # any_word: true
+                      negation: true
                     },
-                    # dmetaphone: {},
-                    trigram:{}
-
+                    dmetaphone: {}
                   }
-                  # ranked_by: ":tsearch + 0.5 * :dmetaphone "
 
   mount_uploader :hero_image, HeroImageUploader
   acts_as_taggable

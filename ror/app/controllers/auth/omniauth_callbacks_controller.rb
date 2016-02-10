@@ -44,8 +44,6 @@ module Auth
         users_scope = (Doorkeeper::AccessToken.where(resource_owner_id: user.id).pluck(:scopes).include? 'admin') ? 'admin' : 'user'
         @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes:  users_scope, refresh_token: secret(32))
         Doorkeeper::TokensController.new.destroy_useless_tokens(user)
-        
-
         response = Doorkeeper::OAuth::TokenResponse.new(@access_token)
         self.headers.merge! response.headers
         self.response_body = response.body.to_json

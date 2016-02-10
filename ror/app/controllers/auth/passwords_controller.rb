@@ -15,7 +15,7 @@ module Auth
       end
       # @user.send_reset_password_instructions if @user
       render nothing: true, status: 200
-      ResetPasswordMailer.send_reset_password_url(@user).deliver_now if @user
+      ResetPasswordMailer.reset_password_instructions(@user, @user.set_reset_password_token).deliver_later if @user
 
 
     end
@@ -49,6 +49,8 @@ module Auth
         error 400, :invalid_rpt
       end
     end
+
+
 
     private
 

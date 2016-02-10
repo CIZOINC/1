@@ -24,23 +24,32 @@ class User < ActiveRecord::Base
     (self.birthday.to_date < 18.years.ago || self.is_admin) ? true : false
   end
 
+  def set_reset_password_token
+    raw, enc = Devise.token_generator.generate(self.class, :reset_password_token)
+
+    self.reset_password_token   = enc
+    self.reset_password_sent_at = Time.now.utc
+    self.save(validate: false)
+    raw
+  end
+
   protected
 
-  def send_devise_notification(notification, *args)
-  # If the record is new or changed then delay the
-  # delivery until the after_commit callback otherwise
-  # send now because after_commit will not be called.
-  if new_record? || changed?
-    pending_notifications << [notification, args]
-
-  else
-    devise_mailer.send(notification, self, *args).deliver_later
-    puts "ARGS ARE: #{args}"
-    puts "NOTIFICATION #{notification}"
-    puts self
-    puts "SEND email"
-  end
-end
+#   def send_devise_notification(notification, *args)
+#   # If the record is new or changed then delay the
+#   # delivery until the after_commit callback otherwise
+#   # send now because after_commit will not be called.
+#   if new_record? || changed?
+#     pending_notifications << [notification, args]
+#
+#   else
+#     devise_mailer.send(notification, self, *args).deliver_later
+#     puts "ARGS ARE: #{args}"
+#     puts "NOTIFICATION #{notification}"
+#     puts self
+#     puts "SEND email"
+#   end
+# end
 
   def destroy_self_tokens
     Doorkeeper::AccessToken.where(resource_owner_id: self.id).destroy_all

@@ -1,8 +1,12 @@
 class Auth::ResetPasswordMailer < Devise::Mailer
-  include Devise::Controllers::UrlHelpers
+  default from: "from@example.com"
   default template_path: 'devise/mailer'
-  def send_reset_password_url(user)
+  # include Devise::Controllers::UrlHelpers
+
+  def reset_password_instructions(user, token)
+    @user = user
     @email = user.email
-    mail(to: @email, subject: 'Reset password')
+    @token = token
+    mail(to: @email, subject: 'Reset password instructions')
   end
 end

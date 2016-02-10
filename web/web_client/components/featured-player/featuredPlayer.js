@@ -8,6 +8,18 @@ angular
 function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ) {
     "use strict";
 
+    return {
+        restrict: 'E',
+        templateUrl: 'components/featured-player/featuredPlayer.html',
+        link: linkFn,
+        transclude: true,
+        scope: {
+            video: '=',
+            filteredList: '=',
+            feedList: '='
+        }
+    };
+
     function linkFn(scope, element, attrs) {
 
         scope = angular.extend(scope, {
@@ -65,7 +77,9 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             playNextVideo: playNextVideo,
             getNextVideo: getNextVideo,
             playPreviousVideo: playPreviousVideo,
-            getPreviousVideo: getPreviousVideo
+            getPreviousVideo: getPreviousVideo,
+
+            showControlsOnMove: showControlsOnMove
         });
 
         ///////////////// setup ////////////////////
@@ -99,6 +113,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 });
                 scope.iconTitle = scope.video && scope.video.category_id ? categoryIcon(scope.video.category_id) : '';
                 scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
+                scope.nextVideo = getNextVideo();
 
                 $timeout( () => {
                     if (!scope.featuredPlayer.classList.contains('hidden-layer')) {
@@ -273,6 +288,24 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 prevVideo = scope.filteredList[index - 1];
             }
             return prevVideo;
+        }
+
+        function  showControlsOnMove() {
+            const waitTime = 3000; //ms for hiding controls
+
+            if (scope.waitingTimer) {
+                $timeout.cancel(scope.waitingTimer);
+            }
+
+            toggleControlsVisibility(false);
+            scope.topElementsRightSide.classList.remove('hidden-layer');
+            scope.buttonLayer.classList.add('player_buttons-layer--hover');
+
+            scope.waitingTimer = $timeout(() => {
+                toggleControlsVisibility(true);
+                scope.topElementsRightSide.classList.add('hidden-layer');
+                scope.buttonLayer.classList.remove('player_buttons-layer--hover');
+            }, waitTime)
         }
 
         function categoryIcon(id) {
@@ -460,18 +493,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 scope.playButton.classList[_classAdd(isDescription)]('hidden-layer');
                 scope.pauseButton.classList[_classAdd(isDescription)]('hidden-layer');
             }
-        }
-    }
-
-    return {
-        restrict: 'E',
-        templateUrl: 'components/featured-player/featuredPlayer.html',
-        link: linkFn,
-        transclude: true,
-        scope: {
-            video: '=',
-            filteredList: '=',
-            feedList: '='
         }
     }
 }

@@ -9,11 +9,11 @@
             </div>
 
             <!-- hero image layer -->
-            <div class="col-xs-12 no-padding hero-image-layer player_hero-image-layer" style="background-image: url({{::video.hero_image_link}})">
+            <div class="col-xs-12 no-padding hero-image-layer player_hero-image-layer" style="background-image: url({{::video.hero_images.hero_image_link}})">
             </div>
 
             <!-- next hero image layer -->
-            <div class="col-xs-12 no-padding hero-image-layer player_hero-image-layer-next hidden-layer" style="background-image: url({{::nextVideo.hero_image_link}})">
+            <div class="col-xs-12 no-padding hero-image-layer player_hero-image-layer-next hidden-layer" style="background-image: url({{::nextVideo.hero_images.hero_image_link}})">
             </div>
 
 
@@ -49,6 +49,7 @@
                  ng-mouseleave="imageBlur()"
                  ng-click="togglePlayPause()"
                  ng-dblclick="toggleFullScreen()"
+                 ng-mousemove="showControlsOnMove()"
                     >
                 <!-- top buttons-->
                 <div class="player_buttons-layer_top-elements">
@@ -135,7 +136,7 @@
 
                         <div class="player_buttons-layer_bottom-elements_titles_next hidden-layer" ng-show="nextVideo" ng-click="playNextVideo($event)">
 
-                            <div class="player_buttons-layer_bottom-elements_titles_next_image" style="background-image: url({{nextVideo.hero_image_link}})"></div>
+                            <div class="player_buttons-layer_bottom-elements_titles_next_image" style="background-image: url({{nextVideo.hero_images.hero_image_link}})"></div>
                             <div class="player_buttons-layer_bottom-elements_titles_next_up-text">up next...</div>
                             <div class="player_buttons-layer_bottom-elements_titles_next_up-title">{{nextVideo.title}}</div>
                         </div>

@@ -11,9 +11,11 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
     const baseMenuItemCSSClass = 'categories-panel_item';
 
     $scope = angular.extend($scope, {
+        //variables
         filteredVideoList: [],
         featuredList: [],
         videosList: [],
+        searchedVideo: undefined,
         isFeaturedScrolled: false,
 
         categories: {
@@ -48,8 +50,17 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
         filterCategory: {
             category_id: ''
         },
+
+        // elements
+        eFeaturedList: document.querySelector('.featured'),
+        eCategoriesPanel: document.querySelector('.categories-panel'),
+        eSearchedVideo: document.querySelector('.searched-video'),
+        eFeedList: document.querySelector('.player-list'),
+
+        // methods
         filterByCategory: filterByCategory,
         toggleMenu: toggleMenu,
+        toggleSearchVideoPlay: toggleSearchVideoPlay,
 
         featuredMouseDown: featuredMouseDown,
         featuredMouseUp: featuredMouseUp,
@@ -63,6 +74,10 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
         .then(updateVideosSeenStatus);
 
     getFeaturedList();
+
+    $scope.$watch('searchedVideo', () => {
+        toggleSearchVideoPlay($scope.searchedVideo);
+    });
 
     function filterByCategory(id) {
         $scope.filterCategory.category_id = id;
@@ -104,6 +119,18 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
             menuContainerOuter.classList.add('menu_container_outer--menu-visible');
             categoriesPanel.classList.add('categories-panel--menu-visible');
         }
+    }
+
+    function toggleSearchVideoPlay(isPlayed) {
+        function _classAction(state) {
+            return state ? 'add' : 'remove';
+        }
+
+        $scope.eFeaturedList.classList[_classAction(isPlayed)]('hidden-layer');
+        $scope.eCategoriesPanel.classList[_classAction(isPlayed)]('hidden-layer');
+        $scope.eSearchedVideo.classList[_classAction(!isPlayed)]('hidden-layer');
+        $scope.eFeedList.classList[_classAction(isPlayed)]('hidden-layer');
+
     }
 
     function featuredMouseDown(event) {
@@ -164,7 +191,7 @@ function MainCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
         return $q( (resolve) => {
             videoServ.getVideosList($scope)
                 .then( (response) => {
-                    $scope.videosList = _.filter(response.data.data, item => item.hero_image_link && item.streams.length)  ;
+                    $scope.videosList = _.filter(response.data.data, item => item.hero_images && item.hero_images.hero_image_link && item.streams && item.streams.length)  ;
                     resolve();
                 });
         });

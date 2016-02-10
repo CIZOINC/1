@@ -6,7 +6,7 @@ module Auth
 
     def fetch_user_by_facebook_token
       begin
-        uri = "https://graph.facebook.com/me?access_token=" + params[:access_token]
+        uri = "https://graph.facebook.com/me?fields=email,birthday&access_token=" + params[:access_token]
         @response = JSON.parse(open(uri).read[0..-1])
         @response['birthday'] = @response['birthday'] ? format_date(@response['birthday']) : time_to_valid_format(Time.now)
         # render 'fetch_user_by_facebook_token'
@@ -44,9 +44,14 @@ module Auth
         users_scope = (Doorkeeper::AccessToken.where(resource_owner_id: user.id).pluck(:scopes).include? 'admin') ? 'admin' : 'user'
         @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes:  users_scope, refresh_token: secret(32))
         Doorkeeper::TokensController.new.destroy_useless_tokens(user)
-        render 'auth/omniauth_callbacks/access_token'
+        
+
+        response = Doorkeeper::OAuth::TokenResponse.new(@access_token)
+        self.headers.merge! response.headers
+        self.response_body = response.body.to_json
+        self.status = response.status
       else
-        render json: {errors: user.errors.full_messages}
+        render json: {errors: user.errors.full_messages}, status: 400
       end
     end
 

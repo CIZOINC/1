@@ -32,7 +32,8 @@ function RegisterCtrl($scope, $log, userServ, moment) {
         },
         months: months,
 
-        registerUser: registerUser
+        registerUser: registerUser,
+        facebookRegister: facebookRegister
     });
 
     function registerUser() {
@@ -52,8 +53,10 @@ function RegisterCtrl($scope, $log, userServ, moment) {
         } else {
             $log.log('date error');
         }
+    }
 
-
+    function facebookRegister() {
+        userServ.facebookAuth($scope.hostName);
     }
 }
 

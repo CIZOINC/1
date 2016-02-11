@@ -4,7 +4,7 @@ angular
     .controller('LoginCtrl', LoginCtrl);
 
 /* @ngInject */
-function LoginCtrl($scope, $state, userServ) {
+function LoginCtrl($scope, $state, userServ, storageServ) {
     "use strict";
 
 
@@ -22,7 +22,11 @@ function LoginCtrl($scope, $state, userServ) {
         userServ.login($scope.hostName, {
             login: $scope.login.email,
             password: $scope.login.password
-        })
+        }).then((response) => {
+            storageServ.setItem($scope.storage.storageUserToken, response.data);
+            $scope.storage.token = response.data;
+            $state.go('main');
+        });
     }
 
     function registerClick() {
@@ -30,4 +34,4 @@ function LoginCtrl($scope, $state, userServ) {
     }
 }
 
-RegisterCtrl.$inject = ['$scope', '$state', 'userServ'];
+LoginCtrl.$inject = ['$scope', '$state', 'userServ', 'storageServ'];

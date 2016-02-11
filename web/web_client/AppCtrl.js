@@ -22,7 +22,7 @@ angular
 
 
 /* @ngInject */
-function AppCtrl($scope, routerHelper, routesList, $state) {
+function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ) {
 
     $scope = angular.extend($scope, {
         title: 'Cizo',
@@ -31,23 +31,27 @@ function AppCtrl($scope, routerHelper, routesList, $state) {
 
         storage: {
             storageSeenKey: 'seen',
+            storageUserToken: 'token',
 
-            seenItems: []
+            seenItems: [],
+            token: undefined
         }
 
     });
 
-
-
-    applicationStart(routerHelper, routesList, $state);
-}
-AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state'];
-
-function applicationStart(routerHelper, routesList, $state) {
-    "use strict";
-
     routerHelper.configureStates(routesList);
+
+    $scope.storage.token = storageServ.getItem($scope.storage.storageUserToken);
+    if ($scope.storage.token && userServ.isUnexpiredToken($scope.storage.token)) {
+        userServ.updateToken($scope.hostName, $scope.storage.token)
+            .then((response) => {
+                storageServ.setItem($scope.storage.storageUserToken, response.data);
+                $scope.storage.token = response.data;
+            });
+    }
+
+
     $state.go('main');
+
 }
-
-
+AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ'];

@@ -47,9 +47,10 @@ gem 'acts-as-taggable-on'
 gem 'aws-sdk', '~> 2'
 
 gem 'versionist'
+gem 'carrierwave', :github => 'satoruk/carrierwave' , :ref => '43179f94d6a4e62f69e812f5082d6447c9138480'
+gem 'carrierwave_backgrounder'
+gem 'rmagick', require: false
 
-gem 'carrierwave'
-gem 'rmagick', '~> 2.15', '>= 2.15.4'
 gem "fog-aws"
 gem "fog"
 

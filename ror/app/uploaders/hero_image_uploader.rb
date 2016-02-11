@@ -1,7 +1,9 @@
 # encoding: utf-8
 
 class HeroImageUploader < CarrierWave::Uploader::Base
+  include ::CarrierWave::Backgrounder::Delay
   include CarrierWave::RMagick
+
   # include CarrierWave::MiniMagick
 
   storage :fog

@@ -4,7 +4,7 @@ angular
     .directive('menu', menu);
 
 /* @ngInject */
-function menu($http, $q, $log, $sce) {
+function menu($http, $q, $log, $sce, $state) {
     "use strict";
 
     return {
@@ -19,7 +19,7 @@ function menu($http, $q, $log, $sce) {
     };
 
     function linkFn(scope) {
-        const debounceSearchWaitTime = 600;
+        const debounceSearchWaitTime = 300;
         scope = angular.extend(scope, {
             isMenuVisible: false,
             searchText: '',
@@ -50,7 +50,9 @@ function menu($http, $q, $log, $sce) {
                     .then((result) => {
                         scope.searchResult = result.data.data;
                     });
-            }, debounceSearchWaitTime)
+            }, debounceSearchWaitTime),
+
+            signInClick: signInClick
         });
 
         function _applyClass(state, element, className) {
@@ -137,8 +139,12 @@ function menu($http, $q, $log, $sce) {
             return $sce.trustAsHtml(iconMap[String(id)]);
         }
 
+
+        function signInClick() {
+            $state.go('login');
+        }
 }
 
 }
 
-menu.$inject = ['$http', '$q', '$log', '$sce'];
+menu.$inject = ['$http', '$q', '$log', '$sce', '$state'];

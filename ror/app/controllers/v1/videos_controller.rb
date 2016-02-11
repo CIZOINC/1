@@ -97,7 +97,8 @@ class V1::VideosController < V1::ApiController
   end
 
   def hero_image
-    @video.update(hero_image: params[:file]) ? nothing(202) : (render json: {errors: @video.errors}, status: 422)
+    @video.hero_image = params[:file]
+    @video.save ? nothing(202) : (render json: {errors: @video.errors}, status: 422)
   end
 
   def trending

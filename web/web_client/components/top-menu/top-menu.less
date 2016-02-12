@@ -5,6 +5,24 @@
   align-items: center;
   align-content: center;
   color: white;
+  padding: 5px;
+
+  &_navigation {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+  }
+
+  &_advanced {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    padding: 10px;
+  }
 
   &_main {
     display: flex;
@@ -30,6 +48,7 @@
     justify-content: flex-start;
     align-content: center;
     align-items: center;
+    padding-left: 20px;
 
     &_item {
       font-size: 18px;
@@ -41,28 +60,16 @@
   }
 
   &_search {
-    padding: 0;
-    margin: 0;
-    position: relative;
+    display: flex;
     color: black;
-    height: 0;
-    top: 0;
-    width: 250px;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    margin-right: 20px;
     &_input {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: calc(100% - 30px);
-      height: 30px;
     }
 
     &_button {
-      position: absolute;
-      top: 0;
-      left: calc(100% - 30px);
-      bottom: 0;
-      right: 0;
-      height: 30px;
     }
   }
 }

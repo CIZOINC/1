@@ -20,7 +20,14 @@ function topMenu() {
     function linkFn(scope) {
         scope = angular.extend(scope, {
 
+
+            moveToHome: moveToHome
         });
+
+
+        function moveToHome() {
+            $state.go('home');
+        }
     }
 }
 

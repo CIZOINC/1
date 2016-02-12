@@ -21,7 +21,7 @@
 
             app = $('#app');
 
-            ele.on('click', function(e) {
+            ele.on('click', function (e) {
                 if (app.hasClass('nav-collapsed-min')) {
                     app.removeClass('nav-collapsed-min');
                 } else {
@@ -29,7 +29,7 @@
                     $rootScope.$broadcast('nav:reset');
                 }
                 return e.preventDefault();
-            });            
+            });
         }
     }
 
@@ -63,7 +63,7 @@
 
             $nav = $('#nav-container');
 
-            $a.on('click', function(event) {
+            $a.on('click', function (event) {
                 var $parent, $this;
                 if ($app.hasClass('nav-collapsed-min') || ($nav.hasClass('nav-horizontal') && $window.width() >= 768)) {
                     return false;
@@ -75,11 +75,11 @@
                 event.preventDefault();
             });
 
-            $aRest.on('click', function(event) {
+            $aRest.on('click', function (event) {
                 $lists.removeClass('open').find('ul').slideUp(slideTime);
             });
 
-            scope.$on('nav:reset', function(event) {
+            scope.$on('nav:reset', function (event) {
                 $lists.removeClass('open').find('ul').slideUp(slideTime);
             });
 
@@ -87,7 +87,7 @@
 
             prevWidth = $window.width();
 
-            updateClass = function() {
+            updateClass = function () {
                 var currentWidth;
                 currentWidth = $window.width();
                 if (currentWidth < 768) {
@@ -99,12 +99,12 @@
                 prevWidth = currentWidth;
             };
 
-            $window.resize(function() {
+            $window.resize(function () {
                 var t;
                 clearTimeout(t);
                 t = setTimeout(updateClass, 300);
             });
-          
+
         }
     }
 
@@ -112,7 +112,7 @@
     function highlightActive() {
         var directive = {
             restrict: 'A',
-            controller: [ '$scope', '$element', '$attrs', '$location', toggleNavCollapsedMinCtrl]
+            controller: ['$scope', '$element', '$attrs', '$location', toggleNavCollapsedMinCtrl]
         };
 
         return directive;
@@ -122,13 +122,13 @@
 
             links = $element.find('a');
 
-            path = function() {
+            path = function () {
                 return $location.path();
             };
 
-            highlightActive = function(links, path) {
+            highlightActive = function (links, path) {
                 path = '#' + path;
-                return angular.forEach(links, function(link) {
+                return angular.forEach(links, function (link) {
                     var $li, $link, href;
                     $link = angular.element(link);
                     $li = $link.parent('li');
@@ -144,7 +144,7 @@
 
             highlightActive(links, $location.path());
 
-            $scope.$watch(path, function(newVal, oldVal) {
+            $scope.$watch(path, function (newVal, oldVal) {
                 if (newVal === oldVal) {
                     return;
                 }
@@ -165,14 +165,11 @@
         return directive;
 
         function link(scope, ele, attrs) {
-            ele.on('click', function() {
+            ele.on('click', function () {
                 return $('#app').toggleClass('on-canvas');
-            });         
+            });
         }
     }
 
 
-})(); 
-
-
-
+})();

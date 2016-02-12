@@ -4,34 +4,34 @@
     angular.module('app.ui.form')
         .controller('WizardCtrl', ['$scope', '$q', '$timeout', 'WizardHandler', WizardCtrl]);
 
-    function WizardCtrl ($scope, $q, $timeout, WizardHandler) {
+    function WizardCtrl($scope, $q, $timeout, WizardHandler) {
         $scope.canExit = false;
         $scope.stepActive = true;
 
-        $scope.finished = function() {
+        $scope.finished = function () {
             alert("Wizard finished :)");
         };
-        $scope.logStep = function() {
+        $scope.logStep = function () {
             console.log("Step continued");
         };
-        $scope.goBack = function() {
+        $scope.goBack = function () {
             WizardHandler.wizard().goTo(0);
         };
-        $scope.exitWithAPromise = function() {
+        $scope.exitWithAPromise = function () {
             var d = $q.defer();
-            $timeout(function() {
+            $timeout(function () {
                 d.resolve(true);
             }, 1000);
             return d.promise;
         };
-        $scope.exitToggle = function() {
+        $scope.exitToggle = function () {
             $scope.canExit = !$scope.canExit;
         };
-        $scope.stepToggle = function() {
+        $scope.stepToggle = function () {
             $scope.stepActive = !$scope.stepActive;
         }
-        $scope.exitValidation = function() {
+        $scope.exitValidation = function () {
             return $scope.canExit;
         };
     }
-})(); 
+})();

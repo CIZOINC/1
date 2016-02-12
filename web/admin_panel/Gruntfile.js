@@ -9,11 +9,11 @@
         port: LIVERELOAD_PORT
     });
 
-    mountFolder = function(connect, dir) {
+    mountFolder = function (connect, dir) {
         return serveStatic(require("path").resolve(dir));
     };
 
-    module.exports = function(grunt) {
+    module.exports = function (grunt) {
         var yeomanConfig;
         require("load-grunt-tasks")(grunt);
         require("time-grunt")(grunt);
@@ -80,35 +80,35 @@
                 },
                 livereload: {
                     options: {
-                        middleware: function(connect) {
+                        middleware: function (connect) {
                             return [lrSnippet, mountFolder(connect, ".tmp"), mountFolder(connect, yeomanConfig.app)];
                         }
                     }
                 },
                 docs: {
                     options: {
-                        middleware: function(connect) {
+                        middleware: function (connect) {
                             return [lrSnippet, mountFolder(connect, yeomanConfig.docs)];
                         }
                     }
                 },
                 landing: {
                     options: {
-                        middleware: function(connect) {
+                        middleware: function (connect) {
                             return [lrSnippet, mountFolder(connect, yeomanConfig.landing)];
                         }
                     }
                 },
                 test: {
                     options: {
-                        middleware: function(connect) {
+                        middleware: function (connect) {
                             return [mountFolder(connect, ".tmp"), mountFolder(connect, "test")];
                         }
                     }
                 },
                 dist: {
                     options: {
-                        middleware: function(connect) {
+                        middleware: function (connect) {
                             return [mountFolder(connect, yeomanConfig.dist)];
                         }
                     }
@@ -121,12 +121,10 @@
             },
             clean: {
                 dist: {
-                    files: [
-                        {
-                            dot: true,
-                            src: [".tmp", "<%= yeoman.dist %>/*", "!<%= yeoman.dist %>/.git*"]
-                        }
-                    ]
+                    files: [{
+                        dot: true,
+                        src: [".tmp", "<%= yeoman.dist %>/*", "!<%= yeoman.dist %>/.git*"]
+                    }]
                 },
                 all: [
                     "readme.md",
@@ -235,30 +233,26 @@
                         sourceMapRootpath: "",
                         outputSourceFiles: true
                     },
-                    files: [
-                        {
-                            expand: true,
-                            cwd: "<%= yeoman.app %>/styles-less",
-                            src: "main.less",
-                            dest: ".tmp/styles",
-                            ext: ".css"
-                        }
-                    ]
+                    files: [{
+                        expand: true,
+                        cwd: "<%= yeoman.app %>/styles-less",
+                        src: "main.less",
+                        dest: ".tmp/styles",
+                        ext: ".css"
+                    }]
                 },
                 dist: {
                     options: {
                         cleancss: true,
                         report: 'min'
                     },
-                    files: [
-                        {
-                            expand: true,
-                            cwd: "<%= yeoman.app %>/styles-less",
-                            src: "main.less",
-                            dest: ".tmp/styles",
-                            ext: ".css"
-                        }
-                    ]
+                    files: [{
+                        expand: true,
+                        cwd: "<%= yeoman.app %>/styles-less",
+                        src: "main.less",
+                        dest: ".tmp/styles",
+                        ext: ".css"
+                    }]
                 }
             },
             useminPrepare: {
@@ -284,51 +278,47 @@
             htmlmin: {
                 dist: {
                     options: {},
-                    files: [
-                        {
-                            expand: true,
-                            cwd: "<%= yeoman.app %>",
-                            src: ["*.html", "views/*.html"],
-                            dest: "<%= yeoman.dist %>"
-                        }
-                    ]
+                    files: [{
+                        expand: true,
+                        cwd: "<%= yeoman.app %>",
+                        src: ["*.html", "views/*.html"],
+                        dest: "<%= yeoman.dist %>"
+                    }]
                 }
             },
             copy: {
                 dist: {
-                    files: [
-                        {
-                            expand: true,
-                            dot: true,
-                            cwd: "<%= yeoman.app %>",
-                            dest: "<%= yeoman.dist %>",
-                            src: [
-                                "favicon.ico",
-                                "bower_components/font-awesome/css/*",
-                                "bower_components/font-awesome/fonts/*",
-                                "bower_components/weather-icons/css/*",
-                                "bower_components/weather-icons/fonts/*",
-                                "bower_components/weather-icons/font/*",
-                                "fonts/**/*",
-                                "i18n/**/*",
-                                "images/**/*",
-                                "styles/fonts/**/*",
-                                "styles/img/**/*",
-                                "styles/ui/images/*",
-                                "app/**/*.html"
-                            ]
-                        }, {
-                            expand: true,
-                            cwd: ".tmp",
-                            dest: "<%= yeoman.dist %>",
-                            src: ["styles/**", "assets/**"]
-                        }, {
-                            expand: true,
-                            cwd: ".tmp/images",
-                            dest: "<%= yeoman.dist %>/images",
-                            src: ["generated/*"]
-                        }
-                    ]
+                    files: [{
+                        expand: true,
+                        dot: true,
+                        cwd: "<%= yeoman.app %>",
+                        dest: "<%= yeoman.dist %>",
+                        src: [
+                            "favicon.ico",
+                            "bower_components/font-awesome/css/*",
+                            "bower_components/font-awesome/fonts/*",
+                            "bower_components/weather-icons/css/*",
+                            "bower_components/weather-icons/fonts/*",
+                            "bower_components/weather-icons/font/*",
+                            "fonts/**/*",
+                            "i18n/**/*",
+                            "images/**/*",
+                            "styles/fonts/**/*",
+                            "styles/img/**/*",
+                            "styles/ui/images/*",
+                            "app/**/*.html"
+                        ]
+                    }, {
+                        expand: true,
+                        cwd: ".tmp",
+                        dest: "<%= yeoman.dist %>",
+                        src: ["styles/**", "assets/**"]
+                    }, {
+                        expand: true,
+                        cwd: ".tmp/images",
+                        dest: "<%= yeoman.dist %>/images",
+                        src: ["generated/*"]
+                    }]
                 },
                 styles: {
                     expand: true,
@@ -365,30 +355,30 @@
                 dist: {}
             }
         });
-        grunt.registerTask("server", function(target) {
+        grunt.registerTask("server", function (target) {
             grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
         });
-        grunt.registerTask("serve", function(target) {
+        grunt.registerTask("serve", function (target) {
             if (target === "dist") {
                 return grunt.task.run(["build", "open", "connect:dist:keepalive"]);
             }
             return grunt.task.run(["clean:server", "concurrent:server", "connect:livereload", "open", "watch"]);
         });
 
-        grunt.registerTask("lessServer", function(target) {
+        grunt.registerTask("lessServer", function (target) {
             grunt.log.warn('The `lessServer` task has been deprecated. Use `grunt lessServe` to start a server.');
-        });  
-        grunt.registerTask("lessServe", function(target) {
+        });
+        grunt.registerTask("lessServe", function (target) {
             if (target === "dist") {
                 return grunt.task.run(["lessBuild", "open", "connect:dist:keepalive"]);
             }
             return grunt.task.run(["clean:server", "concurrent:lessServer", "connect:livereload", "open", "watch"]);
         });
 
-        grunt.registerTask("docs", function() {
+        grunt.registerTask("docs", function () {
             return grunt.task.run(["jade:docs", "connect:docs", "open", "watch"]);
         });
-        grunt.registerTask("landing", function() {
+        grunt.registerTask("landing", function () {
             return grunt.task.run(["jade:landing", "compass:landing", "connect:landing", "open", "watch"]);
         });
 

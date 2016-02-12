@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('app')
-        .config(['$routeProvider', function($routeProvider) {
+        .config(['$routeProvider', function ($routeProvider) {
             var routes, setRoutes;
 
             routes = [
@@ -16,7 +16,7 @@
                 'app/tasks', 'app/calendar'
             ]
 
-            setRoutes = function(route) {
+            setRoutes = function (route) {
                 var config, url;
                 url = '/' + route;
                 config = {
@@ -26,17 +26,24 @@
                 return $routeProvider;
             };
 
-            routes.forEach(function(route) {
+            routes.forEach(function (route) {
                 return setRoutes(route);
             });
 
             $routeProvider
-                .when('/', {redirectTo: '/dashboard'})
-                .when('/dashboard', {templateUrl: 'app/dashboard/dashboard.html'})
-                .when('/404', {templateUrl: 'app/page/404.html'})
-                .otherwise({ redirectTo: '/404'});
+                .when('/', {
+                    redirectTo: '/dashboard'
+                })
+                .when('/dashboard', {
+                    templateUrl: 'app/dashboard/dashboard.html'
+                })
+                .when('/404', {
+                    templateUrl: 'app/page/404.html'
+                })
+                .otherwise({
+                    redirectTo: '/404'
+                });
 
-        }]
-    );
+        }]);
 
-})(); 
+})();

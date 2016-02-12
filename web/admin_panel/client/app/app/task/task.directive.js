@@ -12,10 +12,10 @@
 
         return directive;
 
-        function link (scope, ele, attrs) {
-            scope.$watch(attrs.taskFocus, function(newVal) {
+        function link(scope, ele, attrs) {
+            scope.$watch(attrs.taskFocus, function (newVal) {
                 if (newVal) {
-                    $timeout(function() {
+                    $timeout(function () {
                         return ele[0].focus();
                     }, 0, false);
                 }
@@ -23,4 +23,4 @@
         }
     }
 
-})(); 
+})();

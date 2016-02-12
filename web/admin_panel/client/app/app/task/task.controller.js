@@ -2,8 +2,8 @@
     'use strict';
 
     angular.module('app.task')
-        .controller('taskCtrl', [ '$scope', 'taskStorage', 'filterFilter', '$rootScope', 'logger', taskCtrl]);
-        
+        .controller('taskCtrl', ['$scope', 'taskStorage', 'filterFilter', '$rootScope', 'logger', taskCtrl]);
+
     function taskCtrl($scope, taskStorage, filterFilter, $rootScope, logger) {
         var tasks;
 
@@ -11,7 +11,9 @@
 
         $scope.newTask = '';
 
-        $scope.remainingCount = filterFilter(tasks, {completed: false}).length;
+        $scope.remainingCount = filterFilter(tasks, {
+            completed: false
+        }).length;
 
         $scope.editedTask = null;
 
@@ -19,22 +21,22 @@
             completed: false
         };
 
-        $scope.filter = function(filter) {
+        $scope.filter = function (filter) {
             switch (filter) {
-                case 'all':
-                    return $scope.statusFilter = '';
-                case 'active':
-                    return $scope.statusFilter = {
-                        completed: false
-                    };
-                case 'completed':
-                    return $scope.statusFilter = {
-                        completed: true
-                    };
+            case 'all':
+                return $scope.statusFilter = '';
+            case 'active':
+                return $scope.statusFilter = {
+                    completed: false
+                };
+            case 'completed':
+                return $scope.statusFilter = {
+                    completed: true
+                };
             }
         };
 
-        $scope.add = function() {
+        $scope.add = function () {
             var newTask;
             newTask = $scope.newTask.trim();
             if (newTask.length === 0) {
@@ -50,11 +52,11 @@
             $scope.remainingCount++;
         };
 
-        $scope.edit = function(task) {
+        $scope.edit = function (task) {
             $scope.editedTask = task;
         };
 
-        $scope.doneEditing = function(task) {
+        $scope.doneEditing = function (task) {
             $scope.editedTask = null;
             task.title = task.title.trim();
             if (!task.title) {
@@ -65,7 +67,7 @@
             taskStorage.put(tasks);
         };
 
-        $scope.remove = function(task) {
+        $scope.remove = function (task) {
             var index;
             $scope.remainingCount -= task.completed ? 0 : 1;
             index = $scope.tasks.indexOf(task);
@@ -74,7 +76,7 @@
             logger.logError('Task removed');
         };
 
-        $scope.completed = function(task) {
+        $scope.completed = function (task) {
             $scope.remainingCount += task.completed ? -1 : 1;
             taskStorage.put(tasks);
             if (task.completed) {
@@ -90,15 +92,15 @@
             }
         };
 
-        $scope.clearCompleted = function() {
-            $scope.tasks = tasks = tasks.filter(function(val) {
+        $scope.clearCompleted = function () {
+            $scope.tasks = tasks = tasks.filter(function (val) {
                 return !val.completed;
             });
             taskStorage.put(tasks);
         };
 
-        $scope.markAll = function(completed) {
-            tasks.forEach(function(task) {
+        $scope.markAll = function (completed) {
+            tasks.forEach(function (task) {
                 task.completed = completed;
             });
             $scope.remainingCount = completed ? 0 : tasks.length;
@@ -108,13 +110,13 @@
             }
         };
 
-        $scope.$watch('remainingCount == 0', function(val) {
+        $scope.$watch('remainingCount == 0', function (val) {
             $scope.allChecked = val;
         });
 
-        $scope.$watch('remainingCount', function(newVal, oldVal) {
+        $scope.$watch('remainingCount', function (newVal, oldVal) {
             $rootScope.$broadcast('taskRemaining:changed', newVal);
         });
 
     }
-})(); 
+})();

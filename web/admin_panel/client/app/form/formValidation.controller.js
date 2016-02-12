@@ -28,16 +28,16 @@
 
         original = angular.copy($scope.form);
 
-        $scope.revert = function() {
+        $scope.revert = function () {
             $scope.form = angular.copy(original);
             return $scope.form_constraints.$setPristine();
         };
 
-        $scope.canRevert = function() {
+        $scope.canRevert = function () {
             return !angular.equals($scope.form, original) || !$scope.form_constraints.$pristine;
         };
 
-        $scope.canSubmit = function() {
+        $scope.canSubmit = function () {
             return $scope.form_constraints.$valid && !angular.equals($scope.form, original);
         };
     }
@@ -54,20 +54,20 @@
 
         original = angular.copy($scope.user);
 
-        $scope.revert = function() {
+        $scope.revert = function () {
             $scope.user = angular.copy(original);
             return $scope.form_signin.$setPristine();
         };
 
-        $scope.canRevert = function() {
+        $scope.canRevert = function () {
             return !angular.equals($scope.user, original) || !$scope.form_signin.$pristine;
         };
 
-        $scope.canSubmit = function() {
+        $scope.canSubmit = function () {
             return $scope.form_signin.$valid && !angular.equals($scope.user, original);
         };
 
-        $scope.submitForm = function() {
+        $scope.submitForm = function () {
             $scope.showInfoOnSubmit = true;
             return $scope.revert();
         };
@@ -87,24 +87,24 @@
 
         original = angular.copy($scope.user);
 
-        $scope.revert = function() {
+        $scope.revert = function () {
             $scope.user = angular.copy(original);
             $scope.form_signup.$setPristine();
         };
 
-        $scope.canRevert = function() {
+        $scope.canRevert = function () {
             return !angular.equals($scope.user, original) || !$scope.form_signup.$pristine;
         };
 
-        $scope.canSubmit = function() {
+        $scope.canSubmit = function () {
             return $scope.form_signup.$valid && !angular.equals($scope.user, original);
         };
 
-        $scope.submitForm = function() {
+        $scope.submitForm = function () {
             $scope.showInfoOnSubmit = true;
             return $scope.revert();
         };
 
     }
 
-})(); 
+})();

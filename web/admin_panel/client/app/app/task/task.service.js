@@ -18,13 +18,13 @@
             '{"title": "Shopping", "completed": true} ]';
 
         return {
-            get: function() {
-                return JSON.parse(localStorage.getItem(STORAGE_ID) || DEMO_TASKS );
+            get: function () {
+                return JSON.parse(localStorage.getItem(STORAGE_ID) || DEMO_TASKS);
             },
 
-            put: function(tasks) {
+            put: function (tasks) {
                 return localStorage.setItem(STORAGE_ID, JSON.stringify(tasks));
             }
         }
     }
-})(); 
+})();

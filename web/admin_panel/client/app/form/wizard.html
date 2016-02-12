@@ -1,12 +1,12 @@
 <div class="page">
 
- 
+
     <section class="panel panel-default">
         <div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> Angular Form Wizard</strong></div>
         <div class="panel-body padding-xl">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
-                
+
                     <section class="ui-angular-wizard" ng-controller="WizardCtrl">
                         <button ng-click="stepToggle()" class="btn btn-w-md btn-info">Clicking Me Will Toggle Steps On and Off Dynamically</button>
                         <div class="divider divider-lg"></div>
@@ -14,7 +14,7 @@
                             <wz-step wz-title="Start" canexit="exitWithAPromise">
                                 <h2>Start</h2>
                                 <div class="ui-wizard-content">
-                                        
+
                                     <p>Hey guys, welcome to the wizard :)</p>
                                     <p>Here we will use a promise with a timeout to simulate an async server call. Give the wizard <strong>1 second</strong> to progress after clicking next!</p>
                                     <div class="callout callout-info">
@@ -89,6 +89,6 @@
                 </div>
             </div>
         </div>
-    </section>     
+    </section>
 
 </div>

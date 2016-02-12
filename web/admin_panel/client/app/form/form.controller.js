@@ -14,37 +14,37 @@
         $scope.tags = ['foo', 'bar'];
     }
 
-    function DatepickerDemoCtrl ($scope) {
-        $scope.today = function() {
+    function DatepickerDemoCtrl($scope) {
+        $scope.today = function () {
             $scope.dt = new Date();
         };
         $scope.today();
 
-        $scope.clear = function() {
+        $scope.clear = function () {
             $scope.dt = null;
         };
 
         // Disable weekend selection
-        $scope.disabled = function(date, mode) {
+        $scope.disabled = function (date, mode) {
             return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
         };
 
-        $scope.toggleMin = function() {
+        $scope.toggleMin = function () {
             $scope.minDate = $scope.minDate ? null : new Date();
         };
 
         $scope.toggleMin();
         $scope.maxDate = new Date(2020, 5, 22);
 
-        $scope.open1 = function() {
+        $scope.open1 = function () {
             $scope.popup1.opened = true;
         };
 
-        $scope.open2 = function() {
+        $scope.open2 = function () {
             $scope.popup2.opened = true;
         };
 
-        $scope.setDate = function(year, month, day) {
+        $scope.setDate = function (year, month, day) {
             $scope.dt = new Date(year, month, day);
         };
 
@@ -69,24 +69,20 @@
         tomorrow.setDate(tomorrow.getDate() + 1);
         var afterTomorrow = new Date();
         afterTomorrow.setDate(tomorrow.getDate() + 1);
-        $scope.events =
-            [
-                {
-                    date: tomorrow,
-                    status: 'full'
-                },
-                {
-                    date: afterTomorrow,
-                    status: 'partially'
-                }
-            ];
+        $scope.events = [{
+            date: tomorrow,
+            status: 'full'
+        }, {
+            date: afterTomorrow,
+            status: 'partially'
+        }];
 
-        $scope.getDayClass = function(date, mode) {
+        $scope.getDayClass = function (date, mode) {
             if (mode === 'day') {
-                var dayToCheck = new Date(date).setHours(0,0,0,0);
+                var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
 
                 for (var i = 0; i < $scope.events.length; i++) {
-                    var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+                    var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
 
                     if (dayToCheck === currentDay) {
                         return $scope.events[i].status;
@@ -112,11 +108,11 @@
 
         $scope.ismeridian = true;
 
-        $scope.toggleMode = function() {
+        $scope.toggleMode = function () {
             return $scope.ismeridian = !$scope.ismeridian;
         };
 
-        $scope.update = function() {
+        $scope.update = function () {
             var d;
             d = new Date();
             d.setHours(14);
@@ -124,11 +120,11 @@
             return $scope.mytime = d;
         };
 
-        $scope.changed = function() {
+        $scope.changed = function () {
             return console.log('Time changed to: ' + $scope.mytime);
         };
 
-        $scope.clear = function() {
+        $scope.clear = function () {
             return $scope.mytime = null;
         };
 
@@ -147,28 +143,26 @@
 
         $scope.isReadonly = false;
 
-        $scope.hoveringOver = function(value) {
+        $scope.hoveringOver = function (value) {
             $scope.overStar = value;
             return $scope.percent = 100 * (value / $scope.max);
         };
 
-        $scope.ratingStates = [
-            {
-                stateOn: 'glyphicon-ok-sign',
-                stateOff: 'glyphicon-ok-circle'
-            }, {
-                stateOn: 'glyphicon-star',
-                stateOff: 'glyphicon-star-empty'
-            }, {
-                stateOn: 'glyphicon-heart',
-                stateOff: 'glyphicon-ban-circle'
-            }, {
-                stateOn: 'glyphicon-heart'
-            }, {
-                stateOff: 'glyphicon-off'
-            }
-        ];
+        $scope.ratingStates = [{
+            stateOn: 'glyphicon-ok-sign',
+            stateOff: 'glyphicon-ok-circle'
+        }, {
+            stateOn: 'glyphicon-star',
+            stateOff: 'glyphicon-star-empty'
+        }, {
+            stateOn: 'glyphicon-heart',
+            stateOff: 'glyphicon-ban-circle'
+        }, {
+            stateOn: 'glyphicon-heart'
+        }, {
+            stateOff: 'glyphicon-off'
+        }];
 
     }
 
-})(); 
+})();

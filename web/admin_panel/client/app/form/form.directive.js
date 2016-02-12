@@ -8,12 +8,10 @@
     function uiFileUpload() {
         return {
             restrict: 'A',
-            link: function(scope, ele) {
+            link: function (scope, ele) {
                 ele.bootstrapFileInput();
-            }            
+            }
         }
     }
 
-})(); 
-
-
+})();

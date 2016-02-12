@@ -15,6 +15,7 @@ class Video < ActiveRecord::Base
 
   mount_uploader :hero_image, HeroImageUploader
   process_in_background :hero_image
+  store_in_background :hero_image
   acts_as_taggable
 
   belongs_to :category

@@ -1,15 +1,4 @@
 GIT
-  remote: git://github.com/satoruk/carrierwave.git
-  revision: 43179f94d6a4e62f69e812f5082d6447c9138480
-  ref: 43179f94d6a4e62f69e812f5082d6447c9138480
-  specs:
-    carrierwave (0.10.0)
-      activemodel (>= 3.2.0)
-      activesupport (>= 3.2.0)
-      json (>= 1.7)
-      mime-types (>= 1.16)
-
-GIT
   remote: https://github.com/audionerd/swagger-ui_rails.git
   revision: 603de7400d6d1a1ecd810c918d24c2f3fe043abd
   branch: master
@@ -69,6 +58,11 @@ GEM
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
     byebug (8.2.1)
+    carrierwave (0.10.0)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+      json (>= 1.7)
+      mime-types (>= 1.16)
     carrierwave_backgrounder (0.4.2)
       carrierwave (~> 0.5)
     coffee-rails (4.1.0)
@@ -383,7 +377,7 @@ DEPENDENCIES
   acts-as-taggable-on
   aws-sdk (~> 2)
   byebug
-  carrierwave!
+  carrierwave
   carrierwave_backgrounder
   coffee-rails (~> 4.1.0)
   daemons

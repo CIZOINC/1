@@ -15,25 +15,25 @@
             "timeOut": "3000"
         };
 
-        logIt = function(message, type) {
+        logIt = function (message, type) {
             return toastr[type](message);
         };
 
         return {
-            log: function(message) {
+            log: function (message) {
                 logIt(message, 'info');
             },
-            logWarning: function(message) {
+            logWarning: function (message) {
                 logIt(message, 'warning');
             },
-            logSuccess: function(message) {
+            logSuccess: function (message) {
                 logIt(message, 'success');
             },
-            logError: function(message) {
+            logError: function (message) {
                 logIt(message, 'error');
             }
         };
 
     }
 
-})(); 
+})();

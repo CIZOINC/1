@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160211094154) do
+ActiveRecord::Schema.define(version: 20160212065859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -176,6 +176,7 @@ ActiveRecord::Schema.define(version: 20160211094154) do
     t.datetime "deleted_at"
     t.integer  "featured_order"
     t.boolean  "hero_image_processing", default: false, null: false
+    t.string   "hero_image_tmp"
   end
 
   add_index "videos", ["featured_order"], name: "index_videos_on_featured_order", using: :btree

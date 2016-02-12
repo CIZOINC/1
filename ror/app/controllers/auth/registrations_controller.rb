@@ -12,7 +12,7 @@ module Auth
       if resource.save
         render 'v1/registrations/show', status: 200
       else
-        render json: {error_codes: @user.errors.messages[:codes], error_messages: t(@user.errors.messages[:codes], password_params)}, status: 422
+        render_errors @user.errors.messages[:codes], password_params
       end
     end
 

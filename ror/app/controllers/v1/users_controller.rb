@@ -24,7 +24,7 @@ class V1::UsersController < V1::ApiController
     if @user.update_attributes(users_params)
       render :show, status: 200, location: @user
     else
-      render json: {error_codes: @user.errors.messages[:codes], error_messages: t(@user.errors.messages[:codes])}, status: 422
+      render_errors @user.errors.messages[:codes]
     end
   end
 
@@ -32,7 +32,7 @@ class V1::UsersController < V1::ApiController
     if @current_user.update_attributes(self_params)
       render :me, status: 200, location: @current_user
     else
-      render json: {error_codes: @current_user.errors.messages[:codes], error_messages: t(@current_user.errors.messages[:codes], password_params)}, status: 422
+      render_errors @current_user.errors.messages[:codes], password_params
     end
   end
 

@@ -2,34 +2,38 @@
     'use strict';
 
     angular.module('app', [
-        // Angular modules
-        'ngRoute',
-        'ngAnimate',
-        'ngAria',
+            // Angular modules
+            'ngRoute',
+            'ngAnimate',
+            'ngAria',
 
-        // 3rd Party Modules
-        'ui.bootstrap',
-        'ui.tree',
-        'ngMap',
-        'ngTagsInput',
-        'textAngular',
-        'angular-loading-bar',
-        'ui.calendar',
-        'duScroll',
-        'mgo-angular-wizard',
+            // 3rd Party Modules
+            'ui.bootstrap',
+            'ui.tree',
+            'ngMap',
+            'ngTagsInput',
+            'textAngular',
+            'angular-loading-bar',
+            'ui.calendar',
+            'duScroll',
+            'mgo-angular-wizard',
+            'xeditable',
 
-        // Custom modules
-        'app.nav',
-        'app.i18n',
-        'app.chart',
-        'app.ui',
-        'app.ui.form',
-        'app.ui.form.validation',
-        'app.page',
-        'app.table',
-        'app.task',
-        'app.calendar',
-        'app.videos'
-    ]);
+            // Custom modules
+            'app.nav',
+            'app.i18n',
+            'app.chart',
+            'app.ui',
+            'app.ui.form',
+            'app.ui.form.validation',
+            'app.page',
+            'app.table',
+            'app.task',
+            'app.calendar',
+            'app.videos'
+        ])
+        .run(function (editableOptions) {
+            editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+        });
 
 })();

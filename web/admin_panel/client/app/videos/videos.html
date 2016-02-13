@@ -22,6 +22,10 @@
                 <tr>
                     <th>
                         <div class="th">
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th">
                             Video Name
                             <span class="fa fa-angle-up" data-ng-click=" order('title') " data-ng-class="{active: row == 'title'}"></span>
                             <span class="fa fa-angle-down" data-ng-click=" order('-title') " data-ng-class="{active: row == '-title'}"></span>
@@ -55,19 +59,69 @@
                     <td data-ng-controller="VideoModalCtrl">
                         <script type="text/ng-template" id="videoModal.html">
                             <div class="modal-header">
-                                <h3>Batman v Superman - Trailer 2</h3>
+                                <h3>EDIT VIDEO</h3>
                             </div>
                             <div class="modal-body">
-                                <h4>Description</h4> Batman v Superman: Dawn of Justice Trailer 2 featured on Jimmy Kimmel - http://bit.ly/JKLSubscribe
-                                <br/> Visible:
-                                <label class="ui-switch ui-switch-success">
-                                    <input type="checkbox" checked=""><i></i>
-                                </label><br/>
-                                Featured:
-                                <label class="ui-switch ui-switch-success">
-                                    <input type="checkbox" checked=""><i></i>
-                                </label><br/>
-
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Video title</div>
+                                                    <div class="panel-body">
+                                                        {{video.title}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Video Description</div>
+                                                    <div class="panel-body">
+                                                        {{video.description}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Video Description</div>
+                                                    <div class="panel-body">
+                                                        Category - {{category.title}}
+                                                        <br /> Visible - {{video.visible}}
+                                                        <span ng-if="video.tag_list.length > 0"><br /> Tags - {{video.tag_list}}</span>
+                                                        <br /> Date Added - {{video.created_at | date:'medium'}}
+                                                        <br /> Last Edited - {{video.updated_at | date:'medium'}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div ng-class="video.mature_content ? 'panel panel-default ui-ribbon-container ui-ribbon-danger' : 'panel panel-default'">
+                                                    <div ng-show="video.mature_content" class="ui-ribbon-wrapper">
+                                                        <div class="ui-ribbon">
+                                                            Mature
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Hero Image</div>
+                                                    <div class="panel-body">
+                                                        <img ng-src="{{video.hero_images.hero_image_link_large_banner}}" alt="Description" class="img-responsive" />
+                                                        <br />
+                                                        <div class="btn-group btn-group-justified">
+                                                            <input type="file" title="Change Image" data-ui-file-upload="" style="left: -193px; top: 8px;">
+                                                            <input type="file" title="Change Video" data-ui-file-upload="" style="left: -193px; top: 8px;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-primary" ng-click="ok()">OK</button>
@@ -75,13 +129,16 @@
                             </div>
                         </script>
 
-                        <a href ng-click="open('lg')">{{video.title}}</a>
+                        <button type="button" class="btn btn-w-sm btn-gap-v btn-primary" ng-click="open('lg')">Edit</button>
                     </td>
-                    <td>{{video.description}}</td>
-                    <td>{{categoryLookup[video.category_id].title}}</td>
+                    <td>
+                        <span editable-text="video.title" e-cols="50">{{video.title}}</span>
+                    </td>
+                    <td><span editable-textarea="video.description" e-rows="3" e-cols="80">{{video.description}}</span></td>
+                    <td><span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories.data">{{categoryLookup[video.category_id].title}}</span></td>
                     <td>
                         <label class="ui-switch ui-switch-success">
-                            <input type="checkbox" ng-checked="video.visible"><i></i>
+                            <input type="checkbox" ng-model="video.visible" ng-checked="video.visible"><i></i>
                         </label>
                     </td>
                 </tr>

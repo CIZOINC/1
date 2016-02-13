@@ -13,7 +13,8 @@
                 'chart/echarts', 'chart/echarts-line', 'chart/echarts-bar', 'chart/echarts-pie', 'chart/echarts-scatter', 'chart/echarts-more',
                 'page/404', 'page/500', 'page/blank', 'page/forgot-password', 'page/invoice', 'page/lock-screen', 'page/profile', 'page/invoice', 'page/signin', 'page/signup', 'page/about', 'page/services', 'page/contact',
                 'mail/compose', 'mail/inbox', 'mail/single',
-                'app/tasks', 'app/calendar'
+                'app/tasks', 'app/calendar',
+                'app/videos', 'app/users'
             ]
 
             setRoutes = function (route) {
@@ -36,6 +37,9 @@
                 })
                 .when('/dashboard', {
                     templateUrl: 'app/dashboard/dashboard.html'
+                })
+                .when('/videos', {
+                    templateUrl: 'app/videos/videos.html'
                 })
                 .when('/404', {
                     templateUrl: 'app/page/404.html'

@@ -28,7 +28,8 @@
         'app.page',
         'app.table',
         'app.task',
-        'app.calendar'
+        'app.calendar',
+        'app.videos'
     ]);
 
 })();

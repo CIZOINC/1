@@ -11,7 +11,7 @@ class V1::VideosController < V1::ApiController
 
   before_action :check_if_video_deleted, only: [:show, :update, :destroy, :hero_image, :add_featured, :remove_featured]
   before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
-  before_action :check_for_file, only: [:hero_image]
+  before_action :check_if_file_presents_in_params, only: [:hero_image]
   before_action :set_bucket, only: [:destroy]
   before_action :able_to_be_featured?, only: [:add_featured]
 

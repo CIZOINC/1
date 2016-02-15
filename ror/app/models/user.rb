@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   has_many :skipped_videos, dependent: :destroy
   has_many :seen_videos, dependent: :destroy
 
+  before_destroy :prevent_user_from_destroy, if: :last_admin?
   after_destroy :destroy_self_tokens
 
   def user_age_meets_requirement!
@@ -30,6 +31,15 @@ class User < ActiveRecord::Base
 
   def destroy_self_tokens
     Doorkeeper::AccessToken.where(resource_owner_id: self.id).destroy_all
+  end
+
+  def last_admin?
+    self.is_admin && User.where(is_admin: true).count == 1
+  end
+
+  def prevent_user_from_destroy
+    self.errors[:codes] << '422.11'
+    false
   end
 
   def admin_changed?

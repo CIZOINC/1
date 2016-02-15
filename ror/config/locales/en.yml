@@ -26,18 +26,37 @@ en:
       write: 'Update your information'
       admin: 'Change your preferences'
 
-  invalid_email: Invalid email
-  blank_email: Email can't be blank
-  expired_rpt: reset_password_token has expired, please request a new one
-  invalid_rpt: Token is not valid, please generate a new one
-  rpt_required: reset_password_token is required
+  # invalid_email: Invalid email
+  # blank_email: Email can't be blank
+  # expired_rpt: reset_password_token has expired, please request a new one
+  # invalid_rpt: Token is not valid, please generate a new one
+  # rpt_required: reset_password_token is required
   at_required: access_token is required
-  login_failed: Login failed
-  last_admin: Your account can not be destroyed because you are the last admin on the project.
+  # login_failed: Login failed
+  # last_admin: Your account can not be destroyed because you are the last admin on the project.
+  "400":
+    "1": Reset password token is required
+    "2": Reset password token is not valid, please request a new one
+    "3": Reset password token has expired, please request a new one
+    "4": Login failed
+    "5": Input key does not exist on S3 bucket
+
+  "403":
+    "1": Key is required
+    "2": Filename is required
+    "3": File is required
+    "4": Filename must contain only lowercase letters, numbers, hyphens (-), and periods (.). It must start and end with letters or numbers
+    "5": Forbidden video
+    "6": Unable to save record. If featured true, featured_order can not be nil and vice versa
+
+  "409":
+    "1": Title has already been taken
+    "2": Email has already been taken
+    "3": Transcode in progess
+
   "422":
     "1": Email can't be blank
     "2": Invalid email
-    "3": Email has already been taken
 
     "4": Password can't be blank
     "5": Password is too short (minimum is %{min} characters)
@@ -47,3 +66,7 @@ en:
 
     "9": Birthday can't be blank
     "10": Invalid birthday (for instance 2015-12-28T06:11:29.973Z)
+
+    "11": Your account can not be destroyed because you are the last admin on the project
+
+    "12": Title can't be blank

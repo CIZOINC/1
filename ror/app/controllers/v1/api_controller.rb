@@ -26,10 +26,6 @@ class V1::ApiController < ApplicationController
     @current_user = User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
   end
 
-  def nothing(status)
-    render nothing: true, status: status
-  end
-
   def bucket_name
     'cizo-assets'
   end
@@ -44,6 +40,15 @@ class V1::ApiController < ApplicationController
 
   def set_bucket
     @bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
+  end
+
+  %w(key filename file).each_with_index do |param, index|
+    define_method("check_if_#{param}_presents_in_params") do
+      unless !params[param].blank? && instance_variable_set("@#{param}", params[param])
+        render_errors ["403.#{index+1}"]
+        return
+      end
+    end
   end
 
 end

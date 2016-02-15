@@ -17,7 +17,7 @@ class Video < ActiveRecord::Base
   process_in_background :hero_image
   store_in_background :hero_image
   acts_as_taggable
-
+  
   belongs_to :category
   has_many :streams, dependent: :destroy
   has_many :liked_videos, dependent: :destroy

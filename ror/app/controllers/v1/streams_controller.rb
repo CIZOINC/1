@@ -110,28 +110,19 @@ class V1::StreamsController < V1::ApiController
 
   def check_if_stream_meets_requirements?
     unless stream_meets_requirements?
-      render json: { error: 'Transcode in progess' }, status: 409
+      render_errors ['409.3']
       return
     end
   end
 
   def check_if_object_exists(obj)
-    render json: { error: 'Input key does not exist on S3 bucket' }, status: 400 unless obj.exists?
-  end
-
-  %w(key filename).each do |param|
-    define_method("check_if_#{param}_presents_in_params") do
-      unless !params[param].blank? && instance_variable_set("@#{param}", params[param])#eval("@#{param}") = params[param].blank?
-        render json: {errors:"#{param.capitalize} is required"}, status: 403
-        return
-      end
-    end
+    render_errors ['400.5'] unless obj.exists?
   end
 
   def valid_filename?(filename)
     filename_regexp = /\A^[0-9a-z]+[0-9a-z\-\.\_]+[0-9a-z]$\z/
     unless filename =~ filename_regexp
-      render json: {error: 'Filename must contain only lowercase letters, numbers, hyphens (-), and periods (.). It must start and end with letters or numbers'}, status: 403
+      render_errors ['403.4']
       return
     end
   end
@@ -238,7 +229,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def check_for_requirement
-    render json: { error: 'Forbidden video' }, status: 403 if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
+    render_errors ['403.5'] if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
   end
 
 end

@@ -26,7 +26,7 @@ module Auth
     end
 
     def failure
-      render json: {errors: t(:login_failed)}, status: 400
+      render_errors ['400.4']
     end
 
     private

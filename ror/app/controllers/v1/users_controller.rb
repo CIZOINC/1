@@ -1,5 +1,5 @@
 class V1::UsersController < V1::ApiController
-  include Parametrable
+  # include Parametrable
   before_action only: [:me, :destroy_self_account, :update_self_account, :show, :like_video, :dislike_video, :liked, :skipped, :skip_video, :seen, :unseen, :mark_video_as_seen] do
     doorkeeper_authorize! :user, :admin
   end
@@ -12,9 +12,7 @@ class V1::UsersController < V1::ApiController
   before_action :set_user, only: [:show, :update]
   before_action :set_video, only: [:like_video, :dislike_video, :mark_video_as_seen, :skip_video, :guest_skip_video, :guest_mark_video_as_seen]
   before_action :user_age_meets_requirement, only: [:liked, :seen, :skipped, :unseen]
-  before_action :prevent_last_admin_from_deletion, only: [:destroy_self_account]
-  # before_action :is_admin_not_blank?, only: [:update]
-  # before_action :prevent_email_changing, only: [:update_self_account]
+  # before_action :prevent_last_admin_from_deletion, only: [:destroy_self_account]
 
   def index
     @users = User.all
@@ -43,8 +41,11 @@ class V1::UsersController < V1::ApiController
   end
 
   def destroy_self_account
-    @current_user.destroy
-    head :no_content
+    if @current_user.destroy
+      head :no_content
+    else
+      render_errors @current_user.errors[:codes]
+    end
   end
 
   %w(like dislike skip).each do |method|
@@ -91,18 +92,6 @@ class V1::UsersController < V1::ApiController
   end
 
   private
-
-  def is_admin_not_blank?
-    puts params[:is_admin].to_s
-    if (params[:is_admin].blank? && params.has_key?(:is_admin)) || ((params[:is_admin].to_s != "true") || (params[:is_admin].to_s != "false"))
-      (render json: {error_codes: ["422.10"], error_messages: [t("422.10")]}, status: 422)
-      return
-    end
-  end
-
-  def prevent_last_admin_from_deletion
-    render json: {error: t(:last_admin)}, status: 422 and return if @current_user.is_admin && User.where(is_admin: true).count == 1
-  end
 
   def limit_videos!
     as_admin? ? (@videos = @videos.limit(limited_videos)) : (@videos = @videos.limit(limited_videos(200)))

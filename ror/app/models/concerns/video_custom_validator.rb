@@ -1,7 +1,13 @@
-class VideoCustomValidator < ActiveModel::Validator
+class VideoCustomValidator < CustomValidator
   def validate(record)
-    if (record.featured && !record.featured_order) || (!record.featured && record.featured_order)
-      record.errors[:featured_and_featured_order] << "Unable to save record. If featured true, featured_order can not be nil and vice versa"
-    end
+    super
+    record.errors[:codes] << "403.6" if featured_conditions
+
+  end
+
+  protected
+
+  def featured_conditions
+    (@record.featured && !@record.featured_order) || (!@record.featured && @record.featured_order)
   end
 end

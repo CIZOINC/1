@@ -1,6 +1,6 @@
 module Auth
   class PasswordsController < Devise::PasswordsController
-    before_action :assert_reset_token_passed, only: :update
+    before_action :assert_reset_token_passed, only: [:update, :edit]
 
     def password_reset
       email = params[:email]
@@ -8,15 +8,14 @@ module Auth
         if valid_email?(email)
           @user = User.find_by_email(email)
         else
-          error 422, :invalid_email and return
+          render_errors ['422.2'] and return
         end
       else
-        error 422, :blank_email and return
+        render_errors ['422.1'] and return
       end
       # @user.send_reset_password_instructions if @user
-      render nothing: true, status: 200
+      nothing 200
       ResetPasswordMailer.reset_password_instructions(@user, @user.set_reset_password_token).deliver_later if @user
-
 
     end
 
@@ -24,12 +23,12 @@ module Auth
       user = User.with_reset_password_token(@reset_password_token = params[:reset_password_token])
       if user
         if user.reset_password_sent_at < 1.hour.ago
-          error 400, :expired_rpt
+          render_errors ['400.3']
         else
           render :edit, status: 200
         end
       else
-        error 400, :invalid_rpt
+        render_errors ['400.2']
       end
     end
 
@@ -37,35 +36,29 @@ module Auth
       @user = User.with_reset_password_token(params[:reset_password_token])
       if @user
         if @user.reset_password_sent_at < 1.hour.ago
-          error 400, :expired_rpt
+          render_errors ['400.3']
         else
           if @user.update(password: params[:password])
             render location: @user, status: 200
           else
-            render json: {errors: @user.errors.full_messages}, status: 422
+            render_errors @user.errors.messages[:codes], password_params
           end
         end
       else
-        error 400, :invalid_rpt
+        render_errors ['400.2']
       end
     end
-
-
 
     private
 
     def assert_reset_token_passed
       if params[:reset_password_token].blank?
-          error 400, :rpt_required and return
+          render_errors ['400.1'] and return
       end
     end
 
     def valid_email?(email)
       /\A[^@\s]+@([^@\s]+\.)+[^@\W]+\z/ =~ email
-    end
-
-    def error(status, message)
-      render json: {error: t(message)}, status: status
     end
   end
 end

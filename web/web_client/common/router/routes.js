@@ -1,7 +1,7 @@
 angular
     .module('app.routes', [])
     .constant('routesList', [
-        {
+        /*{
             state: 'main',
             config: {
                 url: '/',
@@ -9,7 +9,7 @@ angular
                 controller: 'MainCtrl',
                 controllerAs: 'main'
             }
-        },
+        },*/
         {
             state: 'register',
             config: {
@@ -26,6 +26,15 @@ angular
                 templateUrl: 'views/login/login.html',
                 controller: 'LoginCtrl',
                 controllerAs: 'login'
+            }
+        },
+        {
+            state: 'home',
+            config: {
+                url: '/',
+                templateUrl: 'views/home/home.html',
+                controller: 'HomeCtrl',
+                controllerAs: 'home'
             }
         }
     ]);

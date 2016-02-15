@@ -51,7 +51,7 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
     }
 
 
-    $state.go('main');
+    $state.go('home');
 
 }
 AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ'];

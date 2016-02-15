@@ -1,0 +1,66 @@
+.featured-carousel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-content: center;
+  align-content: center;
+
+  padding: 20px;
+
+  .featured-carousel_button_mix {
+    background-color: #262626;
+    color: white;
+    font-size: 18px;
+    height: 210px;
+    width: 60px;
+    cursor: pointer;
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+  &_left {
+    .featured-carousel_button_mix;
+  }
+
+  &_content {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-content: center;
+    align-items: center;
+    overflow-x: hidden;
+
+    &_item {
+      min-width: 275px;
+      height: 210px;
+      margin: 0 15px;
+      //background-image: url("../../images/original_filename.jpeg");
+      background-size:  cover;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      &_label {
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #00ffff;
+        width: 50%;
+
+      }
+
+      &_title {
+        background-color: rgba(0,0,0, .8);
+        padding: 10px;
+        color: white;
+        text-align: center;
+        font-size: 23px;
+        font-weight: bolder;
+      }
+    }
+  }
+
+  &_right {
+    .featured-carousel_button_mix;
+  }
+}

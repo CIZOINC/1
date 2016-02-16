@@ -10,4 +10,43 @@
       font-size: 25px;
     }
   }
+
+
+  &_videos {
+    display: flex;
+    //flex-direction: row;
+    justify-content: flex-start;
+    align-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    flex-flow: row wrap;
+
+    &_item {
+      min-width: 275px;
+      max-width: 275px;
+      height: 210px;
+      margin: 0 15px;
+      background-size:  cover;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      &_label {
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #00ffff;
+        width: 50%;
+
+      }
+
+      &_title {
+        background-color: rgba(0,0,0, .8);
+        padding: 10px;
+        color: white;
+        text-align: center;
+        font-size: 23px;
+        font-weight: bolder;
+      }
+    }
+  }
 }

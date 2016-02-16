@@ -4,7 +4,7 @@ angular
     .directive('topMenu', topMenu);
 
 /* @ngInject */
-function topMenu() {
+function topMenu($http, $q, $log, $sce, $state, $anchorScroll) {
     "use strict";
 
     return {
@@ -13,22 +13,39 @@ function topMenu() {
         link: linkFn,
         transclude: false,
         scope: {
-
+            categories: '='
         }
     };
 
     function linkFn(scope) {
         scope = angular.extend(scope, {
+            categoryList: undefined,
 
-
-            moveToHome: moveToHome
+            moveToHome: moveToHome,
+            categoryClick: categoryClick
         });
 
+
+        scope.$watch('categories', (newCategories) => {
+            if (newCategories) {
+                scope.categoryList = [{
+                    id: 0,
+                    title: 'All'
+                }].concat(newCategories);
+            }
+        });
 
         function moveToHome() {
             $state.go('home');
         }
+
+        function categoryClick(event, id) {
+            if (event) {
+                event.stopPropagation();
+            }
+            $anchorScroll(`category-videos-${id}`);
+        }
     }
 }
 
-topMenu.$inject = ['$http', '$q', '$log', '$sce', '$state'];
+topMenu.$inject = ['$http', '$q', '$log', '$sce', '$state', '$anchorScroll'];

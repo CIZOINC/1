@@ -4,13 +4,12 @@ angular
     .controller('HomeCtrl', HomeCtrl);
 
 /* @ngInject */
-function HomeCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout, storageServ) {
+function HomeCtrl($scope, videoServ, categoriesServ, $q, _, moment, $rootScope) {
     "use strict";
 
     $scope = angular.extend($scope, {
         featuredList: [],
-        featuredItem: undefined,
-        videosList: []
+        featuredItem: undefined
     });
 
     getFeaturedList();
@@ -35,6 +34,7 @@ function HomeCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
             categoriesServ.getCategoriesList($scope)
                 .then( (response) => {
                     $scope.categoriesList = response.data.data;
+                    $rootScope.categoriesList = response.data.data;
                     resolve();
                 });
         });
@@ -50,6 +50,12 @@ function HomeCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
         });
     }
 
+    function createdTimeHumanized(date) {
+        var start = moment(date);
+        var end   = moment();
+        return end.to(start);
+    }
+
     function updateVideos() {
         return $q( (resolve) => {
             _.each($scope.videosList, (video) => {
@@ -58,12 +64,12 @@ function HomeCtrl($scope, videoServ, categoriesServ, $q, _, $document, $timeout,
                 });
                 if (category) {
                     video.categoryName = category.title;
+                    video.categoryId = category.category_id;
+                    video.humanizedDate = video && video.created_at ? createdTimeHumanized(video.created_at): undefined;
                 }
-                video.isWatching = false;
-                video.isFullscreen = false;
             });
             resolve($scope.videosList);
         });
     }
 }
-HomeCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', '$document', '$timeout', 'storageServ'];
+HomeCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', 'moment', '$rootScope'];

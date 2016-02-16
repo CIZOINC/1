@@ -3,15 +3,11 @@
     <div class="top-menu_navigation">
         <div class="top-menu_main">
             <span class="icon-menu top-menu_icon"></span>
-            <img class="top-menu_logo" src="images/logo.svg">
+            <img class="top-menu_logo" src="images/logo.svg" ng-click="moveToHome()">
         </div>
 
         <div class="top-menu_categories">
-            <div class="top-menu_categories_item">All</div>         |
-            <div class="top-menu_categories_item">Movies</div>      |
-            <div class="top-menu_categories_item">TV Shows</div>    |
-            <div class="top-menu_categories_item">Games</div>       |
-            <div class="top-menu_categories_item">Lifestyle</div>
+            <div class="top-menu_categories_item" ng-repeat="category in categoryList" ng-click="categoryClick($event, category.id)">{{category.title}}</div>
         </div>
     </div>
 

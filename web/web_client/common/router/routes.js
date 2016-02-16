@@ -36,5 +36,23 @@ angular
                 controller: 'HomeCtrl',
                 controllerAs: 'home'
             }
+        },
+        {
+            state: 'play',
+            config: {
+                url: '/play/:videoId',
+                templateUrl: 'views/play/play.html',
+                controller: 'PlayCtrl',
+                controllerAs: 'play'
+            }
+        },
+        {
+            state: 'list',
+            config: {
+                url: '/list',
+                templateUrl: 'views/list/list.html',
+                controller: 'ListCtrl',
+                controllerAs: 'list'
+            }
         }
     ]);

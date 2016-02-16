@@ -49,10 +49,8 @@ en:
     "8": Unable to remove visibility from featured video. Remove featured before
     "9": Invalid grant_type
     "10": Grant type can not be blank
-
-  "401":
-    "1": Unable to log in. Please check your credentials
-    "2": Unable to log in. Please check your refresh_token
+    "11": Unable to log in. Please check your credentials
+    "12": Unable to log in. Please check your refresh_token
 
   "403":
     "1": Key is required

@@ -92,7 +92,7 @@ module Doorkeeper
 
     def login_failed?
       if authorize_response.class.to_s.demodulize == "ErrorResponse"
-        grant_type_password? ? (errors = [] << '401.1') : (errors = [] << '401.2')
+        grant_type_password? ? (errors = [] << '400.11') : (errors = [] << '400.12')
         errors
       end
     end

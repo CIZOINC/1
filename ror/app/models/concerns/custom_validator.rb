@@ -6,7 +6,7 @@ class CustomValidator < ActiveModel::Validator
 
   protected
 
-  %w(email password birthday password_confirmation title).each do |param|
+  %w(email password birthday password_confirmation title category_id description).each do |param|
     define_method("blank_#{param}?") do
       @record.send("#{param}").blank?
     end

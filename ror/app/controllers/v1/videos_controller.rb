@@ -74,7 +74,7 @@ class V1::VideosController < V1::ApiController
     if @video.update(videos_params)
       render :show, status: :ok, location: @video
     else
-      render json: @video.errors, status: :unprocessable_entity
+      render_errors @video.errors[:codes]
     end
   end
 
@@ -92,7 +92,7 @@ class V1::VideosController < V1::ApiController
     if @video.save
       render :show, status: :created, location: @video
     else
-      render json: @video.errors, status: 422
+      render_errors @video.errors[:codes]
     end
   end
 
@@ -129,8 +129,8 @@ class V1::VideosController < V1::ApiController
     featured_order = params[:featured_order].try(:to_i)
     featured_videos_count = Video.where('featured = ? AND visible = ? AND deleted_at IS NULL', true, true).count
     if featured_order
-      if ((@video.featured_order && featured_order > featured_videos_count) || (!@video.featured_order && featured_order > featured_videos_count + 1)) || featured_order<=0
-        nothing 400
+      if ((@video.featured_order && (featured_order > featured_videos_count) && (already_featured = true)) || (!@video.featured_order && (featured_order > featured_videos_count + 1))) || featured_order<=0
+        render_errors ['400.6'], featured_videos_params(already_featured)
         return
       end
     end
@@ -154,16 +154,16 @@ class V1::VideosController < V1::ApiController
     @video = Video.find(params[:video_id]) if params[:video_id]
   end
 
-  def check_for_file
-    render json: {error: 'File is required'}, status: 400 and return unless params[:file]
-  end
+  # def check_for_file
+  #   render json: {error: 'File is required'}, status: 400 and return unless params[:file]
+  # end
 
   def video_is_invisible?
     !@video.visible?
   end
 
   def able_to_be_featured?
-    render json: {error: 'Invisible videos can not be marked as featured'}, status: 400 and return if video_is_invisible?
+    render_errors ['400.7'] and return if video_is_invisible?
   end
 
   def hero_image_path

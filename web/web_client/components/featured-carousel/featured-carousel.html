@@ -1,0 +1,12 @@
+<div class="featured-carousel">
+    <button class="featured-carousel_left icon-back"  ng-click="movePrev()"></button>
+    <div class="featured-carousel_content">
+        <div class="featured-carousel_content_wrapper" ng-style="{'margin-left': itemsOffset}">
+            <div class="featured-carousel_content_item" ng-repeat="featured in featuredList" style="background-image: url('{{::featured.hero_images.hero_image_link}}')">
+                <div class="featured-carousel_content_item_label">Featured</div>
+                <div class="featured-carousel_content_item_title">{{::featured.title}}</div>
+            </div>
+        </div>
+    </div>
+    <button class="featured-carousel_right icon-forward" ng-click="moveNext()"></button>
+</div>

@@ -29,8 +29,12 @@ class V1::CategoriesController < V1::ApiController
   end
 
   def destroy
-    @category.destroy
-    head :no_content
+    if @category.destroy
+      head :no_content
+    else
+      videos = Video.where("deleted_at IS NULL AND category_id = ?", @category.id)
+      render_errors @category.errors[:codes], videos_count:"#{(videos.count > 1) ? 'are' : 'is'} #{videos.count} #{'video'.pluralize(videos.count)}"
+    end
   end
 
   private

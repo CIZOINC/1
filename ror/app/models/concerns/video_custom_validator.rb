@@ -17,6 +17,8 @@ class VideoCustomValidator < CustomValidator
   end
 
   def invalid_category_id?
+    puts @record.category_id
+    
     !Category.find_by_id(@record.category_id.to_i)
   end
 

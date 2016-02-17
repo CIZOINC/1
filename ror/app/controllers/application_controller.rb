@@ -1,12 +1,10 @@
 class ApplicationController < ActionController::Base
+  include ErrorsRenderer
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  # require 'render_errors/errors_renderer'
-
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
   respond_to  :json
-
 
   def health_check
   	render text: ENV['RAILS_ENV']
@@ -14,8 +12,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-  include ErrorsRenderer
-  
   def password_params
     { min: Devise.password_length.first, max: Devise.password_length.last }
   end

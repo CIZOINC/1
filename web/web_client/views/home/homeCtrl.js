@@ -66,6 +66,7 @@ function HomeCtrl($scope, videoServ, categoriesServ, $q, _, moment, $rootScope) 
                     video.categoryName = category.title;
                     video.categoryId = category.category_id;
                     video.humanizedDate = video && video.created_at ? createdTimeHumanized(video.created_at): undefined;
+                    video.instantPlay = false;
                 }
             });
             resolve($scope.videosList);

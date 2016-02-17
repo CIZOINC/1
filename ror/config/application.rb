@@ -9,6 +9,8 @@ Bundler.require(*Rails.groups)
 module Ror
   class Application < Rails::Application
 
+    # config.autoload_paths << Rails.root.join('lib')
+
     config.middleware.use Rack::Cors do
          allow do
            origins '*'

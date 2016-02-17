@@ -17,14 +17,14 @@ class Video < ActiveRecord::Base
   process_in_background :hero_image
   store_in_background :hero_image
   acts_as_taggable
-  
+
   belongs_to :category
   has_many :streams, dependent: :destroy
   has_many :liked_videos, dependent: :destroy
   has_many :skipped_videos, dependent: :destroy
   has_many :seen_videos, dependent: :destroy
 
-  validates :title, :description, :category_id, presence: true
+  # validates :title, :description, :category_id, presence: true
   validates :featured_order, numericality: {greater_than_or_equal_to: 1}, allow_nil: true
   validates_with VideoCustomValidator
 

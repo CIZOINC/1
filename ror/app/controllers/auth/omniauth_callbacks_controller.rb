@@ -8,17 +8,18 @@ module Auth
       begin
         uri = "https://graph.facebook.com/me?fields=email,birthday&access_token=" + params[:access_token]
         @response = JSON.parse(open(uri).read[0..-1])
-        @response['birthday'] = @response['birthday'] ? format_date(@response['birthday']) : time_to_valid_format(Time.now)
-        # render 'fetch_user_by_facebook_token'
-        find_or_create_user_by(@response['email'], @response['birthday'])
+        # @response['birthday'] = @response['birthday'] ? format_date(@response['birthday']) : time_to_valid_format(Time.now)
+        birthday = @response['birthday']
+        birthday = format_date(birthday) if birthday #here we can set user's birthday to Time.now if birthday is blank.
+        find_or_create_user_by(@response['email'], birthday)
       rescue OpenURI::HTTPError => e
-        error = e.as_json(only: 'io')['io'][0].gsub("\\","")
-        render json: error, status: 400
+        # error = e.as_json(only: 'io')['io'][0].gsub("\\","")
+        # code =  JSON.parse(error)['error']['code']
+        render_errors ['422.21']
       end
     end
 
     def facebook
-      puts "USER_FB #{auth_hash}"
       raw_info = auth_hash['extra']['raw_info']
       email = raw_info['email']
       birthday = format_date(raw_info['birthday'])
@@ -49,7 +50,9 @@ module Auth
         self.response_body = response.body.to_json
         self.status = response.status
       else
-        render json: {errors: user.errors.full_messages}, status: 400
+        puts user.birthday
+        puts user.errors[:codes]
+        render_errors user.errors[:codes]
       end
     end
 
@@ -82,10 +85,7 @@ module Auth
     end
 
     def check_for_access_token_presence
-      if params[:access_token].blank?
-        render json: {error: t(:at_required)}, status: 422
-        return
-      end
+      render_errors ['422.20'] and return if params[:access_token].blank?
     end
   end
 end

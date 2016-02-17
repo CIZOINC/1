@@ -3,7 +3,6 @@ class V1::ApiController < ApplicationController
   before_action :as_admin?, if: :current_user
   helper_method :as_admin?
 
-
   private
 
   def limited_videos(limit = nil)
@@ -11,7 +10,7 @@ class V1::ApiController < ApplicationController
   end
 
   def check_if_video_deleted
-    nothing 404 if @video.deleted_at
+    render_errors ['404.1'] if @video.deleted_at
   end
 
   def user_age_meets_requirement

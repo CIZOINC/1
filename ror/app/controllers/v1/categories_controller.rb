@@ -40,7 +40,7 @@ class V1::CategoriesController < V1::ApiController
   end
 
   def categories_params
-    params.require(:category).permit(:id, :title)
+    params.require(:category).permit(:title)
   end
 
 end

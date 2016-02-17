@@ -146,7 +146,7 @@ class V1::VideosController < V1::ApiController
   private
 
   def videos_params
-    params.permit(:title, :description, :mature_content, :visible, :category_id, :tag_list)
+    params.permit(:id, :title, :description, :mature_content, :visible, :category_id, :tag_list)
   end
 
   def set_video

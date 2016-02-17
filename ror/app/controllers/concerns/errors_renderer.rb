@@ -1,4 +1,5 @@
 module ErrorsRenderer
+  private
   def render_errors(error_codes, params={})
     render json: normalize_errors(error_codes, params), status: status_code(error_codes)
   end

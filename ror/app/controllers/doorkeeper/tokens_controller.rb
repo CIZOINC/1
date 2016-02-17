@@ -111,7 +111,7 @@ module Doorkeeper
     end
 
     def valid_email?
-      Devise.email_regexp =~ @username
+      Devise.email_regexp =~ @username.downcase
     end
 
     def valid_scope?

@@ -105,7 +105,8 @@ gulp.task('minify_third_party_js', function () {
 gulp.task('minify_ng_js', function () {
     "use strict";
     return gulp.src([
-            './temp/**/*.js'
+            './temp/**/*.js',
+            '!./temp/final/**/*.js'
         ])
         .pipe(sourcemaps.init())
         .pipe(concat('ng.min.js'))

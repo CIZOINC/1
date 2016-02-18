@@ -24,6 +24,7 @@ function HomeCtrl($scope, videoServ, categoriesServ, $q, _, moment, $rootScope) 
                 .then( (response) => {
                     $scope.featuredList = response.data.data;
                     $scope.featuredItem = $scope.featuredList[0];
+                    $rootScope.featuredList = $scope.featuredList;
                     resolve();
                 });
         });
@@ -69,6 +70,7 @@ function HomeCtrl($scope, videoServ, categoriesServ, $q, _, moment, $rootScope) 
                     video.instantPlay = false;
                 }
             });
+            $rootScope.videosList = $scope.videosList;
             resolve($scope.videosList);
         });
     }

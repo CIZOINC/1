@@ -45,7 +45,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             buttonLayer: angular.element(element[0].querySelectorAll(`.show-player_buttons-layer`))[0],
             videoLayer: angular.element(element[0].querySelector(`div.video-layer`))[0],
             nextVideoLayer: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_titles_next`))[0],
-            imageLayer: angular.element(element[0].querySelector(`div.hero-image-layer`))[0],
+            //imageLayer: angular.element(element[0].querySelector(`div.hero-image-layer`))[0],
             imageNextLayer: angular.element(element[0].querySelector(`div.show-player_hero-image-layer-next`))[0],
             descriptionLayer: angular.element(element[0].querySelector(`div.show-player_description-layer`))[0],
             playButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_play-button`))[0],
@@ -72,7 +72,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             toggleDescription: toggleDescription,
             setIntermission: setIntermission,
             pauseIntermissionToggle: pauseIntermissionToggle,
-            closeFeatured: closeFeatured,
             nextVideo: getNextVideo(),
             playNextVideo: playNextVideo,
             getNextVideo: getNextVideo,
@@ -116,9 +115,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.nextVideo = getNextVideo();
 
                 $timeout( () => {
-                    if (!scope.showPlayer.classList.contains('hidden-layer')) {
+                    if (!scope.showPlayer.classList.contains('hidden-layer') && scope.video.instantPlay) {
                         togglePlayPause();
-                        $anchorScroll(`show-player`);
+                        scope.video.instantPlay = false;
                     }
                 });
             }
@@ -194,17 +193,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             }
         }
 
-        function closeFeatured(event) {
-            if (event) {
-                event.stopPropagation();
-            }
-            if (playerServ.getElementFullscreenState()) {
-                toggleFullScreen();
-            }
-            scope.showPlayer.classList.add('hidden-layer');
-            scope.screen.pause();
-        }
-
         function getNextVideo() {
 
             if (!scope.video) {
@@ -213,15 +201,16 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             let currentVideoId = scope.video.id;
             let nextVideo;
-
-            let index = _.findIndex(scope.filteredList, (item) => {
-                return item.id === currentVideoId;
-            });
-            if (index + 1 < scope.filteredList.length) {
-                nextVideo = scope.filteredList[index + 1];
+            if (scope.filteredList) {
+                let index = _.findIndex(scope.filteredList, (item) => {
+                    return item.id === currentVideoId;
+                });
+                if (index + 1 < scope.filteredList.length) {
+                    nextVideo = scope.filteredList[index + 1];
+                }
             }
 
-            if (!nextVideo) {
+            if (!nextVideo && scope.feedList) {
                 nextVideo = scope.feedList[0];
             }
 
@@ -248,8 +237,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 }, 500);
             } else {
                 scope.screen.pause();
-                scope.showPlayer.classList.add('hidden-layer');
-                scope.feedList[0].isWatching = true;
             }
         }
 
@@ -364,7 +351,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             $timeout(function () {
                 scope.$broadcast('rzSliderForceRender');
             });
-            if (scope.imageLayer.classList.contains('hidden-layer')) {
+            //if (scope.imageLayer.classList.contains('hidden-layer')) {
                 if (showControls) {
                     setShowHideControlsState(true);
                     if (scope.screen.paused) {
@@ -375,7 +362,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 } else {
                     setShowHideControlsState(false);
                 }
-            }
+            //}
         }
 
         function togglePlayPause(event) {
@@ -434,11 +421,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             scope.pauseButton.classList[_classAdd(!isShowed)]('hidden-layer');
             scope.topElementsRightSide.classList[_classAdd(!isShowed)]('hidden-layer');
             scope.buttonLayer.classList[_classAdd(isShowed)]('show-player_buttons-layer--show-buttons');
-            if (isShowed) {
-                scope.topElementsClose.classList[_classAdd(!isShowed)]('hidden-layer');
-            } else {
-                scope.topElementsClose.classList.add('hidden-layer');
-            }
+
         }
 
         function setFullscreenState(isFullscreen) {

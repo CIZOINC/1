@@ -1,15 +1,15 @@
 /*global angular*/
 angular
     .module('app.directives')
-    .directive('categoryItems', categoryItems);
+    .directive('playItems', playItems);
 
 /* @ngInject */
-function categoryItems($http, $q, $log, $sce, $state, _) {
+function playItems($state, _) {
     "use strict";
 
     return {
         restrict: 'E',
-        templateUrl: 'components/category-items/category-items.html',
+        templateUrl: 'components/play-items/playItems.html',
         link: linkFn,
         transclude: false,
         scope: {
@@ -46,15 +46,6 @@ function categoryItems($http, $q, $log, $sce, $state, _) {
             } else {
                 videosList = videos;
             }
-            if (videosList.length > 7) {
-                let filteredList = [];
-                for (let i = 0; i < 7; i++) {
-                    filteredList.push(videosList[i]);
-                }
-
-                filteredList.push({title: 'View all'});
-                videosList = filteredList;
-            }
             return videosList;
         }
 
@@ -72,8 +63,8 @@ function categoryItems($http, $q, $log, $sce, $state, _) {
         }
 
         function moveToPlayPage(id) {
-            $state.go('play', {videoId: id, categoryId: scope.categoryId});
+            $state.go('play', {videoId: id});
         }
     }
 };
-categoryItems.$inject = ['$http', '$q', '$log', '$sce', '$state', 'lodash'];
+playItems.$inject = ['$state', 'lodash'];

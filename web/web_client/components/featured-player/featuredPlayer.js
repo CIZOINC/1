@@ -72,7 +72,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             toggleDescription: toggleDescription,
             setIntermission: setIntermission,
             pauseIntermissionToggle: pauseIntermissionToggle,
-            closeFeatured: closeFeatured,
             nextVideo: getNextVideo(),
             playNextVideo: playNextVideo,
             getNextVideo: getNextVideo,
@@ -192,17 +191,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 }
                 scope.isIntermissionPaused = true;
             }
-        }
-
-        function closeFeatured(event) {
-            if (event) {
-                event.stopPropagation();
-            }
-            if (playerServ.getElementFullscreenState()) {
-                toggleFullScreen();
-            }
-            scope.featuredPlayer.classList.add('hidden-layer');
-            scope.screen.pause();
         }
 
         function getNextVideo() {

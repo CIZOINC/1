@@ -99,4 +99,4 @@ en:
     "19": Grant type can not be blank
     "20": Access token is required
     "21": Invalid OAuth access token
-    "22":
+    "22": "You are not allowed to upload %{uploaded_file_extension} files, allowed types: %{allowed_types}"

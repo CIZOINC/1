@@ -1,5 +1,6 @@
 class Video < ActiveRecord::Base
   include PgSearch
+  attr_accessor :skip_validation
   pg_search_scope :full_search,
                   associated_against: {tags: :name},
                   against: {
@@ -17,7 +18,7 @@ class Video < ActiveRecord::Base
   process_in_background :hero_image
   store_in_background :hero_image
   acts_as_taggable
-  
+
   belongs_to :category
   has_many :streams, dependent: :destroy
   has_many :liked_videos, dependent: :destroy
@@ -25,8 +26,10 @@ class Video < ActiveRecord::Base
   has_many :seen_videos, dependent: :destroy
 
   # validates :title, :description, :category_id, presence: true
-  validates :featured_order, numericality: {greater_than_or_equal_to: 1}, allow_nil: true
-  validates_with VideoCustomValidator
+  # validates :featured_order, numericality: {greater_than_or_equal_to: 1}, allow_nil: true
+  # validates_with VideoCustomValidator, unless: :skip_validation
+  validates_with HeroImageValidator, if: :skip_validation
+  validates_with VideoCustomValidator, unless: :skip_validation
 
   scope :trending, -> (){ where("visible = ? AND deleted_at IS NULL", true).order(view_count: :desc) }
   scope :desc_order, ->(){ order(created_at: :desc)}

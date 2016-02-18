@@ -4,7 +4,7 @@ angular
     .directive('featuredCarousel', featuredCarousel);
 
 /* @ngInject */
-function featuredCarousel($http, $q, $log, $sce, $state) {
+function featuredCarousel( _) {
     "use strict";
 
     return {
@@ -13,7 +13,8 @@ function featuredCarousel($http, $q, $log, $sce, $state) {
         link: linkFn,
         transclude: false,
         scope: {
-            featuredList: '='
+            featuredList: '=',
+            selectedVideo: '='
         }
     };
 
@@ -24,10 +25,16 @@ function featuredCarousel($http, $q, $log, $sce, $state) {
             itemsOffset: 0,
             currentStep: 1,
 
-
+            playFeatured: playFeatured,
             moveNext: moveNext,
             movePrev: movePrev
         });
+
+        function playFeatured(id) {
+            let selected = _.find(scope.featuredList, featured => featured.id === parseInt(id));
+            selected.instantPlay = true;
+            scope.selectedVideo = selected;
+        }
 
         function moveNext() {
             let hasItems = (scope.featuredList.length / (scope.currentStep * numberOfVisibleItems)) > 1;
@@ -45,4 +52,4 @@ function featuredCarousel($http, $q, $log, $sce, $state) {
         }
     }
 };
-featuredCarousel.$inject = ['$http', '$q', '$log', '$sce', '$state'];
+featuredCarousel.$inject = ['lodash'];

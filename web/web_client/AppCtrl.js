@@ -29,6 +29,7 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
         hostName: `http://staging.cizo.com`,
         videosList: [],
         categoriesList: [],
+        featuredList: [],
 
         storage: {
             storageSeenKey: 'seen',

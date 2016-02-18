@@ -10,7 +10,7 @@ class V1::VideosController < V1::ApiController
   end
 
   before_action :check_if_video_deleted, only: [:show, :update, :destroy, :hero_image, :add_featured, :remove_featured]
-  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update], if: :current_user
+  before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update, :create], if: :current_user
   before_action :check_if_file_presents_in_params, only: [:hero_image]
   before_action :set_bucket, only: [:destroy]
   before_action :able_to_be_featured?, only: [:add_featured]
@@ -97,8 +97,9 @@ class V1::VideosController < V1::ApiController
   end
 
   def hero_image
+    @video.skip_validation = true
     @video.hero_image = params[:file]
-    @video.save ? nothing(202) : (render json: {errors: @video.errors}, status: 422)
+    @video.save ? nothing(202) : (render_errors @video.errors[:codes], hero_image_params)
   end
 
   def trending
@@ -145,6 +146,19 @@ class V1::VideosController < V1::ApiController
 
   private
 
+  def hero_image_params
+    @uploader = HeroImageValidator.new
+    {allowed_types: allowed_types , uploaded_file_extension: uploaded_file_extension}
+  end
+
+  def allowed_types
+    (@uploader.send (:extension_white_list)).join(", ")
+  end
+
+  def uploaded_file_extension
+    @uploader.send(:hero_image_extension, params[:file])
+  end
+
   def videos_params
     params.permit(:id, :title, :description, :mature_content, :visible, :category_id, :tag_list)
   end
@@ -153,10 +167,6 @@ class V1::VideosController < V1::ApiController
     @video = Video.find(params[:id]) if params[:id]
     @video = Video.find(params[:video_id]) if params[:video_id]
   end
-
-  # def check_for_file
-  #   render json: {error: 'File is required'}, status: 400 and return unless params[:file]
-  # end
 
   def video_is_invisible?
     !@video.visible?

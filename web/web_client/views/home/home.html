@@ -2,10 +2,10 @@
 <div class="home">
     <top-menu categories="categoriesList"></top-menu>
 
-    <div class="home_featured">
-        <img class="home_featured_image" ng-src="{{featuredItem.hero_images.hero_image_link}}">
-    </div>
-    <featured-carousel featured-list="featuredList"></featured-carousel>
+
+    <featured-player id="featured-player" video="featuredItem" filtered-list="featuredList" feed-list="videosList"></featured-player>
+
+    <featured-carousel featured-list="featuredList" selected-video="featuredItem"></featured-carousel>
 
     <category-items category-id="0" videos="videosList" categories="categoriesList"></category-items>
     <category-items category-id="11" videos="videosList" categories="categoriesList"></category-items>

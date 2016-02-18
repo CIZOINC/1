@@ -40,7 +40,7 @@ angular
         {
             state: 'play',
             config: {
-                url: '/play/:videoId',
+                url: '/play/:videoId/:categoryId',
                 templateUrl: 'views/play/play.html',
                 controller: 'PlayCtrl',
                 controllerAs: 'play'

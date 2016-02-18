@@ -4,7 +4,7 @@
 @color-dark: #2c3d51;
 @color-darker: #1c1f24;
 
-.featured-player {
+.show-player {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -40,12 +40,15 @@
   }
 
   &_hero-image-layer-next {
-    position: relative;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    //position: relative;
     overflow: hidden;
     background-size: cover;
     background-color: rgba(0,0,0,.9);
 
-    &:before {
+    /*&:before {
       display: block;
       content: '';
       width: 100%;
@@ -59,7 +62,7 @@
       right: 0;
       bottom: 0;
       object-fit: cover;
-    }
+    }*/
   }
 
   &_description-layer {
@@ -279,7 +282,7 @@
           }
 
           &_progress {
-            margin-top: -20%;
+            margin-top: 10%;
             position: absolute;
             padding-bottom: 0;
             top: 0;
@@ -537,7 +540,7 @@ video::-webkit-media-controls-enclosure {
   display:none !important;
 }
 
-featured-player {
+show-player {
   .hidden-layer {
     display: none !important;
   }

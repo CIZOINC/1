@@ -20,24 +20,12 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  doorkeeper:
-    scopes:
-      public: 'Access your public data'
-      write: 'Update your information'
-      admin: 'Change your preferences'
+  # doorkeeper:
+  #   scopes:
+  #     public: 'Access your public data'
+  #     write: 'Update your information'
+  #     admin: 'Change your preferences'
 
-  errors:
-    messages:
-      extension_whitelist_error: "sssss"
-
-  # invalid_email: Invalid email
-  # blank_email: Email can't be blank
-  # expired_rpt: reset_password_token has expired, please request a new one
-  # invalid_rpt: Token is not valid, please generate a new one
-  # rpt_required: reset_password_token is required
-  # at_required: access_token is required
-  # login_failed: Login failed
-  # last_admin: Your account can not be destroyed because you are the last admin on the project.
   "400":
     "1": Reset password token is required
     "2": Reset password token is not valid, please request a new one
@@ -56,11 +44,12 @@ en:
     "1": Key is required
     "2": Filename is required
     "3": File is required
-    "4": Filename must contain only lowercase letters, numbers, hyphens (-), and periods (.). It must start and end with letters or numbers
+    "4": Ids are required
     "5": Forbidden video
     "6": Unable to save record. If featured true, featured_order can not be nil and vice versa
     "7": You are not allowed to log in as admin
     "8": Unable to remove category. Currently there %{videos_count} in category
+    "9": Filename must contain only lowercase letters, numbers, hyphens (-), and periods (.). It must start and end with letters or numbers
 
   "404":
     "1": Video has been deleted

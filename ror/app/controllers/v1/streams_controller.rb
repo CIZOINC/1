@@ -122,7 +122,7 @@ class V1::StreamsController < V1::ApiController
   def valid_filename?(filename)
     filename_regexp = /\A^[0-9a-z]+[0-9a-z\-\.\_]+[0-9a-z]$\z/
     unless filename =~ filename_regexp
-      render_errors ['403.4']
+      render_errors ['403.9']
       return
     end
   end

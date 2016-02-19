@@ -22,6 +22,7 @@ function topMenu($state, $anchorScroll) {
             categoryList: undefined,
 
             moveToHome: moveToHome,
+            moveToLogin: moveToLogin,
             categoryClick: categoryClick
         });
 
@@ -37,6 +38,10 @@ function topMenu($state, $anchorScroll) {
 
         function moveToHome() {
             $state.go('home');
+        }
+
+        function moveToLogin() {
+            $state.go('login');
         }
 
         function categoryClick(event, id) {

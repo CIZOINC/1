@@ -11,7 +11,7 @@
         // toastr setting.
         toastr.options = {
             "closeButton": true,
-            "positionClass": "toast-bottom-right",
+            "positionClass": "toast-top-right",
             "timeOut": "3000"
         };
 

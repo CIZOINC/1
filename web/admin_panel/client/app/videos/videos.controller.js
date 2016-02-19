@@ -1,189 +1,17 @@
 (function () {
     'use strict';
 
-    angular.module('app.videos')
-        .controller('VideosCtrl', ['$scope', '$filter', VideosCtrl])
-        .controller('VideoModalCtrl', ['$scope', '$uibModal', '$log', VideoModalCtrl])
-        .controller('VideoModalInstanceCtrl', ['$scope', '$uibModalInstance', 'video', 'category', VideoModalInstanceCtrl]);
+    function getVideos(createdBefore, createdAfter, count) {
+        // Get the videos, optionally with created before / after / count (max 200)
+        var createdBefore = createdBefore ? createdBefore : null,
+            createdAfter = createdAfter ? createdAfter : null,
+            count = count ? count : 200;
 
-    function VideosCtrl($scope, $filter) {
-        // Init
-        var init;
-
-        // Mock data - 'Categories' from
-        $scope.videoCategories = {
-            data: [{
-                id: 11,
-                title: "Movies"
-            }, {
-                id: 12,
-                title: "TV"
-            }, {
-                id: 13,
-                title: "Games"
-            }, {
-                id: 14,
-                title: "Lifestyle"
-            }]
-        }
-
-        // Convert data array into object for reference
-        $scope.categoryLookup = {};
-        for (var i = 0, len = $scope.videoCategories.data.length; i < len; i++) {
-            $scope.categoryLookup[$scope.videoCategories.data[i].id] = $scope.videoCategories.data[i];
-        }
-
-        // Mock data - 'Featured Videos' from http://staging.cizo.com/featured
-        $scope.featuredVideos = {
-            data: [{
-                id: 25,
-                created_at: '2015-12-23T20:49:26.217Z',
-                updated_at: '2016-02-05T19:59:23.753Z',
-                title: " Watch",
-                description: " Watch",
-                mature_content: false,
-                category_id: 14,
-                visible: true,
-                featured: true,
-                hero_images: {
-                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/25/original_filename.jpeg',
-                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/25/large_banner_original_filename.jpeg',
-                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/25/medium_banner_original_filename.jpeg',
-                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/25/thumb_banner_original_filename.jpeg'
-                },
-                featured_order: 1,
-                tag_list: null,
-                streams: [{
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/25/mp4/video.mp4',
-                    stream_type: 'mp4'
-                }, {
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/25/hls/index.m3u8',
-                    stream_type: 'hls'
-                }]
-            }, {
-                id: 29,
-                created_at: '2015-12-23T20:51:21.059Z',
-                updated_at: '2016-02-05T19:58:10.345Z',
-                title: 'Fallout 4',
-                description: 'Fallout 4',
-                mature_content: false,
-                category_id: 13,
-                visible: true,
-                featured: true,
-                hero_images: {
-                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/29/original_filename.jpeg',
-                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/29/large_banner_original_filename.jpeg',
-                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/29/medium_banner_original_filename.jpeg',
-                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/29/thumb_banner_original_filename.jpeg'
-                },
-                featured_order: 2,
-                tag_list: null,
-                streams: [{
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/29/mp4/video.mp4',
-                    stream_type: 'mp4'
-                }, {
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/29/hls/index.m3u8',
-                    stream_type: 'hls'
-                }]
-            }, {
-                id: 28,
-                created_at: '2015-12-23T20:51:12.807Z',
-                updated_at: '2016-02-05T19:58:35.513Z',
-                title: 'Uncharted 4',
-                description: 'Uncharted 4',
-                mature_content: false,
-                category_id: 13,
-                visible: true,
-                featured: true,
-                hero_images: {
-                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/28/original_filename.jpeg',
-                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/28/large_banner_original_filename.jpeg',
-                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/28/medium_banner_original_filename.jpeg',
-                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/28/thumb_banner_original_filename.jpeg'
-                },
-                featured_order: 3,
-                tag_list: null,
-                streams: [{
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/28/hls/index.m3u8',
-                    stream_type: 'hls'
-                }, {
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/28/mp4/video.mp4',
-                    stream_type: 'mp4'
-                }]
-            }, {
-                id: 31,
-                created_at: '2015-12-23T22:27:31.935Z',
-                updated_at: '2016-02-08T17:29:44.776Z',
-                title: 'Mr. Robot',
-                description: 'Follows a young computer programmer who suffers from social anxiety disorder and forms connections through hacking. He\'s recruited by a mysterious anarchist, who calls himself Mr. Robot.',
-                mature_content: false,
-                category_id: 12,
-                visible: true,
-                featured: true,
-                hero_images: {
-                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/31/Mr-Robot-Season-1-Finale-TV-Series-Review-Tom-Lorenzo-Site-TLO.jpg',
-                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/31/large_banner_Mr-Robot-Season-1-Finale-TV-Series-Review-Tom-Lorenzo-Site-TLO.jpg',
-                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/31/medium_banner_Mr-Robot-Season-1-Finale-TV-Series-Review-Tom-Lorenzo-Site-TLO.jpg',
-                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/31/thumb_banner_Mr-Robot-Season-1-Finale-TV-Series-Review-Tom-Lorenzo-Site-TLO.jpg'
-                },
-                featured_order: 4,
-                tag_list: 'action, horror',
-                streams: [{
-                    link: 'http://staging.cizo.com/videos/31/streams/mp4',
-                    stream_type: 'mp4'
-                }, {
-                    link: 'http://staging.cizo.com/videos/31/streams/hls',
-                    stream_type: 'hls'
-                }]
-            }, {
-                id: 26,
-                created_at: '2015-12-23T20:50:03.793Z',
-                updated_at: '2016-02-05T19:59:04.977Z',
-                title: 'EDC Las Vegas',
-                description: 'EDC Las Vegas',
-                mature_content: false,
-                category_id: 14,
-                visible: true,
-                featured: true,
-                hero_images: {
-                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/26/original_filename.jpeg',
-                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/26/large_banner_original_filename.jpeg',
-                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/26/medium_banner_original_filename.jpeg',
-                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/26/thumb_banner_original_filename.jpeg'
-                },
-                featured_order: 5,
-                tag_list: null,
-                streams: [{
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/26/hls/index.m3u8',
-                    stream_type: 'hls'
-                }, {
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/26/mp4/video.mp4',
-                    stream_type: 'mp4'
-                }]
-            }, {
-                id: 24,
-                created_at: '2015-12-23T20:49:02.230Z',
-                updated_at: '2016-02-05T19:59:40.578Z',
-                title: 'Avengers: Age of Ultron',
-                description: 'When Tony Stark and Bruce Banner try to jump-start a dormant peacekeeping program called Ultron, things go horribly wrong and it\'s up to Earth\'s Mightiest Heroes to stop the villainous Ultron from enacting his terrible plans.',
-                mature_content: true,
-                category_id: 11,
-                visible: true,
-                featured: true,
-                hero_images: {
-                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/original_filename.jpeg',
-                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/large_banner_original_filename.jpeg',
-                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/medium_banner_original_filename.jpeg',
-                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/thumb_banner_original_filename.jpeg'
-                },
-                featured_order: 7,
-                tag_list: null,
-                streams: null
-            }]
-        }
+        // Load the categories
+        let categories = getCategories(true);
 
         // Mock data - 'All Videos' from http://staging.cizo.com/videos
-        $scope.allVideos = {
+        let allVideos = {
             data: [{
                 id: 3279,
                 created_at: '2016-02-06T05:26:31.593Z',
@@ -194,12 +22,6 @@
                 category_id: 11,
                 visible: true,
                 featured: null,
-                hero_images: {
-                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/3279/original_filename.jpeg',
-                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/3279/large_banner_original_filename.jpeg',
-                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/3279/medium_banner_original_filename.jpeg',
-                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/3279/thumb_banner_original_filename.jpeg'
-                },
                 tag_list: null,
                 streams: [{
                     link: 'http://staging.cizo.com/videos/3279/streams/mp4',
@@ -231,6 +53,32 @@
                 }, {
                     link: 'http://staging.cizo.com/videos/1063/streams/hls',
                     stream_type: 'hls'
+                }]
+            }, {
+                id: 23,
+                created_at: '2015-12-23T20:48:40.639Z',
+                updated_at: '2016-02-05T19:59:51.063Z',
+                title: 'Mad Max: Fury Road',
+                description: 'A woman rebels against a tyrannical ruler in post apocalyptic Australia in search for her homeland with the help of a group of female prisoners, a psychotic worshiper, and a drifter named Max.',
+                mature_content: false,
+                category_id: 11,
+                visible: false,
+                featured: false,
+                hero_images: {
+                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/original_filename.jpeg',
+                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/large_banner_original_filename.jpeg',
+                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/medium_banner_original_filename.jpeg',
+                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/thumb_banner_original_filename.jpeg'
+                },
+                tag_list: 'action',
+                streams: [{
+                    link: null,
+                    stream_type: 'hls',
+                    transcode_status: 'pending'
+                }, {
+                    link: null,
+                    stream_type: 'mp4',
+                    transcode_status: 'pending'
                 }]
             }, {
                 id: 31,
@@ -417,33 +265,131 @@
                     hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/thumb_banner_original_filename.jpeg'
                 },
                 tag_list: null,
-                streams: null
-            }, {
-                id: 23,
-                created_at: '2015-12-23T20:48:40.639Z',
-                updated_at: '2016-02-05T19:59:51.063Z',
-                title: 'Mad Max: Fury Road',
-                description: 'A woman rebels against a tyrannical ruler in post apocalyptic Australia in search for her homeland with the help of a group of female prisoners, a psychotic worshiper, and a drifter named Max.',
-                mature_content: false,
-                category_id: 11,
-                visible: true,
-                featured: false,
-                hero_images: {
-                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/23/original_filename.jpeg',
-                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/23/large_banner_original_filename.jpeg',
-                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/23/medium_banner_original_filename.jpeg',
-                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/23/thumb_banner_original_filename.jpeg'
-                },
-                tag_list: 'action',
                 streams: [{
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/23/hls/index.m3u8',
-                    stream_type: 'hls'
-                }, {
-                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/23/mp4/video.mp4',
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/25/mp4/video.mp4',
                     stream_type: 'mp4'
+                }, {
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/25/hls/index.m3u8',
+                    stream_type: 'hls'
                 }]
             }]
         };
+
+        return allVideos;
+    }
+
+    angular.module('app.videos')
+        .controller('VideosCtrl', ['$scope', '$filter', 'loggerView', VideosCtrl])
+        .controller('VideoModalCtrl', ['$scope', '$uibModal', '$log', VideoModalCtrl])
+        .controller('VideoModalInstanceCtrl', ['$scope', '$uibModalInstance', 'video', VideoModalInstanceCtrl])
+        .filter('readyNotReady', readyNotReadyFunc)
+        .factory('loggerView', loggerView);
+
+    function loggerView() {
+        var logIt;
+
+        // toastr setting.
+        toastr.options = {
+            "closeButton": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+
+        logIt = function (message, title, type, onClickEvent) {
+            if (onClickEvent) {
+                toastr.options.onclick = function () {
+                    return console.log('Trigger Modal');
+                }
+            }
+            return toastr[type](message, title);
+        };
+
+        return {
+            log: function (message, title, onClickEvent) {
+                logIt(message, title, 'info', onClickEvent);
+            },
+            logWarning: function (message, title) {
+                logIt(message, title, 'warning', onClickEvent);
+            },
+            logSuccess: function (message, title) {
+                logIt(message, title, 'success', onClickEvent);
+            },
+            logError: function (message, title) {
+                logIt(message, title, 'error', onClickEvent);
+            }
+        };
+    };
+
+    function validateVideo(video) {
+        if (typeof video.hero_images !== 'undefined') {
+            let streamsCount = video.streams.length,
+                validStreams = 0;
+            for (let stream of video.streams) {
+                if (!stream.transcode_status) {
+                    ++validStreams;
+                }
+            }
+            if (streamsCount === validStreams) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function readyNotReadyFunc() {
+        return function (video) {
+            let videoValidation = validateVideo(video);
+            if (videoValidation) {
+                return video.visible ? '✓ Online' : 'Ready';
+            } else {
+                return 'Not Ready';
+            }
+        }
+    }
+
+    function getCategories(processed) {
+        // Get the categories and optionally process them into an object for reference (set 'processed' to true)
+        var processed = processed ? processed : false;
+
+        let videoCategories = {
+            data: [{
+                id: 11,
+                title: 'Movies'
+            }, {
+                id: 12,
+                title: 'TV'
+            }, {
+                id: 13,
+                title: 'Games'
+            }, {
+                id: 14,
+                title: 'Lifestyle'
+            }]
+        };
+
+        if (processed === true) {
+            let categoryObject = {};
+            for (let cat of videoCategories.data) {
+                categoryObject[cat.id] = cat;
+            }
+            videoCategories = categoryObject;
+        }
+
+        return videoCategories;
+    }
+
+    function VideosCtrl($scope, $filter, loggerView) {
+        // Init
+        var init;
+
+        $scope.allVideos = getVideos();
+
+        $scope.videoCategories = getCategories();
+
+        $scope.categoryLookup = getCategories(true);
 
         $scope.searchKeywords = '';
 
@@ -488,6 +434,34 @@
             return $scope.onOrderChange();
         };
 
+        $scope.videoValid = validateVideo;
+
+        $scope.videoClasses = function (video) {
+            if ($scope.videoValid(video)) {
+                if (video.visible) {
+                    return 'btn btn-w-sm btn-gap-v btn-primary';
+                } else {
+                    return 'btn btn-w-sm btn-gap-v btn-dark';
+                }
+            } else {
+                return 'btn btn-w-sm btn-gap-v btn-line-default';
+            }
+        };
+
+        $scope.modifyVisible = function (video) {
+            if (!validateVideo(video)) {
+                loggerView.log(`This video isn’t ready for adding, click 'Edit' and upload an image / video`, 'Oops!', true)
+            } else if (video.visible) {
+                video.visible = false;
+                loggerView.logWarning('Video has been removed from the video feed', 'Video Removed');
+            } else if (!video.visible) {
+                video.visible = true;
+                loggerView.logSuccess('Video has been added to the video feed', 'Video Added');
+            } else {
+                console.log('error');
+            }
+        };
+
         $scope.numPerPageOpt = [3, 5, 10, 20];
 
         $scope.numPerPage = $scope.numPerPageOpt[2];
@@ -508,7 +482,7 @@
 
         $scope.animationsEnabled = true;
 
-        $scope.open = function (size) {
+        $scope.openModal = function (size) {
 
             var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
@@ -518,16 +492,12 @@
                 resolve: {
                     video: function () {
                         return $scope.video;
-                    },
-                    category: function () {
-                        return $scope.categoryLookup[$scope.video.category_id]
                     }
                 }
             });
 
-            modalInstance.result.then(function (selectedItem) {
-                console.log('hi');
-                $scope.selected = selectedItem;
+            modalInstance.result.then(function (video) {
+                $scope.video = video;
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
@@ -538,9 +508,12 @@
         };
     }
 
-    function VideoModalInstanceCtrl($scope, $uibModalInstance, video, category) {
+    function VideoModalInstanceCtrl($scope, $uibModalInstance, video) {
         $scope.video = video;
-        $scope.category = category;
+
+        $scope.videoCategories = getCategories();
+
+        $scope.categoryLookup = getCategories(true);
 
         $scope.ok = function () {
             $uibModalInstance.close($scope.video);

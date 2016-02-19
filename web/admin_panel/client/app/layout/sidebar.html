@@ -1,17 +1,28 @@
-
 <div class="nav-wrapper">
-    <ul id="nav"
-        class="nav"
-        data-slim-scroll
-        data-collapse-nav
-        data-highlight-active>
+    <ul id="nav" class="nav" data-slim-scroll data-collapse-nav data-highlight-active>
         <li class="nav-title">
             <span data-translate="NAVIGATION"></span>
         </li>
-        <li><a href="#/dashboard"> <i class="fa fa-dashboard"></i><span data-translate="DASHBOARD"></span> </a></li>
-        <li><a href="#/users"> <i class="fa fa-users"></i><span data-translate="USER"></span> </a></li>
-        <li><a href="#/videos"> <i class="fa fa-video-camera"></i><span data-translate="VIDEOS"></span> </a></li>
-        <li><a href="#/page/signin"> <i class="fa fa-sign-out"></i><span data-translate="LOG_OUT"></span> </a></li>
+        <li>
+            <a href="#/dashboard"> <i class="fa fa-dashboard"></i><span data-translate="DASHBOARD"></span> </a>
+        </li>
+        <li>
+            <a href="#/users"> <i class="fa fa-users"></i><span data-translate="USER"></span> </a>
+        </li>
+        <li>
+            <a href="#/videos"> <i class="fa fa-video-camera"></i><span data-translate="MANAGEVIDEOS"></span> </a>
+            <ul style="display: block;">
+                <li>
+                    <a href="#/videos"> <i class="fa fa-video-camera"></i><span data-translate="VIDEOS"></span> </a>
+                </li>
+                <li>
+                    <a href="#/featured"> <i class="fa fa-video-camera"></i><span data-translate="FEATURED"></span> </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#/page/signin"> <i class="fa fa-sign-out"></i><span data-translate="LOG_OUT"></span> </a>
+        </li>
         <li class="divider nav-divider"></li>
         <li>
             <a href="#/ui"><i class="fa fa-magic"></i><span data-translate="UI_KIT"></span></a>
@@ -71,27 +82,27 @@
                 <li><a href="#/chart/echarts-scatter"><i class="fa fa-caret-right"></i>ECharts - <span data-translate="SCATTER"></span></a></li>
                 <li><a href="#/chart/echarts-more"><i class="fa fa-caret-right"></i>ECharts - <span data-translate="MORE"></span></a></li>
             </ul>
-        <li class="divider nav-divider"></li>
-        <li class="nav-title">
-            <span data-translate="APPLICATION"></span>
-        </li>
-        <li class="nav-task">
-            <a href="#/app/tasks">
-                <i class="fa fa-tasks"></i><span data-translate="TASKS"></span>
-            </a>
-        </li>
-        <li class="nav-task">
-            <a href="#/app/calendar">
-                <i class="fa fa-calendar"></i><span data-translate="CALENDAR"></span>
-            </a>
-        </li>
-        <li>
-            <a href="#/mail"><i class="fa fa-envelope-o"></i><span data-translate="MAIL"></span></a>
-            <ul>
-                <li><a href="#/mail/inbox"><i class="fa fa-caret-right"></i><span data-translate="INBOX"></span></a></li>
-                <li><a href="#/mail/compose"><i class="fa fa-caret-right"></i><span data-translate="COMPOSE"></span></a></li>
-                <li><a href="#/mail/single"><i class="fa fa-caret-right"></i><span data-translate="SINGLE_MAIL"></span></a></li>
-            </ul>
-        </li>
+            <li class="divider nav-divider"></li>
+            <li class="nav-title">
+                <span data-translate="APPLICATION"></span>
+            </li>
+            <li class="nav-task">
+                <a href="#/app/tasks">
+                    <i class="fa fa-tasks"></i><span data-translate="TASKS"></span>
+                </a>
+            </li>
+            <li class="nav-task">
+                <a href="#/app/calendar">
+                    <i class="fa fa-calendar"></i><span data-translate="CALENDAR"></span>
+                </a>
+            </li>
+            <li>
+                <a href="#/mail"><i class="fa fa-envelope-o"></i><span data-translate="MAIL"></span></a>
+                <ul>
+                    <li><a href="#/mail/inbox"><i class="fa fa-caret-right"></i><span data-translate="INBOX"></span></a></li>
+                    <li><a href="#/mail/compose"><i class="fa fa-caret-right"></i><span data-translate="COMPOSE"></span></a></li>
+                    <li><a href="#/mail/single"><i class="fa fa-caret-right"></i><span data-translate="SINGLE_MAIL"></span></a></li>
+                </ul>
+            </li>
     </ul>
 </div>

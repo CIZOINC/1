@@ -13,9 +13,9 @@ class V1::ApiController < ApplicationController
     render_errors ['404.1'] if @video.deleted_at
   end
 
-  def user_age_meets_requirement
-    @user_age_meets_requirement = @current_user.is_admin ? true : @current_user.user_age_meets_requirement!
-  end
+  # def user_age_meets_requirement
+  #   @user_age_meets_requirement = @current_user.is_admin ? true : @current_user.user_age_meets_requirement!
+  # end
 
   def as_admin?
     doorkeeper_token.scopes.to_s == 'admin'

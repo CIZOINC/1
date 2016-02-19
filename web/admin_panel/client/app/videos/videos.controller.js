@@ -1,6 +1,194 @@
 (function () {
     'use strict';
 
+    angular.module('app.videos')
+        .controller('VideosCtrl', function VideosCtrl($scope, $filter, videoNotifier) {
+            // Init
+            var init;
+
+            $scope.allVideos = getVideos();
+
+            $scope.videoCategories = getCategories();
+
+            $scope.categoryLookup = getCategories(true);
+
+            $scope.searchKeywords = '';
+
+            $scope.filteredVideos = [];
+
+            $scope.row = '';
+
+            $scope.select = function (page) {
+                var end, start;
+                start = (page - 1) * $scope.numPerPage;
+                end = start + $scope.numPerPage;
+                return $scope.currentPageVideos = $scope.filteredVideos.slice(start, end);
+            };
+
+            $scope.onFilterChange = function () {
+                $scope.select(1);
+                $scope.currentPage = 1;
+                return $scope.row = '';
+            };
+
+            $scope.onNumPerPageChange = function () {
+                $scope.select(1);
+                return $scope.currentPage = 1;
+            };
+
+            $scope.onOrderChange = function () {
+                $scope.select(1);
+                return $scope.currentPage = 1;
+            };
+
+            $scope.search = function () {
+                $scope.filteredVideos = $filter('filter')($scope.allVideos.data, $scope.searchKeywords);
+                return $scope.onFilterChange();
+            };
+
+            $scope.order = function (rowName) {
+                if ($scope.row === rowName) {
+                    return;
+                }
+                $scope.row = rowName;
+                $scope.filteredVideos = $filter('orderBy')($scope.allVideos.data, rowName);
+                return $scope.onOrderChange();
+            };
+
+            $scope.videoValid = validateVideo;
+
+            $scope.videoClasses = function (video) {
+                if ($scope.videoValid(video)) {
+                    if (video.visible) {
+                        return 'btn btn-w-sm btn-gap-v btn-primary';
+                    } else {
+                        return 'btn btn-w-sm btn-gap-v btn-dark';
+                    }
+                } else {
+                    return 'btn btn-w-sm btn-gap-v btn-line-default';
+                }
+            };
+
+            $scope.modifyVisible = function (video) {
+                if (!validateVideo(video)) {
+                    videoNotifier.log(`This video isn’t ready for adding, click 'Edit' and upload an image / video`, 'Oops!', true)
+                } else if (video.visible) {
+                    video.visible = false;
+                    videoNotifier.logWarning('Video has been removed from the video feed', 'Video Removed');
+                } else if (!video.visible) {
+                    video.visible = true;
+                    videoNotifier.logSuccess('Video has been added to the video feed', 'Video Added');
+                } else {
+                    console.log('error');
+                }
+            };
+
+            $scope.numPerPageOpt = [3, 5, 10, 20];
+
+            $scope.numPerPage = $scope.numPerPageOpt[2];
+
+            $scope.currentPage = 1;
+
+            $scope.currentPageVideos = [];
+
+            init = function () {
+                $scope.search();
+                return $scope.select($scope.currentPage);
+            };
+
+            init();
+        })
+        .controller('VideoModalCtrl', function VideoModalCtrl($scope, $uibModal, $log) {
+
+            $scope.animationsEnabled = true;
+
+            $scope.openModal = function (size) {
+
+                var modalInstance = $uibModal.open({
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'videoModal.html',
+                    controller: 'VideoModalInstanceCtrl',
+                    size: size,
+                    resolve: {
+                        video: function () {
+                            return $scope.video;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function (video) {
+                    $scope.video = video;
+                }, function () {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+            };
+
+            $scope.toggleAnimation = function () {
+                $scope.animationsEnabled = !$scope.animationsEnabled;
+            };
+        })
+        .controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $uibModalInstance, video) {
+            $scope.video = video;
+
+            $scope.videoCategories = getCategories();
+
+            $scope.categoryLookup = getCategories(true);
+
+            $scope.ok = function () {
+                $uibModalInstance.close($scope.video);
+            };
+
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss("cancel");
+            };
+
+        })
+        .filter('readyNotReady', function readyNotReadyFilter() {
+            return function (video) {
+                let videoValidation = validateVideo(video);
+                if (videoValidation) {
+                    return video.visible ? '✓ Online' : 'Ready';
+                } else {
+                    return 'Not Ready';
+                }
+            }
+        })
+        .factory('videoNotifier', function videoNotifier() {
+            var logIt;
+
+            // toastr setting.
+            toastr.options = {
+                "closeButton": true,
+                "positionClass": "toast-top-right",
+                "timeOut": "3000"
+            };
+
+            logIt = function (message, title, type, onClickEvent) {
+                if (onClickEvent) {
+                    toastr.options.onclick = function () {
+                        return console.log('Trigger Modal');
+                    }
+                }
+                return toastr[type](message, title);
+            };
+
+            return {
+                log: function (message, title, onClickEvent) {
+                    logIt(message, title, 'info', onClickEvent);
+                },
+                logWarning: function (message, title, onClickEvent) {
+                    logIt(message, title, 'warning', onClickEvent);
+                },
+                logSuccess: function (message, title, onClickEvent) {
+                    logIt(message, title, 'success', onClickEvent);
+                },
+                logError: function (message, title, onClickEvent) {
+                    logIt(message, title, 'error', onClickEvent);
+                }
+            };
+        });
+
+
     function getVideos(createdBefore, createdAfter, count) {
         // Get the videos, optionally with created before / after / count (max 200)
         var createdBefore = createdBefore ? createdBefore : null,
@@ -429,78 +617,6 @@
         return featuredVideos;
     }
 
-    angular.module('app.videos')
-        .controller('VideosCtrl', ['$scope', '$filter', 'loggerView', VideosCtrl])
-        .controller('VideoModalCtrl', ['$scope', '$uibModal', '$log', VideoModalCtrl])
-        .controller('VideoModalInstanceCtrl', ['$scope', '$uibModalInstance', 'video', VideoModalInstanceCtrl])
-        .filter('readyNotReady', readyNotReadyFunc)
-        .factory('loggerView', loggerView);
-
-    function loggerView() {
-        var logIt;
-
-        // toastr setting.
-        toastr.options = {
-            "closeButton": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "3000"
-        };
-
-        logIt = function (message, title, type, onClickEvent) {
-            if (onClickEvent) {
-                toastr.options.onclick = function () {
-                    return console.log('Trigger Modal');
-                }
-            }
-            return toastr[type](message, title);
-        };
-
-        return {
-            log: function (message, title, onClickEvent) {
-                logIt(message, title, 'info', onClickEvent);
-            },
-            logWarning: function (message, title, onClickEvent) {
-                logIt(message, title, 'warning', onClickEvent);
-            },
-            logSuccess: function (message, title, onClickEvent) {
-                logIt(message, title, 'success', onClickEvent);
-            },
-            logError: function (message, title, onClickEvent) {
-                logIt(message, title, 'error', onClickEvent);
-            }
-        };
-    };
-
-    function validateVideo(video) {
-        if (typeof video.hero_images !== 'undefined') {
-            let streamsCount = video.streams.length,
-                validStreams = 0;
-            for (let stream of video.streams) {
-                if (!stream.transcode_status) {
-                    ++validStreams;
-                }
-            }
-            if (streamsCount === validStreams) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    function readyNotReadyFunc() {
-        return function (video) {
-            let videoValidation = validateVideo(video);
-            if (videoValidation) {
-                return video.visible ? '✓ Online' : 'Ready';
-            } else {
-                return 'Not Ready';
-            }
-        }
-    }
-
     function getCategories(processed) {
         // Get the categories and optionally process them into an object for reference (set 'processed' to true)
         var processed = processed ? processed : false;
@@ -532,147 +648,23 @@
         return videoCategories;
     }
 
-    function VideosCtrl($scope, $filter, loggerView) {
-        // Init
-        var init;
-
-        $scope.allVideos = getVideos();
-
-        $scope.videoCategories = getCategories();
-
-        $scope.categoryLookup = getCategories(true);
-
-        $scope.searchKeywords = '';
-
-        $scope.filteredVideos = [];
-
-        $scope.row = '';
-
-        $scope.select = function (page) {
-            var end, start;
-            start = (page - 1) * $scope.numPerPage;
-            end = start + $scope.numPerPage;
-            return $scope.currentPageVideos = $scope.filteredVideos.slice(start, end);
-        };
-
-        $scope.onFilterChange = function () {
-            $scope.select(1);
-            $scope.currentPage = 1;
-            return $scope.row = '';
-        };
-
-        $scope.onNumPerPageChange = function () {
-            $scope.select(1);
-            return $scope.currentPage = 1;
-        };
-
-        $scope.onOrderChange = function () {
-            $scope.select(1);
-            return $scope.currentPage = 1;
-        };
-
-        $scope.search = function () {
-            $scope.filteredVideos = $filter('filter')($scope.allVideos.data, $scope.searchKeywords);
-            return $scope.onFilterChange();
-        };
-
-        $scope.order = function (rowName) {
-            if ($scope.row === rowName) {
-                return;
-            }
-            $scope.row = rowName;
-            $scope.filteredVideos = $filter('orderBy')($scope.allVideos.data, rowName);
-            return $scope.onOrderChange();
-        };
-
-        $scope.videoValid = validateVideo;
-
-        $scope.videoClasses = function (video) {
-            if ($scope.videoValid(video)) {
-                if (video.visible) {
-                    return 'btn btn-w-sm btn-gap-v btn-primary';
-                } else {
-                    return 'btn btn-w-sm btn-gap-v btn-dark';
+    function validateVideo(video) {
+        if (typeof video.hero_images !== 'undefined') {
+            let streamsCount = video.streams.length,
+                validStreams = 0;
+            for (let stream of video.streams) {
+                if (!stream.transcode_status) {
+                    ++validStreams;
                 }
-            } else {
-                return 'btn btn-w-sm btn-gap-v btn-line-default';
             }
-        };
-
-        $scope.modifyVisible = function (video) {
-            if (!validateVideo(video)) {
-                loggerView.log(`This video isn’t ready for adding, click 'Edit' and upload an image / video`, 'Oops!', true)
-            } else if (video.visible) {
-                video.visible = false;
-                loggerView.logWarning('Video has been removed from the video feed', 'Video Removed');
-            } else if (!video.visible) {
-                video.visible = true;
-                loggerView.logSuccess('Video has been added to the video feed', 'Video Added');
+            if (streamsCount === validStreams) {
+                return true;
             } else {
-                console.log('error');
+                return false;
             }
-        };
-
-        $scope.numPerPageOpt = [3, 5, 10, 20];
-
-        $scope.numPerPage = $scope.numPerPageOpt[2];
-
-        $scope.currentPage = 1;
-
-        $scope.currentPageVideos = [];
-
-        init = function () {
-            $scope.search();
-            return $scope.select($scope.currentPage);
-        };
-
-        init();
+        } else {
+            return false;
+        }
     }
 
-    function VideoModalCtrl($scope, $uibModal, $log) {
-
-        $scope.animationsEnabled = true;
-
-        $scope.openModal = function (size) {
-
-            var modalInstance = $uibModal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'videoModal.html',
-                controller: 'VideoModalInstanceCtrl',
-                size: size,
-                resolve: {
-                    video: function () {
-                        return $scope.video;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (video) {
-                $scope.video = video;
-            }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
-            });
-        };
-
-        $scope.toggleAnimation = function () {
-            $scope.animationsEnabled = !$scope.animationsEnabled;
-        };
-    }
-
-    function VideoModalInstanceCtrl($scope, $uibModalInstance, video) {
-        $scope.video = video;
-
-        $scope.videoCategories = getCategories();
-
-        $scope.categoryLookup = getCategories(true);
-
-        $scope.ok = function () {
-            $uibModalInstance.close($scope.video);
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss("cancel");
-        };
-
-    }
 })();

@@ -1,6 +1,7 @@
 class V1::UsersController < V1::ApiController
   # include Parametrable
-  before_action only: [:me, :destroy_self_account, :update_self_account, :show, :like_video, :dislike_video, :liked, :skipped, :skip_video, :seen, :unseen, :mark_video_as_seen] do
+  before_action :set_batch, only: [:liked_batch, :seen_batch, :skipped_batch]
+  before_action only: [:me, :destroy_self_account, :update_self_account, :show, :like_video, :dislike_video, :liked, :skipped, :skip_video, :seen, :unseen, :mark_video_as_seen, :liked_batch, :seen_batch, :skipped_batch] do
     doorkeeper_authorize! :user, :admin
   end
 
@@ -11,6 +12,9 @@ class V1::UsersController < V1::ApiController
   before_action :set_params_to_query, only: [:liked, :skipped, :seen, :unseen]
   before_action :set_user, only: [:show, :update]
   before_action :set_video, only: [:like_video, :dislike_video, :mark_video_as_seen, :skip_video, :guest_skip_video, :guest_mark_video_as_seen]
+
+
+
   # before_action :user_age_meets_requirement, only: [:liked, :seen, :skipped, :unseen]
   # before_action :prevent_last_admin_from_deletion, only: [:destroy_self_account]
 
@@ -46,6 +50,18 @@ class V1::UsersController < V1::ApiController
     else
       render_errors @current_user.errors[:codes]
     end
+  end
+
+  def liked_batch
+    open_transaction_for(:like)
+  end
+
+  def seen_batch
+   open_transaction_for(:mark_video_as_seen)
+  end
+
+  def skipped_batch
+    open_transaction_for(:skip)
   end
 
   %w(like dislike skip).each do |method|
@@ -92,6 +108,26 @@ class V1::UsersController < V1::ApiController
   end
 
   private
+
+  def set_batch
+    @videos = Video.where("id IN (?) AND deleted_at IS NULL", ids) unless check_if_ids_presents_in_params
+  end
+
+  def ids
+    params[:ids].split(',').map(&:to_i).uniq
+  end
+
+  def open_transaction_for(method)
+    # Delayed::Job.enqueue BatchJob.new(@videos, method, @current_user.id)
+    transaction(method)
+    nothing 204
+  end
+
+  def transaction(method)
+    ActiveRecord::Base.transaction do
+      @videos.each { |video| video.send "#{method}!", @current_user.id }
+    end
+  end
 
   def limit_videos!
     as_admin? ? (@videos = @videos.limit(limited_videos)) : (@videos = @videos.limit(limited_videos(200)))

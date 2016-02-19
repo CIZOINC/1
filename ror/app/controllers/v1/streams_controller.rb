@@ -9,7 +9,7 @@ class V1::StreamsController < V1::ApiController
   before_action :check_if_filename_presents_in_params, only: :upload_ticket
   before_action :check_if_stream_meets_requirements?, only: :create
   before_action :set_bucket, only: [:upload_ticket, :create]
-  before_action :check_for_requirement, only: :show
+  # before_action :check_for_requirement, only: :show
 
 
   def show
@@ -122,7 +122,7 @@ class V1::StreamsController < V1::ApiController
   def valid_filename?(filename)
     filename_regexp = /\A^[0-9a-z]+[0-9a-z\-\.\_]+[0-9a-z]$\z/
     unless filename =~ filename_regexp
-      render_errors ['403.4']
+      render_errors ['403.9']
       return
     end
   end
@@ -228,8 +228,8 @@ class V1::StreamsController < V1::ApiController
     @stream = @video.streams.find_by(stream_type: params[:stream_type])
   end
 
-  def check_for_requirement
-    render_errors ['403.5'] if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
-  end
+  # def check_for_requirement
+  #   render_errors ['403.5'] if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
+  # end
 
 end

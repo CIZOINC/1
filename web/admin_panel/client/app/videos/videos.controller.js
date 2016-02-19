@@ -278,6 +278,157 @@
         return allVideos;
     }
 
+    function getFeatured() {
+        var featuredVideos = {
+            data: [{
+                id: 25,
+                created_at: '2015-12-23T20:49:26.217Z',
+                updated_at: '2016-02-05T19:59:23.753Z',
+                title: ' Watch',
+                description: ' Watch',
+                mature_content: false,
+                category_id: 14,
+                visible: true,
+                featured: true,
+                hero_images: {
+                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/25/original_filename.jpeg',
+                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/25/large_banner_original_filename.jpeg',
+                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/25/medium_banner_original_filename.jpeg',
+                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/25/thumb_banner_original_filename.jpeg'
+                },
+                featured_order: 1,
+                tag_list: null,
+                streams: [{
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/25/mp4/video.mp4',
+                    stream_type: 'mp4'
+                }, {
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/25/hls/index.m3u8',
+                    stream_type: 'hls'
+                }]
+            }, {
+                id: 29,
+                created_at: '2015-12-23T20:51:21.059Z',
+                updated_at: '2016-02-05T19:58:10.345Z',
+                title: 'Fallout 4',
+                description: 'Fallout 4',
+                mature_content: false,
+                category_id: 13,
+                visible: true,
+                featured: true,
+                hero_images: {
+                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/29/original_filename.jpeg',
+                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/29/large_banner_original_filename.jpeg',
+                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/29/medium_banner_original_filename.jpeg',
+                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/29/thumb_banner_original_filename.jpeg'
+                },
+                featured_order: 2,
+                tag_list: null,
+                streams: [{
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/29/mp4/video.mp4',
+                    stream_type: 'mp4'
+                }, {
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/29/hls/index.m3u8',
+                    stream_type: 'hls'
+                }]
+            }, {
+                id: 28,
+                created_at: '2015-12-23T20:51:12.807Z',
+                updated_at: '2016-02-05T19:58:35.513Z',
+                title: 'Uncharted 4',
+                description: 'Uncharted 4',
+                mature_content: false,
+                category_id: 13,
+                visible: true,
+                featured: true,
+                hero_images: {
+                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/28/original_filename.jpeg',
+                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/28/large_banner_original_filename.jpeg',
+                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/28/medium_banner_original_filename.jpeg',
+                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/28/thumb_banner_original_filename.jpeg'
+                },
+                featured_order: 3,
+                tag_list: null,
+                streams: [{
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/28/hls/index.m3u8',
+                    stream_type: 'hls'
+                }, {
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/28/mp4/video.mp4',
+                    stream_type: 'mp4'
+                }]
+            }, {
+                id: 31,
+                created_at: '2015-12-23T22:27:31.935Z',
+                updated_at: '2016-02-08T17:29:44.776Z',
+                title: 'Mr. Robot',
+                description: 'Follows a young computer programmer who suffers from social anxiety disorder and forms connections through hacking. He\'s recruited by a mysterious anarchist, who calls himself Mr. Robot.',
+                mature_content: false,
+                category_id: 12,
+                visible: true,
+                featured: true,
+                hero_images: {
+                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/31/Mr-Robot-Season-1-Finale-TV-Series-Review-Tom-Lorenzo-Site-TLO.jpg',
+                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/31/large_banner_Mr-Robot-Season-1-Finale-TV-Series-Review-Tom-Lorenzo-Site-TLO.jpg',
+                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/31/medium_banner_Mr-Robot-Season-1-Finale-TV-Series-Review-Tom-Lorenzo-Site-TLO.jpg',
+                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/31/thumb_banner_Mr-Robot-Season-1-Finale-TV-Series-Review-Tom-Lorenzo-Site-TLO.jpg'
+                },
+                featured_order: 4,
+                tag_list: 'action, horror',
+                streams: [{
+                    link: 'http://staging.cizo.com/videos/31/streams/mp4',
+                    stream_type: 'mp4'
+                }, {
+                    link: 'http://staging.cizo.com/videos/31/streams/hls',
+                    stream_type: 'hls'
+                }]
+            }, {
+                id: 26,
+                created_at: '2015-12-23T20:50:03.793Z',
+                updated_at: '2016-02-05T19:59:04.977Z',
+                title: 'EDC Las Vegas',
+                description: 'EDC Las Vegas',
+                mature_content: false,
+                category_id: 14,
+                visible: true,
+                featured: true,
+                hero_images: {
+                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/26/original_filename.jpeg',
+                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/26/large_banner_original_filename.jpeg',
+                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/26/medium_banner_original_filename.jpeg',
+                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/26/thumb_banner_original_filename.jpeg'
+                },
+                featured_order: 5,
+                tag_list: null,
+                streams: [{
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/26/hls/index.m3u8',
+                    stream_type: 'hls'
+                }, {
+                    link: 'https://cizo-assets.s3.amazonaws.com/staging/stream/26/mp4/video.mp4',
+                    stream_type: 'mp4'
+                }]
+            }, {
+                id: 24,
+                created_at: '2015-12-23T20:49:02.230Z',
+                updated_at: '2016-02-05T19:59:40.578Z',
+                title: 'Avengers: Age of Ultron',
+                description: 'When Tony Stark and Bruce Banner try to jump-start a dormant peacekeeping program called Ultron, things go horribly wrong and it\'s up to Earth \'s Mightiest Heroes to stop the villainous Ultron from enacting his terrible plans.',
+                mature_content: true,
+                category_id: 11,
+                visible: true,
+                featured: true,
+                hero_images: {
+                    hero_image_link: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/original_filename.jpeg',
+                    hero_image_link_large_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/large_banner_original_filename.jpeg',
+                    hero_image_link_medium_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/medium_banner_original_filename.jpeg',
+                    hero_image_link_thumb_banner: 'https://cizo-assets.s3.amazonaws.com/staging/images/videos/24/thumb_banner_original_filename.jpeg'
+                },
+                featured_order: 7,
+                tag_list: null,
+                streams: null
+            }]
+        };
+        return featuredVideos;
+    }
+
     angular.module('app.videos')
         .controller('VideosCtrl', ['$scope', '$filter', 'loggerView', VideosCtrl])
         .controller('VideoModalCtrl', ['$scope', '$uibModal', '$log', VideoModalCtrl])
@@ -308,13 +459,13 @@
             log: function (message, title, onClickEvent) {
                 logIt(message, title, 'info', onClickEvent);
             },
-            logWarning: function (message, title) {
+            logWarning: function (message, title, onClickEvent) {
                 logIt(message, title, 'warning', onClickEvent);
             },
-            logSuccess: function (message, title) {
+            logSuccess: function (message, title, onClickEvent) {
                 logIt(message, title, 'success', onClickEvent);
             },
-            logError: function (message, title) {
+            logError: function (message, title, onClickEvent) {
                 logIt(message, title, 'error', onClickEvent);
             }
         };

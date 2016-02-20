@@ -1,22 +1,21 @@
 (function () {
     'use strict';
-
     angular.module('app')
         .factory('appConfig', [appConfig]);
 
     function appConfig() {
         var pageTransitionOpts = [{
             name: 'Fade up',
-            "class": 'animate-fade-up'
+            'class': 'animate-fade-up'
         }, {
             name: 'Scale up',
-            "class": 'ainmate-scale-up'
+            'class': 'ainmate-scale-up'
         }, {
             name: 'Slide in from right',
-            "class": 'ainmate-slide-in-right'
+            'class': 'ainmate-slide-in-right'
         }, {
             name: 'Flip Y',
-            "class": 'animate-flip-y'
+            'class': 'animate-flip-y'
         }];
         var date = new Date();
         var year = date.getFullYear();
@@ -48,5 +47,4 @@
             color: color
         }
     }
-
 })();

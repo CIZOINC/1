@@ -1,6 +1,5 @@
+'use strict';
 (function () {
-    'use strict';
-
     angular.module('app', [
             // Angular modules
             'ngRoute',
@@ -30,7 +29,8 @@
             'app.table',
             'app.task',
             'app.calendar',
-            'app.videos'
+            'app.videos',
+            'app.featured'
         ])
         .run(function (editableOptions) {
             editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'

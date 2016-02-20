@@ -14,8 +14,8 @@
                 'page/404', 'page/500', 'page/blank', 'page/forgot-password', 'page/invoice', 'page/lock-screen', 'page/profile', 'page/invoice', 'page/signin', 'page/signup', 'page/about', 'page/services', 'page/contact',
                 'mail/compose', 'mail/inbox', 'mail/single',
                 'app/tasks', 'app/calendar',
-                'app/videos', 'app/users'
-            ]
+                'app/videos', 'app/featured', 'app/users'
+            ];
 
             setRoutes = function (route) {
                 var config, url;
@@ -40,6 +40,9 @@
                 })
                 .when('/videos', {
                     templateUrl: 'app/videos/videos.html'
+                })
+                .when('/featured', {
+                    templateUrl: 'app/featured/featured.html'
                 })
                 .when('/404', {
                     templateUrl: 'app/page/404.html'

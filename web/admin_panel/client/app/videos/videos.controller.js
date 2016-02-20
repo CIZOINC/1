@@ -1,6 +1,5 @@
+'use strict';
 (function () {
-    'use strict';
-
     angular.module('app.videos')
         .controller('VideosCtrl', function VideosCtrl($scope, $filter, videoNotifier) {
             // Init
@@ -22,23 +21,27 @@
                 var end, start;
                 start = (page - 1) * $scope.numPerPage;
                 end = start + $scope.numPerPage;
-                return $scope.currentPageVideos = $scope.filteredVideos.slice(start, end);
+                $scope.currentPageVideos = $scope.filteredVideos.slice(start, end);
+                return $scope.currentPageVideos;
             };
 
             $scope.onFilterChange = function () {
                 $scope.select(1);
                 $scope.currentPage = 1;
-                return $scope.row = '';
+                $scope.row = '';
+                return $scope.row;
             };
 
             $scope.onNumPerPageChange = function () {
                 $scope.select(1);
-                return $scope.currentPage = 1;
+                $scope.currentPage = 1;
+                return $scope.currentPage;
             };
 
             $scope.onOrderChange = function () {
                 $scope.select(1);
-                return $scope.currentPage = 1;
+                $scope.currentPage = 1;
+                return $scope.currentPage;
             };
 
             $scope.search = function () {
@@ -71,7 +74,7 @@
 
             $scope.modifyVisible = function (video) {
                 if (!validateVideo(video)) {
-                    videoNotifier.log(`This video isn’t ready for adding, click 'Edit' and upload an image / video`, 'Oops!', true)
+                    videoNotifier.log(`This video isn’t ready for adding, click 'Edit' and upload an image / video`, 'Oops!', true);
                 } else if (video.visible) {
                     video.visible = false;
                     videoNotifier.logWarning('Video has been removed from the video feed', 'Video Removed');
@@ -99,28 +102,11 @@
             init();
         })
         .controller('VideoModalCtrl', function VideoModalCtrl($scope, $uibModal, $log) {
-
+            // The video edit & add modal
             $scope.animationsEnabled = true;
 
-            $scope.openModal = function (size) {
-
-                var modalInstance = $uibModal.open({
-                    animation: $scope.animationsEnabled,
-                    templateUrl: 'videoModal.html',
-                    controller: 'VideoModalInstanceCtrl',
-                    size: size,
-                    resolve: {
-                        video: function () {
-                            return $scope.video;
-                        }
-                    }
-                });
-
-                modalInstance.result.then(function (video) {
-                    $scope.video = video;
-                }, function () {
-                    $log.info('Modal dismissed at: ' + new Date());
-                });
+            $scope.openModal = function () {
+                return openModal($scope, $uibModal, $log);
             };
 
             $scope.toggleAnimation = function () {
@@ -139,9 +125,8 @@
             };
 
             $scope.cancel = function () {
-                $uibModalInstance.dismiss("cancel");
+                $uibModalInstance.dismiss('cancel');
             };
-
         })
         .filter('readyNotReady', function readyNotReadyFilter() {
             return function (video) {
@@ -151,23 +136,23 @@
                 } else {
                     return 'Not Ready';
                 }
-            }
+            };
         })
         .factory('videoNotifier', function videoNotifier() {
             var logIt;
 
             // toastr setting.
             toastr.options = {
-                "closeButton": true,
-                "positionClass": "toast-top-right",
-                "timeOut": "3000"
+                closeButton: true,
+                positionClass: 'toast-top-right',
+                timeOut: 3000
             };
 
             logIt = function (message, title, type, onClickEvent) {
                 if (onClickEvent) {
                     toastr.options.onclick = function () {
                         return console.log('Trigger Modal');
-                    }
+                    };
                 }
                 return toastr[type](message, title);
             };
@@ -188,12 +173,73 @@
             };
         });
 
+    function openModal($scope, $uibModal, $log) {
+        var size = 'lg';
+
+        var emptyVideo = {
+            title: 'Add title',
+            description: 'Add a video description',
+            mature_content: false,
+            category_id: 11,
+            visible: false,
+            featured: null,
+            tag_list: 'Add, Movie, Tags',
+            streams: [{
+                link: null,
+                stream_type: 'hls',
+                transcode_status: 'pending'
+            }, {
+                link: null,
+                stream_type: 'mp4',
+                transcode_status: 'pending'
+            }]
+        };
+
+        $scope.video = $scope.video || emptyVideo;
+
+        modalInstance = $uibModal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: 'videoModal.html',
+            controller: 'VideoModalInstanceCtrl',
+            size: size,
+            resolve: {
+                video: function () {
+                    return $scope.video || null;
+                }
+            }
+        });
+
+        modalInstance.result.then(function (video) {
+            $scope.video = video;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    }
+
+    function validateVideo(video) {
+        if (typeof video.hero_images !== 'undefined') {
+            let streamsCount = video.streams.length,
+                validStreams = 0;
+            for (let stream of video.streams) {
+                if (!stream.transcode_status) {
+                    ++validStreams;
+                }
+            }
+            if (streamsCount === validStreams) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
     function getVideos(createdBefore, createdAfter, count) {
         // Get the videos, optionally with created before / after / count (max 200)
-        var createdBefore = createdBefore ? createdBefore : null,
-            createdAfter = createdAfter ? createdAfter : null,
-            count = count ? count : 200;
+        createdBefore = createdBefore ? createdBefore : null;
+        createdAfter = createdAfter ? createdAfter : null;
+        count = count ? count : 200;
 
         // Load the categories
         let categories = getCategories(true);
@@ -416,8 +462,8 @@
                 id: 25,
                 created_at: '2015-12-23T20:49:26.217Z',
                 updated_at: '2016-02-05T19:59:23.753Z',
-                title: " Watch",
-                description: " Watch",
+                title: ' Watch',
+                description: ' Watch',
                 mature_content: false,
                 category_id: 14,
                 visible: true,
@@ -619,7 +665,7 @@
 
     function getCategories(processed) {
         // Get the categories and optionally process them into an object for reference (set 'processed' to true)
-        var processed = processed ? processed : false;
+        processed = processed ? processed : false;
 
         let videoCategories = {
             data: [{
@@ -647,24 +693,4 @@
 
         return videoCategories;
     }
-
-    function validateVideo(video) {
-        if (typeof video.hero_images !== 'undefined') {
-            let streamsCount = video.streams.length,
-                validStreams = 0;
-            for (let stream of video.streams) {
-                if (!stream.transcode_status) {
-                    ++validStreams;
-                }
-            }
-            if (streamsCount === validStreams) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
 })();

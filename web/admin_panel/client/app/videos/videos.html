@@ -1,5 +1,5 @@
-<div class="page">
-    <button type="button" class="btn btn-primary btn-lg btn-w-lg">Add new video</button>
+<div class="page" data-ng-controller="VideoModalCtrl">
+    <button type="button" class="btn btn-primary btn-lg btn-w-lg" ng-click="openModal()">Add new video</button>
 </div>
 <div class="page page-table" data-ng-controller="VideosCtrl">
     <section class="panel panel-default table-dynamic">
@@ -127,7 +127,7 @@
                             </div>
                         </script>
 
-                        <a href ng-click="openModal('lg')">Edit</a>
+                        <a href ng-click="openModal(video)">Edit</a>
                     </td>
                     <td>
                         <span editable-text="video.title" e-cols="50">{{video.title}}</span>

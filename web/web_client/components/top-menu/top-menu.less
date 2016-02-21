@@ -1,4 +1,8 @@
 .top-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -6,6 +10,7 @@
   align-content: center;
   color: white;
   padding: 5px;
+  z-index: 2147485680;
 
   &_navigation {
     display: flex;
@@ -34,6 +39,7 @@
 
   &_icon {
     font-size: 30px;
+    margin: 10px;
     cursor: pointer;
   }
 
@@ -54,12 +60,12 @@
       font-size: 18px;
       font-family: main-cizo;
       padding: 5px;
-      text-decoration: underline;
       cursor: pointer;
     }
   }
 
   &_search {
+    background-color: rgba(0,0,0,.8);
     display: flex;
     color: black;
     justify-content: flex-start;
@@ -67,6 +73,7 @@
     align-content: center;
     margin-right: 20px;
     &_input {
+      background-color: transparent;
     }
 
     &_button {

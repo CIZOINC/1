@@ -1,4 +1,8 @@
 .top-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -6,6 +10,7 @@
   align-content: center;
   color: white;
   padding: 5px;
+  z-index: 2147485680;
 
   &_navigation {
     display: flex;
@@ -34,6 +39,7 @@
 
   &_icon {
     font-size: 30px;
+    margin: 10px;
     cursor: pointer;
   }
 
@@ -53,23 +59,50 @@
     &_item {
       font-size: 18px;
       font-family: main-cizo;
-      padding: 5px;
-      text-decoration: underline;
+      padding: 5px 15px;
       cursor: pointer;
     }
   }
 
   &_search {
+    background-color: rgba(0,0,0,.8);
     display: flex;
     color: black;
     justify-content: flex-start;
     align-items: center;
     align-content: center;
     margin-right: 20px;
+    padding: 3px;
+    border-radius: 3px;
     &_input {
+      background-color: transparent;
+      border: none;
+      font-family: main-cizo;
+      font-size: 18px;
+      width: 400px;
+      color: white;
     }
 
     &_button {
+      background-color: transparent;
+      color: white;
+      border: none;
     }
+  }
+
+  &_login {
+    width: 220px;
+    border: 1px solid white;
+    font-family: main-cizo;
+    font-size: 18px;
+
+    color: white;
+    background-color: transparent;
+
+    &_icon {
+      padding: 5px;
+    }
+
+
   }
 }

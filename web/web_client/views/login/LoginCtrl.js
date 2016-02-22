@@ -25,7 +25,7 @@ function LoginCtrl($scope, $state, userServ, storageServ) {
         }).then((response) => {
             storageServ.setItem($scope.storage.storageUserToken, response.data);
             $scope.storage.token = response.data;
-            $state.go('main');
+            $state.go('home');
         });
     }
 

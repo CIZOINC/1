@@ -45,6 +45,7 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'acts-as-taggable-on'
 
 gem 'aws-sdk', '~> 2'
+gem 'aws-sdk-rails', '~> 1.0'
 
 gem 'versionist'
 gem 'carrierwave'#, :github => 'satoruk/carrierwave' , :ref => '43179f94d6a4e62f69e812f5082d6447c9138480'

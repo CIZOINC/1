@@ -15,7 +15,7 @@ module Auth
       end
       # @user.send_reset_password_instructions if @user
       nothing 200
-      ResetPasswordMailer.reset_password_instructions(@user, @user.set_reset_password_token).deliver_later if @user
+      ResetPasswordMailer.reset_password_instructions(@user, @user.set_reset_password_token).deliver_now if @user
 
     end
 

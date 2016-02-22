@@ -167,6 +167,13 @@ class V1::UsersController < V1::ApiController
       @conditions.push('visible = :visible')
       @arguments[:visible] = true
     end
+
+    # if params[:mature_content] == 'false'
+    #   @conditions.push('mature_content = :mature_content')
+    #   @arguments[:mature_content] = false
+    # end
+
+    set_mature_content
   end
 
 end

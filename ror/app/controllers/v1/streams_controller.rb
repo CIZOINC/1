@@ -182,7 +182,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def prefix
-    Rails.env.production? ? "http://api.cizo.com/" : "http://staging.cizo.com/"
+    Rails.env.production? ? "https://api.cizo.com/" : "https://staging.cizo.com/"
   end
 
   #presets

@@ -50,4 +50,11 @@ class V1::ApiController < ApplicationController
     end
   end
 
+  def set_mature_content
+    if params[:mature_content] == "false"
+      @conditions.push('mature_content = :mature_content')
+      @arguments[:mature_content] = false
+    end
+  end
+
 end

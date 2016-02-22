@@ -16,51 +16,52 @@ class V1::VideosController < V1::ApiController
   before_action :able_to_be_featured?, only: [:add_featured]
 
   def index
-    conditions = []
-    arguments = {}
+    @conditions = []
+    @arguments = {}
 
     unless params[:created_before].blank?
-      conditions.push('created_at <= :created_before')
-      arguments[:created_before] = params[:created_before]
+      @conditions.push('created_at <= :created_before')
+      @arguments[:created_before] = params[:created_before]
     end
 
     unless params[:created_after].blank?
-      conditions.push('created_at >= :created_after')
-      arguments[:created_after] = params[:created_after]
+      @conditions.push('created_at >= :created_after')
+      @arguments[:created_after] = params[:created_after]
     end
 
     unless params[:category].blank?
-      conditions.push("category_id = (SELECT id FROM categories WHERE title = :category)")
-      arguments[:category] = params[:category]
+      @conditions.push("category_id = (SELECT id FROM categories WHERE title = :category)")
+      @arguments[:category] = params[:category]
     end
 
     if params[:deleted] == 'true'
-      conditions.push('deleted_at IS NOT NULL')
+      @conditions.push('deleted_at IS NOT NULL')
       @show_deleted = true #unless @current_user && as_admin?
     else
-      conditions.push('deleted_at IS NULL')
+      @conditions.push('deleted_at IS NULL')
     end
 
     unless params[:max_id].blank?
-       conditions.push('id < :max_id')
-       arguments[:max_id] = params[:max_id].to_i
+       @conditions.push('id < :max_id')
+       @arguments[:max_id] = params[:max_id].to_i
     end
 
     unless params[:since_id].blank?
-      conditions.push('id > :since_id')
-      arguments[:since_id] = params[:since_id].to_i
+      @conditions.push('id > :since_id')
+      @arguments[:since_id] = params[:since_id].to_i
     end
 
     if params[:visible] == 'false'
-      conditions.push('visible = :visible')
-      arguments[:visible] = false
+      @conditions.push('visible = :visible')
+      @arguments[:visible] = false
       @show_invisible = true unless @current_user && as_admin?
     else
-      (conditions.push('visible = :visible') && arguments[:visible] = true) unless (@current_user && as_admin?) || params[:deleted] == 'true'
+      (@conditions.push('visible = :visible') && @arguments[:visible] = true) unless (@current_user && as_admin?) || params[:deleted] == 'true'
     end
 
-    conditions = conditions.join(" AND ")
-    @videos = Video.where(conditions, arguments).desc_order
+    set_mature_content
+
+    @videos = Video.where(@conditions.join(" AND "), @arguments).desc_order
     @videos = @videos.tagged_with(params[:tags]) unless params[:tags].blank?
 
     (@current_user && as_admin?) ? (@videos = @videos.limit(limited_videos)) : (@videos = @videos.limit(limited_videos(200)))
@@ -103,26 +104,37 @@ class V1::VideosController < V1::ApiController
   end
 
   def trending
-    @videos = Video.trending.desc_order.limit(200)
+    @conditions = ["visible = true AND deleted_at IS NULL"]
+    @arguments = {}
+    set_mature_content
+    @videos = Video.where(@conditions.join(" AND "), @arguments).desc_order.limit(200)
     render :index
   end
 
   def search
+    @conditions = ["deleted_at IS NULL"]
+    @arguments = {}
     if search = params[:search]
+      set_mature_content
       if @current_user && as_admin?
-        @videos = Video.where(deleted_at: nil).full_search(search)
+        @videos = Video.where(@conditions.join(" AND "), @arguments).full_search(search)
       else
-        @videos = Video.where("visible = ? AND deleted_at IS NULL", true).full_search(search).limit(200)
+        @conditions.push('visible = :visible')
+        @arguments[:visible] = true
+        @videos = Video.where(@conditions.join(" AND "), @arguments).full_search(search).limit(200)
       end
     end
   end
 
   def featured
     @featured = true
+    @conditions = ['featured = true AND deleted_at IS NULL']
+    @arguments = {}
+    set_mature_content
     if @current_user && as_admin?
-      @videos = Video.where("featured = ? AND deleted_at IS NULL", true).order_by_featured
+      @videos = Video.where(@conditions.join(" AND "), @arguments).order_by_featured
     else
-      @videos = Video.where("featured = ? AND visible = ? AND deleted_at IS NULL", true, true).limit(200).order_by_featured
+      @videos = Video.where(@conditions.join(" AND "), @arguments).limit(200).order_by_featured
     end
   end
 
@@ -145,6 +157,13 @@ class V1::VideosController < V1::ApiController
   end
 
   private
+
+  # def add_to_query(param, value)
+  #   if params[param] == value
+  #     @conditions.push("#{param} = :#{param}")
+  #     @arguments[:mature_content] = eval('value')
+  #   end
+  # end
 
   def hero_image_params
     @uploader = HeroImageValidator.new

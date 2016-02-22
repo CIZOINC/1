@@ -45,6 +45,7 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'acts-as-taggable-on'
 
 gem 'aws-sdk', '~> 2'
+gem 'aws-sdk-rails', '~> 1.0'
 
 gem 'versionist'
 gem 'carrierwave'#, :github => 'satoruk/carrierwave' , :ref => '43179f94d6a4e62f69e812f5082d6447c9138480'
@@ -72,6 +73,9 @@ gem 'pg_search', '~> 1.0', '>= 1.0.5'
 #background jobs
 gem 'delayed_job_active_record'
 gem 'daemons'
+
+#watch on background jobs
+gem 'god', '~> 0.13.7'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

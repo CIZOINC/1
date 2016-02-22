@@ -5,7 +5,7 @@ angular
 
 
 /* @ngInject */
-function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ) {
+function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ, RecursionHelper) {
     "use strict";
 
     return {
@@ -15,8 +15,9 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         transclude: true,
         scope: {
             video: '=',
-            filteredList: '=',
-            feedList: '='
+            featuredList: '=',
+            featuredItem: '=',
+            categoriesList: '='
         }
     };
 
@@ -202,15 +203,11 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             let currentVideoId = scope.video.id;
             let nextVideo;
 
-            let index = _.findIndex(scope.filteredList, (item) => {
+            let index = _.findIndex(scope.featuredList, (item) => {
                 return item.id === currentVideoId;
             });
-            if (index + 1 < scope.filteredList.length) {
-                nextVideo = scope.filteredList[index + 1];
-            }
-
-            if (!nextVideo) {
-                nextVideo = scope.feedList[0];
+            if (index + 1 < scope.featuredList.length) {
+                nextVideo = scope.featuredList[index + 1];
             }
 
             return nextVideo;
@@ -237,7 +234,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             } else {
                 scope.screen.pause();
                 scope.featuredPlayer.classList.add('hidden-layer');
-                scope.feedList[0].isWatching = true;
             }
         }
 
@@ -246,7 +242,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 event.stopPropagation();
             }
             pauseIntermissionToggle(undefined, true);
-            let prevVideo = getPreviousVideo(scope.video, scope.filteredList);
+            let prevVideo = getPreviousVideo(scope.video, scope.featuredList);
             if (prevVideo) {
                 scope.screen.pause();
                 if (playerServ.getElementFullscreenState()) {
@@ -269,11 +265,11 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             let currentVideoId = scope.video.id;
             let prevVideo;
 
-            let index = _.findIndex(scope.filteredList, (item) => {
+            let index = _.findIndex(scope.featuredList, (item) => {
                 return item.id === currentVideoId;
             });
             if (index > 0) {
-                prevVideo = scope.filteredList[index - 1];
+                prevVideo = scope.featuredList[index - 1];
             }
             return prevVideo;
         }
@@ -480,4 +476,4 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         }
     }
 }
-featuredPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'playerServ'];
+featuredPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'playerServ', 'RecursionHelper'];

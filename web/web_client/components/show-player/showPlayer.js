@@ -223,7 +223,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             }
             pauseIntermissionToggle(undefined, true);
             let nextVideo = getNextVideo();
-            if (nextVideo && nextVideo.featured) {
+            if (nextVideo) {
                 scope.screen.pause();
                 if (playerServ.getElementFullscreenState()) {
                     toggleFullScreen(true);

@@ -30,8 +30,6 @@ class Video < ActiveRecord::Base
   # validates_with VideoCustomValidator, unless: :skip_validation
   validates_with HeroImageValidator, if: :skip_validation
   validates_with VideoCustomValidator, unless: :skip_validation
-
-  scope :trending, -> (){ where("visible = ? AND deleted_at IS NULL", true).order(view_count: :desc) }
   scope :desc_order, ->(){ order(created_at: :desc)}
   scope :order_by_featured, ->(){order(featured_order: :asc)}
 

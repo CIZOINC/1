@@ -12,7 +12,18 @@ function userServ($http, $q, $log, moment) {
         login: login,
         facebookAuth: facebookAuth,
         updateToken: updateToken,
-        isUnexpiredToken: isUnexpiredToken
+        isUnexpiredToken: isUnexpiredToken,
+
+        getUnseenList: getUnseenList,
+        setVideoSeen: setVideoSeen,
+        getVideoSeen: getVideoSeen,
+
+        getSkipped: getSkipped,
+        setSkipped: setSkipped,
+
+        getLiked: getLiked,
+        setLiked: setLiked,
+        deleteLiked: deleteLiked
     };
 
 
@@ -99,6 +110,195 @@ function userServ($http, $q, $log, moment) {
         let expirationDate = createdDate.add(token.expires_in);
         return now.diff(expirationDate) > 0;
     }
+
+    function getUnseenList(hostName, token, params) {
+        return $q(function (resolve, reject) {
+            if (!token) {
+                reject();
+            }
+            $http({
+                method: 'GET',
+                url: hostName + '/users/me/videos/unseen',
+                params: params,
+                headers: {'Authorization': `Bearer ${token}`}
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('unseen videos obtained');
+                resolve(response.data.data);
+            }
+
+            function error(response) {
+                $log.info('unseen videos obtaining error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function getVideoSeen(hostName, token, params) {
+        return $q(function (resolve, reject) {
+            if (!token) {
+                reject();
+            }
+            $http({
+                method: 'GET',
+                url: hostName + '/users/me/videos/seen',
+                params: params,
+                headers: {'Authorization': `Bearer ${token}`}
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('seen videos obtained');
+                resolve(response.data.data);
+            }
+
+            function error(response) {
+                $log.info('seen videos obtaining error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function setVideoSeen(hostName, token, videoId) {
+        return $q(function (resolve, reject) {
+            if (!token) {
+                reject();
+            }
+            $http({
+                method: 'PUT',
+                url: hostName + `/users/me/videos/seen/${videoId}`,
+                headers: {'Authorization': `Bearer ${token}`}
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('seen videos set');
+                resolve(response.data.data);
+            }
+
+            function error(response) {
+                $log.info('seen videos set error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function getSkipped(hostName, token, params) {
+        return $q(function (resolve, reject) {
+            if (!token) {
+                reject();
+            }
+            $http({
+                method: 'GET',
+                url: hostName + '/users/me/videos/skipped',
+                params: params,
+                headers: {'Authorization': `Bearer ${token}`}
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('skipped videos obtained');
+                resolve(response.data.data);
+            }
+
+            function error(response) {
+                $log.info('skipped videos obtaining error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function setSkipped(hostName, token, videoId) {
+        return $q(function (resolve, reject) {
+            if (!token) {
+                reject();
+            }
+            $http({
+                method: 'PUT',
+                url: hostName + `/users/me/videos/skipped/${videoId}`,
+                headers: {'Authorization': `Bearer ${token}`}
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('skipped videos set');
+                resolve(response.data.data);
+            }
+
+            function error(response) {
+                $log.info('skipped videos set error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function getLiked(hostName, token, params) {
+        return $q(function (resolve, reject) {
+            if (!token) {
+                reject();
+            }
+            $http({
+                method: 'GET',
+                url: hostName + '/users/me/videos/liked',
+                params: params,
+                headers: {'Authorization': `Bearer ${token}`}
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('liked videos obtained');
+                resolve(response.data.data);
+            }
+
+            function error(response) {
+                $log.info('liked videos obtaining error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function setLiked(hostName, token, videoId) {
+        return $q(function (resolve, reject) {
+            if (!token) {
+                reject();
+            }
+            $http({
+                method: 'PUT',
+                url: hostName + `/users/me/videos/liked/${videoId}`,
+                headers: {'Authorization': `Bearer ${token}`}
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('liked videos set');
+                resolve(response.data.data);
+            }
+
+            function error(response) {
+                $log.info('liked videos set error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function deleteLiked(hostName, token, videoId) {
+        return $q(function (resolve, reject) {
+            if (!token) {
+                reject();
+            }
+            $http({
+                method: 'DELETE',
+                url: hostName + `/users/me/videos/liked/${videoId}`,
+                headers: {'Authorization': `Bearer ${token}`}
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('liked videos deleted');
+                resolve(response.data.data);
+            }
+
+            function error(response) {
+                $log.info('liked videos delete error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
 }
 
 userServ.$inject = ['$http', '$q', '$log', 'moment'];

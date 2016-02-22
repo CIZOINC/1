@@ -27,7 +27,7 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
 
     $scope = angular.extend($scope, {
         title: 'Cizo',
-        hostName: `http://staging.cizo.com`,
+        hostName: `https://staging.cizo.com`,
         videosList: [],
         categoriesList: [],
         featuredList: [],

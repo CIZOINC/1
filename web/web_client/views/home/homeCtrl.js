@@ -4,7 +4,7 @@ angular
     .controller('HomeCtrl', HomeCtrl);
 
 /* @ngInject */
-function HomeCtrl($scope, videoServ, categoriesServ, $q, _, moment, $rootScope) {
+function HomeCtrl($scope, videoServ, categoriesServ, $q, _, moment, $rootScope, userServ) {
     "use strict";
 
     $scope = angular.extend($scope, {
@@ -74,5 +74,6 @@ function HomeCtrl($scope, videoServ, categoriesServ, $q, _, moment, $rootScope) 
             resolve($scope.videosList);
         });
     }
+
 }
-HomeCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', 'moment', '$rootScope'];
+HomeCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', 'moment', '$rootScope', 'userServ'];

@@ -1,6 +1,6 @@
 /*global angular*/
 angular
-    .module('app.helpers', [])
+    .module('app.helpers')
     .factory('RecursionHelper', ['$compile', function($compile){
         "use strict";
         return {

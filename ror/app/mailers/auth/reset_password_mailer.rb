@@ -1,5 +1,5 @@
 class Auth::ResetPasswordMailer < Devise::Mailer
-  default from: "from@example.com"
+  default from: "noreply@cizo.com"
   default template_path: 'devise/mailer'
   # include Devise::Controllers::UrlHelpers
 

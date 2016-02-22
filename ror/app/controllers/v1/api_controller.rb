@@ -13,9 +13,9 @@ class V1::ApiController < ApplicationController
     render_errors ['404.1'] if @video.deleted_at
   end
 
-  def user_age_meets_requirement
-    @user_age_meets_requirement = @current_user.is_admin ? true : @current_user.user_age_meets_requirement!
-  end
+  # def user_age_meets_requirement
+  #   @user_age_meets_requirement = @current_user.is_admin ? true : @current_user.user_age_meets_requirement!
+  # end
 
   def as_admin?
     doorkeeper_token.scopes.to_s == 'admin'
@@ -41,12 +41,19 @@ class V1::ApiController < ApplicationController
     @bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
   end
 
-  %w(key filename file).each_with_index do |param, index|
+  %w(key filename file ids).each_with_index do |param, index|
     define_method("check_if_#{param}_presents_in_params") do
       unless !params[param].blank? && instance_variable_set("@#{param}", params[param])
         render_errors ["403.#{index+1}"]
-        return
+        return true
       end
+    end
+  end
+
+  def set_mature_content
+    if params[:mature_content] == "false"
+      @conditions.push('mature_content = :mature_content')
+      @arguments[:mature_content] = false
     end
   end
 

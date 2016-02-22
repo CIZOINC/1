@@ -4,7 +4,7 @@ angular
     .directive('topMenu', topMenu);
 
 /* @ngInject */
-function topMenu($http, $q, $log, $sce, $state, $anchorScroll) {
+function topMenu($state, $anchorScroll) {
     "use strict";
 
     return {
@@ -48,4 +48,4 @@ function topMenu($http, $q, $log, $sce, $state, $anchorScroll) {
     }
 }
 
-topMenu.$inject = ['$http', '$q', '$log', '$sce', '$state', '$anchorScroll'];
+topMenu.$inject = ['$state', '$anchorScroll'];

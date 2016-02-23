@@ -44,7 +44,7 @@ en:
     "1": Key is required
     "2": Filename is required
     "3": File is required
-    "4": Ids are required
+    "4": Data is required
     "5": Forbidden video
     "6": Unable to save record. If featured true, featured_order can not be nil and vice versa
     "7": You are not allowed to log in as admin

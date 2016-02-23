@@ -51,15 +51,8 @@ class V1::VideosController < V1::ApiController
       @arguments[:since_id] = params[:since_id].to_i
     end
 
-    if params[:visible] == 'false'
-      @conditions.push('visible = :visible')
-      @arguments[:visible] = false
-      @show_invisible = true unless @current_user && as_admin?
-    else
-      (@conditions.push('visible = :visible') && @arguments[:visible] = true) unless (@current_user && as_admin?) || params[:deleted] == 'true'
-    end
-
     set_mature_content
+    set_visibility
 
     @videos = Video.where(@conditions.join(" AND "), @arguments).desc_order
     @videos = @videos.tagged_with(params[:tags]) unless params[:tags].blank?
@@ -116,6 +109,7 @@ class V1::VideosController < V1::ApiController
     @arguments = {}
     if search = params[:search]
       set_mature_content
+      set_visibility
       if @current_user && as_admin?
         @videos = Video.where(@conditions.join(" AND "), @arguments).full_search(search)
       else
@@ -157,13 +151,6 @@ class V1::VideosController < V1::ApiController
   end
 
   private
-
-  # def add_to_query(param, value)
-  #   if params[param] == value
-  #     @conditions.push("#{param} = :#{param}")
-  #     @arguments[:mature_content] = eval('value')
-  #   end
-  # end
 
   def hero_image_params
     @uploader = HeroImageValidator.new

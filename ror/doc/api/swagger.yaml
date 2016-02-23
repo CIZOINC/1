@@ -1202,6 +1202,9 @@ definitions:
       description:
         type: string
         description: Description of video.
+      link:
+        type: string
+        description: Link to page of video
       mature_content:
         type: boolean
         description: 'Boolean indicating if the video contains mature content'

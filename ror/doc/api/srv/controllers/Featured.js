@@ -21,9 +21,10 @@ module.exports.featuredGet = function featuredGet (req, res, next) {
 
 module.exports.featuredVideoIdPut = function featuredVideoIdPut (req, res, next) {
   var videoId = req.swagger.params['video-id'].value;
+  var body = req.swagger.params['body'].value;
   
 
-  var result = Featured.featuredVideoIdPut(videoId);
+  var result = Featured.featuredVideoIdPut(videoId, body);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

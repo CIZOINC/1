@@ -115,19 +115,12 @@ class V1::UsersController < V1::ApiController
 
   def ids
     return if check_if_data_presents_in_params
-    @data.map {|x| x[:id].to_i}.uniq 
+    @data.map {|x| x[:id].to_i}.uniq
   end
 
   def open_transaction_for(method)
-    # Delayed::Job.enqueue BatchJob.new(@videos, method, @current_user.id)
-    transaction(method)
+    Delayed::Job.enqueue BatchJob.new(@videos.ids, method, @current_user.id)
     nothing 204
-  end
-
-  def transaction(method)
-    ActiveRecord::Base.transaction do
-      @videos.each { |video| video.send "#{method}!", @current_user.id }
-    end
   end
 
   def limit_videos!

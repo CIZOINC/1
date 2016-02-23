@@ -86,7 +86,7 @@
   "name" : "body",
   "required" : false,
   "schema" : {
-    "$ref" : "#/definitions/body"
+    "$ref" : "#/definitions/body_1"
   }
 }
         
@@ -433,6 +433,14 @@
   "description" : "Video ID",
   "required" : true,
   "type" : "integer"
+},
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : false,
+  "schema" : {
+    "$ref" : "#/definitions/body"
+  }
 }
         
       ],
@@ -577,7 +585,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_1"
+    "$ref" : "#/definitions/body_2"
   }
 }
         
@@ -659,7 +667,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_3"
+    "$ref" : "#/definitions/body_7"
   }
 },
         {
@@ -801,6 +809,46 @@
         ,
         "404": {
   "description" : "User is not logged in",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a list of videos as skipped.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeVideosSkippedPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/body_6"
+  }
+}
+        
+      ],
+      "responses": {
+        "202": {
+  "description" : "Videos have been accepted for processing. Processing happens in the background. GET /users/me/videos/skipped should be used to validate success."
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
   "schema" : {
     "$ref" : "#/definitions/Error"
   }
@@ -978,7 +1026,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_2"
+    "$ref" : "#/definitions/body_3"
   }
 }
         
@@ -1246,6 +1294,46 @@
         
         
       }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a list of videos as liked.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeVideosLikedPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/body_4"
+  }
+}
+        
+      ],
+      "responses": {
+        "202": {
+  "description" : "Videos have been accepted for processing. Processing happens in the background. GET /users/me/videos/liked should be used to validate success."
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
     } 
     
   } ,
@@ -1294,6 +1382,46 @@
         ,
         "404": {
   "description" : "User is not logged in",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a list of videos as seen. The video&#39;s skipped parameter will be set to false and removed from the skipped resource if present.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeVideosSeenPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/body_5"
+  }
+}
+        
+      ],
+      "responses": {
+        "202": {
+  "description" : "Videos have been accepted for processing. Processing happens in the background. GET /users/me/videos/seen should be used to validate success."
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
   "schema" : {
     "$ref" : "#/definitions/Error"
   }
@@ -1493,7 +1621,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_5"
+    "$ref" : "#/definitions/body_9"
   }
 },
         {
@@ -1580,7 +1708,7 @@
         {
   "name" : "visible",
   "in" : "query",
-  "description" : "Filter videos that are marked as not visible. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the \"id\" attribute of each video.",
+  "description" : "Filter videos by 'visible' field. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the \"id\" attribute of each video if this query parameter is set to false.",
   "required" : false,
   "type" : "boolean"
 },
@@ -1588,6 +1716,13 @@
   "name" : "deleted",
   "in" : "query",
   "description" : "Filter videos that have been deleted. The videos returned will only contain the \"id\" attribute of each video.",
+  "required" : false,
+  "type" : "boolean"
+},
+        {
+  "name" : "show_mature_content",
+  "in" : "query",
+  "description" : "Boolean indicating whether videos containing mature content should appear in the return. Default value is true.",
   "required" : false,
   "type" : "boolean"
 },
@@ -1631,7 +1766,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_4"
+    "$ref" : "#/definitions/body_8"
   }
 }
         
@@ -1860,6 +1995,10 @@
       "type" : "string",
       "description" : "Description of video."
     },
+    "link" : {
+      "type" : "string",
+      "description" : "Link to page of video"
+    },
     "mature_content" : {
       "type" : "boolean",
       "description" : "Boolean indicating if the video contains mature content",
@@ -2003,6 +2142,14 @@
       }
     }
   }
+},"body": {
+  "properties" : {
+    "featured_order" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Order at which the video should appear within the featured list. If omitted, video will be appended to list."
+    }
+  }
 },"inline_response_200_2": {
   "properties" : {
     "access_token" : {
@@ -2027,7 +2174,7 @@
       "description" : "Access_token expiration in seconds"
     }
   }
-},"body": {
+},"body_1": {
   "required" : [ "grant_type", "password", "username" ],
   "properties" : {
     "grant_type" : {
@@ -2091,13 +2238,6 @@
       }
     }
   }
-},"body_1": {
-  "type" : "object",
-  "properties" : {
-    "user" : {
-      "$ref" : "#/definitions/User"
-    }
-  }
 },"body_2": {
   "type" : "object",
   "properties" : {
@@ -2113,6 +2253,61 @@
     }
   }
 },"body_4": {
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Unique identifier representing a specific video"
+          }
+        }
+      }
+    }
+  }
+},"body_5": {
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Unique identifier representing a specific video"
+          }
+        }
+      }
+    }
+  }
+},"body_6": {
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Unique identifier representing a specific video"
+          }
+        }
+      }
+    }
+  }
+},"body_7": {
+  "type" : "object",
+  "properties" : {
+    "user" : {
+      "$ref" : "#/definitions/User"
+    }
+  }
+},"body_8": {
   "required" : [ "category_id", "description", "title" ],
   "properties" : {
     "title" : {
@@ -2179,7 +2374,7 @@
       "description" : "Title of video."
     }
   }
-},"body_5": {
+},"body_9": {
   "properties" : {
     "key" : {
       "type" : "string",

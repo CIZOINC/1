@@ -1,6 +1,6 @@
 'use strict';
 
-exports.videosGet = function(category, tags, createdBefore, createdAfter, visible, deleted, count) {
+exports.videosGet = function(category, tags, createdBefore, createdAfter, visible, deleted, showMatureContent, count) {
 
   var examples = {};
   
@@ -12,14 +12,15 @@ exports.videosGet = function(category, tags, createdBefore, createdAfter, visibl
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-02-03T17:41:55.156+0000",
+    "link" : "aeiou",
+    "created_at" : "2016-02-23T20:11:01.609+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-03T17:41:55.156+0000",
+    "updated_at" : "2016-02-23T20:11:01.609+0000",
     "category_id" : 123,
     "tag_list" : "aeiou",
     "id" : 123,
@@ -42,9 +43,9 @@ exports.videosPost = function(body) {
   examples['application/json'] = {
   "mature_content" : true,
   "category_id" : 123,
-  "updated_at" : "2016-02-03T17:41:55.158+0000",
+  "updated_at" : "2016-02-23T20:11:01.611+0000",
   "tag_list" : "aeiou",
-  "created_at" : "2016-02-03T17:41:55.158+0000",
+  "created_at" : "2016-02-23T20:11:01.611+0000",
   "description" : "aeiou",
   "id" : 123,
   "title" : "aeiou"
@@ -67,14 +68,15 @@ exports.videosVideoIdGet = function(videoId) {
     "link" : "aeiou",
     "stream_type" : "aeiou"
   } ],
-  "created_at" : "2016-02-03T17:41:55.159+0000",
+  "link" : "aeiou",
+  "created_at" : "2016-02-23T20:11:01.613+0000",
   "description" : "aeiou",
   "title" : "aeiou",
   "liked" : true,
   "seen" : true,
   "skipped" : true,
   "mature_content" : true,
-  "updated_at" : "2016-02-03T17:41:55.159+0000",
+  "updated_at" : "2016-02-23T20:11:01.613+0000",
   "category_id" : 123,
   "tag_list" : "aeiou",
   "id" : 123,
@@ -100,14 +102,15 @@ exports.videosVideoIdPut = function(body, videoId) {
     "link" : "aeiou",
     "stream_type" : "aeiou"
   } ],
-  "created_at" : "2016-02-03T17:41:55.159+0000",
+  "link" : "aeiou",
+  "created_at" : "2016-02-23T20:11:01.614+0000",
   "description" : "aeiou",
   "title" : "aeiou",
   "liked" : true,
   "seen" : true,
   "skipped" : true,
   "mature_content" : true,
-  "updated_at" : "2016-02-03T17:41:55.159+0000",
+  "updated_at" : "2016-02-23T20:11:01.614+0000",
   "category_id" : 123,
   "tag_list" : "aeiou",
   "id" : 123,

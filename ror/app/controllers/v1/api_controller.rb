@@ -41,7 +41,7 @@ class V1::ApiController < ApplicationController
     @bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
   end
 
-  %w(key filename file ids).each_with_index do |param, index|
+  %w(key filename file data).each_with_index do |param, index|
     define_method("check_if_#{param}_presents_in_params") do
       unless !params[param].blank? && instance_variable_set("@#{param}", params[param])
         render_errors ["403.#{index+1}"]

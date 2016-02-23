@@ -110,11 +110,12 @@ class V1::UsersController < V1::ApiController
   private
 
   def set_batch
-    @videos = Video.where("id IN (?) AND deleted_at IS NULL", ids) unless check_if_ids_presents_in_params
+    @videos = Video.where("id IN (?) AND deleted_at IS NULL", ids)
   end
 
   def ids
-    params[:ids].split(',').map(&:to_i).uniq
+    return if check_if_data_presents_in_params
+    @data.map {|x| x[:id].to_i}.uniq 
   end
 
   def open_transaction_for(method)

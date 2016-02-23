@@ -12,14 +12,15 @@ exports.featuredGet = function() {
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-02-03T17:41:55.128+0000",
+    "link" : "aeiou",
+    "created_at" : "2016-02-23T20:11:01.576+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-03T17:41:55.128+0000",
+    "updated_at" : "2016-02-23T20:11:01.576+0000",
     "category_id" : 123,
     "tag_list" : "aeiou",
     "id" : 123,
@@ -35,7 +36,7 @@ exports.featuredGet = function() {
     return examples[Object.keys(examples)[0]];
   
 }
-exports.featuredVideoIdPut = function(videoId) {
+exports.featuredVideoIdPut = function(videoId, body) {
 
   var examples = {};
   

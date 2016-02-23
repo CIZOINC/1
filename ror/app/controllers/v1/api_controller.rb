@@ -41,7 +41,7 @@ class V1::ApiController < ApplicationController
     @bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
   end
 
-  %w(key filename file ids).each_with_index do |param, index|
+  %w(key filename file data).each_with_index do |param, index|
     define_method("check_if_#{param}_presents_in_params") do
       unless !params[param].blank? && instance_variable_set("@#{param}", params[param])
         render_errors ["403.#{index+1}"]
@@ -51,10 +51,26 @@ class V1::ApiController < ApplicationController
   end
 
   def set_mature_content
-    if params[:mature_content] == "false"
-      @conditions.push('mature_content = :mature_content')
-      @arguments[:mature_content] = false
+    if params[:show_mature_content] == "false"
+      @conditions.push('mature_content = :show_mature_content')
+      @arguments[:show_mature_content] = false
     end
+  end
+
+  def set_visibility
+    if params[:visible] == 'false'
+      @conditions.push('visible = :visible')
+      @arguments[:visible] = false
+      @show_invisible = true unless @current_user && as_admin?
+    elsif params[:visible] == 'true'
+      visible_conditions
+    else
+      visible_conditions unless @current_user && as_admin?
+    end
+  end
+
+  def visible_conditions
+    (@conditions.push('visible = :visible') && @arguments[:visible] = true) unless params[:deleted] == 'true'
   end
 
 end

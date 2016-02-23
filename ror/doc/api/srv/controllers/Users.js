@@ -117,6 +117,20 @@ module.exports.usersMeVideosLikedGet = function usersMeVideosLikedGet (req, res,
     res.end();
 };
 
+module.exports.usersMeVideosLikedPut = function usersMeVideosLikedPut (req, res, next) {
+  var body = req.swagger.params['body'].value;
+  
+
+  var result = Users.usersMeVideosLikedPut(body);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
 module.exports.usersMeVideosLikedVideoIdPut = function usersMeVideosLikedVideoIdPut (req, res, next) {
   var videoId = req.swagger.params['video-id'].value;
   
@@ -161,6 +175,20 @@ module.exports.usersMeVideosSeenGet = function usersMeVideosSeenGet (req, res, n
     res.end();
 };
 
+module.exports.usersMeVideosSeenPut = function usersMeVideosSeenPut (req, res, next) {
+  var body = req.swagger.params['body'].value;
+  
+
+  var result = Users.usersMeVideosSeenPut(body);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
 module.exports.usersMeVideosSeenVideoIdPut = function usersMeVideosSeenVideoIdPut (req, res, next) {
   var videoId = req.swagger.params['video-id'].value;
   
@@ -182,6 +210,20 @@ module.exports.usersMeVideosSkippedGet = function usersMeVideosSkippedGet (req, 
   
 
   var result = Users.usersMeVideosSkippedGet(createdBefore, createdAfter, count);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersMeVideosSkippedPut = function usersMeVideosSkippedPut (req, res, next) {
+  var body = req.swagger.params['body'].value;
+  
+
+  var result = Users.usersMeVideosSkippedPut(body);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

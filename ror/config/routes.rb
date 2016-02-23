@@ -45,9 +45,9 @@ Rails.application.routes.draw do
       delete :me, on: :collection, to: "users#destroy_self_account"
       put :me, on: :collection, to: "users#update_self_account"
 
-      put 'me/liked', to: "users#liked_batch", on: :collection
-      put 'me/seen', to: "users#seen_batch", on: :collection
-      put 'me/skipped', to: "users#skipped_batch", on: :collection
+      put 'me/videos/liked', to: "users#liked_batch", on: :collection
+      put 'me/videos/seen', to: "users#seen_batch", on: :collection
+      put 'me/videos/skipped', to: "users#skipped_batch", on: :collection
 
       put 'me/videos/liked/:video_id', to: "users#like_video", on: :collection
       delete 'me/videos/liked/:video_id', to: "users#dislike_video", on: :collection

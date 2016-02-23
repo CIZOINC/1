@@ -9,7 +9,7 @@ Bundler.require(*Rails.groups)
 module Ror
   class Application < Rails::Application
     config.action_mailer.delivery_method = :aws_sdk
-    # config.autoload_paths << Rails.root.join('app','workers')
+    config.autoload_paths << Rails.root.join('app','workers')
 
     config.middleware.use Rack::Cors do
          allow do

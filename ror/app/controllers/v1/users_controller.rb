@@ -110,23 +110,17 @@ class V1::UsersController < V1::ApiController
   private
 
   def set_batch
-    @videos = Video.where("id IN (?) AND deleted_at IS NULL", ids) unless check_if_ids_presents_in_params
+    @videos = Video.where("id IN (?) AND deleted_at IS NULL", ids)
   end
 
   def ids
-    params[:ids].split(',').map(&:to_i).uniq
+    return if check_if_data_presents_in_params
+    @data.map {|x| x[:id].to_i}.uniq
   end
 
   def open_transaction_for(method)
-    # Delayed::Job.enqueue BatchJob.new(@videos, method, @current_user.id)
-    transaction(method)
-    nothing 204
-  end
-
-  def transaction(method)
-    ActiveRecord::Base.transaction do
-      @videos.each { |video| video.send "#{method}!", @current_user.id }
-    end
+    Delayed::Job.enqueue BatchJob.new(@videos.ids, method, @current_user.id)
+    nothing 202
   end
 
   def limit_videos!
@@ -163,17 +157,8 @@ class V1::UsersController < V1::ApiController
       @arguments[:created_after] = params[:created_after]
     end
 
-    unless as_admin?
-      @conditions.push('visible = :visible')
-      @arguments[:visible] = true
-    end
-
-    # if params[:mature_content] == 'false'
-    #   @conditions.push('mature_content = :mature_content')
-    #   @arguments[:mature_content] = false
-    # end
-
     set_mature_content
+    set_visibility
   end
 
 end

@@ -6,7 +6,7 @@ exports.usersGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
-    "birthday" : "2016-02-03T17:41:55.138+0000",
+    "birthday" : "2016-02-23T20:11:01.589+0000",
     "password" : "aeiou",
     "id" : 123,
     "email" : "aeiou"
@@ -24,7 +24,7 @@ exports.usersPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-03T17:41:55.139+0000",
+  "birthday" : "2016-02-23T20:11:01.590+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -55,7 +55,7 @@ exports.usersMeGet = function() {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-03T17:41:55.141+0000",
+  "birthday" : "2016-02-23T20:11:01.592+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -72,7 +72,7 @@ exports.usersMePut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-03T17:41:55.142+0000",
+  "birthday" : "2016-02-23T20:11:01.593+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -103,14 +103,15 @@ exports.usersMeVideosLikedGet = function(createdBefore, createdAfter, count) {
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-02-03T17:41:55.143+0000",
+    "link" : "aeiou",
+    "created_at" : "2016-02-23T20:11:01.594+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-03T17:41:55.143+0000",
+    "updated_at" : "2016-02-23T20:11:01.594+0000",
     "category_id" : 123,
     "tag_list" : "aeiou",
     "id" : 123,
@@ -124,6 +125,13 @@ exports.usersMeVideosLikedGet = function(createdBefore, createdAfter, count) {
   
   if(Object.keys(examples).length > 0)
     return examples[Object.keys(examples)[0]];
+  
+}
+exports.usersMeVideosLikedPut = function(body) {
+
+  var examples = {};
+  
+
   
 }
 exports.usersMeVideosLikedVideoIdPut = function(videoId) {
@@ -152,14 +160,15 @@ exports.usersMeVideosSeenGet = function(createdBefore, createdAfter, count) {
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-02-03T17:41:55.147+0000",
+    "link" : "aeiou",
+    "created_at" : "2016-02-23T20:11:01.599+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-03T17:41:55.147+0000",
+    "updated_at" : "2016-02-23T20:11:01.599+0000",
     "category_id" : 123,
     "tag_list" : "aeiou",
     "id" : 123,
@@ -173,6 +182,13 @@ exports.usersMeVideosSeenGet = function(createdBefore, createdAfter, count) {
   
   if(Object.keys(examples).length > 0)
     return examples[Object.keys(examples)[0]];
+  
+}
+exports.usersMeVideosSeenPut = function(body) {
+
+  var examples = {};
+  
+
   
 }
 exports.usersMeVideosSeenVideoIdPut = function(videoId) {
@@ -194,14 +210,15 @@ exports.usersMeVideosSkippedGet = function(createdBefore, createdAfter, count) {
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-02-03T17:41:55.150+0000",
+    "link" : "aeiou",
+    "created_at" : "2016-02-23T20:11:01.603+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-03T17:41:55.150+0000",
+    "updated_at" : "2016-02-23T20:11:01.603+0000",
     "category_id" : 123,
     "tag_list" : "aeiou",
     "id" : 123,
@@ -215,6 +232,13 @@ exports.usersMeVideosSkippedGet = function(createdBefore, createdAfter, count) {
   
   if(Object.keys(examples).length > 0)
     return examples[Object.keys(examples)[0]];
+  
+}
+exports.usersMeVideosSkippedPut = function(body) {
+
+  var examples = {};
+  
+
   
 }
 exports.usersMeVideosSkippedVideoIdPut = function(videoId) {
@@ -236,14 +260,15 @@ exports.usersMeVideosUnseenGet = function(createdBefore, createdAfter, count) {
       "link" : "aeiou",
       "stream_type" : "aeiou"
     } ],
-    "created_at" : "2016-02-03T17:41:55.152+0000",
+    "link" : "aeiou",
+    "created_at" : "2016-02-23T20:11:01.606+0000",
     "description" : "aeiou",
     "title" : "aeiou",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-03T17:41:55.152+0000",
+    "updated_at" : "2016-02-23T20:11:01.606+0000",
     "category_id" : 123,
     "tag_list" : "aeiou",
     "id" : 123,
@@ -285,7 +310,7 @@ exports.usersUserIdGet = function(userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-03T17:41:55.155+0000",
+  "birthday" : "2016-02-23T20:11:01.608+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
@@ -302,7 +327,7 @@ exports.usersUserIdPut = function(body, userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-03T17:41:55.156+0000",
+  "birthday" : "2016-02-23T20:11:01.609+0000",
   "password" : "aeiou",
   "id" : 123,
   "email" : "aeiou"

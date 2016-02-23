@@ -109,11 +109,11 @@ class Video < ActiveRecord::Base
     end
   end
 
-  def set_param_to_nil(*params)
-    params.each do |param|
-      update_column(param, nil) if self["#{param}"]
-    end
-  end
+  # def set_param_to_nil(*params)
+  #   params.each do |param|
+  #     update_column(param, nil) if self["#{param}"]
+  #   end
+  # end
 
  protected
 

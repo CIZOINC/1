@@ -73,8 +73,8 @@ class V1::VideosController < V1::ApiController
   end
 
   def destroy
-    if !@video.deleted_at && @video.update_column(:deleted_at, Time.now)
-      @video.set_param_to_nil(:featured, :featured_order)
+    if @video.update_column(:deleted_at, Time.now)
+      @video.remove_featured!
       @bucket.objects(prefix: stream_folder).batch_delete!
       @bucket.objects(prefix: hero_image_path).batch_delete! if hero_image_path
     end

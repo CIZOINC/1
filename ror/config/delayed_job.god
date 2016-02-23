@@ -36,7 +36,7 @@ def generic_monitoring(w, options = {})
 end
 
 God.watch do |w|
-  script = "#{RAILS_ROOT}/bin/delayed_job"
+  script = "#{RAILS_ROOT}/bin/delayed_job --pid-dir #{ENV['DELAYED_JOB_PID_DIR']}"
   w.name = "delayed_job"
   w.group = "backgrounds"
   w.interval = 60.seconds

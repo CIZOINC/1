@@ -120,7 +120,7 @@ class V1::UsersController < V1::ApiController
 
   def open_transaction_for(method)
     Delayed::Job.enqueue BatchJob.new(@videos.ids, method, @current_user.id)
-    nothing 204
+    nothing 202
   end
 
   def limit_videos!

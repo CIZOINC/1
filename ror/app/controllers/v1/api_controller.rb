@@ -57,4 +57,20 @@ class V1::ApiController < ApplicationController
     end
   end
 
+  def set_visibility
+    if params[:visible] == 'false'
+      @conditions.push('visible = :visible')
+      @arguments[:visible] = false
+      @show_invisible = true unless @current_user && as_admin?
+    elsif params[:visible] == 'true'
+      visible_conditions
+    else
+      visible_conditions unless @current_user && as_admin?
+    end
+  end
+
+  def visible_conditions
+    (@conditions.push('visible = :visible') && @arguments[:visible] = true) unless params[:deleted] == 'true'
+  end
+
 end

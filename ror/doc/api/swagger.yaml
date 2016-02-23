@@ -50,12 +50,17 @@ paths:
           format: date-time
         - name: visible
           in: query
-          description: Filter videos that are marked as not visible. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the "id" attribute of each video. 
+          description: Filter videos by 'visible' field. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the "id" attribute of each video if this query parameter is set to false. 
           required: false
           type: boolean
         - name: deleted
           in: query
           description: Filter videos that have been deleted. The videos returned will only contain the "id" attribute of each video.
+          required: false
+          type: boolean
+        - name: show_mature_content
+          in: query
+          description: Boolean indicating whether videos containing mature content should appear in the return. Default value is true. 
           required: false
           type: boolean
         - name: count
@@ -418,6 +423,16 @@ paths:
       security:
         - oauth:
           - admin
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            properties:
+              featured_order:
+                type: integer
+                format: int32
+                description: Order at which the video should appear within the featured list. If omitted, video will be appended to list. 
       responses:
         '204':
           description: "Video has been marked as featured"

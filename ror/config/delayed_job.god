@@ -1,5 +1,7 @@
 RAILS_ROOT = File.dirname(File.dirname(__FILE__))
 
+God.pid_file_directory = ENV['DELAYED_JOB_PID_DIR']
+
 def generic_monitoring(w, options = {})
   w.start_if do |start|
     start.condition(:process_running) do |c|

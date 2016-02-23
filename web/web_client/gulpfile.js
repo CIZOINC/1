@@ -12,6 +12,7 @@ var babel = require('gulp-babel');
 var rimraf = require('gulp-rimraf');
 var rename = require('gulp-rename');
 var replace = require('gulp-replace');
+var htmlmin = require('gulp-html-minifier');
 var runSequence = require('run-sequence');
 
 var thirdPartyJS = [
@@ -22,7 +23,8 @@ var thirdPartyJS = [
     '../node_modules/angular-sanitize/angular-sanitize.js',
     '../node_modules/moment/moment.js',
     '../node_modules/lodash/index.js',
-    '../node_modules/angularjs-slider/dist/rzslider.js'
+    '../node_modules/angularjs-slider/dist/rzslider.js',
+    '../node_modules/angular-svg-round-progressbar/build/roundProgress.js'
 ];
 var thirdPartyCSS = [
     '../node_modules/angular/angular-csp.css',
@@ -103,7 +105,8 @@ gulp.task('minify_third_party_js', function () {
 gulp.task('minify_ng_js', function () {
     "use strict";
     return gulp.src([
-            './temp/**/*.js'
+            './temp/**/*.js',
+            '!./temp/final/**/*.js'
         ])
         .pipe(sourcemaps.init())
         .pipe(concat('ng.min.js'))
@@ -151,7 +154,7 @@ gulp.task('copy_dependencies', function () {
 
 gulp.task('copy_index_template', function () {
     "use strict";
-    let postfix = Math.round(Math.random() * 100000000) ;
+    var postfix = Math.round(Math.random() * 100000000) ;
 
     return gulp.src(['./index_template.html'])
         .pipe(rename('index.html'))

@@ -1,6 +1,6 @@
 class V1::CategoriesController < V1::ApiController
   before_action :set_category, only: [:show, :update, :destroy]
-  before_action except: [:index] do
+  before_action except: [:index, :show] do
     doorkeeper_authorize! :admin
   end
 
@@ -15,48 +15,36 @@ class V1::CategoriesController < V1::ApiController
     @category = Category.new(categories_params)
     if @category.save
       render :show, status: 200, location: @category
-    elsif @category.errors.added?(:title, blank)
-      error 500
-    elsif @category.errors.added?(:title, taken)
-      error 409
+    else
+      render_errors @category.errors[:codes]
     end
   end
 
   def update
     if @category.update_attributes(categories_params)
       render :show, status: 200, location: @category
-    elsif @category.errors.added?(:title, blank)
-      error 500
-    elsif @category.errors.added?(:title, taken)
-      error 409
+    else
+      render_errors @category.errors[:codes]
     end
   end
 
   def destroy
-    @category.destroy
-    head :no_content
+    if @category.destroy
+      head :no_content
+    else
+      videos = Video.where("deleted_at IS NULL AND category_id = ?", @category.id)
+      render_errors @category.errors[:codes], videos_count:"#{(videos.count > 1) ? 'are' : 'is'} #{videos.count} #{'video'.pluralize(videos.count)}"
+    end
   end
 
   private
-
-  def blank
-    'can\'t be blank'
-  end
-
-  def taken
-    'has already been taken'
-  end
 
   def set_category
     @category = Category.find(params[:id])
   end
 
   def categories_params
-    params.require(:category).permit(:id, :title)
-  end
-
-  def error(status)
-    render json:{error: @category.errors.full_messages}, status: status
+    params.require(:category).permit(:title)
   end
 
 end

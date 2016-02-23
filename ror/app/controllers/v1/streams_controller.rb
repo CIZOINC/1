@@ -9,7 +9,7 @@ class V1::StreamsController < V1::ApiController
   before_action :check_if_filename_presents_in_params, only: :upload_ticket
   before_action :check_if_stream_meets_requirements?, only: :create
   before_action :set_bucket, only: [:upload_ticket, :create]
-  before_action :check_for_requirement, only: :show
+  # before_action :check_for_requirement, only: :show
 
 
   def show
@@ -22,7 +22,7 @@ class V1::StreamsController < V1::ApiController
   def upload_ticket
     apply_format!(@filename)
     valid_filename?(@filename)
-    @form = @bucket.presigned_post(key: file_folder + @filename, expires: Time.now + 300)
+    @form = @bucket.presigned_post(key: file_folder + "#{SecureRandom.uuid}/" + @filename, expires: Time.now + 300)
 
     # obj = bucket.object(file_folder+filename)
     # @url = URI.parse(obj.presigned_url(:put, key: file_folder + filename))
@@ -40,7 +40,7 @@ class V1::StreamsController < V1::ApiController
     transcoder_client = Aws::ElasticTranscoder::Client.new(region: region)
     input = { key: @key }
     return if check_if_object_exists(obj)
-    @bucket.objects(prefix: params[:key].gsub('raw', 'stream').split('/').take(3).join('/')).batch_delete!
+    @bucket.objects(prefix: stream_folder).batch_delete!
 
     #HLS
     hls_stream = @video.streams.find_by(stream_type: "hls")
@@ -79,23 +79,17 @@ class V1::StreamsController < V1::ApiController
 
   def transcode_notification
     @stream = Stream.find_by(job_id: params[:jobId])
-
-    if @stream.nil?
-      nothing 404
-      return
-    end
-
+    nothing 404 and return if @stream.nil?
     @stream.update_attribute(:transcode_status, params[:state].downcase )
 
     #Give access to the key if job completed
     if @stream.transcode_status == 'completed'
-      client = Aws::S3::Client.new(region: region)
+      @client = Aws::S3::Client.new(region: region)
       if @stream.stream_type == 'mp4'
-        client.put_object_acl(acl:'public-read', bucket: bucket_name, key: params[:outputs][0][:key])
+        make_public(params[:outputs][0][:key])
       elsif @stream.stream_type == "hls"
-        bucket = Aws::S3::Bucket.new(region: region, name: bucket_name)
-        bucket.objects(prefix: params[:outputKeyPrefix]).each do |obj|
-          client.put_object_acl(acl:'public-read', bucket: bucket.name, key: obj.key)
+        set_bucket.objects(prefix: params[:outputKeyPrefix]).each do |obj|
+          make_public(obj.key)
         end
       end
     end
@@ -110,35 +104,25 @@ class V1::StreamsController < V1::ApiController
 
   private
 
-  def set_bucket
-    s3 = Aws::S3::Resource.new(region: region)
-    @bucket = s3.bucket(bucket_name)
+  def make_public(object_key)
+    @client.put_object_acl(acl:'public-read', bucket: bucket_name, key: object_key)
   end
 
   def check_if_stream_meets_requirements?
     unless stream_meets_requirements?
-      render json: { error: 'Transcode in progess' }, status: 409
+      render_errors ['409.3']
       return
     end
   end
 
   def check_if_object_exists(obj)
-    render json: { error: 'Input key does not exist on S3 bucket' }, status: 400 unless obj.exists?
-  end
-
-  %w(key filename).each do |param|
-    define_method("check_if_#{param}_presents_in_params") do
-      unless instance_variable_set("@#{param}", params[param])#eval("@#{param}") = params[param].blank?
-        render json: {errors:"#{param.capitalize} is required"}, status: 403
-        return
-      end
-    end
+    render_errors ['400.5'] unless obj.exists?
   end
 
   def valid_filename?(filename)
     filename_regexp = /\A^[0-9a-z]+[0-9a-z\-\.\_]+[0-9a-z]$\z/
     unless filename =~ filename_regexp
-      render json: {error: 'Filename must contain only lowercase letters, numbers, hyphens (-), and periods (.). It must start and end with letters or numbers'}, status: 403
+      render_errors ['403.9']
       return
     end
   end
@@ -189,14 +173,6 @@ class V1::StreamsController < V1::ApiController
     Rails.env.production? ? "production/raw/#{@video.id}/" : "staging/raw/#{@video.id}/"
   end
 
-  def bucket_name
-    'cizo-assets'
-  end
-
-  def region
-    "us-east-1"
-  end
-
   def host
     'https://s3.amazonaws.com/'
   end
@@ -206,7 +182,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def prefix
-    Rails.env.production? ? "http://api.cizo.com/" : "http://staging.cizo.com/"
+    Rails.env.production? ? "https://api.cizo.com/" : "https://staging.cizo.com/"
   end
 
   #presets
@@ -241,6 +217,7 @@ class V1::StreamsController < V1::ApiController
   def link(stream)
     "videos/#{@video.id}/streams/#{stream.stream_type}"
   end
+
   %w(hls mp4).each do |format|
     define_method("output_key_prefix_#{format}") do
       Rails.env.production? ? "production/stream/#{@video.id}/#{format}/" : "staging/stream/#{@video.id}/#{format}/"
@@ -251,9 +228,8 @@ class V1::StreamsController < V1::ApiController
     @stream = @video.streams.find_by(stream_type: params[:stream_type])
   end
 
-
-  def check_for_requirement
-    render json: { error: 'Forbidden video' }, status: 403 if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
-  end
+  # def check_for_requirement
+  #   render_errors ['403.5'] if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
+  # end
 
 end

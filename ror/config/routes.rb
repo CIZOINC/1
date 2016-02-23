@@ -2,15 +2,17 @@ Rails.application.routes.draw do
 
   use_doorkeeper do
        controllers tokens: 'doorkeeper/tokens'
+       skip_controllers :authorizations, :applications, :authorized_applications
   end
 
   devise_for :users, defaults: {format: :json}, controllers: {
-
+    passwords: 'auth/passwords',
     registrations: "auth/registrations",
     omniauth_callbacks: "auth/omniauth_callbacks"
   }
   devise_scope :user do
     get 'oauth/facebook', to:"auth/omniauth_callbacks#fetch_user_by_facebook_token", defaults: {format: :json}
+    post 'users/password_reset', to: 'auth/passwords#password_reset', defaults: {format: :json}
   end
 
   if Rails.env.development? || Rails.env.staging?
@@ -43,9 +45,13 @@ Rails.application.routes.draw do
       delete :me, on: :collection, to: "users#destroy_self_account"
       put :me, on: :collection, to: "users#update_self_account"
 
+      put 'me/videos/liked', to: "users#liked_batch", on: :collection
+      put 'me/videos/seen', to: "users#seen_batch", on: :collection
+      put 'me/videos/skipped', to: "users#skipped_batch", on: :collection
+
       put 'me/videos/liked/:video_id', to: "users#like_video", on: :collection
       delete 'me/videos/liked/:video_id', to: "users#dislike_video", on: :collection
-      get 'me/videos/liked',  to: "users#likes", on: :collection
+      get 'me/videos/liked',  to: "users#liked", on: :collection
 
       put 'guest/videos/seen/:video_id', to: 'users#guest_mark_video_as_seen', on: :collection
       put 'guest/videos/skipped/:video_id', to: 'users#guest_skip_video', on: :collection

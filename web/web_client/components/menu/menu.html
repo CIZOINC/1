@@ -1,0 +1,64 @@
+<nav class="navbar">
+    <div class="navbar-main">
+        <div class="icon-menu navbar-main_button" ng-click="toggleMenu()" ></div>
+        <img class="navbar-main_logo" src="images/logo.svg">
+        <div class="icon-search navbar-main_button" ng-click="toggleMenuType(true)"></div>
+    </div>
+
+    <div class="navbar_search hidden-layer">
+        <span class="navbar_search_back icon-back navbar_search_buttons" ng-click="toggleMenuType(false)"></span>
+        <input class="navbar_search_input" ng-model="searchText" ng-keyup="searchInputUpdate()">
+        <span class="navbar_search_clear icon-close navbar_search_buttons" ng-click="clearSearchInput()"></span>
+    </div>
+</nav>
+
+<div class="menu">
+    <div class="menu_container">
+        <div class="menu_item">
+            <span class="menu_item_icon icon-home"></span>
+            <span class="menu_item_title">Home</span>
+            <span class="menu_item_counter"></span>
+            <span class="menu_item_next icon-forward"></span>
+        </div>
+        <div class="menu_item">
+            <span class="menu_item_icon icon-unseen"></span>
+            <span class="menu_item_title">Unseen</span>
+            <span class="menu_item_counter"></span>
+            <span class="menu_item_next icon-forward"></span>
+        </div>
+        <div class="menu_item">
+            <span class="menu_item_icon icon-skipped"></span>
+            <span class="menu_item_title">Skipped</span>
+            <span class="menu_item_counter"></span>
+            <span class="menu_item_next icon-forward"></span>
+        </div>
+        <div class="menu_item">
+            <span class="menu_item_icon icon-seen"></span>
+            <span class="menu_item_title">Seen</span>
+            <span class="menu_item_counter"></span>
+            <span class="menu_item_next icon-forward"></span>
+        </div>
+        <div class="menu_item">
+            <span class="menu_item_icon icon-favorites"></span>
+            <span class="menu_item_title">Favorites</span>
+            <span class="menu_item_counter"></span>
+            <span class="menu_item_next icon-forward"></span>
+        </div>
+        <div class="menu_item" ng-click="signInClick()">
+            <span class="menu_item_icon icon-profile"></span>
+            <span class="menu_item_title">Sign in</span>
+            <span class="menu_item_counter"></span>
+            <span class="menu_item_next icon-forward"></span>
+        </div>
+    </div>
+    <div class="menu_container_outer"  ng-click="toggleMenu(true)"></div>
+
+</div>
+
+<div class="search-results  hidden-layer">
+    <div ng-repeat="foundedVideo in searchResult" class="search-results_item" ng-click="searchItemClick(foundedVideo)">
+        <span class="search-results_item_category  icon-category{{categoryIconMap(foundedVideo.category_id)}}"></span>
+        <span class="search-results_item_title">{{foundedVideo.title}}</span>
+        <span class="search-results_item_play icon-play"></span>
+    </div>
+</div>

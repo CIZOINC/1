@@ -20,8 +20,72 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  doorkeeper:
-    scopes:
-      public: 'Access your public data'
-      write: 'Update your information'
-      admin: 'Change your preferences'
+  # doorkeeper:
+  #   scopes:
+  #     public: 'Access your public data'
+  #     write: 'Update your information'
+  #     admin: 'Change your preferences'
+
+  "400":
+    "1": Reset password token is required
+    "2": Reset password token is not valid, please request a new one
+    "3": Reset password token has expired, please request a new one
+    "4": Login failed
+    "5": Input key does not exist on S3 bucket
+    "6": Featured order can not be less than 1 and more than %{featured_videos_count}
+    "7": Unable to mark invisible video as featured. Make it visible before
+    "8": Unable to remove visibility from featured video. Remove featured before
+    "9": Unable to make video visible if hero image is empty. Please, upload hero image before.
+    "10": Unable to make video visible if it's streams are not completed
+    "11": Unable to log in. Please check your credentials
+    "12": Unable to log in. Please check your refresh_token
+
+  "403":
+    "1": Key is required
+    "2": Filename is required
+    "3": File is required
+    "4": Data is required
+    "5": Forbidden video
+    "6": Unable to save record. If featured true, featured_order can not be nil and vice versa
+    "7": You are not allowed to log in as admin
+    "8": Unable to remove category. Currently there %{videos_count} in category
+    "9": Filename must contain only lowercase letters, numbers, hyphens (-), and periods (.). It must start and end with letters or numbers
+
+  "404":
+    "1": Video has been deleted
+
+  "409":
+    "1": Title has already been taken
+    "2": Email has already been taken
+    "3": Transcode in progess
+
+  "422":
+    "1": Email can't be blank
+    "2": Invalid email
+
+    "4": Password can't be blank
+    "5": Password is too short (minimum is %{min} characters)
+    "6": Password is too long (maximum is %{max} characters)
+    "7": Password confirmation can't be blank
+    "8": Password confirmation does not match password
+
+    "9": Birthday can't be blank
+    "10": Invalid birthday (for instance 2015-12-28T06:11:29.973Z)
+
+    "11": Your account can not be destroyed because you are the last admin on the project
+
+    "12": Title can't be blank
+
+    "13": Category_id can't be blank
+
+    "14": Description can't be blank
+
+    "15": Category was not found
+
+    "16": Invalid scope
+    "17": Invalid grant_type
+    "18": Refresh token can not be blank
+    "19": Grant type can not be blank
+    "20": Access token is required
+    "21": Invalid OAuth access token
+    "22": "You are not allowed to upload %{uploaded_file_extension} files, allowed types: %{allowed_types}"

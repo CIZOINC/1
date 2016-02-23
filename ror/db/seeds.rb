@@ -11,3 +11,12 @@
 #   puts i
 # end
 # puts "DONE!"
+#
+# 10.times do |u|
+#   User.create(email: "email#{u}@test.com", birthday: "2015-12-28T06:11:29.973Z", password: "password", password_confirmation: "password")
+# end
+cat = Category.create(title: "uniq title")
+10000.times do |v|
+  Video.create(title: "title_#{v}", description: "description", category_id: cat.id )
+  puts "Video #{v} created"
+end

@@ -1,83 +1,51 @@
-<nav class="navbar">
-    <div class="navbar-main">
-        <div class="icon-menu navbar-main_button" ng-click="toggleMenu()"></div>
-        <img class="navbar-main_logo" src="images/splashLogo.png">
-        <div class="icon-search navbar-main_button"></div>
-    </div>
-</nav>
+<!--<menu host="hostName" searched-video="searchedVideo"></menu>-->
 
-<div class="menu">
-    <div class="menu_container">
-        <div class="menu_item">
-            <span class="menu_item_icon icon-home"></span>
-            <span class="menu_item_title">Home</span>
-            <span class="menu_item_counter"></span>
-            <span class="menu_item_next icon-forward"></span>
-        </div>
-        <div class="menu_item">
-            <span class="menu_item_icon icon-unseen"></span>
-            <span class="menu_item_title">Unseen</span>
-            <span class="menu_item_counter"></span>
-            <span class="menu_item_next icon-forward"></span>
-        </div>
-        <div class="menu_item">
-            <span class="menu_item_icon icon-skipped"></span>
-            <span class="menu_item_title">Skipped</span>
-            <span class="menu_item_counter"></span>
-            <span class="menu_item_next icon-forward"></span>
-        </div>
-        <div class="menu_item">
-            <span class="menu_item_icon icon-seen"></span>
-            <span class="menu_item_title">Seen</span>
-            <span class="menu_item_counter"></span>
-            <span class="menu_item_next icon-forward"></span>
-        </div>
-        <div class="menu_item">
-            <span class="menu_item_icon icon-favorites"></span>
-            <span class="menu_item_title">Favorites</span>
-            <span class="menu_item_counter"></span>
-            <span class="menu_item_next icon-forward"></span>
-        </div>
-        <div class="menu_item">
-            <span class="menu_item_icon icon-profile"></span>
-            <span class="menu_item_title">Sign in</span>
-            <span class="menu_item_counter"></span>
-            <span class="menu_item_next icon-forward"></span>
-        </div>
-    </div>
-    <div class="menu_container_outer"  ng-click="toggleMenu(true)"></div>
+<top-menu></top-menu>
 
+<div class="featured"
+     ng-mousedown="featuredMouseDown($event)"
+     ng-mouseup="featuredMouseUp()"
+     ng-mousemove="featuredMouseMove($event)"
+     >
+    <div  style="background-image: url({{::featured.hero_images.hero_image_link}})"
+          ng-attr-id="{{ 'featured-' + featured.id }}"
+          ng-repeat="featured in featuredList"
+          class="featured_hero-image"
+          ng-click="featuredPlay($event)" >
+    </div>
+</div>
+
+<div class="categories-panel categories-panel--margin">
+    <div class="categories-panel_item" ng-click="filterByCategory()" ng-class="categories[0].cssClass">
+        <div class="categories-panel_item_icon categories-panel_item_icon--all-icon icon-all  "></div>
+        <div class="categories-panel_item_title">All</div>
+    </div>
+    <div class="categories-panel_item" ng-click="filterByCategory(11)" ng-class="categories[11].cssClass">
+        <div class="categories-panel_item_icon icon-{{categories[11].icon}}" ></div>
+        Movies
+    </div>
+    <div class="categories-panel_item" ng-click="filterByCategory(13)" ng-class="categories[13].cssClass">
+        <div class="categories-panel_item_icon icon-{{categories[13].icon}}" ></div>
+        Games
+    </div>
+    <div class="categories-panel_item" ng-click="filterByCategory(12)" ng-class="categories[12].cssClass">
+        <div class="categories-panel_item_icon icon-{{categories[12].icon}}" ></div>
+        TV Shows
+    </div>
+    <div class="categories-panel_item" ng-click="filterByCategory(14)" ng-class="categories[14].cssClass">
+        <div class="categories-panel_item_icon icon-{{categories[14].icon}}" ></div>
+        Lifestyle
+    </div>
 </div>
 
 
-<div>
-    <div class="categories-panel categories-panel--margin">
-        <div class="categories-panel_item" ng-click="filterByCategory()">
-            <div class="categories-panel_item_icon categories-panel_item_icon--all-icon icon-all  ">
-            </div>
-            <div class="categories-panel_item_title">All</div>
-        </div>
-        <div class="categories-panel_item" ng-click="filterByCategory(11)">
-            <div class="categories-panel_item_icon icon-categorymovie" ></div>
-            Movies
-        </div>
-        <div class="categories-panel_item" ng-click="filterByCategory(12)">
-            <div class="categories-panel_item_icon icon-categorytv" ></div>
-            TV Shows
-        </div>
-        <div class="categories-panel_item" ng-click="filterByCategory(13)">
-            <div class="categories-panel_item_icon icon-categorygames" ></div>
-            Games
-        </div>
-        <div class="categories-panel_item" ng-click="filterByCategory(14)">
-            <div class="categories-panel_item_icon icon-lifestyle" ></div>
-            Lifestyle
-        </div>
-    </div>
-</div>
+<searched-player id="search-player" class="col-xs-12 col-md-8 col-md-offset-2 searched-video hidden-layer" video="searchedVideo"></searched-player>
+
+<featured-player class="col-xs-12 col-md-8 col-md-offset-2 hidden-layer" id="featured-player" video="featuredItem" filtered-list="featuredList" feed-list="filteredVideoList"></featured-player>
+
 
 <div class="container-fluid player-list">
     <div class="row" ng-repeat="videoItem in filteredVideoList")>
-        <player id="player{{videoItem.id}}"  class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem" filtered-list="filteredVideoList" need-fullscreen="needFullscreen"></player>
+        <player id="player{{videoItem.id}}"  class="col-xs-12 col-md-8 col-md-offset-2" video="videoItem" filtered-list="filteredVideoList" storage="storage"></player>
     </div>
 </div>

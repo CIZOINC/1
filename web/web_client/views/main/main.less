@@ -18,99 +18,20 @@
   }
 }
 
-.navbar {
-  &--menu-visible {
-    z-index: 1500;
-    top: 0;
-    position: fixed;
-    width: 100%;
+.featured {
+  white-space: nowrap;
+  overflow-x: scroll;
+
+  &_hero-image {
+    margin: 0 5px;
+    display: inline-block;
+    width: 600px;
+    height: 300px;
+    background-size: cover;
   }
-}
-
-.navbar-main {
-  width: 100%;
-  padding: 10px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  justify-content: space-between;
-  background-color: @color-dark;
-  &_button {
-    color: white;
-    font-size: 35px;
-    margin: 10px;
+  &::-webkit-scrollbar {
+    width: 3px;
   }
-
-  &_logo {
-    height: 50px;
-  }
-}
-
-
-.menu {
-
-  &_container {
-    display: none;
-    &--menu-visible {
-      display: inline;
-      position: fixed;
-      width: 400px;
-      z-index: 500;
-      background-color: #101218;
-      top: 90px;
-      bottom: 0;
-    }
-  }
-
-  &_container_outer {
-    display: none;
-    &--menu-visible {
-      display: inline;
-      position: fixed;
-      top: 90px;
-      left: 400px;
-      right: 0;
-      bottom: 0;
-      background-color: black;
-      opacity: 0.7;
-      z-index: 2147483660;
-    }
-
-  }
-
-  &_item {
-    color: white;
-    font-family: 'main-cizo';
-    text-transform: uppercase;
-    padding: 20px 0 ;
-    border-bottom: solid 1px #282c3c;
-
-    display: flex;
-    align-items: stretch;
-    align-content: stretch;
-    justify-content: space-between;
-
-    &_icon {
-      padding-left: 30px;
-      font-size: 25px;
-    }
-
-    &_title {
-      padding-left: 20px;
-      font-size: 22px;
-      width: 80%;
-      text-align: left;
-    }
-
-    &_next {
-      font-size: 18px;
-      padding-right: 15px;
-    }
-  }
-
-
-
 }
 
 .categories-panel {
@@ -136,13 +57,16 @@
     &:hover {
       color: @color-lighter;
     }
+
+    &--selected {
+      color: @color-lighter;
+      &:hover {
+        text-shadow: @color-darker 3px 3px;
+      }
+    }
     &_icon {
       font-size: 80px;
       margin-bottom: -15px;
-      &:hover {
-        fill: @color-lighter;
-      }
-
       &--all-icon {
         &::before {
           font-size: 60px;
@@ -158,4 +82,8 @@
 
 .player-list {
   margin-bottom: 40px;
+}
+
+.hidden-layer {
+  display: none;
 }

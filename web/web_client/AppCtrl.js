@@ -1,7 +1,9 @@
+angular.module('app.helpers', []);
 angular.module('app.controls', ['ngSanitize']);
 angular.module('app.wrappers', []);
+angular.module('app.routerHelper', ['ui.router', 'app.wrappers']);
 angular.module('app.services', []);
-angular.module('app.directives', ['app.services']);
+angular.module('app.directives', ['app.services', 'app.helpers']);
 angular.module('templates', []);
 
 angular
@@ -14,26 +16,45 @@ angular
         'app.routes',
         'ngSanitize',
         'templates',
-        'rzModule'])
+        'rzModule',
+        'angular-svg-round-progress'
+    ])
     .controller('AppCtrl', AppCtrl);
 
 
 /* @ngInject */
-function AppCtrl($scope, routerHelper, routesList, $state) {
-    $scope.title = 'Cizo';
-    $scope.hostName = `http://staging.cizo.com`;
+function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ) {
 
-    $scope.categoriesList = [];
+    $scope = angular.extend($scope, {
+        title: 'Cizo',
+        hostName: `https://staging.cizo.com`,
+        videosList: [],
+        categoriesList: [],
+        featuredList: [],
 
-    applicationStart(routerHelper, routesList, $state);
-}
-AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state'];
+        storage: {
+            storageSeenKey: 'seen',
+            storageUserToken: 'token',
 
-function applicationStart(routerHelper, routesList, $state) {
-    "use strict";
+            seenItems: [],
+            token: undefined
+        }
+
+    });
 
     routerHelper.configureStates(routesList);
-    $state.go('main');
+
+    $scope.storage.token = storageServ.getItem($scope.storage.storageUserToken);
+    if ($scope.storage.token && userServ.isUnexpiredToken($scope.storage.token)) {
+        userServ.updateToken($scope.hostName, $scope.storage.token)
+            .then((response) => {
+                storageServ.setItem($scope.storage.storageUserToken, response.data);
+                $scope.storage.token = response.data;
+            });
+    }
+
+
+    $state.go('home');
+
 }
-
-
+AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ'];

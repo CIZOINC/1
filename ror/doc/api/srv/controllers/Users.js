@@ -263,6 +263,49 @@ module.exports.usersMeVideosUnseenGet = function usersMeVideosUnseenGet (req, re
     res.end();
 };
 
+module.exports.usersPasswordPut = function usersPasswordPut (req, res, next) {
+  var password = req.swagger.params['password'].value;
+  var resetPasswordToken = req.swagger.params['reset_password_token'].value;
+  
+
+  var result = Users.usersPasswordPut(password, resetPasswordToken);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersPasswordEditGet = function usersPasswordEditGet (req, res, next) {
+  var resetPasswordToken = req.swagger.params['reset_password_token'].value;
+  
+
+  var result = Users.usersPasswordEditGet(resetPasswordToken);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
+module.exports.usersPasswordResetPost = function usersPasswordResetPost (req, res, next) {
+  var email = req.swagger.params['email'].value;
+  
+
+  var result = Users.usersPasswordResetPost(email);
+
+  if(typeof result !== 'undefined') {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(result || {}, null, 2));
+  }
+  else
+    res.end();
+};
+
 module.exports.usersUserIdGet = function usersUserIdGet (req, res, next) {
   var userId = req.swagger.params['user-id'].value;
   

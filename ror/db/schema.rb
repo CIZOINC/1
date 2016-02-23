@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160127083632) do
+ActiveRecord::Schema.define(version: 20160218112327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,14 +26,31 @@ ActiveRecord::Schema.define(version: 20160127083632) do
 
   add_index "categories", ["title"], name: "index_categories_on_title", unique: true, using: :btree
 
-  create_table "likes", force: :cascade do |t|
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+  add_index "delayed_jobs", ["queue"], name: "delayed_jobs_queue", using: :btree
+
+  create_table "liked_videos", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "video_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "likes", ["user_id", "video_id"], name: "index_likes_on_user_id_and_video_id", unique: true, using: :btree
+  add_index "liked_videos", ["user_id", "video_id"], name: "index_liked_videos_on_user_id_and_video_id", unique: true, using: :btree
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", null: false
@@ -140,30 +157,27 @@ ActiveRecord::Schema.define(version: 20160127083632) do
     t.datetime "updated_at",                             null: false
     t.string   "birthday"
     t.boolean  "is_admin",               default: false
-    t.string   "provider"
-    t.string   "uid"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["provider"], name: "index_users_on_provider", using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["uid"], name: "index_users_on_uid", using: :btree
 
   create_table "videos", force: :cascade do |t|
     t.string   "title"
     t.string   "description"
     t.integer  "category_id"
-    t.string   "hero_image_link"
-    t.integer  "view_count",      default: 0
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.integer  "view_count",            default: 0
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.string   "hero_image"
-    t.boolean  "featured",        default: false
-    t.boolean  "mature_content",  default: false
-    t.integer  "skip_count",      default: 0
-    t.boolean  "visible",         default: false
+    t.boolean  "featured"
+    t.boolean  "mature_content",        default: false
+    t.integer  "skip_count",            default: 0
+    t.boolean  "visible",               default: false
     t.datetime "deleted_at"
     t.integer  "featured_order"
+    t.boolean  "hero_image_processing", default: false, null: false
+    t.string   "hero_image_tmp"
   end
 
   add_index "videos", ["featured_order"], name: "index_videos_on_featured_order", using: :btree

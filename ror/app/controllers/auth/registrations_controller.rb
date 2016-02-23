@@ -1,5 +1,6 @@
 module Auth
   class RegistrationsController < Devise::RegistrationsController
+    # include Parametrable
     protect_from_forgery with: :null_session
     skip_before_action :verify_authenticity_token
     skip_before_action :require_no_authentication
@@ -11,7 +12,7 @@ module Auth
       if resource.save
         render 'v1/registrations/show', status: 200
       else
-        render json:{errors: resource.errors.full_messages}, status: 500
+        render_errors @user.errors.messages[:codes], password_params
       end
     end
 

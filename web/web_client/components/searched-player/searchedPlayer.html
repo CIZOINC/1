@@ -1,0 +1,111 @@
+<div class="container-fluid searched-player" video-id="{{video.id}}">
+    <div class="row">
+        <div class="col-xs-12 no-padding">
+            <!-- video layer -->
+            <div class="col-xs-12 no-padding video-layer">
+                <video class="col-xs-12 no-padding" video-src="sources" preload='none'></video>
+            </div>
+
+            <!-- description layer-->
+            <div class="col-xs-12 no-padding searched-player_description-layer hidden-layer">
+                <div class="searched-player_description-layer_container">
+                    <div class="searched-player_description-layer_container_close-container">
+                        <div class="searched-player_description-layer_container_close-container_button icon-close" ng-click="toggleDescription($event, false)"></div>
+                    </div>
+
+                    <div class="searched-player_description-layer_container_titles">
+                        <div class="searched-player_description-layer_container_titles_category icon-category{{iconTitle}}"></div>
+
+                        <div class="searched-player_description-layer_container_titles_labels">
+                            <span class="searched-player_description-layer_container_titles_labels_created">
+                                {{createdDate}}
+                            </span>
+                            <span class="searched-player_description-layer_container_titles_labels_title">
+                                {{video.title}}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="searched-player_description-layer_container_text">
+                        {{video.description}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- buttons layer-->
+            <div class="searched-player_buttons-layer"
+                 ng-mouseenter="imageHover()"
+                 ng-mouseleave="imageBlur()"
+                 ng-click="togglePlayPause()"
+                 ng-dblclick="toggleFullScreen()"
+                 ng-mousemove="showControlsOnMove()"
+                    >
+                <!-- top buttons-->
+                <div class="searched-player_buttons-layer_top-elements">
+                    <div>
+                        <div class="icon-close searched-player_buttons-layer_top-elements_close-button" ng-click="closeVideo($event)"></div>
+                    </div>
+
+
+                    <div class="searched-player_buttons-layer_top-elements_rightside">
+                        <span class="icon-favorites searched-player_buttons-layer_top-elements_rightside_buttons"></span>
+                        <span class="icon-info searched-player_buttons-layer_top-elements_rightside_buttons" ng-click="toggleDescription($event, true)"></span>
+                        <span class="icon-share searched-player_buttons-layer_top-elements_rightside_buttons"></span>
+                    </div>
+                </div>
+                <!-- center elements-->
+                <div class="searched-player_buttons-layer_center-elements stop-selection">
+
+                    <div class="searched-player_buttons-layer_center-elements_group">
+
+                        <div class="searched-player_buttons-layer_center-elements_group_controls">
+                            <div class="searched-player_buttons-layer_center-elements_group_controls_wrapper">
+                                <div class="searched-player_buttons-layer_center-elements_group_controls_wrapper-play-pause">
+                                    <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="searched-player_buttons-layer_center-elements_play-button">
+                                    <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="searched-player_buttons-layer_center-elements_pause-button hidden-layer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- bottom elements-->
+                <div class="searched-player_buttons-layer_bottom-elements">
+                    <div class="searched-player_buttons-layer_bottom-elements_titles searched-player_buttons-layer_bottom-elements_titles--hero-image">
+                        <div class="searched-player_buttons-layer_bottom-elements_titles_current">
+                            <div ng-class="iconTitle"></div>
+
+                            <div class="searched-player_buttons-layer_bottom-elements_titles_current_title">
+                                <span class="searched-player_buttons-layer_bottom-elements_titles_current_title_created">
+                                    {{createdDate}}
+                                </span>
+                                <span class="searched-player_buttons-layer_bottom-elements_titles_current_title">
+                                    {{video.title}}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="searched-player_buttons-layer_bottom-elements_controls hidden-layer">
+
+                        <div class="searched-player_buttons-layer_bottom-elements_controls_time-position">{{timePassed}}</div>
+
+                        <div class="searched-player_buttons-layer_bottom-elements_controls_slider">
+                            <rzslider ng-click="$event.stopPropagation()"
+                                      rz-slider-high="sliderModel.value"
+                                      rz-slider-model="sliderModel.start"
+                                      rz-slider-options="sliderModel.options"
+                                      >
+                            </rzslider>
+                        </div>
+
+                        <div class="searched-player_buttons-layer_bottom-elements_controls_duration">{{duration}}</div>
+
+                        <span class="icon-expand searched-player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen($event)"></span>
+                        <span class="icon-collapse searched-player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen($event)"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

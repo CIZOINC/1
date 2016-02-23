@@ -10,6 +10,130 @@
   "basePath": "/",
   "paths": {
   
+  "/users/auth/facebook": {
+    
+    "get": {
+      "summary": "",
+      "description":"Redirects to facebook page. Access to email and birthday is required. Then redirects back to application and sign in.",
+      "x-swagger-router-controller": "Authorization",
+      "tags": ["Authorization"],
+      "operationId": "usersAuthFacebookGet",
+      "responses": {
+        "200": {
+  "description" : "Returns access_token and refresh_token",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_2"
+  }
+}
+        ,
+        "400": {
+  "description" : "Login failed, user didn't want to give access."
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/oauth/facebook": {
+    
+    "get": {
+      "summary": "",
+      "description":"Log in with facebook",
+      "x-swagger-router-controller": "Authorization",
+      "tags": ["Authorization"],
+      "operationId": "oauthFacebookGet",
+      "parameters": [
+        {
+  "name" : "access_token",
+  "in" : "query",
+  "description" : "Must give access to user's email and birthday. Can be generated <a href = 'here'>https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Did%2Cname%2Cbirthday%2Cemail&version=v2.5<a>",
+  "required" : true,
+  "type" : "string"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "Returns access_token and refresh_token",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_2"
+  }
+}
+        ,
+        "400": {
+  "description" : "Bad request. This is returned if access_token is invalid or expired"
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/oauth/token": {
+    
+    "post": {
+      "summary": "",
+      "description":"description",
+      "x-swagger-router-controller": "Authorization",
+      "tags": ["Authorization"],
+      "operationId": "oauthTokenPost",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : false,
+  "schema" : {
+    "$ref" : "#/definitions/body_1"
+  }
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "Returns access_token and refresh_token",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_3"
+  }
+}
+        ,
+        "400": {
+  "description" : "Bad request. This is returned if grant_type is anything other than \"password\" or \"refresh_token\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "401": {
+  "description" : "Unauthorized. This is returned if wrong credentials or invalid refresh_token or invalid scope(anything but the \"admin\" or \"user\") have been sent",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "422": {
+  "description" : "Unprocessable untity. This is returned if username is blank",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  
   "/categories/{category-id}": {
     
     "get": {
@@ -427,7 +551,7 @@
         "200": {
   "description" : "A list of users",
   "schema" : {
-    "$ref" : "#/definitions/inline_response_200_2"
+    "$ref" : "#/definitions/inline_response_200_4"
   }
 }
         ,
@@ -461,7 +585,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_1"
+    "$ref" : "#/definitions/body_2"
   }
 }
         
@@ -476,6 +600,291 @@
         ,
         "403": {
   "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/{user-id}": {
+    
+    "get": {
+      "summary": "",
+      "description":"Returns a user for the given ID.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersUserIdGet",
+      "parameters": [
+        {
+  "name" : "user-id",
+  "in" : "path",
+  "description" : "User ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A user",
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Updates a user.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersUserIdPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/body_7"
+  }
+},
+        {
+  "name" : "user-id",
+  "in" : "path",
+  "description" : "User ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "A user",
+  "schema" : {
+    "$ref" : "#/definitions/User"
+  }
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/password_reset": {
+    
+    "post": {
+      "summary": "",
+      "description":"Sends email with reset password instructions",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersPasswordResetPost",
+      "parameters": [
+        {
+  "name" : "email",
+  "in" : "query",
+  "description" : "Valid email",
+  "required" : true,
+  "type" : "string"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "Email with reset password instructions has been sent."
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/guest/videos/seen/{video-id}": {
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a video as seen for guest users",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersGuestVideosSeenVideoIdPut",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Video has been marked as seen."
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/me/videos/skipped": {
+    
+    "get": {
+      "summary": "",
+      "description":"Gets a list of videos skipped by the current user",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeVideosSkippedGet",
+      "parameters": [
+        {
+  "name" : "created_before",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "created_after",
+  "in" : "query",
+  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
+  "required" : false,
+  "type" : "string",
+  "format" : "date-time"
+},
+        {
+  "name" : "count",
+  "in" : "query",
+  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
+  "required" : false,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "200": {
+  "description" : "Skipped videos",
+  "schema" : {
+    "$ref" : "#/definitions/inline_response_200_1"
+  }
+}
+        ,
+        "404": {
+  "description" : "User is not logged in",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } ,
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a list of videos as skipped.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeVideosSkippedPut",
+      "parameters": [
+        {
+  "in" : "body",
+  "name" : "body",
+  "required" : true,
+  "schema" : {
+    "$ref" : "#/definitions/body_6"
+  }
+}
+        
+      ],
+      "responses": {
+        "202": {
+  "description" : "Videos have been accepted for processing. Processing happens in the background. GET /users/me/videos/skipped should be used to validate success."
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
+        "default": {
+  "description" : "Unexpected error",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        
+        
+      }
+    } 
+    
+  } ,
+  
+  "/users/me/videos/skipped/{video-id}": {
+    
+    "put": {
+      "summary": "",
+      "description":"Marks a video as skipped.",
+      "x-swagger-router-controller": "Users",
+      "tags": ["Users"],
+      "operationId": "usersMeVideosSkippedVideoIdPut",
+      "parameters": [
+        {
+  "name" : "video-id",
+  "in" : "path",
+  "description" : "Video ID",
+  "required" : true,
+  "type" : "integer"
+}
+        
+      ],
+      "responses": {
+        "204": {
+  "description" : "Video has been marked as skipped"
+}
+        ,
+        "403": {
+  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
   "schema" : {
     "$ref" : "#/definitions/Error"
   }
@@ -617,7 +1026,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_2"
+    "$ref" : "#/definitions/body_3"
   }
 }
         
@@ -761,87 +1170,71 @@
     
   } ,
   
-  "/users/{user-id}": {
+  "/users/password": {
     
-    "get": {
+    "put": {
       "summary": "",
-      "description":"Returns a user for the given ID.",
+      "description":"Update user&#39;s password",
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
-      "operationId": "usersUserIdGet",
+      "operationId": "usersPasswordPut",
       "parameters": [
         {
-  "name" : "user-id",
-  "in" : "path",
-  "description" : "User ID",
+  "name" : "password",
+  "in" : "query",
+  "description" : "New valid password.",
   "required" : true,
-  "type" : "integer"
+  "type" : "string"
+},
+        {
+  "name" : "reset_password_token",
+  "in" : "query",
+  "description" : "Valid reset_password_token",
+  "required" : true,
+  "type" : "string"
 }
         
       ],
       "responses": {
         "200": {
-  "description" : "A user",
-  "schema" : {
-    "$ref" : "#/definitions/User"
-  }
+  "description" : "Password has been changed"
 }
         ,
-        "default": {
-  "description" : "Unexpected error",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
+        "400": {
+  "description" : "Invalid password or/and invalid reset_password_token"
 }
         
         
       }
-    } ,
+    } 
     
-    "put": {
+  } ,
+  
+  "/users/password/edit": {
+    
+    "get": {
       "summary": "",
-      "description":"Updates a user.",
+      "description":"Returns valid reset_password_token",
       "x-swagger-router-controller": "Users",
       "tags": ["Users"],
-      "operationId": "usersUserIdPut",
+      "operationId": "usersPasswordEditGet",
       "parameters": [
         {
-  "in" : "body",
-  "name" : "body",
+  "name" : "reset_password_token",
+  "in" : "query",
+  "description" : "Valid reset_password_token from email.",
   "required" : true,
-  "schema" : {
-    "$ref" : "#/definitions/body_6"
-  }
-},
-        {
-  "name" : "user-id",
-  "in" : "path",
-  "description" : "User ID",
-  "required" : true,
-  "type" : "integer"
+  "type" : "string"
 }
         
       ],
       "responses": {
         "200": {
-  "description" : "A user",
-  "schema" : {
-    "$ref" : "#/definitions/User"
-  }
+  "description" : "Email with reset password instructions has been sent."
 }
         ,
-        "403": {
-  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"admin\"",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        ,
-        "default": {
-  "description" : "Unexpected error",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
+        "400": {
+  "description" : "Token is expired or invalid"
 }
         
         
@@ -915,7 +1308,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_3"
+    "$ref" : "#/definitions/body_4"
   }
 }
         
@@ -923,173 +1316,6 @@
       "responses": {
         "202": {
   "description" : "Videos have been accepted for processing. Processing happens in the background. GET /users/me/videos/liked should be used to validate success."
-}
-        ,
-        "403": {
-  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        ,
-        "default": {
-  "description" : "Unexpected error",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        
-        
-      }
-    } 
-    
-  } ,
-  
-  "/users/guest/videos/seen/{video-id}": {
-    
-    "put": {
-      "summary": "",
-      "description":"Marks a video as seen for guest users",
-      "x-swagger-router-controller": "Users",
-      "tags": ["Users"],
-      "operationId": "usersGuestVideosSeenVideoIdPut",
-      "parameters": [
-        {
-  "name" : "video-id",
-  "in" : "path",
-  "description" : "Video ID",
-  "required" : true,
-  "type" : "integer"
-}
-        
-      ],
-      "responses": {
-        "204": {
-  "description" : "Video has been marked as seen."
-}
-        
-        
-      }
-    } 
-    
-  } ,
-  
-  "/users/me/videos/skipped": {
-    
-    "get": {
-      "summary": "",
-      "description":"Gets a list of videos skipped by the current user",
-      "x-swagger-router-controller": "Users",
-      "tags": ["Users"],
-      "operationId": "usersMeVideosSkippedGet",
-      "parameters": [
-        {
-  "name" : "created_before",
-  "in" : "query",
-  "description" : "Filters videos by created_at date. Videos that have a date before the one specified will be returned.",
-  "required" : false,
-  "type" : "string",
-  "format" : "date-time"
-},
-        {
-  "name" : "created_after",
-  "in" : "query",
-  "description" : "Filters videos by created_at date. Videos that have a date after the one specified will be returned.",
-  "required" : false,
-  "type" : "string",
-  "format" : "date-time"
-},
-        {
-  "name" : "count",
-  "in" : "query",
-  "description" : "Specifies the number of videos to try and retrieve up to a maximum of 200.",
-  "required" : false,
-  "type" : "integer"
-}
-        
-      ],
-      "responses": {
-        "200": {
-  "description" : "Skipped videos",
-  "schema" : {
-    "$ref" : "#/definitions/inline_response_200_1"
-  }
-}
-        ,
-        "404": {
-  "description" : "User is not logged in",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        
-        
-      }
-    } ,
-    
-    "put": {
-      "summary": "",
-      "description":"Marks a list of videos as skipped.",
-      "x-swagger-router-controller": "Users",
-      "tags": ["Users"],
-      "operationId": "usersMeVideosSkippedPut",
-      "parameters": [
-        {
-  "in" : "body",
-  "name" : "body",
-  "required" : true,
-  "schema" : {
-    "$ref" : "#/definitions/body_5"
-  }
-}
-        
-      ],
-      "responses": {
-        "202": {
-  "description" : "Videos have been accepted for processing. Processing happens in the background. GET /users/me/videos/skipped should be used to validate success."
-}
-        ,
-        "403": {
-  "description" : "Forbidden. This is returned if the oauth2 scope is anything other than \"user\"",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        ,
-        "default": {
-  "description" : "Unexpected error",
-  "schema" : {
-    "$ref" : "#/definitions/Error"
-  }
-}
-        
-        
-      }
-    } 
-    
-  } ,
-  
-  "/users/me/videos/skipped/{video-id}": {
-    
-    "put": {
-      "summary": "",
-      "description":"Marks a video as skipped.",
-      "x-swagger-router-controller": "Users",
-      "tags": ["Users"],
-      "operationId": "usersMeVideosSkippedVideoIdPut",
-      "parameters": [
-        {
-  "name" : "video-id",
-  "in" : "path",
-  "description" : "Video ID",
-  "required" : true,
-  "type" : "integer"
-}
-        
-      ],
-      "responses": {
-        "204": {
-  "description" : "Video has been marked as skipped"
 }
         ,
         "403": {
@@ -1177,7 +1403,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_4"
+    "$ref" : "#/definitions/body_5"
   }
 }
         
@@ -1331,7 +1557,7 @@
         "200": {
   "description" : "S3 upload details",
   "schema" : {
-    "$ref" : "#/definitions/inline_response_200_3"
+    "$ref" : "#/definitions/inline_response_200_5"
   }
 }
         ,
@@ -1395,7 +1621,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_8"
+    "$ref" : "#/definitions/body_9"
   }
 },
         {
@@ -1540,7 +1766,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_7"
+    "$ref" : "#/definitions/body_8"
   }
 }
         
@@ -1926,18 +2152,90 @@
   }
 },"inline_response_200_2": {
   "properties" : {
+    "access_token" : {
+      "type" : "string",
+      "description" : "Uniq access_token"
+    },
+    "refresh_token" : {
+      "type" : "string",
+      "description" : "Uniq refresh_token, can be used when access_token expires."
+    },
+    "scope" : {
+      "type" : "string",
+      "description" : "Scope."
+    },
+    "created_at" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "expires_in" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Access_token expiration in seconds"
+    }
+  }
+},"body_1": {
+  "required" : [ "grant_type", "password", "username" ],
+  "properties" : {
+    "grant_type" : {
+      "type" : "string",
+      "format" : "string",
+      "description" : "grant type, can be password or refresh_token",
+      "enum" : [ "password", "refresh_token" ]
+    },
+    "username" : {
+      "type" : "string",
+      "description" : "User's email. Required if grant_type is password."
+    },
+    "password" : {
+      "type" : "string",
+      "description" : "User's password. Required if grant_type is password."
+    },
+    "scope" : {
+      "type" : "string",
+      "description" : "Authorization scope. Can be sent if grant_type is password.",
+      "enum" : [ "user", "admin" ]
+    },
+    "refresh_token" : {
+      "type" : "string",
+      "description" : "User's refresh token. Required if grant_type is refresh_token."
+    }
+  }
+},"inline_response_200_3": {
+  "properties" : {
+    "access_token" : {
+      "type" : "string",
+      "description" : "Uniq access_token"
+    },
+    "refresh_token" : {
+      "type" : "string",
+      "description" : "Uniq refresh_token, can be used when access_token expires."
+    },
+    "scope" : {
+      "type" : "string",
+      "description" : "Scope."
+    },
+    "created_at" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "token_type" : {
+      "type" : "string",
+      "description" : "Token type, Default - bearer"
+    },
+    "expires_in" : {
+      "type" : "integer",
+      "format" : "int32",
+      "description" : "Access_token expiration in seconds"
+    }
+  }
+},"inline_response_200_4": {
+  "properties" : {
     "data" : {
       "type" : "array",
       "items" : {
         "$ref" : "#/definitions/User"
       }
-    }
-  }
-},"body_1": {
-  "type" : "object",
-  "properties" : {
-    "user" : {
-      "$ref" : "#/definitions/User"
     }
   }
 },"body_2": {
@@ -1948,19 +2246,10 @@
     }
   }
 },"body_3": {
+  "type" : "object",
   "properties" : {
-    "data" : {
-      "type" : "array",
-      "items" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "format" : "int32",
-            "description" : "Unique identifier representing a specific video"
-          }
-        }
-      }
+    "user" : {
+      "$ref" : "#/definitions/User"
     }
   }
 },"body_4": {
@@ -1996,14 +2285,30 @@
     }
   }
 },"body_6": {
+  "properties" : {
+    "data" : {
+      "type" : "array",
+      "items" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Unique identifier representing a specific video"
+          }
+        }
+      }
+    }
+  }
+},"body_7": {
   "type" : "object",
   "properties" : {
     "user" : {
       "$ref" : "#/definitions/User"
     }
   }
-},"body_7": {
-  "required" : [ "category_id", "description", "mature_content", "title" ],
+},"body_8": {
+  "required" : [ "category_id", "description", "title" ],
   "properties" : {
     "title" : {
       "type" : "string",
@@ -2069,14 +2374,14 @@
       "description" : "Title of video."
     }
   }
-},"body_8": {
+},"body_9": {
   "properties" : {
     "key" : {
       "type" : "string",
       "description" : "S3 bucket key for raw video."
     }
   }
-},"inline_response_200_3": {
+},"inline_response_200_5": {
   "properties" : {
     "aws_access_key_id" : {
       "type" : "string",

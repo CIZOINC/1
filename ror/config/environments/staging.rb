@@ -1,6 +1,6 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-
+  # SECRETS = YAML.load_file(["#{Rails.root}","config", "secrets.yml"].join('/'))
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -13,6 +13,8 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
+
+  config.active_job.queue_adapter = :delayed_job
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
@@ -79,5 +81,20 @@ Rails.application.configure do
 
   # log to STDOUT so logs appear in puma logs
   Rails.logger = Logger.new(STDOUT)
+
+  config.action_mailer.default_url_options = {:host => 'https://staging.cizo.com'}
+  # config.action_mailer.delivery_method = :smtp
+  # change to true to allow email to be sent during development
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default :charset => "utf-8"
+  # config.action_mailer.smtp_settings = {
+  #     address: "smtp.gmail.com",
+  #     port: 587,
+  #     authentication: "plain",
+  #     enable_starttls_auto: true,
+  #     user_name: SECRETS['heroku_username'],
+  #     password: SECRETS['heroku_password']
+  # }
 
 end

@@ -1,0 +1,109 @@
+.featured-carousel {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  align-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  padding: 30px 0;
+  background-color: rgba(0,0,0,.8);
+
+  .featured-carousel_button_mix {
+    background-color: transparent;
+    color: white;
+    font-size: 30px;
+    height: 210px;
+    width: 40px;
+    cursor: pointer;
+    border: none;
+    margin: 0 -10px;
+    &:focus {
+      outline: none;
+    }
+  }
+  &_left {
+    .featured-carousel_button_mix;
+  }
+
+  &_content {
+    display: flex;
+    width: 1220px;
+    overflow-x: hidden;
+
+    &_wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-content: center;
+      align-items: center;
+      transition: margin-left .3s ease-out 0.1s;
+    }
+
+    &_item {
+      min-width: 275px;
+      height: 210px;
+      margin: 0 15px;
+      background-size:  cover;
+      font-family: main-cizo;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-transform: uppercase;
+
+      &_label {
+        margin: 10px 0 0 -5px;
+        position: relative;
+        padding: 5px 10px;
+        background-color: #00ffff;
+        width: 30%;
+        font-size: 12px;
+        font-weight: 900;
+        &:after {
+          content: "";
+          border-left: .5em solid #00ffff; /* This width determines the arrows length */
+          border-top: 10pt solid transparent; /* This width has to be 50% of 'line-height + padding-top + padding-bottom' */
+          border-bottom: 10pt solid transparent; /* Same for this width */
+          width: 0;
+          height: 0;
+          position: absolute;
+          right: -.5em; /* This has to be the same value as 'border-left's width */
+          top: 0;
+        }
+
+        &:before {
+          content: "";
+          border-right: 5px solid #1c9eb2;
+          border-top: 5px solid transparent;
+          width: 0;
+          height: 0;
+          position: absolute;
+          left: 0;
+          top: -5px;
+        }
+      }
+
+      &_title {
+        background-color: rgba(0,0,0, .8);
+        padding: 15px;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bolder;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+    }
+  }
+
+  &_right {
+    .featured-carousel_button_mix;
+  }
+}

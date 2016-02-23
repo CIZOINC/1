@@ -43,7 +43,7 @@ God.watch do |w|
   w.stop = "#{script} stop"
   w.start_grace = 20.seconds
   w.restart_grace = 20.seconds
-  w.pid_file = "#{RAILS_ROOT}/log/delayed_job.pid"
+  w.pid_file = ENV['DELAYED_JOB_PID_DIR'] + "/delayed_job.pid"
 
   w.behavior(:clean_pid_file)
 

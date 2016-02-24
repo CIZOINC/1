@@ -4,10 +4,14 @@
         <div class="featured-carousel_content_wrapper" ng-style="{'margin-left': itemsOffset}">
             <div class="featured-carousel_content_item"
                  ng-repeat="featured in featuredList"
-                 ng-click="playFeatured(featured.id)"
-                 style="background-image: url('{{::featured.hero_images.hero_image_link}}')"
-            >
+                 ng-click="playFeatured(featured.id)">
+                <div class="featured-carousel_content_item_image" style="background-image: url('{{::featured.hero_images.hero_image_link}}')"></div>
+
                 <div class="featured-carousel_content_item_label">Featured</div>
+                <div class="featured-carousel_content_item_intermission">
+                    <span class="icon-share featured-carousel_content_item_intermission_button"></span>
+                    <span class="icon-info featured-carousel_content_item_intermission_button"></span>
+                </div>
                 <div class="featured-carousel_content_item_title">{{::featured.title}}</div>
             </div>
         </div>

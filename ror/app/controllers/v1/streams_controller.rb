@@ -9,6 +9,7 @@ class V1::StreamsController < V1::ApiController
   before_action :check_if_filename_presents_in_params, only: :upload_ticket
   before_action :check_if_stream_meets_requirements?, only: :create
   before_action :set_bucket, only: [:upload_ticket, :create]
+  before_action :check_for_headers, only: :transcode_notification
   # before_action :check_for_requirement, only: :show
 
 
@@ -79,7 +80,7 @@ class V1::StreamsController < V1::ApiController
 
   def transcode_notification
     @stream = Stream.find_by(job_id: params[:jobId])
-    nothing 404 and return if @stream.nil?
+    nothing 404 and return if (@stream.nil? || params[:jobId].nil?)
     @stream.update_attribute(:transcode_status, params[:state].downcase )
 
     #Give access to the key if job completed
@@ -103,6 +104,12 @@ class V1::StreamsController < V1::ApiController
   end
 
   private
+
+  def check_for_headers
+    headers = YAML.load_file(["#{Rails.root}","config", "headers.yml"].join('/'))
+    nothing 401 and return if request.headers['x-api-key'].blank?
+    nothing 403 and return unless request.headers['x-api-key'] == headers["#{Rails.env}"]['x-api-key']
+  end
 
   def make_public(object_key)
     @client.put_object_acl(acl:'public-read', bucket: bucket_name, key: object_key)

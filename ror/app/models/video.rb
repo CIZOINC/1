@@ -32,6 +32,7 @@ class Video < ActiveRecord::Base
   validates_with VideoCustomValidator, unless: :skip_validation
   scope :desc_order, ->(){ order(created_at: :desc)}
   scope :order_by_featured, ->(){order(featured_order: :asc)}
+  scope :trending, ->(){ order(view_count: :desc)}
 
   after_create :create_streams
 

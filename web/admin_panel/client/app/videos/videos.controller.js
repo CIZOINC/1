@@ -74,7 +74,7 @@
 
             $scope.modifyVisible = function (video) {
                 if (!validateVideo(video)) {
-                    videoNotifier.log(`This video isn’t ready for adding, click 'Edit' and upload an image / video`, 'Oops!', true);
+                    videoNotifier.log('This video isn’t ready for adding, click \'Edit\' and upload an image / video', 'Oops!', true);
                 } else if (video.visible) {
                     video.visible = false;
                     videoNotifier.logWarning('Video has been removed from the video feed', 'Video Removed');
@@ -130,7 +130,7 @@
         })
         .filter('readyNotReady', function readyNotReadyFilter() {
             return function (video) {
-                let videoValidation = validateVideo(video);
+                var videoValidation = validateVideo(video);
                 if (videoValidation) {
                     return video.visible ? '✓ Online' : 'Ready';
                 } else {
@@ -218,9 +218,9 @@
 
     function validateVideo(video) {
         if (typeof video.hero_images !== 'undefined') {
-            let streamsCount = video.streams.length,
+            var streamsCount = video.streams.length,
                 validStreams = 0;
-            for (let stream of video.streams) {
+            for (var stream of video.streams) {
                 if (!stream.transcode_status) {
                     ++validStreams;
                 }
@@ -242,10 +242,10 @@
         count = count ? count : 200;
 
         // Load the categories
-        let categories = getCategories(true);
+        var categories = getCategories(true);
 
         // Mock data - 'All Videos' from http://staging.cizo.com/videos
-        let allVideos = {
+        var allVideos = {
             data: [{
                 id: 3279,
                 created_at: '2016-02-06T05:26:31.593Z',
@@ -667,7 +667,7 @@
         // Get the categories and optionally process them into an object for reference (set 'processed' to true)
         processed = processed ? processed : false;
 
-        let videoCategories = {
+        var videoCategories = {
             data: [{
                 id: 11,
                 title: 'Movies'
@@ -684,8 +684,8 @@
         };
 
         if (processed === true) {
-            let categoryObject = {};
-            for (let cat of videoCategories.data) {
+            var categoryObject = {};
+            for (var cat of videoCategories.data) {
                 categoryObject[cat.id] = cat;
             }
             videoCategories = categoryObject;

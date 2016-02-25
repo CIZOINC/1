@@ -100,7 +100,7 @@ class V1::VideosController < V1::ApiController
     @conditions = ["visible = true AND deleted_at IS NULL"]
     @arguments = {}
     set_mature_content
-    @videos = Video.where(@conditions.join(" AND "), @arguments).desc_order.limit(200)
+    @videos = Video.where(@conditions.join(" AND "), @arguments).trending.limit(200)
     render :index
   end
 

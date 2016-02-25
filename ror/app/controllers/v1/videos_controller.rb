@@ -91,9 +91,8 @@ class V1::VideosController < V1::ApiController
   end
 
   def hero_image
-    @video.skip_validation = true
-    @video.hero_image = params[:file]
-    @video.save ? nothing(202) : (render_errors @video.errors[:codes], hero_image_params)
+    return if hero_image_errors_any?
+    nothing 202 if @video.update_attributes(hero_image: @file)
   end
 
   def trending
@@ -152,17 +151,42 @@ class V1::VideosController < V1::ApiController
 
   private
 
+  def hero_image_errors_any?
+    render_errors(['422.23']) and return true if hero_image_is_uploading
+    render_errors(['422.22'], hero_image_params) if hero_image_extension_not_allowed
+  end
+
+  def carrierwave_jobs
+    djs = Delayed::Job.where(queue: "carrierwave")
+    djs.map{|x| YAML.load(x.handler)}
+  end
+
+  def carrierwave_jobs_ids
+    carrierwave_jobs.map(&:id).map(&:to_i)
+  end
+
+  def hero_image_is_uploading
+    @video.id.in? carrierwave_jobs_ids
+  end
+
   def hero_image_params
-    @uploader = HeroImageValidator.new
     {allowed_types: allowed_types , uploaded_file_extension: uploaded_file_extension}
   end
 
   def allowed_types
-    (@uploader.send (:extension_white_list)).join(", ")
+    extension_white_list.join(", ")
   end
 
   def uploaded_file_extension
-    @uploader.send(:hero_image_extension, params[:file])
+    @file.original_filename.split('.').last
+  end
+
+  def extension_white_list
+    %w(jpg jpeg png bmp)
+  end
+
+  def hero_image_extension_not_allowed
+    !uploaded_file_extension.in? extension_white_list
   end
 
   def videos_params

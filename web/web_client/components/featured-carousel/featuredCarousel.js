@@ -14,7 +14,8 @@ function featuredCarousel( _) {
         transclude: false,
         scope: {
             featuredList: '=',
-            selectedVideo: '='
+            selectedVideo: '=',
+            replay: '&onReplay'
         }
     };
 

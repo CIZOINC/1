@@ -1,8 +1,0 @@
-staging:
-  x-api-key: staging-x-api-key
-
-production:
-  x-api-key: production-x-api-key
-
-development:
-  x-api-key: x-api-key

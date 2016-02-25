@@ -62,26 +62,18 @@ en:
   "422":
     "1": Email can't be blank
     "2": Invalid email
-
     "4": Password can't be blank
     "5": Password is too short (minimum is %{min} characters)
     "6": Password is too long (maximum is %{max} characters)
     "7": Password confirmation can't be blank
     "8": Password confirmation does not match password
-
     "9": Birthday can't be blank
     "10": Invalid birthday (for instance 2015-12-28T06:11:29.973Z)
-
     "11": Your account can not be destroyed because you are the last admin on the project
-
     "12": Title can't be blank
-
     "13": Category_id can't be blank
-
     "14": Description can't be blank
-
     "15": Category was not found
-
     "16": Invalid scope
     "17": Invalid grant_type
     "18": Refresh token can not be blank
@@ -89,3 +81,4 @@ en:
     "20": Access token is required
     "21": Invalid OAuth access token
     "22": "You are not allowed to upload %{uploaded_file_extension} files, allowed types: %{allowed_types}"
+    "23": Uploading hero image for this video is in progress now

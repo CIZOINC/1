@@ -106,9 +106,8 @@ class V1::StreamsController < V1::ApiController
   private
 
   def check_for_headers
-    headers = YAML.load_file(["#{Rails.root}","config", "headers.yml"].join('/'))
     nothing 401 and return if request.headers['x-api-key'].blank?
-    nothing 403 and return unless request.headers['x-api-key'] == headers["#{Rails.env}"]['x-api-key']
+    nothing 403 and return unless request.headers['x-api-key'] == Rails.application.secrets.internal_api_key
   end
 
   def make_public(object_key)

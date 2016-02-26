@@ -180,8 +180,8 @@
         if (typeof video.hero_images !== 'undefined') {
             var streamsCount = video.streams.length,
                 validStreams = 0;
-            for (var stream of video.streams) {
-                if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'processing') {
+            for (var stream = 0; stream < video.streams.length; stream++) {
+                if (video.streams[stream].transcode_status !== 'pending' && video.streams[stream].transcode_status !== 'processing') {
                     validStreams++;
                 }
             }
@@ -197,7 +197,7 @@
     }
 
     function authenticate(apiUsername, apiPassword, $http, callback) {
-        let authBody = {
+        var authBody = {
             grant_type: 'password',
             username: apiUsername,
             password: apiPassword,
@@ -300,8 +300,8 @@
 
         if (processed === true) {
             var categoryObject = {};
-            for (var cat of videoCategories.data) {
-                categoryObject[cat.id] = cat;
+            for (var c = 0; c < videoCategories.data.length; c++) {
+                categoryObject[videoCategories.data[c].id] = videoCategories.data[c];
             }
             videoCategories = categoryObject;
         }

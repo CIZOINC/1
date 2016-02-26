@@ -17,6 +17,7 @@
             'duScroll',
             'mgo-angular-wizard',
             'xeditable',
+            'dndLists',
 
             // Custom modules
             'app.nav',

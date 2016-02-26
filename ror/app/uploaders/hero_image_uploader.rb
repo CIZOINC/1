@@ -1,11 +1,14 @@
 # encoding: utf-8
 
 class HeroImageUploader < CarrierWave::Uploader::Base
+
   include ::CarrierWave::Backgrounder::Delay
   include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
 
   storage :fog
+
+  after :cache, :processing
 
   def store_dir
     if Rails.env.production?
@@ -25,7 +28,18 @@ class HeroImageUploader < CarrierWave::Uploader::Base
 
   version :thumb_banner do
     process resize_to_fill: [250, 250]
+    after :store, :completed
   end
+
+  def completed(file)
+    Video.find(model.id).update_column(:hero_image_upload_status, "completed")
+  end
+
+  def processing(file)
+    Video.find(model.id).update_column(:hero_image_upload_status, "processing")
+  end
+
+
 
   # def extension_white_list
   #   %w(jpg jpeg png bmp)

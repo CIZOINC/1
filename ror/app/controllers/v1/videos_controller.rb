@@ -92,7 +92,7 @@ class V1::VideosController < V1::ApiController
 
   def hero_image
     return if hero_image_errors_any?
-    nothing 202 if @video.update_attributes(hero_image: @file)
+    nothing 202 if @video.update_attributes(hero_image: @file, hero_image_upload_status: "pending")
   end
 
   def trending

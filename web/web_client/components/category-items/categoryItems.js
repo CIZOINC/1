@@ -23,7 +23,7 @@ function categoryItems($http, $q, $log, $sce, $state, _) {
         scope = angular.extend(scope, {
             videosList: [],
             title: '',
-
+            manyItems: false,
             moveToPlayPage: moveToPlayPage
         });
 
@@ -52,7 +52,8 @@ function categoryItems($http, $q, $log, $sce, $state, _) {
                     filteredList.push(videosList[i]);
                 }
 
-                filteredList.push({title: 'View all'});
+                scope.manyItems = true;
+
                 videosList = filteredList;
             }
             return videosList;

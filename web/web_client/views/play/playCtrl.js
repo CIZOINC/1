@@ -17,6 +17,16 @@ function PlayCtrl($scope, $rootScope, $stateParams, _) {
         videoCategoryId: undefined
     });
 
+
+
+    if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
+        $scope.videoCategoryId = Number($stateParams.categoryId);
+        let filteredVideos = _.filter($rootScope.videosList, videos => videos.category_id === Number($stateParams.categoryId));
+        $scope.videosList = $scope.featuredList.concat(filteredVideos);
+    } else {
+        $scope.videosList = $scope.featuredList.concat($rootScope.videosList);
+    }
+
     if (Number($stateParams.videoId)) {
         let video = _.find($scope.videosList, video => video.id === Number($stateParams.videoId));
         video.instantPlay = true;
@@ -24,9 +34,7 @@ function PlayCtrl($scope, $rootScope, $stateParams, _) {
 
     }
 
-    if ($stateParams.categoryId) {
-        $scope.videoCategoryId = Number($stateParams.categoryId);
-    }
+
 }
 
 PlayCtrl.$inject = ['$scope', '$rootScope', '$stateParams', 'lodash'];

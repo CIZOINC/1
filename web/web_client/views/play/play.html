@@ -1,9 +1,10 @@
 <div class="play">
     <top-menu categories="categoriesList"></top-menu>
 
-    <show-player class="play_player" video="videoItem" filtered-list="videosList"></show-player>
+    <show-player class="play_player" video="videoItem" videos-list="videosList" featured-list="featuredList"></show-player>
 
-    <featured-carousel featured-list="featuredList" selected-video="videoItem"></featured-carousel>
+    <div class="play_video-items">
+        <play-items category-id="{{videoCategoryId}}" videos="videosList" categories="categoriesList"></play-items>
+    </div>
 
-    <play-items category-id="{{videoCategoryId}}" videos="videosList" categories="categoriesList"></play-items>
 </div>

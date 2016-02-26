@@ -5,14 +5,15 @@ angular
     .service('playerServ', playerServ);
 
 
-function playerServ($q) {
+function playerServ($q, $state) {
     "use strict";
 
     return {
         toggleFullScreen: toggleFullScreen,
         getElementFullscreenState: getElementFullscreenState,
         getPreviousVideo: getPreviousVideo,
-        getNextVideo: getNextVideo
+        getNextVideo: getNextVideo,
+        shareVideo: shareVideo
     };
 
     function getElementFullscreenState() {
@@ -91,5 +92,9 @@ function playerServ($q) {
         return nextVideo;
     }
 
+    function shareVideo(id) {
+        $state.go('share', {videoId: id});
+    }
+
 }
-playerServ.$inject = ['$q'];
+playerServ.$inject = ['$q', '$state'];

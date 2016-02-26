@@ -1,15 +1,6 @@
 angular
     .module('app.routes', [])
     .constant('routesList', [
-        /*{
-            state: 'main',
-            config: {
-                url: '/',
-                templateUrl: 'views/main/main.html',
-                controller: 'MainCtrl',
-                controllerAs: 'main'
-            }
-        },*/
         {
             state: 'register',
             config: {
@@ -53,6 +44,15 @@ angular
                 templateUrl: 'views/list/list.html',
                 controller: 'ListCtrl',
                 controllerAs: 'list'
+            }
+        },
+        {
+            state: 'share',
+            config: {
+                url: '/share/:videoId',
+                templateUrl: 'views/share/share.html',
+                controller: 'ShareCtrl',
+                controllerAs: 'share'
             }
         }
     ]);

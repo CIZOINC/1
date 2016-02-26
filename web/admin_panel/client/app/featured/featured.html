@@ -1,7 +1,7 @@
 <div class="page" data-ng-controller="VideoModalCtrl">
     <button type="button" class="btn btn-primary btn-lg btn-w-lg" ng-click="openModal()">Add new video</button>
 </div>
-<div class="page page-table" data-ng-controller="VideosCtrl">
+<div class="page page-table" data-ng-controller="FeaturedCtrl">
     <section class="panel panel-default table-dynamic">
         <div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> Current Videos</strong></div>
 
@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-sm-3 col-xs-6 filter-result-info">
                     <span>
-                        Showing {{filteredVideos.length}}/{{allVideos.data.length}} entries
+                        Showing {{filteredVideos.length}}/{{featuredVideos.data.length}} entries
                     </span>
                 </div>
             </div>

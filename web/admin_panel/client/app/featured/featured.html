@@ -1,9 +1,13 @@
 <div class="page" data-ng-controller="VideoModalCtrl">
     <button type="button" class="btn btn-primary btn-lg btn-w-lg" ng-click="openModal()">Add new video</button>
 </div>
-<div class="page page-table" data-ng-controller="FeaturedCtrl">
-    <section class="panel panel-default table-dynamic">
-        <div class="panel-heading"><strong><span class="glyphicon glyphicon-th"></span> Current Videos</strong></div>
+<div class="page page-table simpleDemo" data-ng-controller="FeaturedCtrl">
+    <div class="panel panel-default table-dynamic">
+        <div class="panel-heading">
+            <strong>
+                <span class="glyphicon glyphicon-th"></span>
+                Featured Videos</strong>
+        </div>
 
         <div class="table-filters">
             <div class="row">
@@ -14,7 +18,58 @@
                 </div>
                 <div class="col-sm-3 col-xs-6 filter-result-info">
                     <span>
-                        Showing {{filteredVideos.length}}/{{featuredVideos.data.length}} entries
+                        Showing
+                        {{filteredVideos.length}}/{{featuredVideos.data.length}}
+                        entries
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <!-- The dnd-list directive allows to drop elements into it.
+                        The dropped data will be added to the referenced list -->
+            <ul dnd-list="featuredVideos.data">
+                <!-- The dnd-draggable directive makes an element draggable and will
+                            transfer the object that was assigned to it. If an element was
+                            dragged away, you have to remove it from the original list
+                            yourself using the dnd-moved attribute -->
+                <li ng-repeat="video in featuredVideos.data" dnd-disable-if="videoModels.locked" dnd-draggable="video" dnd-moved="updateFeatured($index, video)" dnd-effect-allowed="move" ng-class="{'selected': videoModels.selected === video}">
+                    <span class="fa fa-bars">&nbsp;</span>{{video.title}}
+                    <span class="pull-right">
+                        <span class="label label-primary">{{categoryLookup[video.category_id].title}}</span>
+                        <span ng-show="{{video.mature_content}}">
+                            -
+                            <span class="label label-danger">NSFW</span>
+                        </span>
+                    </span>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
+<!--
+<div class="page page-table" data-ng-controller="FeaturedCtrl">
+    <section class="panel panel-default table-dynamic">
+        <div class="panel-heading">
+            <strong>
+                <span class="glyphicon glyphicon-th"></span>
+                Current Videos</strong>
+        </div>
+
+        <div class="table-filters">
+            <div class="row">
+                <div class="col-sm-4 col-xs-6">
+                    <form>
+                        <input type="text" placeholder="Search..." class="form-control" data-ng-model="searchKeywords" data-ng-keyup="search()">
+                    </form>
+                </div>
+                <div class="col-sm-3 col-xs-6 filter-result-info">
+                    <span>
+                        Showing
+                        {{filteredVideos.length}}/{{featuredVideos.data.length}}
+                        entries
                     </span>
                 </div>
             </div>
@@ -24,8 +79,7 @@
             <thead>
                 <tr>
                     <th>
-                        <div class="th">
-                        </div>
+                        <div class="th"></div>
                     </th>
                     <th>
                         <div class="th">
@@ -72,10 +126,12 @@
                                                             Featured
                                                         </div>
                                                     </div>
-                                                    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Hero Image</div>
+                                                    <div class="panel-heading">
+                                                        <span class="glyphicon glyphicon-th"></span>
+                                                        Hero Image</div>
                                                     <div class="panel-body">
-                                                        <img ng-src="{{video.hero_images.hero_image_link_large_banner}}" alt="Description" class="img-responsive" />
-                                                        <br />
+                                                        <img ng-src="{{video.hero_images.hero_image_link_large_banner}}" alt="Description" class="img-responsive"/>
+                                                        <br/>
                                                         <div class="btn-group btn-group-justified">
                                                             <input type="file" title="Change Image" data-ui-file-upload="" style="left: -193px; top: 8px;">
                                                             <input type="file" title="Change Video" data-ui-file-upload="" style="left: -193px; top: 8px;">
@@ -89,7 +145,9 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="panel panel-default">
-                                                    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Video title</div>
+                                                    <div class="panel-heading">
+                                                        <span class="glyphicon glyphicon-th"></span>
+                                                        Video title</div>
                                                     <div class="panel-body">
                                                         <span editable-text="video.title">{{video.title}}</span>
                                                     </div>
@@ -99,7 +157,9 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="panel panel-default">
-                                                    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Video Description</div>
+                                                    <div class="panel-heading">
+                                                        <span class="glyphicon glyphicon-th"></span>
+                                                        Video Description</div>
                                                     <div class="panel-body">
                                                         <span editable-textarea="video.description" e-rows="3" e-cols="35">{{video.description}}</span>
                                                     </div>
@@ -109,10 +169,16 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="panel panel-default">
-                                                    <div class="panel-heading"><span class="glyphicon glyphicon-th"></span> Video Description</div>
+                                                    <div class="panel-heading">
+                                                        <span class="glyphicon glyphicon-th"></span>
+                                                        Video Description</div>
                                                     <div class="panel-body">
-                                                        <span ng-show="video.tag_list.length > 0">Tags - {{video.tag_list}}<br /></span> Date Added - {{video.created_at | date:'medium'}}
-                                                        <br />Last Edited - {{video.updated_at | date:'medium'}}
+                                                        <span ng-show="video.tag_list.length > 0">Tags -
+                                                            {{video.tag_list}}<br/></span>
+                                                        Date Added -
+                                                        {{video.created_at | date:'medium'}}
+                                                        <br/>Last Edited -
+                                                        {{video.updated_at | date:'medium'}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -132,11 +198,16 @@
                     <td>
                         <span editable-text="video.title" e-cols="50">{{video.title}}</span>
                     </td>
-                    <td><span editable-textarea="video.description" e-rows="3" e-cols="80">{{video.description}}</span></td>
-                    <td><span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories.data">{{categoryLookup[video.category_id].title}}</span></td>
+                    <td>
+                        <span editable-textarea="video.description" e-rows="3" e-cols="80">{{video.description}}</span>
+                    </td>
+                    <td>
+                        <span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories.data">{{categoryLookup[video.category_id].title}}</span>
+                    </td>
                     <td>
                         <label class="ui-switch ui-switch-success">
-                            <input type="checkbox" ng-model="video.mature_content" ng-checked="video.mature_content"><i></i>
+                            <input type="checkbox" ng-model="video.mature_content" ng-checked="video.mature_content">
+                            <i></i>
                         </label>
                     </td>
                     <td>
@@ -151,17 +222,25 @@
                 <div class="col-md-6 page-num-info">
                     <span>
                         Show
-                        <select data-ng-model="numPerPage"
-                                data-ng-options="num for num in numPerPageOpt"
-                                data-ng-change="onNumPerPageChange()">
-                        </select>
+                        <select data-ng-model="numPerPage" data-ng-options="num for num in numPerPageOpt" data-ng-change="onNumPerPageChange()"></select>
                         entries per page
                     </span>
                 </div>
                 <div class="col-md-6 text-right pagination-container">
-                    <uib-pagination class="pagination-sm" ng-model="currentPage" total-items="filteredVideos.length" max-size="4" ng-change="select(currentPage)" items-per-page="numPerPage" rotate="false" previous-text="&lsaquo;" next-text="&rsaquo;" boundary-links="true"></uib-pagination>
+                    <uib-pagination
+                        class="pagination-sm"
+                        ng-model="currentPage"
+                        total-items="filteredVideos.length"
+                        max-size="4"
+                        ng-change="select(currentPage)"
+                        items-per-page="numPerPage"
+                        rotate="false"
+                        previous-text="&lsaquo;"
+                        next-text="&rsaquo;"
+                        boundary-links="true"></uib-pagination>
                 </div>
             </div>
         </footer>
     </section>
 </div>
+-->

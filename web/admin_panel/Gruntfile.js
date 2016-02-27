@@ -347,9 +347,9 @@
             },
             uglify: {
                 options: {
-                    mangle: true,
+                    mangle: false,
                     compress: {
-                        drop_console: true
+                        drop_console: false
                     }
                 },
                 dist: {}

@@ -3,11 +3,18 @@
 (function () {
     angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, videoNotifier) {
         var init;
-
+        $scope.videoModels = {
+            locked: false,
+            selected: null
+        }
         $scope.featuredVideos = {
             data: []
         };
+        $scope.updateFeatured = function ($index, video) {
+            $scope.featuredVideos.data.splice($index, 1);
 
+            console.log($scope.featuredVideos);
+        }
         getFeaturedVideos($scope, $http, function gotFeatured(err, videos) {
             if (err) throw new Error(err);
 

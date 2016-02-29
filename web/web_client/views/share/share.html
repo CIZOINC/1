@@ -1,5 +1,7 @@
 <div class="share" style="background-image: url('{{video.hero_images.hero_image_link}}')"> </div>
 
+<div class="share_close-button icon-close" ng-click="closeShare()"></div>
+
 <div class="share-wrapper">
     <div class="share_group">
         <div class="share_group_title">
@@ -16,18 +18,31 @@
         </div>
 
         <div class="share_group_social">
-            <div class="share_group_social_item social-facebook">
+            <div class="share_group_social_item social-facebook" ng-click="shareVideoItem('facebook')">
                 <span class="icon-facebook"></span>
                 <span>Facebook</span>
+            </div>
+            <div class="share_group_social_item social-twitter" ng-click="shareVideoItem('twitter')">
+                <span class="icon-twitter icon-adjust-twitter"></span>
+                <span>Twitter</span>
+            </div>
+            <div class="share_group_social_item social-google" ng-click="shareVideoItem('google')">
+                <span class="icon-google icon-adjust-google"></span>
+                <span>Google</span>
+            </div>
+            <div class="share_group_social_item social-reddit" ng-click="shareVideoItem('reddit')">
+                <span class="icon-reddit icon-adjust-reddit"></span>
+                <span>Reddit</span>
             </div>
         </div>
 
         <div class="share_group_link-title">
-            <hr>
-            <span>Link</span>
-            <hr>
+            <div class="share_group_link-title_decoration"></div>
+            <span class="share_group_link-title_caption">Link</span>
+            <div class="share_group_link-title_decoration"></div>
         </div>
-        <input class="share_group_link">
+
+        <span class="share_group_link">https://staging.cizo.com/public/web_client/index.html#/play/{{video.id}}/0</span>
 
 
     </div>

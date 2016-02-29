@@ -83,6 +83,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             getPreviousVideo: getPreviousVideo,
 
             replayVideo: replayVideo,
+            shareVideo: shareVideo,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -111,7 +112,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             }
         });
 
-        scope.$watch('video', (oldList, newList) => {
+        scope.$watch('video', () => {
             if (scope.video && scope.video.streams) {
                 scope.sources = scope.video.streams.map((source) => {
                     return {src: $sce.trustAsResourceUrl(source.link), type: `video/${source.stream_type}`}
@@ -142,6 +143,10 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
 
             }
+        });
+
+        scope.$watch('featuredItem', () => {
+            scope.video = scope.featuredItem;
         });
 
 
@@ -319,6 +324,13 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             $timeout( () => {
                 scope.screen.play();
             }, 500);
+        }
+
+        function shareVideo(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            playerServ.shareVideo(scope.video.id);
         }
 
         function  showControlsOnMove() {

@@ -22,7 +22,7 @@ angular
         {
             state: 'home',
             config: {
-                url: '/',
+                url: '',
                 templateUrl: 'views/home/home.html',
                 controller: 'HomeCtrl',
                 controllerAs: 'home'
@@ -53,6 +53,15 @@ angular
                 templateUrl: 'views/share/share.html',
                 controller: 'ShareCtrl',
                 controllerAs: 'share'
+            }
+        },
+        {
+            state: 'shared_play',
+            config: {
+                url: '/videos/:videoId',
+                templateUrl: 'views/play/play.html',
+                controller: 'PlayCtrl',
+                controllerAs: 'play'
             }
         }
     ]);

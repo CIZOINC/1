@@ -14,7 +14,6 @@
 
   &_videos {
     display: flex;
-    //flex-direction: row;
     justify-content: flex-start;
     align-content: center;
     align-items: center;
@@ -25,29 +24,51 @@
       min-width: 275px;
       max-width: 275px;
       height: 210px;
-      margin: 0 15px;
+      margin: 5px 15px;
       background-size:  cover;
 
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       font-family: main-cizo;
+      text-transform: uppercase;
+      cursor: pointer;
       &_label {
         margin: 10px 0;
         padding: 10px;
         background-color: #00ffff;
         width: 50%;
-
+        font-size: 12px;
       }
 
       &_title {
         background-color: rgba(0,0,0, .8);
-        padding: 10px;
+        padding: 15px;
         color: white;
         text-align: center;
-        font-size: 23px;
+        font-size: 16px;
         font-weight: bolder;
+
+        display: flex;
+        flex-direction: column;
+
+        &--playing {
+          background-color: #00ffff;
+          color: black;
+        }
+
+        &_date {
+          font-size: 12px;
+          color: #737577;
+        }
+
+        &_caption {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
       }
     }
+
   }
 }

@@ -23,11 +23,14 @@ angular
 
 
 /* @ngInject */
-function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ) {
+function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ, playerServ) {
 
     $scope = angular.extend($scope, {
         title: 'Cizo',
         hostName: `https://staging.cizo.com`,
+        sharingPath: 'https://staging.cizo.com/app',
+        facebookAppIdStage: '459923084193687',
+        facebookAppIdProd: '459778204208175',
         videosList: [],
         categoriesList: [],
         featuredList: [],
@@ -53,8 +56,5 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
             });
     }
 
-
-    $state.go('home');
-
 }
-AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ'];
+AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', 'playerServ'];

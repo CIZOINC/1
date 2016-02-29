@@ -1,0 +1,181 @@
+.share {
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: #2b3c4f;
+  background-size: cover;
+  z-index: 1;
+
+  &_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    background-color: rgba(0,0,0,.9);
+  }
+
+  &_group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    z-index: 100;
+    &_title {
+      font-family: main-cizo;
+      text-transform: uppercase;
+      font-size: 35px;
+      margin: 5px;
+    }
+
+    &_video {
+      width: 275*1.8px;
+      height: 210*1.8px;
+      background-size:  cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      align-content: center;
+      margin-bottom: 10px;
+
+      &_title {
+        background-color: rgba(0,0,0, .8);
+        width: 100%;
+        padding: 15px;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bolder;
+        font-family: main-cizo;
+
+        display: flex;
+        flex-direction: column;
+
+
+        &_caption {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          width: 100%;
+        }
+      }
+    }
+
+    .social-facebook {
+      background-color: #3b5999;
+    }
+
+    .social-twitter {
+      background-color: #60a9de;
+    }
+
+    .icon-adjust-twitter {
+      font-size: 30px;
+    }
+
+    .social-google {
+      background-color: #dc4e40;
+    }
+
+    .icon-adjust-google {
+      font-size: 35px;
+    }
+
+    .social-reddit {
+      background-color: #cee3f8;
+      color: black;
+    }
+
+
+    &_social {
+      display: flex;
+      flex-direction: row;
+      width: 75%;
+
+      font-family: main-cizo;
+      font-size: 25px;
+      text-transform: uppercase;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      align-content: center;
+      &_item {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        padding: 5px 15px;
+        width: 45%;
+        height: 50px;
+        margin: 5px;
+        cursor: pointer;
+      }
+    }
+
+    &_link-title {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      align-content: center;
+      width: 80%;
+      margin: 20px 0;
+
+      &_decoration {
+        width: 150px;
+        height: 1px;
+        border-bottom: solid 1px white;
+      }
+
+      &_caption {
+        font-family: main-cizo;
+        font-size: 25px;
+      }
+    }
+
+    &_link {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+      width: 70%;
+      text-align: center;
+      padding: 4px;
+      font-family: main-cizo;
+      font-size: 25px;
+      overflow-x: auto;
+    }
+  }
+
+  &_close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 15px;
+    font-size: 35px;
+    color: white;
+    z-index: 100;
+  }
+}
+
+.share-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
+  color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}

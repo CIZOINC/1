@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160226064718) do
+ActiveRecord::Schema.define(version: 20160229095857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,8 +167,8 @@ ActiveRecord::Schema.define(version: 20160226064718) do
     t.string   "description"
     t.integer  "category_id"
     t.integer  "view_count",               default: 0
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.string   "hero_image"
     t.boolean  "featured"
     t.boolean  "mature_content",           default: false
@@ -176,9 +176,9 @@ ActiveRecord::Schema.define(version: 20160226064718) do
     t.boolean  "visible",                  default: false
     t.datetime "deleted_at"
     t.integer  "featured_order"
-    t.boolean  "hero_image_processing",    default: false, null: false
+    t.boolean  "hero_image_processing",    default: false,  null: false
     t.string   "hero_image_tmp"
-    t.string   "hero_image_upload_status"
+    t.string   "hero_image_upload_status", default: "idle"
   end
 
   add_index "videos", ["featured_order"], name: "index_videos_on_featured_order", using: :btree

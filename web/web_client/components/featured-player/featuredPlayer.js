@@ -17,7 +17,8 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             video: '=',
             featuredList: '=',
             featuredItem: '=',
-            categoriesList: '='
+            categoriesList: '=',
+            hostName: '@'
         }
     };
 
@@ -83,6 +84,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             getPreviousVideo: getPreviousVideo,
 
             replayVideo: replayVideo,
+            shareVideo: shareVideo,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -258,9 +260,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             let nextVideo = getNextVideo();
             if (nextVideo && nextVideo.featured) {
                 scope.screen.pause();
-                if (playerServ.getElementFullscreenState()) {
-                    toggleFullScreen(true);
-                }
+
 
                 scope.video = nextVideo;
                 scope.isIntermissionState = false;
@@ -289,9 +289,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             let prevVideo = getPreviousVideo(scope.video, scope.featuredList);
             if (prevVideo) {
                 scope.screen.pause();
-                if (playerServ.getElementFullscreenState()) {
-                    toggleFullScreen(true);
-                }
+
 
                 scope.video = prevVideo;
                 scope.isIntermissionState = false;
@@ -318,7 +316,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             return prevVideo;
         }
 
-        function replayVideo() {
+        function replayVideo(event) {
             if (event) {
                 event.stopPropagation();
             }
@@ -337,6 +335,13 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             $timeout( () => {
                 scope.screen.play();
             }, 500);
+        }
+
+        function shareVideo(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            playerServ.shareVideo(scope.video.id);
         }
 
         function  showControlsOnMove() {
@@ -486,7 +491,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.titlesOverlayLayer.classList[_classAdd(!isWatched)]('featured-player_buttons-layer_bottom-elements_titles--hero-image');
             scope.titlesOverlayLayer.classList[_classAdd(!isWatched)]('hidden-layer');
             scope.controlsOverlayLayer.classList[_classAdd(!isWatched)]('hidden-layer');
-            //scope.nextVideoLayer.classList[_classAdd(!isWatched)]('hidden-layer');
         }
 
         function setShowHideControlsState(isShowed) {
@@ -503,7 +507,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.descriptionLayer.classList[_classAdd(isFullscreen)]('featured-player_description-layer--fullscreen');
             scope.buttonLayer.classList[_classAdd(isFullscreen)]('featured-player_buttons-layer--fullscreen');
             scope.buttonLayer.classList[_classAdd(!isFullscreen)]('featured-player_buttons-layer--hover');
-            scope.topElementsClose.classList[_classAdd(!isFullscreen)]('hidden-layer');
             scope.expandButton.classList[_classAdd(isFullscreen)]('hidden-layer');
             scope.collapseButton.classList[_classAdd(!isFullscreen)]('hidden-layer');
             scope.nextVideoLayer.classList[_classAdd(!isFullscreen)]('hidden-layer');

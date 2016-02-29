@@ -14,7 +14,6 @@
 
   &_videos {
     display: flex;
-    //flex-direction: row;
     justify-content: flex-start;
     align-content: center;
     align-items: center;
@@ -25,7 +24,7 @@
       min-width: 275px;
       max-width: 275px;
       height: 210px;
-      margin: 0 15px;
+      margin: 5px 15px;
       background-size:  cover;
 
       display: flex;
@@ -33,6 +32,7 @@
       justify-content: flex-end;
       font-family: main-cizo;
       text-transform: uppercase;
+      cursor: pointer;
       &_label {
         margin: 10px 0;
         padding: 10px;
@@ -62,6 +62,25 @@
           white-space: nowrap;
           overflow: hidden;
         }
+      }
+    }
+
+    &_item-view-all {
+      border: solid 2px #315c73;
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      min-width: 275px;
+      max-width: 275px;
+      height: 210px;
+      margin: 5px 15px;
+      cursor: pointer;
+      &_title {
+        font-family: main-cizo;
+        font-size: 34px;
+        text-transform: uppercase;
+        color: #315c73;
       }
     }
   }

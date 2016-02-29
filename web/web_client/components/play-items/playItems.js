@@ -4,7 +4,7 @@ angular
     .directive('playItems', playItems);
 
 /* @ngInject */
-function playItems($state, _) {
+function playItems($state, _, playerServ) {
     "use strict";
 
     return {
@@ -23,7 +23,7 @@ function playItems($state, _) {
         scope = angular.extend(scope, {
             videosList: [],
             title: '',
-
+            iconName:  playerServ.getIconName(scope.categoryId),
             moveToPlayPage: moveToPlayPage
         });
 
@@ -31,11 +31,13 @@ function playItems($state, _) {
             scope.videosList = filterVideos(videos, scope.categoryId);
         });
 
-        scope.$watch('categories', (categories) => {
+        /*scope.$watch('categories', (categories) => {
             scope.title = getCategoryName(categories, scope.categoryId);
-            if (scope.title) {
-                scope.iconName = scope.title.toLowerCase();
-            }
+        });*/
+
+        scope.$watch('categoryId', () => {
+            scope.iconName =  playerServ.getIconName(scope.categoryId);
+            scope.title = getCategoryName(scope.categories, scope.categoryId);
         });
 
 
@@ -67,4 +69,4 @@ function playItems($state, _) {
         }
     }
 };
-playItems.$inject = ['$state', 'lodash'];
+playItems.$inject = ['$state', 'lodash', 'playerServ'];

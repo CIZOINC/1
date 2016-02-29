@@ -14,7 +14,7 @@ class Video < ActiveRecord::Base
                   }
 
   mount_uploader :hero_image, HeroImageUploader
-  store_in_background :hero_image  #this method should also process_in_background
+  process_in_background :hero_image
   acts_as_taggable
 
   belongs_to :category
@@ -23,7 +23,7 @@ class Video < ActiveRecord::Base
   has_many :skipped_videos, dependent: :destroy
   has_many :seen_videos, dependent: :destroy
   validates :hero_image_upload_status,
-            inclusion: {in: %w(pending processing error competed)},
+            inclusion: {in: %w(pending processing error completed idle)},
             allow_nil: true
   validates_with VideoCustomValidator
   scope :desc_order, ->(){ order(created_at: :desc)}

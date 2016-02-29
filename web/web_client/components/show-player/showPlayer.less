@@ -11,21 +11,30 @@
   align-content: center;
   align-items: center;
   width: 100%;
-  height: 450px;
-
+  height: 100%;
+  transition: height 0.5s ease-out;
   margin-bottom: 30px;
+  background-color: @color-dark;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
 
-
-  &_wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
+  &--playing {
+    height: calc(~"100% + 280px");
+    transition: height 0.5s ease-out;
   }
 
+
+  @video-layer-height: 69%;
   &_video-layer {
+    left: 0;
+    top: 60px;
     width: 100%;
-    height: 100%;
+    height: @video-layer-height;
     position: absolute;
+    z-index: 500;
+
     &_video {
       width: 100%;
       height: 100%;
@@ -34,21 +43,30 @@
   }
 
   &_hero-image-layer {
-    height: 100%;
+    bottom: 0;
     width: 100%;
+    position: absolute;
     object-fit: cover;
+    z-index: 10;
+    overflow: hidden;
+    transition: top .6s ease-out;
+    &--playing {
+      top: 70px;
+      height: calc(~"100% + 200px");
+      transition: top .6s ease-out;
+      //position: absolute;
+      filter: blur(5px);
+      -webkit-filter: blur(5px);
+    }
   }
 
   &_hero-image-layer-next {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    //position: relative;
+    position: relative;
     overflow: hidden;
     background-size: cover;
     background-color: rgba(0,0,0,.9);
 
-    /*&:before {
+    &:before {
       display: block;
       content: '';
       width: 100%;
@@ -62,23 +80,23 @@
       right: 0;
       bottom: 0;
       object-fit: cover;
-    }*/
+    }
   }
 
   &_description-layer {
     display: flex;
     user-select: none;
     position: absolute;
-    top: 0;
+    top: 60px;
     left: 0;
     width: 100%;
-    height: 100%;
+    bottom: 0;
     align-items: stretch;
     align-content: stretch;
     flex-direction: column;
     justify-content: flex-end;
     background: transparent;
-    z-index: 100;
+    z-index: 2147483680;
 
     &--fullscreen {
       z-index: 2147483680;
@@ -157,14 +175,15 @@
     display: flex;
     user-select: none;
     position: absolute;
-    top: 0;
+    top: 60px;
     left: 0;
     width: 100%;
-    height: 100%;
+    bottom: -10px;
     align-items: stretch;
     align-content: stretch;
     flex-direction: column;
     background: transparent;
+    z-index: 10000;
 
     &--intermission {
       background-color: rgba(0,0,0,.8);
@@ -180,6 +199,8 @@
 
     &--fullscreen {
       z-index: 2147483647;
+      top: 0;
+      height: 100%;
     }
 
     &_top-elements {
@@ -194,7 +215,6 @@
         color: white;
         font-size: 23px;
         cursor: pointer;
-        cursor: hand;
         z-index: 50;
         &::before {
           margin-top: 15px;
@@ -216,7 +236,6 @@
           font-size: 32px;
           margin: 10px;
           cursor: pointer;
-          cursor: hand;
         }
       }
     }
@@ -234,6 +253,7 @@
         align-content: stretch;
         justify-content: center;
         flex-direction: column;
+        margin-top: -90px;
 
         &_title {
           display: flex;
@@ -241,15 +261,17 @@
           align-content: center;
           justify-content: center;
           flex-direction: column;
-          text-transform: uppercase;
+
           color: @color-mid;
           font-size: 20px;
+          font-family: main-cizo;
+          text-transform: uppercase;
           margin-bottom: 10px;
 
           &_caption {
             color: white;
             font-size: 35px;
-            text-transform: none;
+            text-transform: uppercase;
           }
         }
 
@@ -296,7 +318,7 @@
           align-content: stretch;
           justify-content: center;
           flex-direction: row;
-          margin-top: 55px;
+          margin-top: 15px;
         }
       }
 
@@ -307,7 +329,6 @@
         justify-content: center;
         align-items:center;
         align-content: flex-start;
-        margin-top: 35%;
         margin-left: 15px;
         user-select: none;
         cursor: pointer;
@@ -325,7 +346,6 @@
         justify-content: center;
         align-items:center;
         align-content: flex-start;
-        margin-top: 35%;
         user-select: none;
         cursor: pointer;
 
@@ -367,8 +387,10 @@
         color: white;
         text-transform: uppercase;
         font-family: 'main-cizo';
-        margin-top: 30px;
+        margin-top: 10px;
         font-size: 28px;
+        border: solid 1px white;
+        padding: 15px;
       }
     }
 

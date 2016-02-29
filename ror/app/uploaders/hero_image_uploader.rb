@@ -39,8 +39,6 @@ class HeroImageUploader < CarrierWave::Uploader::Base
     Video.find(model.id).update_column(:hero_image_upload_status, "processing")
   end
 
-
-
   # def extension_white_list
   #   %w(jpg jpeg png bmp)
   # end

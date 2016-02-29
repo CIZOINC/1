@@ -18,7 +18,9 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
         getFeaturedList: getFeaturedList,
         getCategories: getCategories,
         getVideos: getVideos,
-        updateVideos: updateVideos
+        updateVideos: updateVideos,
+
+        getIconName: getIconName
     };
 
     function getElementFullscreenState() {
@@ -157,6 +159,17 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
             $rootScope.videosList = scope.videosList;
             resolve(scope.videosList);
         });
+    }
+
+    function getIconName(iconId) {
+        let iconMap = {
+            0: 'all',
+            11: 'movie',
+            12: 'tv',
+            13: 'games',
+            14: 'lifestyle'
+        };
+        return iconMap[Number(iconId)];
     }
 
 }

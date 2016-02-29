@@ -17,7 +17,8 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             video: '=',
             featuredList: '=',
             featuredItem: '=',
-            categoriesList: '='
+            categoriesList: '=',
+            hostName: '@'
         }
     };
 

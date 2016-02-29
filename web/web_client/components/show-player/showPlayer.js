@@ -17,7 +17,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             video: '=',
             videosList: '=',
             featuredList: '=',
-            featuredItem: '='
+            featuredItem: '=',
+            hostName: '@'
         }
     };
 
@@ -490,7 +491,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             scope.descriptionLayer.classList[_classAdd(isFullscreen)]('show-player_description-layer--fullscreen');
             scope.buttonLayer.classList[_classAdd(isFullscreen)]('show-player_buttons-layer--fullscreen');
             scope.buttonLayer.classList[_classAdd(!isFullscreen)]('show-player_buttons-layer--hover');
-            //scope.topElementsClose.classList[_classAdd(!isFullscreen)]('hidden-layer');
             scope.expandButton.classList[_classAdd(isFullscreen)]('hidden-layer');
             scope.collapseButton.classList[_classAdd(!isFullscreen)]('hidden-layer');
             scope.nextVideoLayer.classList[_classAdd(!isFullscreen)]('hidden-layer');

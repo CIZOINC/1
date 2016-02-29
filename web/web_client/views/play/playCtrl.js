@@ -22,8 +22,8 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ) {
 
     function viewSetup() {
         $scope = angular.extend($scope, {
-            categoriesList: $rootScope.categoriesList,
-            videosList: $rootScope.videosList,
+            categoriesList: $scope.categoriesList || $rootScope.categoriesList,
+            videosList: $scope.videosList || $rootScope.videosList,
             //featuredList: $rootScope.featuredList,
             featuredItem: $rootScope.featuredList ? $rootScope.featuredList[0] : {},
             videoItem: undefined,

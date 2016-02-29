@@ -4,7 +4,7 @@ angular
     .directive('categoryItems', categoryItems);
 
 /* @ngInject */
-function categoryItems($http, $q, $log, $sce, $state, _) {
+function categoryItems($state, _, playerServ) {
     "use strict";
 
     return {
@@ -24,7 +24,8 @@ function categoryItems($http, $q, $log, $sce, $state, _) {
             videosList: [],
             title: '',
             manyItems: false,
-            moveToPlayPage: moveToPlayPage
+            moveToPlayPage: moveToPlayPage,
+            iconName:  playerServ.getIconName(scope.categoryId)
         });
 
         scope.$watch('videos', (videos) => {
@@ -33,9 +34,6 @@ function categoryItems($http, $q, $log, $sce, $state, _) {
 
         scope.$watch('categories', (categories) => {
             scope.title = getCategoryName(categories, scope.categoryId);
-            if (scope.title) {
-                scope.iconName = scope.title.toLowerCase();
-            }
         });
 
 
@@ -77,4 +75,4 @@ function categoryItems($http, $q, $log, $sce, $state, _) {
         }
     }
 };
-categoryItems.$inject = ['$http', '$q', '$log', '$sce', '$state', 'lodash'];
+categoryItems.$inject = ['$state', 'lodash', 'playerServ'];

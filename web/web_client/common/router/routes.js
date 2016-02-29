@@ -29,6 +29,15 @@ angular
             }
         },
         {
+            state: 'main',
+            config: {
+                url: '/',
+                templateUrl: 'views/home/home.html',
+                controller: 'HomeCtrl',
+                controllerAs: 'home'
+            }
+        },
+        {
             state: 'play',
             config: {
                 url: '/play/:videoId/:categoryId',

@@ -5,7 +5,7 @@ angular
 
 
 /* @ngInject */
-function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ, RecursionHelper) {
+function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ) {
     "use strict";
 
     return {
@@ -163,6 +163,10 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                     hideLimitLabels: true,
                     onChange: function () {
                         console.log('change to ' + scope.sliderModel.value);
+                        if (scope.sliderModel.start > 0) {
+                            scope.sliderModel.value = scope.sliderModel.start;
+                            scope.sliderModel.start = 0;
+                        }
                         scope.screen.currentTime = scope.sliderModel.value;
                     }
                 }
@@ -585,4 +589,4 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
     }
 }
-showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'playerServ', 'RecursionHelper'];
+showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'playerServ'];

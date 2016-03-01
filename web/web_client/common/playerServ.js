@@ -155,6 +155,9 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
                     video.humanizedDate = video && video.created_at ? createdTimeHumanized(video.created_at): undefined;
                     video.instantPlay = false;
                 }
+                if (scope.userAuthorized) {
+
+                }
             });
             $rootScope.videosList = scope.videosList;
             resolve(scope.videosList);

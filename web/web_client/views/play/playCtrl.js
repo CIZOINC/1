@@ -4,7 +4,7 @@ angular
     .controller('PlayCtrl', PlayCtrl);
 
 /* @ngInject */
-function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ) {
+function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ, userServ) {
     "use strict";
 
     if ($rootScope.featuredList && $rootScope.featuredList.length && $rootScope.videosList && $rootScope.videosList.length) {
@@ -14,6 +14,17 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ) {
             .then(playerServ.getCategories)
             .then(playerServ.getVideos)
             .then(playerServ.updateVideos)
+            .then((videos) => {
+                if ($scope.userAuthorized) {
+                    userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
+                        .then((favorites) => {
+                            _.each(videos, (videoItem) => {
+                                let favItem = _.filter(favorites, item => item.id === videoItem.id);
+                                videoItem.favorites = !!favItem.length;
+                            });
+                        });
+                }
+            })
             .then(viewSetup);
     }
 
@@ -24,7 +35,6 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ) {
         $scope = angular.extend($scope, {
             categoriesList: $scope.categoriesList || $rootScope.categoriesList,
             videosList: $scope.videosList || $rootScope.videosList,
-            //featuredList: $rootScope.featuredList,
             featuredItem: $rootScope.featuredList ? $rootScope.featuredList[0] : {},
             videoItem: undefined,
             videoCategoryId: undefined
@@ -61,4 +71,4 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ) {
 
 }
 
-PlayCtrl.$inject = ['$scope', '$rootScope', '$stateParams', 'lodash', 'playerServ'];
+PlayCtrl.$inject = ['$scope', '$rootScope', '$stateParams', 'lodash', 'playerServ', 'userServ'];

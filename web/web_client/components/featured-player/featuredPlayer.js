@@ -85,6 +85,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
             replayVideo: replayVideo,
             shareVideo: shareVideo,
+            setFavorites: setFavorites,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -159,6 +160,10 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                     hideLimitLabels: true,
                     onChange: function () {
                         console.log('change to ' + scope.sliderModel.value);
+                        if (scope.sliderModel.start > 0) {
+                            scope.sliderModel.value = scope.sliderModel.start;
+                            scope.sliderModel.start = 0;
+                        }
                         scope.screen.currentTime = scope.sliderModel.value;
                     }
                 }
@@ -344,6 +349,14 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             playerServ.shareVideo(scope.video.id);
         }
 
+        function setFavorites() {
+            if (scope.video.favorites) {
+
+            } else {
+
+            }
+        }
+
         function  showControlsOnMove() {
             const waitTime = 1500; //ms for hiding controls
 
@@ -355,6 +368,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 toggleControlsVisibility(false);
                 scope.topElementsRightSide.classList.remove('hidden-layer');
                 scope.buttonLayer.classList.add('player_buttons-layer--hover');
+
 
                 scope.waitingTimer = $timeout(() => {
                     toggleControlsVisibility(true);
@@ -423,17 +437,15 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             $timeout(function () {
                 scope.$broadcast('rzSliderForceRender');
             });
-            if (scope.imageLayer.classList.contains('hidden-layer')) {
-                if (showControls) {
-                    setShowHideControlsState(true);
-                    if (scope.screen.paused) {
-                        setPlayPauseState(false);
-                    } else {
-                        setPlayPauseState(true);
-                    }
+            if (showControls) {
+                setShowHideControlsState(true);
+                if (scope.screen.paused) {
+                    setPlayPauseState(false);
                 } else {
-                    setShowHideControlsState(false);
+                    setPlayPauseState(true);
                 }
+            } else {
+                setShowHideControlsState(false);
             }
         }
 
@@ -457,6 +469,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             }
 
             setVideoPlayState(true);
+            showControlsOnMove();
 
             //update slider after showing it parent element
             $timeout(function () {

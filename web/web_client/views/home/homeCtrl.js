@@ -4,7 +4,7 @@ angular
     .controller('HomeCtrl', HomeCtrl);
 
 /* @ngInject */
-function HomeCtrl($scope, videoServ, categoriesServ, $q, _, moment, $rootScope, playerServ) {
+function HomeCtrl($scope, playerServ, userServ, _) {
     "use strict";
 
     $scope = angular.extend($scope, {
@@ -15,8 +15,19 @@ function HomeCtrl($scope, videoServ, categoriesServ, $q, _, moment, $rootScope, 
     playerServ.getFeaturedList($scope)
         .then(playerServ.getCategories)
         .then(playerServ.getVideos)
-        .then(playerServ.updateVideos);
+        .then(playerServ.updateVideos)
+        .then((videos) => {
+            if ($scope.userAuthorized) {
+                userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
+                    .then((favorites) => {
+                        _.each(videos, (videoItem) => {
+                            let favItem = _.filter(favorites, item => item.id === videoItem.id);
+                            videoItem.favorites = !!favItem.length;
+                        });
+                    });
+            }
+        });
 
 
 }
-HomeCtrl.$inject = ['$scope', 'videoServ', 'categoriesServ', '$q', 'lodash', 'moment', '$rootScope', 'playerServ'];
+HomeCtrl.$inject = ['$scope', 'playerServ', 'userServ', 'lodash'];

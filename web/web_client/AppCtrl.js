@@ -34,6 +34,7 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
         videosList: [],
         categoriesList: [],
         featuredList: [],
+        userAuthorized: false,
 
         storage: {
             storageSeenKey: 'seen',
@@ -54,6 +55,13 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
                 storageServ.setItem($scope.storage.storageUserToken, response.data);
                 $scope.storage.token = response.data;
             });
+    }
+
+    if (!userServ.isUnexpiredToken($scope.storage.token)) {
+        storageServ.deleteItem($scope.storage.storageUserToken);
+        $scope.userAuthorized = false;
+    } else {
+        $scope.userAuthorized = true;
     }
 
 }

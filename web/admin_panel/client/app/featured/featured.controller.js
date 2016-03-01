@@ -28,7 +28,7 @@
             } else if ($scope.videoModels.locked === false) {
                 videoIndex = 1;
 
-                for (var outputVideo of $scope.featuredVideos.data) {
+                for (let outputVideo of $scope.featuredVideos.data) {
                     updateFeaturedOrder($scope, $http, outputVideo.id, videoIndex, function (err, result) {
                         if (err) {
                             console.error(err);
@@ -45,7 +45,7 @@
                 videoIndex = 1;
 
                 // Save the initial order
-                for (var inputVideo of $scope.featuredVideos.data) {
+                for (let inputVideo of $scope.featuredVideos.data) {
                     inputFeaturedVideos.push(inputVideo);
                     inputFeaturedOrder[inputVideo.id] = videoIndex;
                     videoIndex++;
@@ -274,8 +274,8 @@
         if (typeof video.hero_images !== 'undefined') {
             var streamsCount = video.streams.length,
                 validStreams = 0;
-            for (var stream = 0; stream < video.streams.length; stream++) {
-                if (video.streams[stream].transcode_status !== 'pending' && video.streams[stream].transcode_status !== 'processing') {
+            for (let stream of video.streams) {
+                if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'processing') {
                     validStreams++;
                 }
             }

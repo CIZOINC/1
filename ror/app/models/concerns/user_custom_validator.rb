@@ -11,10 +11,10 @@ class UserCustomValidator < CustomValidator
     record.errors[:codes] << "422.5"  if (!blank_password? && password_too_short?)
     record.errors[:codes] << "422.6"  if (record.password && password_too_long?)
     record.errors[:codes] << "422.7"  if (!blank_password? && blank_password_confirmation? && password_is_valid? && new_record?)
-    record.errors[:codes] << "422.8" if password_confirmation_does_not_match_password(record.password, record.try(:password_confirmation))
+    record.errors[:codes] << "422.8"  if password_confirmation_does_not_match_password(record.password, record.try(:password_confirmation))
     #birthday
     record.errors[:codes] << "422.9"  if blank_birthday?
-    record.errors[:codes] << "422.10"  if (!blank_birthday? && !valid_birthday?)
+    record.errors[:codes] << "422.10" if (!blank_birthday? && !valid_birthday?)
   end
 
   protected

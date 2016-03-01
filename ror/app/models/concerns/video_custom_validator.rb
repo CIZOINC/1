@@ -1,13 +1,13 @@
 class VideoCustomValidator < CustomValidator
   def validate(record)
     super
-    record.errors[:codes] << "403.6" if featured_conditions
+    record.errors[:codes] << "403.6"  if featured_conditions
     record.errors[:codes] << '422.12' if blank_title?
     record.errors[:codes] << '422.13' if blank_category_id?
     record.errors[:codes] << '422.14' if blank_description?
     record.errors[:codes] << '422.15' if invalid_category_id? && category_not_blank
-    record.errors[:codes] << '400.8' if trying_to_make_featured_video_invisible
-    record.errors[:codes] << "400.9" if trying_to_make_video_without_hero_image_visible
+    record.errors[:codes] << '400.8'  if trying_to_make_featured_video_invisible
+    record.errors[:codes] << "400.9"  if trying_to_make_video_without_hero_image_visible
     record.errors[:codes] << "400.10" if trying_to_make_video_with_incompleted_streams_visible
 
   end

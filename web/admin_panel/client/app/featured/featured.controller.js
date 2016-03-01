@@ -1,20 +1,64 @@
 'use strict';
 
 (function () {
+    var api_username = 'hank@weezlabs.com',
+        api_password = 'weezlabs';
+
     angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, videoNotifier) {
         var init;
         $scope.videoModels = {
-            locked: false,
+            locked: true,
             selected: null
-        }
+        };
+
         $scope.featuredVideos = {
             data: []
         };
+
+        var inputFeaturedVideos = [],
+            inputFeaturedOrder = {},
+            outputFeaturedOrder = {},
+            videoIndex;
+
+        $scope.updateOrder = function (cancelled) {
+            if (cancelled && $scope.videoModels.locked === false) {
+                $scope.featuredVideos.data = inputFeaturedVideos;
+                $scope.videoModels.locked = true;
+                inputFeaturedVideos = [];
+            } else if ($scope.videoModels.locked === false) {
+                videoIndex = 1;
+
+                for (var outputVideo of $scope.featuredVideos.data) {
+                    updateFeaturedOrder($scope, $http, outputVideo.id, videoIndex, function (err, result) {
+                        if (err) {
+                            console.error(err);
+                        } else if (result) {
+                            console.log(result);
+                        }
+                    });
+                    videoIndex++;
+                }
+
+                $scope.videoModels.locked = true;
+                inputFeaturedVideos = [];
+            } else {
+                videoIndex = 1;
+
+                // Save the initial order
+                for (var inputVideo of $scope.featuredVideos.data) {
+                    inputFeaturedVideos.push(inputVideo);
+                    inputFeaturedOrder[inputVideo.id] = videoIndex;
+                    videoIndex++;
+                }
+
+                $scope.videoModels.locked = false;
+            }
+        };
+
         $scope.updateFeatured = function ($index, video) {
             $scope.featuredVideos.data.splice($index, 1);
+        };
 
-            console.log($scope.featuredVideos);
-        }
         getFeaturedVideos($scope, $http, function gotFeatured(err, videos) {
             if (err) throw new Error(err);
 
@@ -266,8 +310,9 @@
     }
 
     function getFeaturedVideos($scope, $http, callback) {
-        authenticate('hank@weezlabs.com', 'weezlabs', $http, function (err, response) {
+        authenticate(api_username, api_password, $http, function (err, response) {
             if (err) throw new Error(err);
+            $scope.admin_token = response.access_token;
             $http({
                 method: 'GET',
                 url: 'https://staging.cizo.com/featured',
@@ -280,6 +325,28 @@
                 callback(response.data);
             });
         });
+    }
+
+    function updateFeaturedOrder($scope, $http, videoID, featuredOrder, callback) {
+        if ($scope.admin_token) {
+            let options = {
+                method: 'PUT',
+                url: `https://staging.cizo.com/featured/${videoID}`,
+                data: {
+                    featured_order: featuredOrder
+                },
+                headers: {
+                    authorization: 'Bearer ' + $scope.admin_token
+                }
+            };
+            $http(options).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(error) {
+                callback(error.data);
+            });
+        } else {
+            throw new Error('No Admin Token');
+        }
     }
 
     function getCategories(processed) {

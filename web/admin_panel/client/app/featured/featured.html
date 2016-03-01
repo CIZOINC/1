@@ -1,6 +1,3 @@
-<div class="page" data-ng-controller="VideoModalCtrl">
-    <button type="button" class="btn btn-primary btn-lg btn-w-lg" ng-click="openModal()">Add new video</button>
-</div>
 <div class="page page-table simpleDemo" data-ng-controller="FeaturedCtrl">
     <div class="panel panel-default table-dynamic">
         <div class="panel-heading">
@@ -11,7 +8,24 @@
 
         <div class="table-filters">
             <div class="row">
-                <div class="col-sm-4 col-xs-6">
+                <div class="col-sm-6 col-xs-6">
+                    <span ng-if="videoModels.locked">
+                        <button type="button" class="btn btn-primary" ng-click="updateOrder()">Update Videos</button>
+                    </span>
+                    <span ng-if="!videoModels.locked">
+                        <button type="button" class="btn btn-danger" ng-click="updateOrder('true')">Cancel</button>
+                    </span>
+                    <span ng-if="!videoModels.locked">
+                        <button type="button" class="btn btn-info" ng-click="updateOrder()">Save Order</button>
+                    </span>
+                </div>
+                <div class="col-sm-6 col-xs-6">
+                    <span class="pull-right">
+                        <button ng-if="!videoModels.locked" type="button" class="btn btn-primary btn btn-w-lg" ng-click="openModal()">Add new video</button>
+
+                    </span>
+                </div>
+                <!-- <div class="col-sm-6 col-xs-6">
                     <form>
                         <input type="text" placeholder="Search..." class="form-control" data-ng-model="searchKeywords" data-ng-keyup="search()">
                     </form>
@@ -22,7 +36,7 @@
                         {{filteredVideos.length}}/{{featuredVideos.data.length}}
                         entries
                     </span>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -35,7 +49,7 @@
                             dragged away, you have to remove it from the original list
                             yourself using the dnd-moved attribute -->
                 <li ng-repeat="video in featuredVideos.data" dnd-disable-if="videoModels.locked" dnd-draggable="video" dnd-moved="updateFeatured($index, video)" dnd-effect-allowed="move" ng-class="{'selected': videoModels.selected === video}">
-                    <span class="fa fa-bars">&nbsp;</span>{{video.title}}
+                    <span ng-if="!videoModels.locked" class="fa fa-bars" style="cursor: move">&nbsp;</span>{{video.title}}
                     <span class="pull-right">
                         <span class="label label-primary">{{categoryLookup[video.category_id].title}}</span>
                         <span ng-show="{{video.mature_content}}">

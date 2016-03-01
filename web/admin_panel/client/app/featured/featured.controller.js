@@ -317,7 +317,7 @@
                 method: 'GET',
                 url: 'https://staging.cizo.com/featured',
                 headers: {
-                    authorization: 'Bearer ' + response.access_token
+                    authorization: `Bearer ${$scope.admin_token}`
                 }
             }).then(function successCB(response) {
                 callback(null, response.data);

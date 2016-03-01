@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+    var api_username = 'hank@weezlabs.com',
+        api_password = 'weezlabs';
+
     angular.module('app.videos').controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, videoNotifier) {
         var init;
 
@@ -69,6 +72,16 @@
 
         $scope.videoValid = validateVideo;
 
+        $scope.matureContent = function (video) {
+            flagMature($scope, $http, video.id, video.mature_content, function (err, res) {
+                if (err) {
+                    console.error(err);
+                } else if (res) {
+                    console.log(res);
+                }
+            });
+        };
+
         $scope.videoClasses = function (video) {
             if ($scope.videoValid(video)) {
                 if (video.visible) {
@@ -86,9 +99,23 @@
                 videoNotifier.log('This video isn’t ready for adding, click \'Edit\' and upload an image / video', 'Oops!', true);
             } else if (video.visible) {
                 video.visible = false;
+                flagVisible($scope, $http, video.id, video.visible, function (err, res) {
+                    if (err) {
+                        console.error(err);
+                    } else if (res) {
+                        console.log(res);
+                    }
+                });
                 videoNotifier.logWarning('Video has been removed from the video feed', 'Video Removed');
             } else if (!video.visible) {
                 video.visible = true;
+                flagVisible($scope, $http, video.id, video.visible, function (err, res) {
+                    if (err) {
+                        console.error(err);
+                    } else if (res) {
+                        console.log(res);
+                    }
+                });
                 videoNotifier.logSuccess('Video has been added to the video feed', 'Video Added');
             } else {
                 console.log('error');
@@ -263,13 +290,14 @@
         createdAfter = createdAfter ? createdAfter : null;
         count = count ? count : 200;
 
-        authenticate('hank@weezlabs.com', 'weezlabs', $http, function (err, response) {
+        authenticate(api_username, api_password, $http, function (err, response) {
             if (err) throw new Error(err);
+            $scope.admin_token = response.access_token;
             $http({
                 method: 'GET',
                 url: 'https://staging.cizo.com/videos',
                 headers: {
-                    authorization: 'Bearer ' + response.access_token
+                    authorization: `Bearer ${$scope.admin_token}`
                 }
             }).then(function successCB(response) {
                 callback(null, response.data);
@@ -277,6 +305,51 @@
                 callback(response.data);
             });
         });
+    }
+
+    function flagMature($scope, $http, videoID, maturedFlag, callback) {
+        if ($scope.admin_token) {
+            let options = {
+                method: 'PUT',
+                url: `https://staging.cizo.com/videos/${videoID}`,
+                data: {
+                    mature_content: maturedFlag
+                },
+                headers: {
+                    authorization: `Bearer ${$scope.admin_token}`
+                }
+            };
+            $http(options).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(error) {
+                callback(error.data);
+            });
+        } else {
+            throw new Error('No Admin Token');
+        }
+    }
+
+    function flagVisible($scope, $http, videoID, visibleFlag, callback) {
+        if ($scope.admin_token) {
+            let options = {
+                method: 'PUT',
+                url: `https://staging.cizo.com/videos/${videoID}`,
+                data: {
+                    visible: visibleFlag
+                },
+                headers: {
+                    authorization: `Bearer ${$scope.admin_token}`
+                }
+            };
+            console.log(options);
+            $http(options).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(error) {
+                callback(error.data);
+            });
+        } else {
+            throw new Error('No Admin Token');
+        }
     }
 
     function getCategories(processed) {

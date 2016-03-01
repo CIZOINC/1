@@ -136,7 +136,7 @@
                     <td><span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories.data">{{categoryLookup[video.category_id].title}}</span></td>
                     <td>
                         <label class="ui-switch ui-switch-success">
-                            <input type="checkbox" ng-model="video.mature_content" ng-checked="video.mature_content"><i></i>
+                            <input type="checkbox" ng-model="video.mature_content" ng-change="matureContent(video)" ng-checked="video.mature_content"><i></i>
                         </label>
                     </td>
                     <td>

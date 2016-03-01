@@ -78,6 +78,7 @@ class V1::UsersController < V1::ApiController
       @conditions.push("#{method}_videos.user_id = :#{method}_user_id AND deleted_at IS NULL")
       @conditions = @conditions.join(" AND ")
       @videos = Video.joins("#{method}_videos".to_sym).where(@conditions, @arguments)
+      # @videos = @current_user.public_send "#{method}_videos"
       limit_videos!
     end
   end

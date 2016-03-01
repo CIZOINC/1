@@ -1,7 +1,9 @@
+require 'extensions/string'
 class Category < ActiveRecord::Base
   has_many :videos
   validates_with CategoryCustomValidator
   before_destroy :any_videos_in_category?
+  after_validation :update_canonical_title
 
   protected
 
@@ -11,4 +13,9 @@ class Category < ActiveRecord::Base
       return false
     end
   end
+
+  def update_canonical_title
+    update_column(:canonical_title, title.to_canonical)
+  end
+
 end

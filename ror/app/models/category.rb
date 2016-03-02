@@ -3,7 +3,7 @@ class Category < ActiveRecord::Base
   has_many :videos
   validates_with CategoryCustomValidator
   before_destroy :any_videos_in_category?
-  after_save :update_canonical_title
+  after_save :update_canonical_title, if: :title_changed?
 
   protected
 

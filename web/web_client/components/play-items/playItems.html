@@ -11,6 +11,10 @@
              ng-click="moveToPlayPage(video.id)"
              ng-attr-id="play-video-item-{{video.id}}"
         >
+            <div class="play-items_videos_item_overlay">
+                <span class="play-items_videos_item_overlay_button icon-play"></span>
+                <span class="play-items_videos_item_overlay_button icon-replay hidden-layer"></span>
+            </div>
             <div class="play-items_videos_item_title">
                 <span class="play-items_videos_item_title_date">{{::video.humanizedDate}}</span>
                 <span class="play-items_videos_item_title_caption">{{::video.title}}</span>

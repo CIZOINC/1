@@ -1,26 +1,78 @@
 'use strict';
 
 (function () {
-    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, $window, videoNotifier) {
+    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, $window) {
         if (!$window.sessionStorage.token) {
             $location.url('/');
         }
 
+        function videoNotifier(type, title, message, onClickEvent) {
+            toastr.options = {
+                closeButton: true,
+                positionClass: 'toast-top-right',
+                timeOut: 3000
+            };
+
+            if (onClickEvent) {
+                toastr.options.onclick = onClickEvent;
+            }
+
+            return toastr[type](message, title);
+        }
+
+        function getCategories(callback) {
+            // Get the available categories from the API
+            let options = {
+                method: 'GET',
+                url: 'https://staging.cizo.com/categories',
+                headers: {
+                    authorization: `Bearer ${$window.sessionStorage.token}`
+                }
+            };
+
+            $http(options).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(error) {
+                callback(error.data);
+            });
+        }
+
         function getFeaturedVideos(callback) {
-            $http({
+            // Get the featured videos from the API
+            let options = {
                 method: 'GET',
                 url: 'https://staging.cizo.com/featured',
                 headers: {
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }
-            }).then(function successCB(response) {
+            };
+
+            $http(options).then(function successCB(response) {
                 callback(null, response.data);
             }, function errorCB(response) {
                 callback(response.data);
             });
         }
 
-        function updateFeaturedOrder($scope, $http, videoID, featuredOrder, callback) {
+        function getVideos(callback) {
+            // Get the featured videos from the API
+            let options = {
+                method: 'GET',
+                url: 'https://staging.cizo.com/videos',
+                headers: {
+                    authorization: `Bearer ${$window.sessionStorage.token}`
+                }
+            };
+
+            $http(options).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(response) {
+                callback(response.data);
+            });
+        }
+
+        function updateFeaturedOrder(videoID, featuredOrder, callback) {
+            // Update the featured_order of a specific video
             let options = {
                 method: 'PUT',
                 url: `https://staging.cizo.com/featured/${videoID}`,
@@ -31,6 +83,7 @@
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }
             };
+
             $http(options).then(function successCB(response) {
                 callback(null, response.data);
             }, function errorCB(error) {
@@ -38,19 +91,41 @@
             });
         }
 
-        function getCategories(callback) {
+        function removeFeatured(videoID, callback) {
+            // Update the featured_order of a specific video
             let options = {
-                method: 'GET',
-                url: 'https://staging.cizo.com/categories',
+                method: 'DELETE',
+                url: `https://staging.cizo.com/featured/${videoID}`,
                 headers: {
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }
             };
+
             $http(options).then(function successCB(response) {
                 callback(null, response.data);
             }, function errorCB(error) {
                 callback(error.data);
             });
+        }
+
+        function validateVideo(video) {
+            if (typeof video.hero_images !== 'undefined') {
+                var streamsCount = video.streams.length,
+                    validStreams = 0;
+                for (let stream of video.streams) {
+                    if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'processing') {
+                        validStreams++;
+                    }
+                }
+
+                if (streamsCount === validStreams) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         }
 
         var inputFeaturedVideos = [],
@@ -63,6 +138,25 @@
             selected: null
         };
 
+        $scope.removeFeatured = function (video) {
+            for (let r in $scope.featuredVideos.data) {
+                if (video.id === $scope.featuredVideos.data[r].id) {
+                    $scope.featuredVideos.data.splice(r, 1);
+                }
+            }
+            removeFeatured(video.id, function (err, res) {
+                if (err) {
+                    videoNotifier('danger', 'Error:', 'Unable to remove featured video.', function (clicked) {
+                        console.log(clicked);
+                    });
+                } else {
+                    videoNotifier('success', 'Success', 'The video has been removed from featured carousel.', function (clicked) {
+                        console.log(clicked, res);
+                    });
+                }
+            });
+        };
+
         $scope.updateOrder = function (cancelled) {
             if (cancelled && $scope.videoModels.locked === false) {
                 $scope.featuredVideos.data = inputFeaturedVideos;
@@ -72,7 +166,7 @@
                 videoIndex = 1;
 
                 for (let outputVideo of $scope.featuredVideos.data) {
-                    updateFeaturedOrder($scope, $http, outputVideo.id, videoIndex, function (err, result) {
+                    updateFeaturedOrder(outputVideo.id, videoIndex, function (err, result) {
                         if (err) {
                             console.error(err);
                         } else if (result) {
@@ -187,18 +281,26 @@
         $scope.currentPageVideos = [];
 
         init = function init() {
-            getCategories(function (err, res) {
-                $scope.videoCategories = res.data;
+            getCategories(function gotCategories(err, categories) {
+                if (err) throw new Error(err);
+                $scope.videoCategories = categories.data;
 
                 $scope.categoryLookup = {};
 
-                for (let category of res.data) {
+                for (let category of categories.data) {
                     $scope.categoryLookup[category.id] = category;
                 }
-                getFeaturedVideos(function gotFeatured(err, videos) {
+
+                getVideos(function gotVideos(err, videos) {
                     if (err) throw new Error(err);
 
-                    $scope.featuredVideos = videos;
+                    $scope.videos = videos;
+                });
+
+                getFeaturedVideos(function gotFeaturedVideos(err, featuredVids) {
+                    if (err) throw new Error(err);
+
+                    $scope.featuredVideos = featuredVids;
                     $scope.search();
                     return $scope.select($scope.currentPage);
                 });
@@ -206,100 +308,5 @@
         };
 
         init();
-    }).factory('videoNotifier', function videoNotifier() {
-        var logIt;
-
-        toastr.options = {
-            closeButton: true,
-            positionClass: 'toast-top-right',
-            timeOut: 3000
-        };
-
-        logIt = function logIt(message, title, type, onClickEvent) {
-            if (onClickEvent) {
-                toastr.options.onclick = function () {
-                    return console.log('Trigger Modal');
-                };
-            }
-            return toastr[type](message, title);
-        };
-
-        return {
-            log: function log(message, title, onClickEvent) {
-                logIt(message, title, 'info', onClickEvent);
-            },
-            logWarning: function logWarning(message, title, onClickEvent) {
-                logIt(message, title, 'warning', onClickEvent);
-            },
-            logSuccess: function logSuccess(message, title, onClickEvent) {
-                logIt(message, title, 'success', onClickEvent);
-            },
-            logError: function logError(message, title, onClickEvent) {
-                logIt(message, title, 'error', onClickEvent);
-            }
-        };
     });
-
-    function openModal($scope, $uibModal, $log) {
-        var size = 'lg';
-
-        var emptyVideo = {
-            title: 'Add title',
-            description: 'Add a video description',
-            mature_content: false,
-            category_id: 11,
-            visible: false,
-            featured: null,
-            tag_list: 'Add, Movie, Tags',
-            streams: [{
-                link: null,
-                stream_type: 'hls',
-                transcode_status: 'pending'
-            }, {
-                link: null,
-                stream_type: 'mp4',
-                transcode_status: 'pending'
-            }]
-        };
-
-        $scope.video = $scope.video || emptyVideo;
-
-        modalInstance = $uibModal.open({
-            animation: $scope.animationsEnabled,
-            templateUrl: 'videoModal.html',
-            controller: 'VideoModalInstanceCtrl',
-            size: size,
-            resolve: {
-                video: function video() {
-                    return $scope.video || null;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (video) {
-            $scope.video = video;
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    }
-
-    function validateVideo(video) {
-        if (typeof video.hero_images !== 'undefined') {
-            var streamsCount = video.streams.length,
-                validStreams = 0;
-            for (let stream of video.streams) {
-                if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'processing') {
-                    validStreams++;
-                }
-            }
-
-            if (streamsCount === validStreams) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
 })();

@@ -1,4 +1,4 @@
-module VideosHelper
+module V1::VideosHelper
   def video_link(video_id)
     if Rails.env.staging?
       "https://staging.cizo.com/app/#/videos/#{video_id}"

@@ -1,4 +1,4 @@
-module CategoriesHelper
+module V1::CategoriesHelper
   def set_partial(category, json)
     json.partial! 'category', category: category
   end

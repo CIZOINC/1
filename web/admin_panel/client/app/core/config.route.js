@@ -33,7 +33,7 @@
 
             $routeProvider
                 .when('/', {
-                    redirectTo: '/dashboard'
+                    redirectTo: '/page/signin'
                 })
                 .when('/dashboard', {
                     templateUrl: 'app/dashboard/dashboard.html'

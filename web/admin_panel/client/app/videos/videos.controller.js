@@ -1,26 +1,102 @@
 'use strict';
 
 (function () {
-    var api_username = 'hank@weezlabs.com',
-        api_password = 'weezlabs';
+    angular.module('app.videos').controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, $location, $window, Upload, videoNotifier) {
+        if (!$window.sessionStorage.token) {
+            $location.url('/');
+        }
 
-    angular.module('app.videos').controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, videoNotifier) {
         var init;
+
+        function flagMature(videoID, maturedFlag, callback) {
+            if ($window.sessionStorage.token) {
+                let options = {
+                    method: 'PUT',
+                    url: `https://staging.cizo.com/videos/${videoID}`,
+                    data: {
+                        mature_content: maturedFlag
+                    },
+                    headers: {
+                        authorization: `Bearer ${$window.sessionStorage.token}`
+                    }
+                };
+                $http(options).then(function successCB(response) {
+                    callback(null, response.data);
+                }, function errorCB(error) {
+                    callback(error.data);
+                });
+            } else {
+                throw new Error('No Admin Token');
+            }
+        }
+
+        function flagVisible($scope, $http, videoID, visibleFlag, callback) {
+            if ($window.sessionStorage.token) {
+                let options = {
+                    method: 'PUT',
+                    url: `https://staging.cizo.com/videos/${videoID}`,
+                    data: {
+                        visible: visibleFlag
+                    },
+                    headers: {
+                        authorization: `Bearer ${$window.sessionStorage.token}`
+                    }
+                };
+                console.log(options);
+                $http(options).then(function successCB(response) {
+                    callback(null, response.data);
+                }, function errorCB(error) {
+                    callback(error.data);
+                });
+            } else {
+                throw new Error('No Admin Token');
+            }
+        }
+
+        function getCategories(processed) {
+            processed = processed ? processed : false;
+
+            var videoCategories = {
+                data: [{
+                    id: 11,
+                    title: 'Movies'
+                }, {
+                    id: 12,
+                    title: 'TV'
+                }, {
+                    id: 13,
+                    title: 'Games'
+                }, {
+                    id: 14,
+                    title: 'Lifestyle'
+                }]
+            };
+
+            if (processed === true) {
+                var categoryObject = {};
+                for (var c = 0; c < videoCategories.data.length; c++) {
+                    categoryObject[videoCategories.data[c].id] = videoCategories.data[c];
+                }
+                videoCategories = categoryObject;
+            }
+
+            return videoCategories;
+        }
+
+        $scope.videoCategories = getCategories();
+
+        $scope.categoryLookup = getCategories(true);
 
         $scope.allVideos = {
             data: []
         };
 
-        getVideos(null, null, null, $scope, $http, function gotVideos(err, videos) {
+        getVideos(null, null, null, $window, $scope, $http, function gotVideos(err, videos) {
             if (err) throw new Error(err);
 
             $scope.allVideos = videos;
             $scope.search();
         });
-
-        $scope.videoCategories = getCategories();
-
-        $scope.categoryLookup = getCategories(true);
 
         $scope.searchKeywords = '';
 
@@ -73,7 +149,7 @@
         $scope.videoValid = validateVideo;
 
         $scope.matureContent = function (video) {
-            flagMature($scope, $http, video.id, video.mature_content, function (err, res) {
+            flagMature(video.id, video.mature_content, function (err, res) {
                 if (err) {
                     console.error(err);
                 } else if (res) {
@@ -207,8 +283,8 @@
         if (typeof video.hero_images !== 'undefined') {
             var streamsCount = video.streams.length,
                 validStreams = 0;
-            for (var stream = 0; stream < video.streams.length; stream++) {
-                if (video.streams[stream].transcode_status !== 'pending' && video.streams[stream].transcode_status !== 'processing') {
+            for (let stream of video.streams) {
+                if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'processing') {
                     validStreams++;
                 }
             }
@@ -221,25 +297,6 @@
         } else {
             return false;
         }
-    }
-
-    function authenticate(apiUsername, apiPassword, $http, callback) {
-        var authBody = {
-            grant_type: 'password',
-            username: apiUsername,
-            password: apiPassword,
-            scope: 'admin'
-        };
-
-        $http({
-            method: 'POST',
-            url: 'https://staging.cizo.com/oauth/token',
-            data: authBody
-        }).then(function successCB(response) {
-            callback(null, response.data);
-        }, function errorCB(response) {
-            callback(response.data);
-        });
     }
 
     function openModal($scope, $uibModal, $log) {
@@ -285,100 +342,21 @@
         });
     }
 
-    function getVideos(createdBefore, createdAfter, count, $scope, $http, callback) {
+    function getVideos(createdBefore, createdAfter, count, $window, $scope, $http, callback) {
         createdBefore = createdBefore ? createdBefore : null;
         createdAfter = createdAfter ? createdAfter : null;
         count = count ? count : 200;
 
-        authenticate(api_username, api_password, $http, function (err, response) {
-            if (err) throw new Error(err);
-            $scope.admin_token = response.access_token;
-            $http({
-                method: 'GET',
-                url: 'https://staging.cizo.com/videos',
-                headers: {
-                    authorization: `Bearer ${$scope.admin_token}`
-                }
-            }).then(function successCB(response) {
-                callback(null, response.data);
-            }, function errorCB(response) {
-                callback(response.data);
-            });
-        });
-    }
-
-    function flagMature($scope, $http, videoID, maturedFlag, callback) {
-        if ($scope.admin_token) {
-            let options = {
-                method: 'PUT',
-                url: `https://staging.cizo.com/videos/${videoID}`,
-                data: {
-                    mature_content: maturedFlag
-                },
-                headers: {
-                    authorization: `Bearer ${$scope.admin_token}`
-                }
-            };
-            $http(options).then(function successCB(response) {
-                callback(null, response.data);
-            }, function errorCB(error) {
-                callback(error.data);
-            });
-        } else {
-            throw new Error('No Admin Token');
-        }
-    }
-
-    function flagVisible($scope, $http, videoID, visibleFlag, callback) {
-        if ($scope.admin_token) {
-            let options = {
-                method: 'PUT',
-                url: `https://staging.cizo.com/videos/${videoID}`,
-                data: {
-                    visible: visibleFlag
-                },
-                headers: {
-                    authorization: `Bearer ${$scope.admin_token}`
-                }
-            };
-            console.log(options);
-            $http(options).then(function successCB(response) {
-                callback(null, response.data);
-            }, function errorCB(error) {
-                callback(error.data);
-            });
-        } else {
-            throw new Error('No Admin Token');
-        }
-    }
-
-    function getCategories(processed) {
-        processed = processed ? processed : false;
-
-        var videoCategories = {
-            data: [{
-                id: 11,
-                title: 'Movies'
-            }, {
-                id: 12,
-                title: 'TV'
-            }, {
-                id: 13,
-                title: 'Games'
-            }, {
-                id: 14,
-                title: 'Lifestyle'
-            }]
-        };
-
-        if (processed === true) {
-            var categoryObject = {};
-            for (var c = 0; c < videoCategories.data.length; c++) {
-                categoryObject[videoCategories.data[c].id] = videoCategories.data[c];
+        $http({
+            method: 'GET',
+            url: 'https://staging.cizo.com/videos',
+            headers: {
+                authorization: `Bearer ${$window.sessionStorage.token}`
             }
-            videoCategories = categoryObject;
-        }
-
-        return videoCategories;
+        }).then(function successCB(response) {
+            callback(null, response.data);
+        }, function errorCB(response) {
+            callback(response.data);
+        });
     }
 })();

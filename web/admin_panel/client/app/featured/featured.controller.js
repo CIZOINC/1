@@ -1,11 +1,75 @@
 'use strict';
 
 (function () {
-    var api_username = 'hank@weezlabs.com',
-        api_password = 'weezlabs';
+    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, $window, videoNotifier) {
+        if (!$window.sessionStorage.token) {
+            $location.url('/');
+        }
 
-    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, videoNotifier) {
+        function getFeaturedVideos(callback) {
+            $http({
+                method: 'GET',
+                url: 'https://staging.cizo.com/featured',
+                headers: {
+                    authorization: `Bearer ${$window.sessionStorage.token}`
+                }
+            }).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(response) {
+                callback(response.data);
+            });
+        }
+
+        function updateFeaturedOrder($scope, $http, videoID, featuredOrder, callback) {
+            let options = {
+                method: 'PUT',
+                url: `https://staging.cizo.com/featured/${videoID}`,
+                data: {
+                    featured_order: featuredOrder
+                },
+                headers: {
+                    authorization: `Bearer ${$window.sessionStorage.token}`
+                }
+            };
+            $http(options).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(error) {
+                callback(error.data);
+            });
+        }
+
+        function getCategories(processed) {
+            processed = processed ? processed : false;
+
+            var videoCategories = {
+                data: [{
+                    id: 11,
+                    title: 'Movies'
+                }, {
+                    id: 12,
+                    title: 'TV'
+                }, {
+                    id: 13,
+                    title: 'Games'
+                }, {
+                    id: 14,
+                    title: 'Lifestyle'
+                }]
+            };
+
+            if (processed === true) {
+                var categoryObject = {};
+                for (var c = 0; c < videoCategories.data.length; c++) {
+                    categoryObject[videoCategories.data[c].id] = videoCategories.data[c];
+                }
+                videoCategories = categoryObject;
+            }
+
+            return videoCategories;
+        }
+
         var init;
+
         $scope.videoModels = {
             locked: true,
             selected: null
@@ -17,7 +81,6 @@
 
         var inputFeaturedVideos = [],
             inputFeaturedOrder = {},
-            outputFeaturedOrder = {},
             videoIndex;
 
         $scope.updateOrder = function (cancelled) {
@@ -55,11 +118,11 @@
             }
         };
 
-        $scope.updateFeatured = function ($index, video) {
+        $scope.updateFeatured = function ($index) {
             $scope.featuredVideos.data.splice($index, 1);
         };
 
-        getFeaturedVideos($scope, $http, function gotFeatured(err, videos) {
+        getFeaturedVideos(function gotFeatured(err, videos) {
             if (err) throw new Error(err);
 
             $scope.featuredVideos = videos;
@@ -288,94 +351,5 @@
         } else {
             return false;
         }
-    }
-
-    function authenticate(apiUsername, apiPassword, $http, callback) {
-        var authBody = {
-            grant_type: 'password',
-            username: apiUsername,
-            password: apiPassword,
-            scope: 'admin'
-        };
-
-        $http({
-            method: 'POST',
-            url: 'https://staging.cizo.com/oauth/token',
-            data: authBody
-        }).then(function successCB(response) {
-            callback(null, response.data);
-        }, function errorCB(response) {
-            callback(response.data);
-        });
-    }
-
-    function getFeaturedVideos($scope, $http, callback) {
-        authenticate(api_username, api_password, $http, function (err, response) {
-            if (err) throw new Error(err);
-            $scope.admin_token = response.access_token;
-            $http({
-                method: 'GET',
-                url: 'https://staging.cizo.com/featured',
-                headers: {
-                    authorization: `Bearer ${$scope.admin_token}`
-                }
-            }).then(function successCB(response) {
-                callback(null, response.data);
-            }, function errorCB(response) {
-                callback(response.data);
-            });
-        });
-    }
-
-    function updateFeaturedOrder($scope, $http, videoID, featuredOrder, callback) {
-        if ($scope.admin_token) {
-            let options = {
-                method: 'PUT',
-                url: `https://staging.cizo.com/featured/${videoID}`,
-                data: {
-                    featured_order: featuredOrder
-                },
-                headers: {
-                    authorization: 'Bearer ' + $scope.admin_token
-                }
-            };
-            $http(options).then(function successCB(response) {
-                callback(null, response.data);
-            }, function errorCB(error) {
-                callback(error.data);
-            });
-        } else {
-            throw new Error('No Admin Token');
-        }
-    }
-
-    function getCategories(processed) {
-        processed = processed ? processed : false;
-
-        var videoCategories = {
-            data: [{
-                id: 11,
-                title: 'Movies'
-            }, {
-                id: 12,
-                title: 'TV'
-            }, {
-                id: 13,
-                title: 'Games'
-            }, {
-                id: 14,
-                title: 'Lifestyle'
-            }]
-        };
-
-        if (processed === true) {
-            var categoryObject = {};
-            for (var c = 0; c < videoCategories.data.length; c++) {
-                categoryObject[videoCategories.data[c].id] = videoCategories.data[c];
-            }
-            videoCategories = categoryObject;
-        }
-
-        return videoCategories;
     }
 })();

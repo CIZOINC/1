@@ -12,8 +12,6 @@ class V1::UsersController < V1::ApiController
   before_action :set_user, only: [:show, :update]
   before_action :set_video, only: [:like_video, :dislike_video, :mark_video_as_seen, :skip_video, :guest_skip_video, :guest_mark_video_as_seen]
 
-
-
   def index
     @users = User.all
   end

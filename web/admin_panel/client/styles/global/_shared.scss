@@ -1,6 +1,55 @@
-@media print {
-   .no-print{
-        display:none;
+@media print
+{
+    .no-print
+    {
+        display: none;
     }
 }
 
+.featuredVideoList ul[dnd-list],
+.featuredVideoList ul[dnd-list] > li
+{
+    position: relative;
+}
+.featuredVideoList ul[dnd-list]
+{
+    min-height: 42px;
+    padding-left: 0;
+}
+.featuredVideoList ul[dnd-list] .dndDraggingSource
+{
+    display: none;
+}
+.featuredVideoList ul[dnd-list] .dndPlaceholder
+{
+    display: block;
+
+    min-height: 42px;
+
+    background-color: #ddd;
+}
+.featuredVideoList ul[dnd-list] li
+{
+    display: block;
+
+    margin-bottom: -1px;
+    padding: 10px 15px;
+
+    border: 1px solid $state-default-border;
+    background-color: $state-default-bg;
+}
+.featuredVideoList ul[dnd-list] li:nth-child(-n+4)
+{
+    display: block;
+
+    margin-bottom: -1px;
+    padding: 10px 15px;
+
+    color: $bright;
+    background-color: $brand-primary;
+}
+.featuredVideoList ul[dnd-list] li.selected
+{
+    color: #3c763d;
+    background-color: #dff0d8;
+}

@@ -22,105 +22,15 @@
         <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css">
         <!-- endbuild -->
-
-        <style>
-            /**
-     * For the correct positioning of the placeholder element, the dnd-list and
-     * it's children must have position: relative
-     */
-            .simpleDemo ul[dnd-list],
-            .simpleDemo ul[dnd-list] > li {
-                position: relative;
-            }
-
-            /**
-     * The dnd-list should always have a min-height,
-     * otherwise you can't drop to it once it's empty
-     */
-            .simpleDemo ul[dnd-list] {
-                min-height: 42px;
-                padding-left: 0;
-            }
-
-            /**
-     * The dndDraggingSource class will be applied to
-     * the source element of a drag operation. It makes
-     * sense to hide it to give the user the feeling
-     * that he's actually moving it.
-     */
-            .simpleDemo ul[dnd-list] .dndDraggingSource {
-                display: none;
-            }
-
-            /**
-     * An element with .dndPlaceholder class will be
-     * added to the dnd-list while the user is dragging
-     * over it.
-     */
-            .simpleDemo ul[dnd-list] .dndPlaceholder {
-                display: block;
-
-                min-height: 42px;
-
-                background-color: #ddd;
-            }
-
-            /**
-     * The dnd-lists's child elements currently MUST have
-     * position: relative. Otherwise we can not determine
-     * whether the mouse pointer is in the upper or lower
-     * half of the element we are dragging over. In other
-     * browsers we can use event.offsetY for this.
-     */
-            .simpleDemo ul[dnd-list] li {
-                display: block;
-
-                margin-bottom: -1px;
-                padding: 10px 15px;
-
-                border: 1px solid #ddd;
-                border-top-left-radius: 4px;
-                border-top-right-radius: 4px;
-                background-color: #fff;
-            }
-
-            /**
-     * Show selected elements in green
-     */
-            .simpleDemo ul[dnd-list] li.selected {
-                color: #3c763d;
-                background-color: #dff0d8;
-            }
-
-        </style>
-
     </head>
 
-    <body
-        data-ng-app="app"
-        id="app"
-        class="app"
-        data-custom-page
-        data-off-canvas-nav
-        data-ng-controller="AppCtrl"
-        data-ng-class=" { 'layout-boxed': main.layout === 'boxed',
-                            'nav-collapsed-min': main.isMenuCollapsed
-          } ">
+    <body data-ng-app="app" id="app" class="app" data-custom-page data-off-canvas-nav data-ng-controller="AppCtrl" data-ng-class=" { 'layout-boxed': main.layout === 'boxed', 'nav-collapsed-min': main.isMenuCollapsed } ">
         <!--[if lt IE 9]> <div class="lt-ie9-bg"> <p class="browsehappy">You are using an <strong>outdated</strong> browser.</p> <p>Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p> </div> <![endif]-->
-
         <header
             data-ng-include=" 'app/layout/header.html' "
             id="header"
             class="header-container "
-            data-ng-class="{ 'header-fixed': main.fixedHeader,
-                                  'bg-white': ['11','12','13','14','15','16','21'].indexOf(main.skin) >= 0,
-                                  'bg-dark': main.skin === '31',
-                                  'bg-primary': ['22','32'].indexOf(main.skin) >= 0,
-                                  'bg-success': ['23','33'].indexOf(main.skin) >= 0,
-                                  'bg-info-alt': ['24','34'].indexOf(main.skin) >= 0,
-                                  'bg-warning': ['25','35'].indexOf(main.skin) >= 0,
-                                  'bg-danger': ['26','36'].indexOf(main.skin) >= 0
-                 }"></header>
+            data-ng-class="{ 'header-fixed': main.fixedHeader, 'bg-white': ['11','12','13','14','15','16','21'].indexOf(main.skin) >= 0, 'bg-dark': main.skin === '31', 'bg-primary': ['22','32'].indexOf(main.skin) >= 0, 'bg-success': ['23','33'].indexOf(main.skin) >= 0, 'bg-info-alt': ['24','34'].indexOf(main.skin) >= 0, 'bg-warning': ['25','35'].indexOf(main.skin) >= 0, 'bg-danger': ['26','36'].indexOf(main.skin) >= 0 }"></header>
 
         <div class="main-container" data-ng-class="{ 'app-nav-horizontal': main.menu === 'horizontal' }">
             <aside

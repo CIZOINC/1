@@ -8,6 +8,23 @@
 
         var init;
 
+        function getVideos(callback) {
+            // Get the featured videos from the API
+            let options = {
+                method: 'GET',
+                url: 'https://staging.cizo.com/videos',
+                headers: {
+                    authorization: `Bearer ${$window.sessionStorage.token}`
+                }
+            };
+
+            $http(options).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(response) {
+                callback(response.data);
+            });
+        }
+
         function flagMature(videoID, maturedFlag, callback) {
             if ($window.sessionStorage.token) {
                 let options = {
@@ -146,7 +163,26 @@
             return;
         };
 
-        $scope.videoValid = validateVideo;
+        $scope.videoValid = function validateVideo(video) {
+            if (typeof video.hero_images !== 'undefined') {
+                var streamsCount = video.streams.length,
+                    validStreams = 0;
+                for (let stream of video.streams) {
+                    if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'processing') {
+                        validStreams++;
+                    }
+                }
+
+                if (streamsCount === validStreams) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        };
+
 
         $scope.matureContent = function (video) {
             flagMature(video.id, video.mature_content, function (err, res) {

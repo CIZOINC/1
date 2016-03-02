@@ -1,4 +1,4 @@
-<div class="page page-table simpleDemo" data-ng-controller="FeaturedCtrl">
+<div class="page page-table" data-ng-controller="FeaturedCtrl">
     <div class="panel panel-default table-dynamic">
         <div class="panel-heading">
             <strong>
@@ -7,38 +7,33 @@
         </div>
 
         <div class="table-filters">
-            <div class="row">
-                <div class="col-sm-6 col-xs-6">
-                    <span ng-if="videoModels.locked">
-                        <button type="button" class="btn btn-primary" ng-click="updateOrder()">Update Videos</button>
-                    </span>
-                    <span ng-if="!videoModels.locked">
-                        <button type="button" class="btn btn-danger" ng-click="updateOrder('true')">Cancel</button>
-                    </span>
-                    <span ng-if="!videoModels.locked">
-                        <button type="button" class="btn btn-info" ng-click="updateOrder()">Save Order</button>
-                    </span>
-                </div>
-                <div class="col-sm-6 col-xs-6">
-                    <span class="pull-right">
-                        <button ng-if="!videoModels.locked" type="button" class="btn btn-primary btn btn-w-lg" ng-click="openModal()">Add new video</button>
-
-                    </span>
-                </div>
-            </div>
+            <span ng-if="videoModels.locked">
+                <button type="button" class="btn btn-primary" ng-click="updateOrder()">Change Order</button>
+            </span>
+            <span ng-if="!videoModels.locked">
+                <button type="button" class="btn btn-danger" ng-click="updateOrder('true')">Cancel</button>
+            </span>
+            <span ng-if="!videoModels.locked">
+                <button type="button" class="btn btn-info" ng-click="updateOrder()">Save Order</button>
+            </span>
         </div>
 
-        <div class="panel-body">
-            <ul dnd-list="featuredVideos.data">
-                <li ng-repeat="video in featuredVideos.data" dnd-disable-if="videoModels.locked" dnd-draggable="video" dnd-moved="updateFeatured($index, video)" dnd-effect-allowed="move" ng-class="{'selected': videoModels.selected === video}">
-                    <span ng-if="!videoModels.locked" class="fa fa-bars" style="cursor: move">&nbsp;</span>{{video.title}}
+        <div class="panel-body featuredVideoList">
+            <ul class="featuredPanel" dnd-list="featuredVideos.data">
+                <li ng-repeat="video in featuredVideos.data" dnd-disable-if="videoModels.locked" dnd-draggable="video" dnd-moved="updateFeaturedArray($index)" dnd-effect-allowed="move" ng-style="!videoModels.locked && {'cursor': 'move'}">
+                    <span ng-hide="videoModels.locked" class="fa fa-bars">&nbsp;</span>{{video.title}}
                     <span class="pull-right">
-                        <span class="label" ng-class="{'label-primary': video.category_id === 11, 'label-warning': video.category_id === 12, 'label-danger': video.category_id === 13, 'label-info': video.category_id === 14 }">{{categoryLookup[video.category_id].title}}</span>
+                        <span
+                            class="label"
+                            ng-class="{'label-success': video.category_id === 11, 'label-warning': video.category_id === 12, 'label-default': video.category_id === 13, 'label-info': video.category_id === 14 }"
+                            ng-style=" video.category_id === 11 && {'color': '#333'}">{{categoryLookup[video.category_id].title}}</span>
                         <span ng-show="{{video.mature_content}}">
                             -
                             <span class="label label-danger">NSFW</span>
                         </span>
-                        &nbsp;<i ng-show="!videoModels.locked" ng-click="removeFeatured(video)" class="fa fa-trash" ng-style="{'color': color.danger}"></i>
+                        <button class="btn btn-danger btn-xs" ng-hide="videoModels.locked">
+                            <span class="fa fa-ban"></span>
+                            Remove Featured</button>
                     </span>
                 </li>
             </ul>

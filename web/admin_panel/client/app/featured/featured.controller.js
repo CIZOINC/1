@@ -38,50 +38,30 @@
             });
         }
 
-        function getCategories(processed) {
-            processed = processed ? processed : false;
-
-            var videoCategories = {
-                data: [{
-                    id: 11,
-                    title: 'Movies'
-                }, {
-                    id: 12,
-                    title: 'TV'
-                }, {
-                    id: 13,
-                    title: 'Games'
-                }, {
-                    id: 14,
-                    title: 'Lifestyle'
-                }]
-            };
-
-            if (processed === true) {
-                var categoryObject = {};
-                for (var c = 0; c < videoCategories.data.length; c++) {
-                    categoryObject[videoCategories.data[c].id] = videoCategories.data[c];
+        function getCategories(callback) {
+            let options = {
+                method: 'GET',
+                url: 'https://staging.cizo.com/categories',
+                headers: {
+                    authorization: `Bearer ${$window.sessionStorage.token}`
                 }
-                videoCategories = categoryObject;
-            }
-
-            return videoCategories;
+            };
+            $http(options).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(error) {
+                callback(error.data);
+            });
         }
 
-        var init;
+        var inputFeaturedVideos = [],
+            inputFeaturedOrder = {},
+            videoIndex,
+            init;
 
         $scope.videoModels = {
             locked: true,
             selected: null
         };
-
-        $scope.featuredVideos = {
-            data: []
-        };
-
-        var inputFeaturedVideos = [],
-            inputFeaturedOrder = {},
-            videoIndex;
 
         $scope.updateOrder = function (cancelled) {
             if (cancelled && $scope.videoModels.locked === false) {
@@ -121,17 +101,6 @@
         $scope.updateFeatured = function ($index) {
             $scope.featuredVideos.data.splice($index, 1);
         };
-
-        getFeaturedVideos(function gotFeatured(err, videos) {
-            if (err) throw new Error(err);
-
-            $scope.featuredVideos = videos;
-            $scope.search();
-        });
-
-        $scope.videoCategories = getCategories();
-
-        $scope.categoryLookup = getCategories(true);
 
         $scope.searchKeywords = '';
 
@@ -218,44 +187,25 @@
         $scope.currentPageVideos = [];
 
         init = function init() {
-            $scope.search();
-            return $scope.select($scope.currentPage);
+            getCategories(function (err, res) {
+                $scope.videoCategories = res.data;
+
+                $scope.categoryLookup = {};
+
+                for (let category of res.data) {
+                    $scope.categoryLookup[category.id] = category;
+                }
+                getFeaturedVideos(function gotFeatured(err, videos) {
+                    if (err) throw new Error(err);
+
+                    $scope.featuredVideos = videos;
+                    $scope.search();
+                    return $scope.select($scope.currentPage);
+                });
+            });
         };
 
         init();
-    }).controller('VideoModalCtrl', function VideoModalCtrl($scope, $uibModal, $log) {
-        $scope.animationsEnabled = true;
-
-        $scope.openModal = function () {
-            return openModal($scope, $uibModal, $log);
-        };
-
-        $scope.toggleAnimation = function () {
-            $scope.animationsEnabled = !$scope.animationsEnabled;
-        };
-    }).controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $uibModalInstance, video) {
-        $scope.video = video;
-
-        $scope.videoCategories = getCategories();
-
-        $scope.categoryLookup = getCategories(true);
-
-        $scope.ok = function () {
-            $uibModalInstance.close($scope.video);
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
-    }).filter('readyNotReady', function readyNotReadyFilter() {
-        return function (video) {
-            var videoValidation = validateVideo(video);
-            if (videoValidation) {
-                return video.visible ? '✓ Online' : 'Ready';
-            } else {
-                return 'Not Ready';
-            }
-        };
     }).factory('videoNotifier', function videoNotifier() {
         var logIt;
 

@@ -19,6 +19,7 @@
             'mgo-angular-wizard',
             'xeditable',
             'dndLists',
+            'ngFileUpload',
 
             // Custom modules
             'app.nav',

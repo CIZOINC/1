@@ -53,6 +53,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             descriptionLayer: angular.element(element[0].querySelector(`div.show-player_description-layer`))[0],
             playButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_play-button`))[0],
             pauseButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_pause-button`))[0],
+            favoritesButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_top-elements_rightside_buttons_favorites`))[0],
 
             // intermission elements
             prevButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_prev`))[0],
@@ -85,6 +86,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             replayVideo: replayVideo,
             shareVideo: shareVideo,
+            toggleFavorites: toggleFavorites,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -122,6 +124,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
                 scope.nextVideo = getNextVideo();
                 scope.isIntermissionPaused = false;
+
+                setFavoritesState(scope.video.favorites);
 
                 $timeout( () => {
                     if (!scope.showPlayer.classList.contains('hidden-layer') && scope.video.instantPlay) {
@@ -338,6 +342,20 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             playerServ.shareVideo(scope.video.id);
         }
 
+        function toggleFavorites(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            scope.video.favorites = !scope.video.favorites;
+            setFavoritesState(scope.video.favorites);
+
+            if (!scope.video.favorites) {
+                userServ.deleteLiked(scope.hostName, scope.token.access_token, scope.video.id);
+            } else {
+                userServ.setLiked(scope.hostName, scope.token.access_token, scope.video.id);
+            }
+        }
+
         function  showControlsOnMove() {
             const waitTime = 1500; //ms for hiding controls
 
@@ -537,6 +555,11 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             setPlayPauseState(false);
 
+        }
+
+        function setFavoritesState(isFavorite) {
+            scope.favoritesButton.classList[_classAdd(isFavorite)]('icon-favorites-filled');
+            scope.favoritesButton.classList[_classAdd(!isFavorite)]('icon-favorites');
         }
 
         function setDescriptionState(isDescription) {

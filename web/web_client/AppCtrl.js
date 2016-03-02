@@ -49,6 +49,7 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
     routerHelper.configureStates(routesList);
 
     $scope.storage.token = storageServ.getItem($scope.storage.storageUserToken);
+
     if ($scope.storage.token && userServ.isUnexpiredToken($scope.storage.token)) {
         userServ.updateToken($scope.hostName, $scope.storage.token)
             .then((response) => {

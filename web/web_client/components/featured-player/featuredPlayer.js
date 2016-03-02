@@ -5,7 +5,7 @@ angular
 
 
 /* @ngInject */
-function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ, RecursionHelper) {
+function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ, RecursionHelper, userServ) {
     "use strict";
 
     return {
@@ -18,7 +18,8 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             featuredList: '=',
             featuredItem: '=',
             categoriesList: '=',
-            hostName: '@'
+            hostName: '@',
+            token: '='
         }
     };
 
@@ -53,6 +54,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             descriptionLayer: angular.element(element[0].querySelector(`div.featured-player_description-layer`))[0],
             playButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_play-button`))[0],
             pauseButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_pause-button`))[0],
+            favoritesButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_top-elements_rightside_buttons_favorites`))[0],
 
             // intermission elements
             prevButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_prev`))[0],
@@ -85,7 +87,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
             replayVideo: replayVideo,
             shareVideo: shareVideo,
-            setFavorites: setFavorites,
+            toggleFavorites: toggleFavorites,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -123,6 +125,8 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
                 scope.nextVideo = getNextVideo();
                 scope.isIntermissionPaused = false;
+
+                setFavoritesState(scope.video.favorites);
 
                 $timeout( () => {
                     if (!scope.featuredPlayer.classList.contains('hidden-layer') && scope.video.instantPlay) {
@@ -349,11 +353,17 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             playerServ.shareVideo(scope.video.id);
         }
 
-        function setFavorites() {
-            if (scope.video.favorites) {
+        function toggleFavorites(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            scope.video.favorites = !scope.video.favorites;
+            setFavoritesState(scope.video.favorites);
 
+            if (!scope.video.favorites) {
+                userServ.deleteLiked(scope.hostName, scope.token.access_token, scope.video.id);
             } else {
-
+                userServ.setLiked(scope.hostName, scope.token.access_token, scope.video.id);
             }
         }
 
@@ -563,6 +573,11 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
         }
 
+        function setFavoritesState(isFavorite) {
+            scope.favoritesButton.classList[_classAdd(isFavorite)]('icon-favorites-filled');
+            scope.favoritesButton.classList[_classAdd(!isFavorite)]('icon-favorites');
+        }
+
         function setDescriptionState(isDescription) {
             scope.descriptionLayer.classList[_classAdd(!isDescription)]('hidden-layer');
             scope.titlesOverlayLayer.classList[_classAdd(isDescription)]('hidden-layer');
@@ -589,4 +604,4 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         }
     }
 }
-featuredPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'playerServ', 'RecursionHelper'];
+featuredPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'playerServ', 'RecursionHelper', 'userServ'];

@@ -4,7 +4,7 @@ angular
     .controller('HomeCtrl', HomeCtrl);
 
 /* @ngInject */
-function HomeCtrl($scope, playerServ, userServ, _) {
+function HomeCtrl($scope, $rootScope, playerServ, userServ, _) {
     "use strict";
 
     $scope = angular.extend($scope, {
@@ -24,10 +24,23 @@ function HomeCtrl($scope, playerServ, userServ, _) {
                             let favItem = _.filter(favorites, item => item.id === videoItem.id);
                             videoItem.favorites = !!favItem.length;
                         });
+
+                        _.each($scope.featuredList, (videoItem) => {
+                            let favItem = _.filter(favorites, item => item.id === videoItem.id);
+                            videoItem.favorites = !!favItem.length;
+                        });
+
+                        $scope.featuredItem = $scope.featuredList[0];
+                        $rootScope.featuredList = $scope.featuredList;
+                        $rootScope.videosList = videos;
                     });
+            } else {
+                $rootScope.featuredList = $scope.featuredList;
+                $rootScope.videosList = videos;
+
             }
         });
 
 
 }
-HomeCtrl.$inject = ['$scope', 'playerServ', 'userServ', 'lodash'];
+HomeCtrl.$inject = ['$scope', '$rootScope', 'playerServ', 'userServ', 'lodash'];

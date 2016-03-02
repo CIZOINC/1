@@ -8,7 +8,11 @@ class V1::CategoriesController < V1::ApiController
   end
 
   def index
-    @categories = Category.all
+    unless params[:title].blank?
+      @categories = Category.where(canonical_title: params[:title].to_canonical)
+    else
+      @categories = Category.all
+    end
   end
 
   def create

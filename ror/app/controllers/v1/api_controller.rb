@@ -2,6 +2,7 @@ class V1::ApiController < ApplicationController
   before_action :current_user
   before_action :as_admin?, if: :current_user
   helper_method :as_admin?
+  helper_method :last_token
 
   private
 
@@ -19,6 +20,10 @@ class V1::ApiController < ApplicationController
 
   def as_admin?
     doorkeeper_token.scopes.to_s == 'admin'
+  end
+
+  def last_token(user)
+    Doorkeeper::AccessToken.where(resource_owner_id: user.id).last
   end
 
   def current_user

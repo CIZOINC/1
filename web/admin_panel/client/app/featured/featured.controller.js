@@ -1,26 +1,63 @@
 'use strict';
 
 (function () {
-    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, $window, videoNotifier) {
+    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, $window) {
         if (!$window.sessionStorage.token) {
+            // Fail out to root without an admin token
             $location.url('/');
         }
 
+        function videoNotifier(type, title, message, onClickEvent) {
+            // Pop-up toasters for featured videos
+            toastr.options = {
+                closeButton: true,
+                positionClass: 'toast-top-right',
+                timeOut: 3000
+            };
+
+            if (onClickEvent) {
+                toastr.options.onclick = onClickEvent;
+            }
+
+            return toastr[type](message, title);
+        }
+
+        function getCategories(callback) {
+            // Get the available categories from the API
+            let options = {
+                method: 'GET',
+                url: 'https://staging.cizo.com/categories',
+                headers: {
+                    authorization: `Bearer ${$window.sessionStorage.token}`
+                }
+            };
+
+            $http(options).then(function successCB(response) {
+                callback(null, response.data);
+            }, function errorCB(error) {
+                callback(error.data);
+            });
+        }
+
         function getFeaturedVideos(callback) {
-            $http({
+            // Get the featured videos from the API
+            let options = {
                 method: 'GET',
                 url: 'https://staging.cizo.com/featured',
                 headers: {
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }
-            }).then(function successCB(response) {
+            };
+
+            $http(options).then(function successCB(response) {
                 callback(null, response.data);
             }, function errorCB(response) {
                 callback(response.data);
             });
         }
 
-        function updateFeaturedOrder($scope, $http, videoID, featuredOrder, callback) {
+        function updateFeaturedOrder(videoID, featuredOrder, callback) {
+            // Update the featured_order of a specific video
             let options = {
                 method: 'PUT',
                 url: `https://staging.cizo.com/featured/${videoID}`,
@@ -31,6 +68,24 @@
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }
             };
+
+            $http(options).then(function successCB(response) {
+                callback(null, response);
+            }, function errorCB(error) {
+                callback(error);
+            });
+        }
+
+        function removeFeatured(videoID, callback) {
+            // Update the featured_order of a specific video
+            let options = {
+                method: 'DELETE',
+                url: `https://staging.cizo.com/featured/${videoID}`,
+                headers: {
+                    authorization: `Bearer ${$window.sessionStorage.token}`
+                }
+            };
+
             $http(options).then(function successCB(response) {
                 callback(null, response.data);
             }, function errorCB(error) {
@@ -38,50 +93,38 @@
             });
         }
 
-        function getCategories(processed) {
-            processed = processed ? processed : false;
-
-            var videoCategories = {
-                data: [{
-                    id: 11,
-                    title: 'Movies'
-                }, {
-                    id: 12,
-                    title: 'TV'
-                }, {
-                    id: 13,
-                    title: 'Games'
-                }, {
-                    id: 14,
-                    title: 'Lifestyle'
-                }]
-            };
-
-            if (processed === true) {
-                var categoryObject = {};
-                for (var c = 0; c < videoCategories.data.length; c++) {
-                    categoryObject[videoCategories.data[c].id] = videoCategories.data[c];
-                }
-                videoCategories = categoryObject;
-            }
-
-            return videoCategories;
-        }
-
-        var init;
-
-        $scope.videoModels = {
-            locked: true,
-            selected: null
-        };
-
-        $scope.featuredVideos = {
-            data: []
-        };
-
         var inputFeaturedVideos = [],
             inputFeaturedOrder = {},
-            videoIndex;
+            init;
+
+        $scope.videoModels = {
+            locked: true
+        };
+
+        $scope.removeFeatured = function (video) {
+            // Remove a featured video from the featured list
+            for (let r in $scope.featuredVideos.data) {
+                if (video.id === $scope.featuredVideos.data[r].id) {
+                    $scope.featuredVideos.data.splice(r, 1);
+                }
+            }
+            removeFeatured(video.id, function (err, res) {
+                if (err) {
+                    videoNotifier('danger', 'Error', 'Unable to remove featured video.', function (clicked) {
+                        console.error(clicked);
+                    });
+                } else {
+                    videoNotifier('success', 'Success', 'The video has been removed from featured carousel.', function (clicked) {
+                        console.log(clicked, res);
+                    });
+                }
+            });
+        };
+
+        $scope.updateFeaturedArray = function ($index) {
+            // Slice the array at the right position
+            $scope.featuredVideos.data.splice($index, 1);
+        };
 
         $scope.updateOrder = function (cancelled) {
             if (cancelled && $scope.videoModels.locked === false) {
@@ -89,14 +132,22 @@
                 $scope.videoModels.locked = true;
                 inputFeaturedVideos = [];
             } else if ($scope.videoModels.locked === false) {
-                videoIndex = 1;
+                let videoIndex = 1,
+                    updateSuccess = true;
 
-                for (let outputVideo of $scope.featuredVideos.data) {
-                    updateFeaturedOrder($scope, $http, outputVideo.id, videoIndex, function (err, result) {
+                for (let o in $scope.featuredVideos.data) {
+                    updateFeaturedOrder($scope.featuredVideos.data[o].id, videoIndex, function (err, result) {
                         if (err) {
-                            console.error(err);
-                        } else if (result) {
-                            console.log(result);
+                            updateSuccess = false;
+                            videoNotifier('danger', 'Error', 'Unable to update featured video order.', function (clicked) {
+                                console.error(err, clicked);
+                            });
+                        } else {
+                            if (parseInt(o) === ($scope.featuredVideos.data.length - 1) && updateSuccess === true) {
+                                videoNotifier('success', 'Success', 'The featured video order has been updated.', function (clicked) {
+                                    console.log(clicked, result);
+                                });
+                            }
                         }
                     });
                     videoIndex++;
@@ -105,7 +156,7 @@
                 $scope.videoModels.locked = true;
                 inputFeaturedVideos = [];
             } else {
-                videoIndex = 1;
+                let videoIndex = 1;
 
                 // Save the initial order
                 for (let inputVideo of $scope.featuredVideos.data) {
@@ -118,238 +169,25 @@
             }
         };
 
-        $scope.updateFeatured = function ($index) {
-            $scope.featuredVideos.data.splice($index, 1);
-        };
-
-        getFeaturedVideos(function gotFeatured(err, videos) {
-            if (err) throw new Error(err);
-
-            $scope.featuredVideos = videos;
-            $scope.search();
-        });
-
-        $scope.videoCategories = getCategories();
-
-        $scope.categoryLookup = getCategories(true);
-
-        $scope.searchKeywords = '';
-
-        $scope.filteredVideos = [];
-
-        $scope.row = '';
-
-        $scope.select = function (page) {
-            var end, start;
-            start = (page - 1) * $scope.numPerPage;
-            end = start + $scope.numPerPage;
-            $scope.currentPageVideos = $scope.filteredVideos.slice(start, end);
-            return $scope.currentPageVideos;
-        };
-
-        $scope.onFilterChange = function () {
-            $scope.select(1);
-            $scope.currentPage = 1;
-            $scope.row = '';
-            return $scope.row;
-        };
-
-        $scope.onNumPerPageChange = function () {
-            $scope.select(1);
-            $scope.currentPage = 1;
-            return $scope.currentPage;
-        };
-
-        $scope.onOrderChange = function () {
-            $scope.select(1);
-            $scope.currentPage = 1;
-            return $scope.currentPage;
-        };
-
-        $scope.search = function () {
-            $scope.filteredVideos = $filter('filter')($scope.featuredVideos.data, $scope.searchKeywords);
-            return $scope.onFilterChange();
-        };
-
-        $scope.order = function (rowName) {
-            if ($scope.row === rowName) {
-                return;
-            }
-            $scope.row = rowName;
-            $scope.filteredVideos = $filter('orderBy')($scope.featuredVideos.data, rowName);
-            $scope.onOrderChange();
-            return;
-        };
-
-        $scope.videoValid = validateVideo;
-
-        $scope.videoClasses = function (video) {
-            if ($scope.videoValid(video)) {
-                if (video.visible) {
-                    return 'btn btn-w-sm btn-gap-v btn-primary';
-                } else {
-                    return 'btn btn-w-sm btn-gap-v btn-dark';
-                }
-            } else {
-                return 'btn btn-w-sm btn-gap-v btn-line-default';
-            }
-        };
-
-        $scope.modifyVisible = function (video) {
-            if (!validateVideo(video)) {
-                videoNotifier.log('This video isn’t ready for adding, click \'Edit\' and upload an image / video', 'Oops!', true);
-            } else if (video.visible) {
-                video.visible = false;
-                videoNotifier.logWarning('Video has been removed from the video feed', 'Video Removed');
-            } else if (!video.visible) {
-                video.visible = true;
-                videoNotifier.logSuccess('Video has been added to the video feed', 'Video Added');
-            } else {
-                console.log('error');
-            }
-        };
-
-        $scope.numPerPageOpt = [3, 5, 10, 20];
-
-        $scope.numPerPage = $scope.numPerPageOpt[2];
-
-        $scope.currentPage = 1;
-
-        $scope.currentPageVideos = [];
-
         init = function init() {
-            $scope.search();
-            return $scope.select($scope.currentPage);
+            getCategories(function gotCategories(err, categories) {
+                if (err) throw new Error(err);
+                $scope.videoCategories = categories.data;
+
+                $scope.categoryLookup = {};
+
+                for (let category of categories.data) {
+                    $scope.categoryLookup[category.id] = category;
+                }
+
+                getFeaturedVideos(function gotFeaturedVideos(err, featuredVids) {
+                    if (err) throw new Error(err);
+
+                    $scope.featuredVideos = featuredVids;
+                });
+            });
         };
 
         init();
-    }).controller('VideoModalCtrl', function VideoModalCtrl($scope, $uibModal, $log) {
-        $scope.animationsEnabled = true;
-
-        $scope.openModal = function () {
-            return openModal($scope, $uibModal, $log);
-        };
-
-        $scope.toggleAnimation = function () {
-            $scope.animationsEnabled = !$scope.animationsEnabled;
-        };
-    }).controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $uibModalInstance, video) {
-        $scope.video = video;
-
-        $scope.videoCategories = getCategories();
-
-        $scope.categoryLookup = getCategories(true);
-
-        $scope.ok = function () {
-            $uibModalInstance.close($scope.video);
-        };
-
-        $scope.cancel = function () {
-            $uibModalInstance.dismiss('cancel');
-        };
-    }).filter('readyNotReady', function readyNotReadyFilter() {
-        return function (video) {
-            var videoValidation = validateVideo(video);
-            if (videoValidation) {
-                return video.visible ? '✓ Online' : 'Ready';
-            } else {
-                return 'Not Ready';
-            }
-        };
-    }).factory('videoNotifier', function videoNotifier() {
-        var logIt;
-
-        toastr.options = {
-            closeButton: true,
-            positionClass: 'toast-top-right',
-            timeOut: 3000
-        };
-
-        logIt = function logIt(message, title, type, onClickEvent) {
-            if (onClickEvent) {
-                toastr.options.onclick = function () {
-                    return console.log('Trigger Modal');
-                };
-            }
-            return toastr[type](message, title);
-        };
-
-        return {
-            log: function log(message, title, onClickEvent) {
-                logIt(message, title, 'info', onClickEvent);
-            },
-            logWarning: function logWarning(message, title, onClickEvent) {
-                logIt(message, title, 'warning', onClickEvent);
-            },
-            logSuccess: function logSuccess(message, title, onClickEvent) {
-                logIt(message, title, 'success', onClickEvent);
-            },
-            logError: function logError(message, title, onClickEvent) {
-                logIt(message, title, 'error', onClickEvent);
-            }
-        };
     });
-
-    function openModal($scope, $uibModal, $log) {
-        var size = 'lg';
-
-        var emptyVideo = {
-            title: 'Add title',
-            description: 'Add a video description',
-            mature_content: false,
-            category_id: 11,
-            visible: false,
-            featured: null,
-            tag_list: 'Add, Movie, Tags',
-            streams: [{
-                link: null,
-                stream_type: 'hls',
-                transcode_status: 'pending'
-            }, {
-                link: null,
-                stream_type: 'mp4',
-                transcode_status: 'pending'
-            }]
-        };
-
-        $scope.video = $scope.video || emptyVideo;
-
-        modalInstance = $uibModal.open({
-            animation: $scope.animationsEnabled,
-            templateUrl: 'videoModal.html',
-            controller: 'VideoModalInstanceCtrl',
-            size: size,
-            resolve: {
-                video: function video() {
-                    return $scope.video || null;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (video) {
-            $scope.video = video;
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    }
-
-    function validateVideo(video) {
-        if (typeof video.hero_images !== 'undefined') {
-            var streamsCount = video.streams.length,
-                validStreams = 0;
-            for (let stream of video.streams) {
-                if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'processing') {
-                    validStreams++;
-                }
-            }
-
-            if (streamsCount === validStreams) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
 })();

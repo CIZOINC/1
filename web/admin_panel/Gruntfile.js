@@ -1,5 +1,6 @@
+'use strict';
+
 (function () {
-    'use strict';
     var LIVERELOAD_PORT, lrSnippet, mountFolder;
     var serveStatic = require('serve-static');
 

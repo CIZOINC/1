@@ -13,21 +13,11 @@ class ApplicationController < ActionController::Base
   def health_check
   	render text: ENV['RAILS_ENV']
   end
-  #
-  def doorkeeper_authorize!(*scopes)
-    update_user_scope
-    super
-  end
-
+  
   private
 
   def as_admin?
     doorkeeper_token.scopes.to_s == 'admin'
-  end
-
-  def update_user_scope
-    user = User.find_by_id(doorkeeper_token.resource_owner_id) if doorkeeper_token
-    user.update_scope(as_admin?) if user
   end
 
   # def last_token(user)

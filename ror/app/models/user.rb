@@ -27,15 +27,7 @@ class User < ActiveRecord::Base
     raw
   end
 
-  def update_scope(as_admin)
-    self.update_column(:logged_in_as_admin, as_admin) if logged_in_as_admin_was_changed?(as_admin)
-  end
-
   protected
-
-  def logged_in_as_admin_was_changed?(as_admin)
-    self.logged_in_as_admin != as_admin
-  end
 
   def destroy_self_tokens
     Doorkeeper::AccessToken.where(resource_owner_id: self.id).destroy_all
@@ -56,7 +48,7 @@ class User < ActiveRecord::Base
 
   def update_tokens
     if tokens = Doorkeeper::AccessToken.where(resource_owner_id: self.id)
-      self.is_admin ? set_scopes!(tokens, 'admin') : set_scopes!(tokens, 'user')
+      set_scopes!(tokens, 'user') if not self.is_admin # downgrade all existing tokens to 'user' scope if a user is no longer an admin
     end
   end
 

@@ -1,4 +1,5 @@
 class V1::CategoriesController < V1::ApiController
+  prepend Doorkeeper::Rails::Helpers
   before_action :set_category, only: [:show, :update, :destroy]
   before_action except: [:index, :show] do
     doorkeeper_authorize! :admin
@@ -8,11 +9,7 @@ class V1::CategoriesController < V1::ApiController
   end
 
   def index
-    unless params[:title].blank?
-      @categories = Category.where(canonical_title: params[:title].to_canonical)
-    else
-      @categories = Category.all
-    end
+    @categories = Category.all
   end
 
   def create

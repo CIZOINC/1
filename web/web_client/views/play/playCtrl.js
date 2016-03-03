@@ -4,7 +4,7 @@ angular
     .controller('PlayCtrl', PlayCtrl);
 
 /* @ngInject */
-function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ, userServ) {
+function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
     "use strict";
 
     if ($rootScope.featuredList && $rootScope.featuredList.length && $rootScope.videosList && $rootScope.videosList.length) {
@@ -33,9 +33,7 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ, userServ) {
 
     function viewSetup() {
         $scope = angular.extend($scope, {
-            categoriesList: $scope.categoriesList || $rootScope.categoriesList,
-            videosList: $scope.videosList || $rootScope.videosList,
-            featuredItem: $rootScope.featuredList ? $rootScope.featuredList[0] : {},
+            featuredItem: ($rootScope.featuredList && $rootScope.featuredList)? $rootScope.featuredList[0] : $scope.featuredList[0],
             videoItem: undefined,
             videoCategoryId: undefined
         });
@@ -44,7 +42,7 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ, userServ) {
 
         if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
             $scope.videoCategoryId = Number($stateParams.categoryId);
-            let filteredVideos = _.filter($rootScope.videosList, videos => videos.category_id === Number($stateParams.categoryId));
+            let filteredVideos = _.filter($scope.videosList, videos => videos.category_id === Number($stateParams.categoryId));
 
             if ($scope.featuredList) {
                 $scope.videosList =  _.unionBy($scope.featuredList, filteredVideos, 'id');
@@ -56,7 +54,7 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ, userServ) {
             if ($scope.featuredList) {
                 $scope.videosList = _.unionBy($scope.featuredList, $rootScope.videosList, 'id');
             } else {
-                $scope.videosList = $rootScope.videosList;
+                $scope.videosList = $scope.videosList;
             }
 
         }

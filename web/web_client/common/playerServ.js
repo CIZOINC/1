@@ -110,8 +110,6 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
                 .then( (response) => {
                     $rootScope.featuredList = scope.featuredList;
                     scope.featuredList = response.data.data;
-                    scope.featuredItem = scope.featuredList[0];
-
                     resolve(scope);
                 });
         });
@@ -146,7 +144,7 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
 
     function updateVideos(scope) {
         return $q( (resolve) => {
-            _.each(scope.videosList, (video) => {
+            let updatedVideos = _.map(scope.videosList, (video) => {
                 let category = _.find(scope.categoriesList, (category) => {
                     return category.id === video.category_id;
                 });
@@ -156,13 +154,12 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
                     video.humanizedDate = video && video.created_at ? createdTimeHumanized(video.created_at): undefined;
                     video.instantPlay = false;
                 }
-                if (scope.userAuthorized) {
+                return video;
                     if (scope.storage.seenItems && scope.storage.seenItems.length) {
                         video.isWatched = _.contains(scope.storage.seenItems, video.id);
                     }
-                }
             });
-            $rootScope.videosList = scope.videosList;
+            scope.videosList = updatedVideos;
             resolve(scope.videosList);
         });
     }

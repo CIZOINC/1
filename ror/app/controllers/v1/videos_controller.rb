@@ -30,8 +30,11 @@ class V1::VideosController < V1::ApiController
     end
 
     unless params[:category].blank?
-      @conditions.push("category_id = (SELECT id FROM categories WHERE title = :category)")
-      @arguments[:category] = params[:category]
+      @conditions.push("category_id = (SELECT id FROM categories WHERE canonical_title = :category)")
+      @arguments[:category] = params[:category].to_canonical
+      puts params[:category].to_canonical
+      puts @arguments
+      puts @conditions
     end
 
     if params[:deleted] == 'true'

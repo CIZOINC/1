@@ -23,7 +23,7 @@ angular
 
 
 /* @ngInject */
-function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ, playerServ) {
+function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ, playerServ, $timeout) {
 
     $scope = angular.extend($scope, {
         title: 'Cizo',
@@ -34,12 +34,15 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
         videosList: [],
         categoriesList: [],
         featuredList: [],
+        userAuthorized: false,
 
         storage: {
             storageSeenKey: 'seen',
+            storageFavoritesKey: 'favorites',
             storageUserToken: 'token',
 
             seenItems: [],
+            favoritesItems: [],
             token: undefined
         }
 
@@ -48,13 +51,37 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
     routerHelper.configureStates(routesList);
 
     $scope.storage.token = storageServ.getItem($scope.storage.storageUserToken);
+
     if ($scope.storage.token && userServ.isUnexpiredToken($scope.storage.token)) {
-        userServ.updateToken($scope.hostName, $scope.storage.token)
-            .then((response) => {
-                storageServ.setItem($scope.storage.storageUserToken, response.data);
-                $scope.storage.token = response.data;
-            });
+
+        $timeout(() => {
+            "use strict";
+            userServ.updateToken($scope.hostName, $scope.storage.token)
+                .then((response) => {
+                    storageServ.setItem($scope.storage.storageUserToken, response.data);
+                    $scope.storage.token = response.data;
+                });
+        }, 30000);
+
     }
 
+    if (!userServ.isUnexpiredToken($scope.storage.token)) {
+        storageServ.deleteItem($scope.storage.storageUserToken);
+        $scope.userAuthorized = false;
+    } else {
+        $scope.userAuthorized = true;
+    }
+
+    // upload storage
+    $scope.storage.seenItems = storageServ.getItem($scope.storage.storageSeenKey);
+    if ($scope.storage.seenItems == null) {
+        $scope.storage.seenItems = [];
+    }
+    $scope.storage.favoritesItems = storageServ.getItem($scope.storage.storageFavoritesKey);
+    if ($scope.storage.favoritesItems == null) {
+        $scope.storage.favoritesItems = [];
+    }
+
+
 }
-AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', 'playerServ'];
+AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', 'playerServ', '$timeout'];

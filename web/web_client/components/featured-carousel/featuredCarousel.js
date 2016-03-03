@@ -48,7 +48,7 @@ function featuredCarousel( _) {
         function movePrev() {
             if (scope.currentStep > 1) {
                 scope.currentStep--;
-                scope.itemsOffset = -1 * contentWidth * scope.currentStep;
+                scope.itemsOffset = -1 * contentWidth * (scope.currentStep - 1) +'px';
             }
         }
     }

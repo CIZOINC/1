@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
 
   def update_tokens
     if tokens = Doorkeeper::AccessToken.where(resource_owner_id: self.id)
-      self.is_admin ? set_scopes!(tokens, 'admin') : set_scopes!(tokens, 'user')
+      set_scopes!(tokens, 'user') if not self.is_admin # downgrade all existing tokens to 'user' scope if a user is no longer an admin
     end
   end
 

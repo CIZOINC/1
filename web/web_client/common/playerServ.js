@@ -5,7 +5,7 @@ angular
     .service('playerServ', playerServ);
 
 
-function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
+function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageServ, userServ, _) {
     "use strict";
 
     return {
@@ -20,7 +20,8 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
         getVideos: getVideos,
         updateVideos: updateVideos,
 
-        getIconName: getIconName
+        getIconName: getIconName,
+        setVideoWatched: setVideoWatched
     };
 
     function getElementFullscreenState() {
@@ -109,8 +110,6 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
                 .then( (response) => {
                     $rootScope.featuredList = scope.featuredList;
                     scope.featuredList = response.data.data;
-                    scope.featuredItem = scope.featuredList[0];
-
                     resolve(scope);
                 });
         });
@@ -145,7 +144,7 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
 
     function updateVideos(scope) {
         return $q( (resolve) => {
-            _.each(scope.videosList, (video) => {
+            let updatedVideos = _.map(scope.videosList, (video) => {
                 let category = _.find(scope.categoriesList, (category) => {
                     return category.id === video.category_id;
                 });
@@ -155,10 +154,30 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
                     video.humanizedDate = video && video.created_at ? createdTimeHumanized(video.created_at): undefined;
                     video.instantPlay = false;
                 }
+
+                if (scope.userAuthorized) {
+                    if (scope.storage.seenItems && scope.storage.seenItems.length) {
+                        video.isWatched = _.some(scope.storage.seenItems, video.id);
+                    }
+
+                    if (scope.storage.favoritesItems && scope.storage.favoritesItems.length) {
+                        video.favorites = _.some(scope.storage.favoritesItems, video.id);
+                    } else {
+                        video.favorites = false;
+                    }
+                }
+                return video;
             });
-            $rootScope.videosList = scope.videosList;
+            scope.videosList = updatedVideos;
             resolve(scope.videosList);
         });
+    }
+
+    function setVideoWatched(storage, hostName, videoId) {
+        storage.seenItems.push(videoId);
+        storage.seenItems = _.uniq(storage.seenItems);
+        storageServ.setItem(storage.storageSeenKey, storage.seenItems);
+        userServ.setVideoSeen(hostName, storage.token.access_token, videoId);
     }
 
     function getIconName(iconId) {
@@ -173,4 +192,4 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
     }
 
 }
-playerServ.$inject = ['$q', '$state', '$rootScope', 'categoriesServ', 'videoServ'];
+playerServ.$inject = ['$q', '$state', '$rootScope', 'categoriesServ', 'videoServ', 'storageServ', 'userServ', 'lodash'];

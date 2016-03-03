@@ -7,7 +7,12 @@
                  ng-click="playFeatured(featured.id)"
                  ng-attr-id="{{'featured-carousel-video-' + featured.id}}"
             >
-                <div class="featured-carousel_content_item_image" style="background-image: url('{{::featured.hero_images.hero_image_link}}')"></div>
+                <div class="featured-carousel_content_item_image" style="background-image: url('{{::featured.hero_images.hero_image_link_thumb_banner}}')"></div>
+                <div class="featured-carousel_content_item_overlay">
+                    <span class="featured-carousel_content_item_overlay_button icon-play"></span>
+                </div>
+
+
 
                 <div class="featured-carousel_content_item_label">Featured</div>
                 <div class="featured-carousel_content_item_intermission hidden-layer">

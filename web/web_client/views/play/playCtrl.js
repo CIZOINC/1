@@ -4,7 +4,7 @@ angular
     .controller('PlayCtrl', PlayCtrl);
 
 /* @ngInject */
-function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ) {
+function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
     "use strict";
 
     if ($rootScope.featuredList && $rootScope.featuredList.length && $rootScope.videosList && $rootScope.videosList.length) {
@@ -14,6 +14,17 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ) {
             .then(playerServ.getCategories)
             .then(playerServ.getVideos)
             .then(playerServ.updateVideos)
+            .then((videos) => {
+                if ($scope.userAuthorized) {
+                    userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
+                        .then((favorites) => {
+                            _.each(videos, (videoItem) => {
+                                let favItem = _.filter(favorites, item => item.id === videoItem.id);
+                                videoItem.favorites = !!favItem.length;
+                            });
+                        });
+                }
+            })
             .then(viewSetup);
     }
 
@@ -22,31 +33,34 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ) {
 
     function viewSetup() {
         $scope = angular.extend($scope, {
-            categoriesList: $scope.categoriesList || $rootScope.categoriesList,
-            videosList: $scope.videosList || $rootScope.videosList,
-            //featuredList: $rootScope.featuredList,
-            featuredItem: $rootScope.featuredList ? $rootScope.featuredList[0] : {},
+            featuredItem: ($rootScope.featuredList && $rootScope.featuredList)? $rootScope.featuredList[0] : $scope.featuredList[0],
             videoItem: undefined,
-            videoCategoryId: undefined
+            videoCategoryId: undefined,
+            categoriesList: $rootScope.categoriesList
         });
 
-
+        if (!$scope.videosList || !$scope.videosList.length) {
+            $scope.videosList = $rootScope.videosList;
+        }
+        if (!$scope.featuredList || !$scope.featuredList.length) {
+            $scope.featuredList = $rootScope.featuredList;
+        }
 
         if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
             $scope.videoCategoryId = Number($stateParams.categoryId);
-            let filteredVideos = _.filter($rootScope.videosList, videos => videos.category_id === Number($stateParams.categoryId));
+            let filteredVideos = _.filter($scope.videosList, videos => videos.category_id === Number($stateParams.categoryId));
 
             if ($scope.featuredList) {
-                $scope.videosList = $scope.featuredList.concat(filteredVideos);
+                $scope.videosList =  _.unionBy($scope.featuredList, filteredVideos, 'id');
             } else {
                 $scope.videosList = filteredVideos;
             }
 
         } else {
             if ($scope.featuredList) {
-                $scope.videosList = $scope.featuredList.concat($rootScope.videosList);
+                $scope.videosList = _.unionBy($scope.featuredList, $rootScope.videosList, 'id');
             } else {
-                $scope.videosList = $rootScope.videosList;
+                $scope.videosList = $scope.videosList;
             }
 
         }
@@ -61,4 +75,4 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ) {
 
 }
 
-PlayCtrl.$inject = ['$scope', '$rootScope', '$stateParams', 'lodash', 'playerServ'];
+PlayCtrl.$inject = ['$scope', '$rootScope', '$stateParams', 'lodash', 'playerServ', 'userServ'];

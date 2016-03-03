@@ -1,6 +1,5 @@
+'use strict';
 (function () {
-    'use strict';
-
     angular.module('app')
         .config(['$routeProvider', function ($routeProvider) {
             var routes, setRoutes;
@@ -50,7 +49,5 @@
                 .otherwise({
                     redirectTo: '/404'
                 });
-
         }]);
-
 })();

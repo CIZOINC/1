@@ -19,7 +19,7 @@
                 <div class="col-sm-3 col-xs-6 filter-result-info">
                     <span>
                         Showing
-                        {{filteredVideos.length}}/{{allVideos.data.length}}
+                        {{filteredVideos.length}}/{{videos.data.length}}
                         entries
                     </span>
                 </div>
@@ -57,103 +57,26 @@
                             Feed Status
                         </div>
                     </th>
+                    <th>
+                        <div class="th">
+                            <a href="#/featured">Featured</a>
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <tr data-ng-repeat="video in currentPageVideos">
                     <td data-ng-controller="VideoModalCtrl">
-                        <script type="text/ng-template" id="videoModal.html">
-                            <div class="modal-header">
-                                <h3>EDIT VIDEO</h3>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div ng-class="video.featured ? 'panel panel-default ui-ribbon-container ui-ribbon-danger' : 'panel panel-default'">
-                                                    <div ng-show="video.featured" class="ui-ribbon-wrapper">
-                                                        <div class="ui-ribbon">
-                                                            Featured
-                                                        </div>
-                                                    </div>
-                                                    <div class="panel-heading">
-                                                        <span class="glyphicon glyphicon-th"></span>
-                                                        Hero Image</div>
-                                                    <div class="panel-body">
-                                                        <img ng-src="{{video.hero_images.hero_image_link_large_banner}}" alt="Description" class="img-responsive"/>
-                                                        <br/>
-                                                        <div class="btn-group btn-group-justified">
-                                                            <input type="file" title="Change Image" data-ui-file-upload="" style="left: -193px; top: 8px;">
-                                                            <input type="file" title="Change Video" data-ui-file-upload="" style="left: -193px; top: 8px;">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <span class="glyphicon glyphicon-th"></span>
-                                                        Video title</div>
-                                                    <div class="panel-body">
-                                                        <span editable-text="video.title">{{video.title}}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <span class="glyphicon glyphicon-th"></span>
-                                                        Video Description</div>
-                                                    <div class="panel-body">
-                                                        <span editable-textarea="video.description" e-rows="3" e-cols="35">{{video.description}}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <span class="glyphicon glyphicon-th"></span>
-                                                        Video Description</div>
-                                                    <div class="panel-body">
-                                                        <span ng-show="video.tag_list.length > 0">Tags -
-                                                            {{video.tag_list}}<br/></span>
-                                                        Date Added -
-                                                        {{video.created_at | date:'medium'}}
-                                                        <br/>Last Edited -
-                                                        {{video.updated_at | date:'medium'}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-primary" ng-click="ok()">OK</button>
-                                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                            </div>
-                        </script>
-
                         <a href ng-click="openModal(video)">Edit</a>
                     </td>
                     <td>
-                        <span editable-text="video.title" e-cols="50">{{video.title}}</span>
+                        <span editable-text="video.title" e-cols="50" onbeforesave="modifyTitle(video, $data)">{{video.title}}</span>
                     </td>
                     <td>
-                        <span editable-textarea="video.description" e-rows="3" e-cols="80">{{video.description}}</span>
+                        <span editable-textarea="video.description" e-rows="3" e-cols="80" onbeforesave="modifyDescription(video, $data)">{{video.description}}</span>
                     </td>
                     <td>
-                        <span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories.data">{{categoryLookup[video.category_id].title}}</span>
+                        <span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories" onbeforesave="modifyCategory(video, $data)">{{categoryLookup[video.category_id].title}}</span>
                     </td>
                     <td>
                         <label class="ui-switch ui-switch-success">
@@ -162,7 +85,13 @@
                         </label>
                     </td>
                     <td>
-                        <button type="button" ng-class="videoClasses(video)" ng-click="modifyVisible(video)" ng-disabled="video.featured">{{video | readyNotReady}}</button>
+                        <button type="button" ng-class="videoClasses(video)" ng-click="modifyVisible(video)">{{video | readyNotReady}}</button>
+                    </td>
+                    <td>
+                        <label ng-show="validateVideo(video) && video.visible" class="ui-switch ui-switch-warning">
+                            <input type="checkbox" ng-model="video.featured" ng-change="featuredVideo(video)" ng-checked="video.featured">
+                            <i></i>
+                        </label>
                     </td>
                 </tr>
             </tbody>

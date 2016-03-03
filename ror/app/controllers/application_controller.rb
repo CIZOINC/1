@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   private
 
   def as_admin?
-    doorkeeper_token.scopes.to_s == 'admin'
+    doorkeeper_token && doorkeeper_token.scopes.to_s == 'admin'
   end
 
   # def last_token(user)

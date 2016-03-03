@@ -1,5 +1,5 @@
+'use strict';
 (function () {
-    'use strict';
     angular.module('app')
         .factory('appConfig', [appConfig]);
 
@@ -45,6 +45,6 @@
             pageTransitionOpts: pageTransitionOpts,
             main: main,
             color: color
-        }
+        };
     }
 })();

@@ -47,14 +47,14 @@ function PlayCtrl($scope, $rootScope, $stateParams, _, playerServ, userServ) {
             let filteredVideos = _.filter($rootScope.videosList, videos => videos.category_id === Number($stateParams.categoryId));
 
             if ($scope.featuredList) {
-                $scope.videosList = $scope.featuredList.concat(filteredVideos);
+                $scope.videosList =  _.unionBy($scope.featuredList, filteredVideos, 'id');
             } else {
                 $scope.videosList = filteredVideos;
             }
 
         } else {
             if ($scope.featuredList) {
-                $scope.videosList = $scope.featuredList.concat($rootScope.videosList);
+                $scope.videosList = _.unionBy($scope.featuredList, $rootScope.videosList, 'id');
             } else {
                 $scope.videosList = $rootScope.videosList;
             }

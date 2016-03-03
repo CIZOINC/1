@@ -5,7 +5,7 @@ angular
     .service('playerServ', playerServ);
 
 
-function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
+function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageServ, userServ) {
     "use strict";
 
     return {
@@ -20,7 +20,8 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
         getVideos: getVideos,
         updateVideos: updateVideos,
 
-        getIconName: getIconName
+        getIconName: getIconName,
+        setVideoWatched: setVideoWatched
     };
 
     function getElementFullscreenState() {
@@ -156,12 +157,21 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
                     video.instantPlay = false;
                 }
                 if (scope.userAuthorized) {
-
+                    if (scope.storage.seenItems && scope.storage.seenItems.length) {
+                        video.isWatched = _.contains(scope.storage.seenItems, video.id);
+                    }
                 }
             });
             $rootScope.videosList = scope.videosList;
             resolve(scope.videosList);
         });
+    }
+
+    function setVideoWatched(storage, hostName, videoId) {
+        storage.seenItems.push(videoId);
+        storage.seenItems = _.uniq(storage.seenItems);
+        storageServ.setItem(storage.storageSeenKey, storage.seenItems);
+        userServ.setVideoSeen(hostName, storage.token.access_token, videoId);
     }
 
     function getIconName(iconId) {
@@ -176,4 +186,4 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ) {
     }
 
 }
-playerServ.$inject = ['$q', '$state', '$rootScope', 'categoriesServ', 'videoServ'];
+playerServ.$inject = ['$q', '$state', '$rootScope', 'categoriesServ', 'videoServ', 'storageServ', 'userServ'];

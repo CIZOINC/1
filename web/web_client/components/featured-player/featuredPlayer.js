@@ -18,7 +18,9 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             featuredList: '=',
             featuredItem: '=',
             categoriesList: '=',
-            hostName: '@'
+            hostName: '@',
+            storage: '=',
+            videos: '='
         }
     };
 
@@ -85,6 +87,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             replayVideo: replayVideo,
             shareVideo: shareVideo,
             setFavorites: setFavorites,
+            setWatched: setWatched,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -100,6 +103,14 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.sliderModel.value = scope.screen.currentTime;
             scope.sliderModel.options.ceil = scope.screen.duration;
             scope.$apply();
+
+
+            if (!scope.video.isWatched) {
+                if (scope.screen.currentTime > scope.screen.duration * 0.75) {
+                    setWatched();
+                }
+            }
+
         });
 
         scope.screenList.bind('ended', () => {
@@ -113,7 +124,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             }
         });
 
-        scope.$watch('video', (oldList, newList) => {
+        scope.$watch('video', () => {
             if (scope.video && scope.video.streams) {
                 scope.sources = scope.video.streams.map((source) => {
                     return {src: $sce.trustAsResourceUrl(source.link), type: `video/${source.stream_type}`}
@@ -354,6 +365,15 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             } else {
 
             }
+        }
+
+        function setWatched() {
+            scope.video.isWatched = true;
+
+            let watchedVideo = _.filter(scope.videos, video => video.id === scope.video.id);
+            watchedVideo.isWatched = true;
+            scope.$apply();
+            playerServ.setVideoWatched(scope.storage, scope.hostName, scope.video.id);
         }
 
         function  showControlsOnMove() {

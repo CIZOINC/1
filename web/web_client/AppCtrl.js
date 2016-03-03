@@ -64,5 +64,12 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
         $scope.userAuthorized = true;
     }
 
+    // upload storage
+    $scope.storage.seenItems = storageServ.getItem($scope.storage.storageSeenKey);
+    if ($scope.storage.seenItems == null) {
+        $scope.storage.seenItems = [];
+    }
+
+
 }
 AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', 'playerServ'];

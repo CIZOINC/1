@@ -38,18 +38,19 @@ function ShareCtrl($scope, $rootScope, $stateParams, _, $state, playerServ) {
 
 
     function shareVideoItem(type) {
+        let fullPath = `${$scope.sharingPath}#/videos/${$scope.video.id}`;
         let socialMap = {
             'facebook': 'https://www.facebook.com/dialog/share?' +
                 `app_id=${$scope.facebookAppIdStage}&display=popup` +
-                `&href=${encodeURIComponent($scope.sharingPath)}` +
-                `&redirect_uri=${encodeURIComponent($scope.sharingPath)}`,
+                `&href=${encodeURIComponent(fullPath)}` +
+                `&redirect_uri=${encodeURIComponent(fullPath)}`,
             'google': 'https://plus.google.com/share?url=',
             'twitter': 'https://twitter.com/home?status=',
             'reddit': 'https://www.reddit.com/submit?url='
         };
 
         if (type !== 'facebook') {
-            let path = `${encodeURIComponent($scope.sharingPath)}#/videos/${$scope.video.id}`;
+            let path = `${encodeURIComponent(fullPath)}`;
             window.location = socialMap[type] + path;
         } else {
             window.location = socialMap[type];

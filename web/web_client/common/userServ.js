@@ -105,6 +105,9 @@ function userServ($http, $q, $log, moment) {
     }
 
     function isUnexpiredToken(token) {
+        if (!token || token === null) {
+            return false;
+        }
         let createdDate = moment(token.created_at);
         let now = moment();
         let expirationDate = createdDate.add(token.expires_in);

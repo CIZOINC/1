@@ -16,6 +16,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'bold-cizo';
+  src: url('./font/CenturyGothicBold.ttf?78360421') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @screen_gradient_start: #0f1012;
 @screen_gradient_finish: #2b3c4f;
 
@@ -65,6 +72,8 @@ body {
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
+
+.icon-favorites-filled:before { content: '\46'; } /* 'F' */
 .icon-google:before { content: '\47'; } /* 'G' */
 .icon-reddit:before { content: '\52'; } /* 'R' */
 .icon-all:before { content: '\61'; } /* 'a' */

@@ -35,10 +35,16 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
         $scope = angular.extend($scope, {
             featuredItem: ($rootScope.featuredList && $rootScope.featuredList)? $rootScope.featuredList[0] : $scope.featuredList[0],
             videoItem: undefined,
-            videoCategoryId: undefined
+            videoCategoryId: undefined,
+            categoriesList: $rootScope.categoriesList
         });
 
-
+        if (!$scope.videosList || !$scope.videosList.length) {
+            $scope.videosList = $rootScope.videosList;
+        }
+        if (!$scope.featuredList || !$scope.featuredList.length) {
+            $scope.featuredList = $rootScope.featuredList;
+        }
 
         if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
             $scope.videoCategoryId = Number($stateParams.categoryId);

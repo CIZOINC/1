@@ -23,7 +23,7 @@ angular
 
 
 /* @ngInject */
-function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ, playerServ) {
+function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ, playerServ, $timeout) {
 
     $scope = angular.extend($scope, {
         title: 'Cizo',
@@ -38,9 +38,11 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
 
         storage: {
             storageSeenKey: 'seen',
+            storageFavoritesKey: 'favorites',
             storageUserToken: 'token',
 
             seenItems: [],
+            favoritesItems: [],
             token: undefined
         }
 
@@ -51,11 +53,16 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
     $scope.storage.token = storageServ.getItem($scope.storage.storageUserToken);
 
     if ($scope.storage.token && userServ.isUnexpiredToken($scope.storage.token)) {
-        userServ.updateToken($scope.hostName, $scope.storage.token)
-            .then((response) => {
-                storageServ.setItem($scope.storage.storageUserToken, response.data);
-                $scope.storage.token = response.data;
-            });
+
+        $timeout(() => {
+            "use strict";
+            userServ.updateToken($scope.hostName, $scope.storage.token)
+                .then((response) => {
+                    storageServ.setItem($scope.storage.storageUserToken, response.data);
+                    $scope.storage.token = response.data;
+                });
+        }, 30000);
+
     }
 
     if (!userServ.isUnexpiredToken($scope.storage.token)) {
@@ -70,7 +77,11 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
     if ($scope.storage.seenItems == null) {
         $scope.storage.seenItems = [];
     }
+    $scope.storage.favoritesItems = storageServ.getItem($scope.storage.storageFavoritesKey);
+    if ($scope.storage.favoritesItems == null) {
+        $scope.storage.favoritesItems = [];
+    }
 
 
 }
-AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', 'playerServ'];
+AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', 'playerServ', '$timeout'];

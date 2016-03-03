@@ -151,7 +151,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         });
 
         scope.$watch('featuredItem', () => {
-            scope.video = scope.featuredItem;
+            if (scope.featuredItem) {
+                scope.video = scope.featuredItem;
+            }
         });
 
 
@@ -368,14 +370,13 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.topElementsRightSide.classList.remove('hidden-layer');
                 scope.buttonLayer.classList.add('player_buttons-layer--hover');
 
+
                 scope.waitingTimer = $timeout(() => {
                     toggleControlsVisibility(true);
                     scope.topElementsRightSide.classList.add('hidden-layer');
                     scope.buttonLayer.classList.remove('player_buttons-layer--hover');
                 }, waitTime);
             }
-
-
         }
 
         function categoryIcon(id) {
@@ -435,17 +436,15 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             $timeout(function () {
                 scope.$broadcast('rzSliderForceRender');
             });
-            if (scope.imageLayer.classList.contains('hidden-layer')) {
-                if (showControls) {
-                    setShowHideControlsState(true);
-                    if (scope.screen.paused) {
-                        setPlayPauseState(false);
-                    } else {
-                        setPlayPauseState(true);
-                    }
+            if (showControls) {
+                setShowHideControlsState(true);
+                if (scope.screen.paused) {
+                    setPlayPauseState(false);
                 } else {
-                    setShowHideControlsState(false);
+                    setPlayPauseState(true);
                 }
+            } else {
+                setShowHideControlsState(false);
             }
         }
 

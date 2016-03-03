@@ -5,7 +5,7 @@ angular
     .service('playerServ', playerServ);
 
 
-function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageServ, userServ) {
+function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageServ, userServ, _) {
     "use strict";
 
     return {
@@ -154,10 +154,19 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
                     video.humanizedDate = video && video.created_at ? createdTimeHumanized(video.created_at): undefined;
                     video.instantPlay = false;
                 }
-                return video;
+
+                if (scope.userAuthorized) {
                     if (scope.storage.seenItems && scope.storage.seenItems.length) {
-                        video.isWatched = _.contains(scope.storage.seenItems, video.id);
+                        video.isWatched = _.some(scope.storage.seenItems, video.id);
                     }
+
+                    if (scope.storage.favoritesItems && scope.storage.favoritesItems.length) {
+                        video.favorites = _.some(scope.storage.favoritesItems, video.id);
+                    } else {
+                        video.favorites = false;
+                    }
+                }
+                return video;
             });
             scope.videosList = updatedVideos;
             resolve(scope.videosList);
@@ -183,4 +192,4 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
     }
 
 }
-playerServ.$inject = ['$q', '$state', '$rootScope', 'categoriesServ', 'videoServ', 'storageServ', 'userServ'];
+playerServ.$inject = ['$q', '$state', '$rootScope', 'categoriesServ', 'videoServ', 'storageServ', 'userServ', 'lodash'];

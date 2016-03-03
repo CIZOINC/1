@@ -4,7 +4,7 @@ angular
     .controller('HomeCtrl', HomeCtrl);
 
 /* @ngInject */
-function HomeCtrl($scope, $rootScope, playerServ, userServ, _) {
+function HomeCtrl($scope, $rootScope, playerServ, userServ, _, storageServ) {
     "use strict";
 
     $scope = angular.extend($scope, {
@@ -17,30 +17,24 @@ function HomeCtrl($scope, $rootScope, playerServ, userServ, _) {
         .then(playerServ.getVideos)
         .then(playerServ.updateVideos)
         .then((videos) => {
-            if ($scope.userAuthorized) {
-                userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
-                    .then((favorites) => {
-                        _.each(videos, (videoItem) => {
-                            let favItem = _.filter(favorites, item => item.id === videoItem.id);
-                            videoItem.favorites = !!favItem.length;
-                        });
-
-                        _.each($scope.featuredList, (videoItem) => {
-                            let favItem = _.filter(favorites, item => item.id === videoItem.id);
-                            videoItem.favorites = !!favItem.length;
-                        });
-
-                        $scope.featuredItem = $scope.featuredList[0];
-                        $rootScope.featuredList = $scope.featuredList;
-                        $rootScope.videosList = videos;
-                    });
-            } else {
-                $rootScope.featuredList = $scope.featuredList;
-                $rootScope.videosList = videos;
-
+            $rootScope.featuredList = $scope.featuredList;
+            $rootScope.videosList = videos;
+            if ($scope.featuredList && $scope.featuredList.length) {
+                $scope.featuredItem = $scope.featuredList[0];
             }
         });
 
+    if ($scope.userAuthorized) {
+        userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
+            .then((favorites) => {
+                let favoritesArray = _.map(favorites, fav => fav.id);
+                let storedArray = storageServ.getItem($scope.storage.storageFavoritesKey);
+
+                let newArray = _.union(favoritesArray, storedArray);
+                storageServ.setItem($scope.storage.storageFavoritesKey, newArray);
+                $scope.storage.favoritesItems = newArray;
+            });
+    }
 
 }
-HomeCtrl.$inject = ['$scope', '$rootScope', 'playerServ', 'userServ', 'lodash'];
+HomeCtrl.$inject = ['$scope', '$rootScope', 'playerServ', 'userServ', 'lodash', 'storageServ'];

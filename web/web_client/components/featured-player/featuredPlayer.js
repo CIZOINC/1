@@ -47,12 +47,12 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
             buttonLayer: angular.element(element[0].querySelectorAll(`.featured-player_buttons-layer`))[0],
             videoLayer: angular.element(element[0].querySelector(`div.video-layer`))[0],
-            nextVideoLayer: angular.element(element[0].querySelector(`.featured-player_buttons-layer_bottom-elements_titles_next`))[0],
             imageLayer: angular.element(element[0].querySelector(`.featured-player_hero-image-layer`))[0],
             imageNextLayer: angular.element(element[0].querySelector(`div.featured-player_hero-image-layer-next`))[0],
             descriptionLayer: angular.element(element[0].querySelector(`div.featured-player_description-layer`))[0],
             playButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_play-button`))[0],
             pauseButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_pause-button`))[0],
+            centerControlGroup: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_group`))[0],
 
             // intermission elements
             prevButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_prev`))[0],
@@ -60,7 +60,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             countDown: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_group_controls_progress`))[0],
             intermissionTitle: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_group_title`))[0],
             intermissionPause: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_group_bottom`))[0],
-
 
             // bottom elements
             bottomElements: angular.element(element[0].querySelector(`.featured-player_buttons-layer_bottom-elements`))[0],
@@ -522,7 +521,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.buttonLayer.classList[_classAdd(!isFullscreen)]('featured-player_buttons-layer--hover');
             scope.expandButton.classList[_classAdd(isFullscreen)]('hidden-layer');
             scope.collapseButton.classList[_classAdd(!isFullscreen)]('hidden-layer');
-            scope.nextVideoLayer.classList[_classAdd(!isFullscreen)]('hidden-layer');
         }
 
         function setIntermissionState(isIntermission) {
@@ -558,6 +556,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.controlsOverlayLayer.classList[_classAdd(isIntermission)]('hidden-layer');
             scope.imageNextLayer.classList[_classAdd(!isIntermission)]('hidden-layer');
             scope.videoLayer.classList[_classAdd(isIntermission)]('hidden-layer');
+            scope.centerControlGroup.classList[_classAdd(isIntermission)]('featured-player_buttons-layer_center-elements_group--intermission');
 
             setPlayPauseState(false);
 

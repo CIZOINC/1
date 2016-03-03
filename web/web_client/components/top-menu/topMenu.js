@@ -35,10 +35,11 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
 
         scope.$watch('categories', (newCategories) => {
             if (newCategories) {
-                scope.categoryList = [{
+                scope.categoryList = newCategories;
+                /*scope.categoryList = [{
                     id: 0,
                     title: 'All'
-                }].concat(newCategories);
+                }].concat(newCategories);*/
             }
         });
 

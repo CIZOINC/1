@@ -1,13 +1,21 @@
 .play-items {
   color: white;
-  margin-left: 100px;
+  width: 100%;
   &_title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    color: #2b3d53;
+    margin-left: 20px;
     &_icon {
       font-size: 45px;
     }
 
     &_name {
-      font-size: 25px;
+      font-size: 35px;
+      font-family: main-cizo;
     }
   }
 
@@ -20,12 +28,23 @@
     overflow-x: hidden;
     flex-flow: row wrap;
 
+
+    &_wrapper {
+      max-width: 1250px;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+    }
+
     &_item {
-      min-width: 275px;
+      width: 275px;
       max-width: 275px;
       height: 210px;
       margin: 5px 15px;
       background-size:  cover;
+      border: solid 1px #1c1f24;
 
       display: flex;
       position: relative;
@@ -34,6 +53,16 @@
       font-family: main-cizo;
       text-transform: uppercase;
       cursor: pointer;
+      color: white;
+
+      &:hover {
+        border: solid 1px #00ffff;
+        color: black;
+      }
+
+      &:hover > .play-items_videos_item_title {
+        background-color: #00ffff;
+      }
 
       &_overlay {
         display: flex;
@@ -56,31 +85,29 @@
           font-size: 65px;
           text-shadow: 3px 5px 0 rgba(0,0,0,.6);
           margin-top: -15px;
+          color: white;
         }
       }
+
       &_label {
         margin: 10px 0;
         padding: 10px;
         background-color: #00ffff;
         width: 50%;
         font-size: 12px;
+        z-index: 100;
       }
 
       &_title {
-        background-color: rgba(0,0,0, .8);
+        background-color: rgba(22, 22, 22, 0.9);
         padding: 15px;
-        color: white;
         text-align: center;
         font-size: 16px;
         font-weight: bolder;
 
         display: flex;
         flex-direction: column;
-
-        &--playing {
-          background-color: #00ffff;
-          color: black;
-        }
+        z-index: 100;
 
         &_date {
           font-size: 12px;
@@ -95,5 +122,23 @@
       }
     }
 
+    &_item-view-all {
+      border: solid 2px #315c73;
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      min-width: 275px;
+      max-width: 275px;
+      height: 210px;
+      margin: 5px 15px;
+      cursor: pointer;
+      &_title {
+        font-family: main-cizo;
+        font-size: 34px;
+        text-transform: uppercase;
+        color: #315c73;
+      }
+    }
   }
 }

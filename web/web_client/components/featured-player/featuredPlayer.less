@@ -14,14 +14,15 @@
   height: 100%;
   transition: height 0.5s ease-out;
   margin-bottom: 30px;
-  background-color: @color-dark;
+  //background-color: @color-dark;
+  background-color: black;
   position: absolute;
   left: 0;
   top: 0;
   overflow: hidden;
 
   &--playing {
-    height: calc(~"100% + 280px");
+    height: calc(~"100% + 210px");
     transition: height 0.5s ease-out;
   }
 
@@ -34,7 +35,7 @@
     height: @video-layer-height;
     position: absolute;
     z-index: 500;
-
+    background-color: black;
     &_video {
       width: 100%;
       height: 100%;
@@ -45,18 +46,17 @@
   &_hero-image-layer {
     bottom: 0;
     width: 100%;
+    height: 100%;
     position: absolute;
     object-fit: cover;
-    z-index: 10;
+    object-position: 50% 50%;
+    z-index: 550;
     overflow: hidden;
     transition: top .6s ease-out;
     &--playing {
       top: 70px;
-      height: calc(~"100% + 200px");
-      transition: top .6s ease-out;
-      //position: absolute;
-      filter: blur(5px);
-      -webkit-filter: blur(5px);
+      height: calc(~"100% + 210px");
+      display: none;
     }
   }
 
@@ -253,7 +253,10 @@
         align-content: stretch;
         justify-content: center;
         flex-direction: column;
-        margin-top: -90px;
+
+        &--intermission {
+          margin-top: -150px;
+        }
 
         &_title {
           display: flex;

@@ -1,7 +1,7 @@
 
 
 <div class="show-player" video-id="{{video.id}}">
-    <top-menu categories="categoriesList" host-name="{{hostName}}"></top-menu>
+
 
     <!-- video layer -->
     <div class="video-layer show-player_video-layer">
@@ -58,7 +58,8 @@
 
 
         <div class="show-player_buttons-layer_top-elements_rightside">
-            <span class="icon-favorites show-player_buttons-layer_top-elements_rightside_buttons"></span>
+            <span class="icon-favorites show-player_buttons-layer_top-elements_rightside_buttons featured-player_buttons-layer_top-elements_rightside_buttons_favorites"
+                    ng-click="toggleFavorites($event)"></span>
             <span class="icon-info show-player_buttons-layer_top-elements_rightside_buttons" ng-click="toggleDescription($event, true)"></span>
             <span class="icon-share show-player_buttons-layer_top-elements_rightside_buttons" ng-click="shareVideo($event)"></span>
         </div>
@@ -130,13 +131,6 @@
                                 {{video.title}}
                             </span>
                 </div>
-            </div>
-
-            <div class="show-player_buttons-layer_bottom-elements_titles_next hidden-layer" ng-show="nextVideo" ng-click="playNextVideo($event)">
-
-                <div class="show-player_buttons-layer_bottom-elements_titles_next_image" style="background-image: url({{nextVideo.hero_images.hero_image_link}})"></div>
-                <div class="show-player_buttons-layer_bottom-elements_titles_next_up-text">up next...</div>
-                <div class="show-player_buttons-layer_bottom-elements_titles_next_up-title">{{nextVideo.title}}</div>
             </div>
         </div>
         <div class="show-player_buttons-layer_bottom-elements_controls">

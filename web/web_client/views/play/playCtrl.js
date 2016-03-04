@@ -49,20 +49,9 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
         if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
             $scope.videoCategoryId = Number($stateParams.categoryId);
             let filteredVideos = _.filter($scope.videosList, videos => videos.category_id === Number($stateParams.categoryId));
-
-            if ($scope.featuredList) {
-                $scope.videosList =  _.unionBy($scope.featuredList, filteredVideos, 'id');
-            } else {
-                $scope.videosList = filteredVideos;
-            }
-
+            $scope.videosList = filteredVideos;
         } else {
-            if ($scope.featuredList) {
-                $scope.videosList = _.unionBy($scope.featuredList, $rootScope.videosList, 'id');
-            } else {
-                $scope.videosList = $scope.videosList;
-            }
-
+            $scope.videosList = $scope.videosList;
         }
 
         if (Number($stateParams.videoId)) {

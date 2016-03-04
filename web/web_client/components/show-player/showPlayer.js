@@ -18,7 +18,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             videosList: '=',
             featuredList: '=',
             featuredItem: '=',
-            hostName: '@'
+            hostName: '@',
+            storage: '='
         }
     };
 
@@ -52,8 +53,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             descriptionLayer: angular.element(element[0].querySelector(`div.show-player_description-layer`))[0],
             playButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_play-button`))[0],
             pauseButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_pause-button`))[0],
-            centerControlGroup: angular.element(element[0].querySelector(`.featured-player_buttons-layer_center-elements_group`))[0],
-            favoritesButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_top-elements_rightside_buttons_favorites`))[0],
+            centerControlGroup: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_group`))[0],
+            favoritesButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_top-elements_rightside_buttons_favorites`))[0],
 
             // intermission elements
             prevButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_prev`))[0],
@@ -87,6 +88,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             replayVideo: replayVideo,
             shareVideo: shareVideo,
             toggleFavorites: toggleFavorites,
+            setWatched: setWatched,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -102,6 +104,12 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             scope.sliderModel.value = scope.screen.currentTime;
             scope.sliderModel.options.ceil = scope.screen.duration;
             scope.$apply();
+
+            if (!scope.video.isWatched) {
+                if (scope.screen.currentTime > scope.screen.duration * 0.75) {
+                    setWatched();
+                }
+            }
         });
 
         scope.screenList.bind('ended', () => {
@@ -356,6 +364,25 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             } else {
                 userServ.setLiked(scope.hostName, scope.token.access_token, scope.video.id);
             }
+        }
+
+        function setWatched() {
+            scope.video.isWatched = true;
+
+            let watchedVideo = _.filter(scope.videos, video => video.id === scope.video.id);
+            watchedVideo.isWatched = true;
+
+
+            let playItem = document.querySelector(`#play-video-item-${scope.video.id}`);
+            if (playItem) {
+                playItem.querySelector('.play-items_videos_item_overlay').classList.add('play-items_videos_item_overlay--watched');
+                playItem.querySelector('.play-items_videos_item_title').classList.add('play-items_videos_item_title--watched');
+                playItem.querySelector('.icon-play').classList.add('hidden-layer');
+                playItem.querySelector('.icon-replay').classList.remove('hidden-layer');
+            }
+
+            scope.$apply();
+            playerServ.setVideoWatched(scope.storage, scope.hostName, scope.video.id);
         }
 
         function  showControlsOnMove() {

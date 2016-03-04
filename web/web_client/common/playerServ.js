@@ -157,11 +157,11 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
 
                 if (scope.userAuthorized) {
                     if (scope.storage.seenItems && scope.storage.seenItems.length) {
-                        video.isWatched = _.some(scope.storage.seenItems, video.id);
+                        video.isWatched = _.some(scope.storage.seenItems, item => item === video.id);
                     }
 
                     if (scope.storage.favoritesItems && scope.storage.favoritesItems.length) {
-                        video.favorites = _.some(scope.storage.favoritesItems, video.id);
+                        video.favorites = _.some(scope.storage.favoritesItems, item => item === video.id);
                     } else {
                         video.favorites = false;
                     }

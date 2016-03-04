@@ -4,7 +4,7 @@ angular
     .directive('playItems', playItems);
 
 /* @ngInject */
-function playItems($state, _, playerServ) {
+function playItems($state, _, playerServ, $timeout) {
     "use strict";
 
     return {
@@ -29,11 +29,18 @@ function playItems($state, _, playerServ) {
 
         scope.$watch('videos', (videos) => {
             scope.videosList = filterVideos(videos, scope.categoryId);
+            $timeout(() => {
+                _.each(scope.videosList, (video) => {
+                    let videoItem = document.querySelector(`#play-video-item-${video.id}`);
+                    if (videoItem && video.isWatched) {
+                        videoItem.querySelector('.play-items_videos_item_overlay').classList.add('play-items_videos_item_overlay--watched');
+                        videoItem.querySelector('.play-items_videos_item_title').classList.add('play-items_videos_item_title--watched');
+                        videoItem.querySelector('.icon-play').classList.add('hidden-layer');
+                        videoItem.querySelector('.icon-replay').classList.remove('hidden-layer');
+                    }
+                });
+            });
         });
-
-        /*scope.$watch('categories', (categories) => {
-            scope.title = getCategoryName(categories, scope.categoryId);
-        });*/
 
         scope.$watch('categoryId', () => {
             scope.iconName =  playerServ.getIconName(scope.categoryId);
@@ -69,4 +76,4 @@ function playItems($state, _, playerServ) {
         }
     }
 };
-playItems.$inject = ['$state', 'lodash', 'playerServ'];
+playItems.$inject = ['$state', 'lodash', 'playerServ', '$timeout'];

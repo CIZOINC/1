@@ -381,6 +381,16 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
             let watchedVideo = _.filter(scope.videos, video => video.id === scope.video.id);
             watchedVideo.isWatched = true;
+
+
+            let categoryItem = document.querySelector(`#category-play-item-${scope.video.id}`);
+            if (categoryItem) {
+                categoryItem.querySelector('.category-items_videos_item_overlay').classList.add('category-items_videos_item_overlay--watched');
+                categoryItem.querySelector('.category-items_videos_item_title').classList.add('category-items_videos_item_title--watched');
+                categoryItem.querySelector('.icon-play').classList.add('hidden-layer');
+                categoryItem.querySelector('.icon-replay').classList.remove('hidden-layer');
+            }
+
             scope.$apply();
             playerServ.setVideoWatched(scope.storage, scope.hostName, scope.video.id);
         }

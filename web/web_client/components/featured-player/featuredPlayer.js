@@ -370,9 +370,9 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             setFavoritesState(scope.video.favorites);
 
             if (!scope.video.favorites) {
-                userServ.deleteLiked(scope.hostName, scope.token.access_token, scope.video.id);
+                userServ.deleteLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
             } else {
-                userServ.setLiked(scope.hostName, scope.token.access_token, scope.video.id);
+                userServ.setLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
             }
         }
 

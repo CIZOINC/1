@@ -1,5 +1,5 @@
-(function () {
-    'use strict';
+'use strict';
 
-    angular.module('app.videos', ['ngFileUpload']);
+(function () {
+    angular.module('app.videos', ['ngFileUpload', 'ngTagsInput']);
 })();

@@ -36,7 +36,6 @@
                 url: 'https://staging.cizo.com/oauth/token',
                 data: authBody
             }).then(function successCB(response) {
-                console.log(response.data);
                 $window.sessionStorage.token = response.data.access_token;
                 callback(null, response.data);
             }, function errorCB(response) {
@@ -53,7 +52,6 @@
                         $scope.invalidLogin = true;
                         throw new Error(err);
                     } else {
-                        console.log(res);
                         $location.url('/dashboard');
                     }
                 });

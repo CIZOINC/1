@@ -6,7 +6,7 @@
             var streamsCount = video.streams.length,
                 validStreams = 0;
             for (let stream of video.streams) {
-                if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'processing') {
+                if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'progressing') {
                     validStreams++;
                 }
             }
@@ -21,51 +21,8 @@
         }
     }
 
-    function openModal($scope, $uibModal, $log) {
-        var size = 'lg';
-
-        var emptyVideo = {
-            title: 'Add title',
-            description: 'Add a video description',
-            mature_content: false,
-            category_id: 11,
-            visible: false,
-            featured: null,
-            tag_list: 'Add, Movie, Tags',
-            streams: [{
-                link: null,
-                stream_type: 'hls',
-                transcode_status: 'pending'
-            }, {
-                link: null,
-                stream_type: 'mp4',
-                transcode_status: 'pending'
-            }]
-        };
-
-        $scope.video = $scope.video || emptyVideo;
-
-        var modalInstance = $uibModal.open({
-            animation: $scope.animationsEnabled,
-            templateUrl: './app/videos/addvideo.html',
-            controller: 'VideoModalInstanceCtrl',
-            size: size,
-            resolve: {
-                video: function video() {
-                    return $scope.video || null;
-                }
-            }
-        });
-
-        modalInstance.result.then(function (video) {
-            $scope.video = video;
-        }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    }
-
-    angular
-        .module('app.videos').controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, $location, $window, Upload) {
+    angular.module('app.videos')
+        .controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, $location, $window, $uibModal) {
             if (!$window.sessionStorage.token) {
                 // Fail out to root without an admin token
                 $location.url('/');
@@ -122,7 +79,187 @@
                 });
             }
 
-            let modifyVideo = {
+            function createVideo(inputValues, callback) {
+                if (inputValues) {
+                    let options = {
+                        method: 'POST',
+                        url: 'https://staging.cizo.com/videos',
+                        data: inputValues,
+                        headers: {
+                            authorization: `Bearer ${$window.sessionStorage.token}`
+                        }
+                    };
+
+                    console.log(options);
+
+                    $http(options).then(function successCB(response) {
+                        callback(null, response.data);
+                    }, function errorCB(error) {
+                        callback(error);
+                    });
+                }
+            }
+
+            function updateVideo(videoObject, callback) {
+                if ($window.sessionStorage.token) {
+                    let videoUpdateBody = {
+                            category_id: videoObject.category_id,
+                            title: videoObject.title,
+                            description: videoObject.description,
+                            mature_content: videoObject.mature_content,
+                            tag_list: videoObject.tag_list
+                        },
+                        options = {
+                            method: 'PUT',
+                            url: `https://staging.cizo.com/videos/${videoObject.id}`,
+                            data: videoUpdateBody,
+                            headers: {
+                                authorization: `Bearer ${$window.sessionStorage.token}`
+                            }
+                        };
+
+                    $http(options).then(function successCB(response) {
+                        callback(null, response.data);
+                    }, function errorCB(error) {
+                        callback(error);
+                    });
+                } else {
+                    throw new Error('No Admin Token');
+                }
+            }
+
+            function deleteVideo(videoId, callback) {
+                let options = {
+                    method: 'DELETE',
+                    url: `https://staging.cizo.com/videos/${videoId}`,
+                    headers: {
+                        authorization: `Bearer ${$window.sessionStorage.token}`
+                    }
+                };
+
+                $http(options).then(function successCB(response) {
+                    callback(null, response.data);
+                }, function errorCB(error) {
+                    callback(error);
+                });
+            }
+
+            function openModal(video, $scope, $uibModal) {
+                let emptyVideo = {
+                    title: 'Add title',
+                    description: 'Add a video description',
+                    mature_content: false,
+                    visible: false,
+                    featured: false,
+                    tag_list: 'Add Tags'
+                };
+
+                if ($scope.videoCategories && $scope.videoCategories[0] && $scope.videoCategories[0].id) {
+                    emptyVideo.category_id = $scope.videoCategories[0].id;
+                } else {
+                    emptyVideo.category_id = 11;
+                }
+
+                let updateVideoList = function () {
+                    return getVideos(function gotVideos(err, videos) {
+                        if (err) throw new Error(err);
+
+                        $scope.videos = videos;
+                        $scope.search();
+                        if ($location.search().add_video) {
+                            openModal($scope, $uibModal);
+                        }
+                        return $scope.select($scope.currentPage);
+                    });
+                };
+
+                let deleteVideoCB = function (resultVideo) {
+                        return deleteVideo(resultVideo.id, function (err) {
+                            if (err) {
+                                console.error(err);
+                                updateVideoList();
+                            } else {
+                                console.log(`Deleted ${resultVideo.id}`);
+                                updateVideoList();
+                            }
+                        });
+                    },
+                    updateVideoCB = function (resultVideo) {
+                        return updateVideo(resultVideo, function (err, res) {
+                            if (err) {
+                                console.error(err);
+                                updateVideoList();
+                            } else {
+                                console.log(res);
+                                updateVideoList();
+                            }
+                        });
+                    };
+
+                if (!video) {
+                    createVideo(emptyVideo, function (err, res) {
+                        if (err) {
+                            throw err;
+                        } else {
+                            console.log(`Created ${res.id}`);
+
+                            $scope.video = res;
+
+                            let modalInstance = $uibModal.open({
+                                animation: true,
+                                templateUrl: './app/videos/addvideo.html',
+                                controller: 'VideoModalInstanceCtrl',
+                                size: 'lg',
+                                resolve: {
+                                    video: function video() {
+                                        return $scope.video;
+                                    }
+                                }
+                            });
+
+                            modalInstance.result.then(function (resultVideo) {
+                                if (resultVideo.category_id === emptyVideo.category_id && resultVideo.description === emptyVideo.description && resultVideo.title === emptyVideo.title && resultVideo.tag_list === emptyVideo.tag_list) {
+                                    deleteVideoCB(resultVideo);
+                                } else {
+                                    updateVideoCB(resultVideo);
+                                }
+                            }, function (result) {
+                                if (($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list) || result === 'delete') {
+                                    deleteVideoCB($scope.video);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    $scope.video = video;
+
+                    let modalInstance = $uibModal.open({
+                        animation: true,
+                        templateUrl: './app/videos/addvideo.html',
+                        controller: 'VideoModalInstanceCtrl',
+                        size: 'lg',
+                        resolve: {
+                            video: function video() {
+                                return $scope.video;
+                            }
+                        }
+                    });
+
+                    modalInstance.result.then(function (resultVideo) {
+                        if (resultVideo.category_id === emptyVideo.category_id && resultVideo.description === emptyVideo.description && resultVideo.title === emptyVideo.title && resultVideo.tag_list === emptyVideo.tag_list) {
+                            deleteVideoCB(resultVideo);
+                        } else {
+                            updateVideoCB(resultVideo);
+                        }
+                    }, function (result) {
+                        if ($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list || result === 'delete') {
+                            deleteVideoCB($scope.video);
+                        }
+                    });
+                }
+            }
+
+            let modifyVideoProperty = {
                 flagMature: function (videoID, maturedFlag, callback) {
                     if ($window.sessionStorage.token) {
                         let options = {
@@ -343,7 +480,7 @@
             $scope.validateVideo = validateVideo;
 
             $scope.featuredVideo = function (video) {
-                modifyVideo.flagFeatured(video.id, video.featured, function (err, res) {
+                modifyVideoProperty.flagFeatured(video.id, video.featured, function (err, res) {
                     let responseType = {
                         errorText: null,
                         successText: null
@@ -370,7 +507,7 @@
             };
 
             $scope.matureContent = function (video) {
-                modifyVideo.flagMature(video.id, video.mature_content, function (err, res) {
+                modifyVideoProperty.flagMature(video.id, video.mature_content, function (err, res) {
                     if (err) {
                         console.error(err);
                     } else if (res) {
@@ -402,7 +539,7 @@
                     video.visible = false;
                     if (video.featured) {
                         video.featured = false;
-                        modifyVideo.flagFeatured(video.id, video.featured, function (err, res) {
+                        modifyVideoProperty.flagFeatured(video.id, video.featured, function (err, res) {
                             let responseType = {
                                 errorText: null,
                                 successText: null
@@ -424,7 +561,7 @@
                                 videoNotifier('success', 'Success', `Successfully ${responseType.successText} featured carousel.`, function (clicked) {
                                     console.log(clicked, res);
                                 });
-                                modifyVideo.flagVisible(video.id, video.visible, function (err, res) {
+                                modifyVideoProperty.flagVisible(video.id, video.visible, function (err, res) {
                                     if (err) {
                                         videoNotifier('danger', 'Error', 'Unable to remove the video from the feed.', function (clicked) {
                                             console.error(clicked);
@@ -438,7 +575,7 @@
                             }
                         });
                     } else {
-                        modifyVideo.flagVisible(video.id, video.visible, function (err, res) {
+                        modifyVideoProperty.flagVisible(video.id, video.visible, function (err, res) {
                             if (err) {
                                 console.error(err);
                             } else {
@@ -450,7 +587,7 @@
                     }
                 } else if (!video.visible) {
                     video.visible = true;
-                    modifyVideo.flagVisible(video.id, video.visible, function (err, res) {
+                    modifyVideoProperty.flagVisible(video.id, video.visible, function (err, res) {
                         if (err) {
                             console.error(err);
                         } else {
@@ -466,7 +603,7 @@
 
             $scope.modifyDescription = function (video, description) {
                 if (description) {
-                    modifyVideo.editDescription(video.id, description, function (err, res) {
+                    modifyVideoProperty.editDescription(video.id, description, function (err, res) {
                         if (err) {
                             videoNotifier('danger', 'Error', 'Unable to modify the video\'s description due to a server error.', function (clicked) {
                                 console.error(clicked);
@@ -484,7 +621,7 @@
 
             $scope.modifyTitle = function (video, title) {
                 if (title) {
-                    modifyVideo.editTitle(video.id, title, function (err, res) {
+                    modifyVideoProperty.editTitle(video.id, title, function (err, res) {
                         if (err) {
                             videoNotifier('danger', 'Error', 'Unable to modify the video\'s title due to a server error.', function (clicked) {
                                 console.error(clicked);
@@ -502,7 +639,7 @@
 
             $scope.modifyCategory = function (video, category) {
                 if (category) {
-                    modifyVideo.editCategory(video.id, category, function (err, res) {
+                    modifyVideoProperty.editCategory(video.id, category, function (err, res) {
                         if (err) {
                             videoNotifier('danger', 'Error', 'Unable to modify the video\'s category due to a server error.', function (clicked) {
                                 console.error(clicked);
@@ -526,6 +663,16 @@
 
             $scope.currentPageVideos = [];
 
+            $scope.animationsEnabled = true;
+
+            $scope.openModal = function (video) {
+                return openModal(video, $scope, $uibModal);
+            };
+
+            $scope.toggleAnimation = function () {
+                $scope.animationsEnabled = !$scope.animationsEnabled;
+            };
+
             init = function init() {
                 getCategories(function gotCategories(err, categories) {
                     if (err) throw new Error(err);
@@ -536,32 +683,199 @@
                     for (let category of categories.data) {
                         $scope.categoryLookup[category.id] = category;
                     }
-                    console.log($scope.videoCategories);
+
                     getVideos(function gotVideos(err, videos) {
                         if (err) throw new Error(err);
 
                         $scope.videos = videos;
                         $scope.search();
-                        return $scope.select($scope.currentPage);
+                        if ($location.search().add_video) {
+                            openModal(null, $scope, $uibModal);
+                            return $scope.select($scope.currentPage);
+                        } else {
+                            return $scope.select($scope.currentPage);
+                        }
                     });
                 });
             };
 
             init();
         })
-        .controller('VideoModalCtrl', function VideoModalCtrl($scope, $uibModal, $log) {
-            $scope.animationsEnabled = true;
-
-            $scope.openModal = function () {
-                return openModal($scope, $uibModal, $log);
-            };
-
-            $scope.toggleAnimation = function () {
-                $scope.animationsEnabled = !$scope.animationsEnabled;
-            };
-        })
-        .controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $uibModalInstance, video) {
+        .controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $window, $http, $filter, $uibModalInstance, Upload, $timeout, video) {
             $scope.video = video;
+            $scope.file = {};
+
+            $scope.log = '';
+
+            Upload.defaults.blobUrlsMaxMemory = 805306368;
+
+            function generateSafeFilename(fileName) {
+                return `${Math.random().toString(36).substring(7)}.${fileName.split('.').pop()}`;
+            }
+
+            function getUploadTicket(videoId, fileName, callback) {
+                let safeFileName = generateSafeFilename(fileName);
+
+                let options = {
+                    method: 'GET',
+                    url: `https://staging.cizo.com/videos/${videoId}/upload_ticket`,
+                    headers: {
+                        authorization: `Bearer ${$window.sessionStorage.token}`
+                    },
+                    params: {
+                        filename: safeFileName
+                    }
+                };
+
+                console.log(options);
+
+                $http(options).then(function successCB(response) {
+                    callback(null, response.data);
+                }, function errorCB(error) {
+                    callback(error);
+                });
+            }
+
+            function triggerStreamTranscode(videoId, keyName, callback) {
+                let options = {
+                    method: 'POST',
+                    url: `https://staging.cizo.com/videos/${videoId}/streams`,
+                    headers: {
+                        authorization: `Bearer ${$window.sessionStorage.token}`
+                    },
+                    params: {
+                        key: keyName
+                    }
+                };
+
+                $http(options).then(function successCB(response) {
+                    callback(null, response.data);
+                }, function errorCB(error) {
+                    callback(error);
+                });
+            }
+
+            function getCategories(callback) {
+                // Get the available categories from the API
+                let options = {
+                    method: 'GET',
+                    url: 'https://staging.cizo.com/categories',
+                    headers: {
+                        authorization: `Bearer ${$window.sessionStorage.token}`
+                    }
+                };
+
+                $http(options).then(function successCB(response) {
+                    callback(null, response.data);
+                }, function errorCB(error) {
+                    callback(error);
+                });
+            }
+
+            getCategories(function (err, res) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log(res);
+                    $scope.videoCategories = res.data;
+
+                    $scope.categoryLookup = {};
+
+                    for (let category of res.data) {
+                        $scope.categoryLookup[category.id] = category;
+                    }
+                }
+            });
+
+            $scope.uploadFile = function (file) {
+                let fileType = file.type.split('/')[0].toLowerCase();
+
+                if (fileType === 'image') {
+                    // Upload hero image
+                    Upload.upload({
+                        url: `https://staging.cizo.com/videos/${$scope.video.id}/hero_image`,
+                        headers: {
+                            authorization: `Bearer ${$window.sessionStorage.token}`
+                        },
+                        data: {
+                            file: file
+                        }
+                    }).then(function (resp) {
+                        $timeout(function () {
+                            $scope.log = `file: ${resp.config.data.file.name}, Response: ${JSON.stringify(resp.data)}
+                            ${$scope.log}`;
+                        });
+                    }, null, function (evt) {
+                        let progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                        console.log(progressPercentage);
+                        if (progressPercentage < 100) {
+                            $scope.progress = progressPercentage;
+                        } else {
+                            $scope.progress = null;
+                        }
+                    });
+                } else if (fileType === 'video') {
+                    // Upload video
+                    getUploadTicket(video.id, file.name, function (err, res) {
+                        if (err) {
+                            console.error(err);
+                        } else {
+                            let options = {
+                                url: res.url,
+                                data: {
+                                    key: res.key,
+                                    'x-amz-date': res['x-amz-date'],
+                                    Expires: res.Expires,
+                                    'x-amz-credential': res['x-amz-credential'],
+                                    'x-amz-algorithm': res['x-amz-algorithm'],
+                                    policy: res.policy,
+                                    'x-amz-security-token': res['x-amz-security-token'],
+                                    'x-amz-signature': res['x-amz-signature'],
+                                    file: file
+                                }
+                            };
+
+                            Upload.upload(options).then(function (resp) {
+                                console.log(resp);
+                                $timeout(function () {
+                                    $scope.log = `file: ${resp.config.data.file.name}, Response: ${JSON.stringify(resp.data)}
+                                    ${$scope.log}`;
+                                    triggerStreamTranscode($scope.video.id, res.key, function (err, res) {
+                                        if (err) {
+                                            console.error(err);
+                                        } else {
+                                            console.log(res);
+                                        }
+                                    });
+                                });
+                            }, null, function (evt) {
+                                let progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                                console.log(progressPercentage);
+                                if (progressPercentage < 100) {
+                                    $scope.progress = progressPercentage;
+                                } else {
+                                    $scope.progress = null;
+                                }
+                            });
+                        }
+                    });
+                }
+            };
+
+            $scope.tags = $scope.video.tag_list.split(/,\s?/);
+
+            $scope.tagAdded = function (tags) {
+                let tag_list = '';
+                for (let tag in tags) {
+                    console.log(tags.length, tag, tags[tag]);
+                    if (parseInt(tag) === tags.length - 1) {
+                        tag_list += tags[tag].text;
+                    } else {
+                        tag_list += `${tags[tag].text}, `;
+                    }
+                }
+                video.tag_list = tag_list;
+            };
 
             $scope.ok = function () {
                 $uibModalInstance.close($scope.video);
@@ -569,6 +883,10 @@
 
             $scope.cancel = function () {
                 $uibModalInstance.dismiss('cancel');
+            };
+
+            $scope.deleteCancel = function (result) {
+                $uibModalInstance.dismiss(result);
             };
         })
         .filter('readyNotReady', function readyNotReadyFilter() {

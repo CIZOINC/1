@@ -1,11 +1,14 @@
+'use strict';
+
 (function () {
-    'use strict';
-
     angular.module('app')
-        .controller('DashboardCtrl', ['$scope', DashboardCtrl])
+        .controller('DashboardCtrl', ['$scope', '$location', '$window', DashboardCtrl]);
 
-    function DashboardCtrl($scope) {
-
+    function DashboardCtrl($scope, $location, $window) {
+        if (!$window.sessionStorage.token) {
+            // Fail out to root without an admin token
+            $location.url('/');
+        }
         $scope.line2 = {};
         $scope.radar1 = {};
 
@@ -21,11 +24,11 @@
                 feature: {
                     restore: {
                         show: true,
-                        title: "restore"
+                        title: 'restore'
                     },
                     saveAsImage: {
                         show: true,
-                        title: "save as image"
+                        title: 'save as image'
                     }
                 }
             },
@@ -82,11 +85,11 @@
                 feature: {
                     restore: {
                         show: true,
-                        title: "restore"
+                        title: 'restore'
                     },
                     saveAsImage: {
                         show: true,
-                        title: "save as image"
+                        title: 'save as image'
                     }
                 }
             },
@@ -124,8 +127,5 @@
                 }]
             }]
         };
-
     }
-
-
 })();

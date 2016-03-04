@@ -6,7 +6,7 @@
             var streamsCount = video.streams.length,
                 validStreams = 0;
             for (let stream of video.streams) {
-                if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'processing') {
+                if (stream.transcode_status !== 'pending' && stream.transcode_status !== 'progressing') {
                     validStreams++;
                 }
             }
@@ -22,7 +22,7 @@
     }
 
     angular.module('app.videos')
-        .controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, $location, $window, $uibModal, Upload) {
+        .controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, $location, $window, $uibModal) {
             if (!$window.sessionStorage.token) {
                 // Fail out to root without an admin token
                 $location.url('/');
@@ -146,24 +146,53 @@
 
             function openModal(video, $scope, $uibModal) {
                 let emptyVideo = {
-                        title: 'Add title',
-                        description: 'Add a video description',
-                        mature_content: false,
-                        category_id: $scope.videoCategories[0].id || 11,
-                        visible: false,
-                        featured: false,
-                        tag_list: 'Add Tags'
-                    },
-                    updateVideoList = function () {
-                        return getVideos(function gotVideos(err, videos) {
-                            if (err) throw new Error(err);
+                    title: 'Add title',
+                    description: 'Add a video description',
+                    mature_content: false,
+                    visible: false,
+                    featured: false,
+                    tag_list: 'Add Tags'
+                };
 
-                            $scope.videos = videos;
-                            $scope.search();
-                            if ($location.search().add_video) {
-                                openModal($scope, $uibModal);
+                if ($scope.videoCategories && $scope.videoCategories[0] && $scope.videoCategories[0].id) {
+                    emptyVideo.category_id = $scope.videoCategories[0].id;
+                } else {
+                    emptyVideo.category_id = 11;
+                }
+
+                let updateVideoList = function () {
+                    return getVideos(function gotVideos(err, videos) {
+                        if (err) throw new Error(err);
+
+                        $scope.videos = videos;
+                        $scope.search();
+                        if ($location.search().add_video) {
+                            openModal($scope, $uibModal);
+                        }
+                        return $scope.select($scope.currentPage);
+                    });
+                };
+
+                let deleteVideoCB = function (resultVideo) {
+                        return deleteVideo(resultVideo.id, function (err) {
+                            if (err) {
+                                console.error(err);
+                                updateVideoList();
+                            } else {
+                                console.log(`Deleted ${resultVideo.id}`);
+                                updateVideoList();
                             }
-                            return $scope.select($scope.currentPage);
+                        });
+                    },
+                    updateVideoCB = function (resultVideo) {
+                        return updateVideo(resultVideo, function (err, res) {
+                            if (err) {
+                                console.error(err);
+                                updateVideoList();
+                            } else {
+                                console.log(res);
+                                updateVideoList();
+                            }
                         });
                     };
 
@@ -190,37 +219,13 @@
 
                             modalInstance.result.then(function (resultVideo) {
                                 if (resultVideo.category_id === emptyVideo.category_id && resultVideo.description === emptyVideo.description && resultVideo.title === emptyVideo.title && resultVideo.tag_list === emptyVideo.tag_list) {
-                                    return deleteVideo(resultVideo.id, function (err) {
-                                        if (err) {
-                                            console.error(err);
-                                            updateVideoList();
-                                        } else {
-                                            console.log(`Deleted ${resultVideo.id}`);
-                                            updateVideoList();
-                                        }
-                                    });
+                                    deleteVideoCB(resultVideo);
                                 } else {
-                                    return updateVideo(resultVideo, function (err, res) {
-                                        if (err) {
-                                            console.error(err);
-                                            updateVideoList();
-                                        } else {
-                                            console.log(res);
-                                            updateVideoList();
-                                        }
-                                    });
+                                    updateVideoCB(resultVideo);
                                 }
-                            }, function () {
-                                if ($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list) {
-                                    return deleteVideo($scope.video.id, function (err) {
-                                        if (err) {
-                                            console.error(err);
-                                            updateVideoList();
-                                        } else {
-                                            console.log(`Deleted ${$scope.video.id}`);
-                                            updateVideoList();
-                                        }
-                                    });
+                            }, function (result) {
+                                if (($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list) || result === 'delete') {
+                                    deleteVideoCB($scope.video);
                                 }
                             });
                         }
@@ -242,37 +247,13 @@
 
                     modalInstance.result.then(function (resultVideo) {
                         if (resultVideo.category_id === emptyVideo.category_id && resultVideo.description === emptyVideo.description && resultVideo.title === emptyVideo.title && resultVideo.tag_list === emptyVideo.tag_list) {
-                            return deleteVideo(resultVideo.id, function (err) {
-                                if (err) {
-                                    console.error(err);
-                                    updateVideoList();
-                                } else {
-                                    console.log(`Deleted ${resultVideo.id}`);
-                                    updateVideoList();
-                                }
-                            });
+                            deleteVideoCB(resultVideo);
                         } else {
-                            return updateVideo(resultVideo, function (err, res) {
-                                if (err) {
-                                    console.error(err);
-                                    updateVideoList();
-                                } else {
-                                    console.log(res);
-                                    updateVideoList();
-                                }
-                            });
+                            updateVideoCB(resultVideo);
                         }
-                    }, function () {
-                        if ($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list) {
-                            return deleteVideo($scope.video.id, function (err) {
-                                if (err) {
-                                    console.error(err);
-                                    updateVideoList();
-                                } else {
-                                    console.log(`Deleted ${$scope.video.id}`);
-                                    updateVideoList();
-                                }
-                            });
+                    }, function (result) {
+                        if ($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list || result === 'delete') {
+                            deleteVideoCB($scope.video);
                         }
                     });
                 }
@@ -720,7 +701,7 @@
 
             init();
         })
-        .controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $window, $http, $uibModalInstance, Upload, $timeout, video) {
+        .controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $window, $http, $filter, $uibModalInstance, Upload, $timeout, video) {
             $scope.video = video;
             $scope.file = {};
 
@@ -755,6 +736,57 @@
                 });
             }
 
+            function triggerStreamTranscode(videoId, keyName, callback) {
+                let options = {
+                    method: 'POST',
+                    url: `https://staging.cizo.com/videos/${videoId}/streams`,
+                    headers: {
+                        authorization: `Bearer ${$window.sessionStorage.token}`
+                    },
+                    params: {
+                        key: keyName
+                    }
+                };
+
+                $http(options).then(function successCB(response) {
+                    callback(null, response.data);
+                }, function errorCB(error) {
+                    callback(error);
+                });
+            }
+
+            function getCategories(callback) {
+                // Get the available categories from the API
+                let options = {
+                    method: 'GET',
+                    url: 'https://staging.cizo.com/categories',
+                    headers: {
+                        authorization: `Bearer ${$window.sessionStorage.token}`
+                    }
+                };
+
+                $http(options).then(function successCB(response) {
+                    callback(null, response.data);
+                }, function errorCB(error) {
+                    callback(error);
+                });
+            }
+
+            getCategories(function (err, res) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log(res);
+                    $scope.videoCategories = res.data;
+
+                    $scope.categoryLookup = {};
+
+                    for (let category of res.data) {
+                        $scope.categoryLookup[category.id] = category;
+                    }
+                }
+            });
+
             $scope.uploadFile = function (file) {
                 let fileType = file.type.split('/')[0].toLowerCase();
 
@@ -775,8 +807,12 @@
                         });
                     }, null, function (evt) {
                         let progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                        $scope.log = `progress: ${progressPercentage}% ${evt.config.data.file.name}
-                        ${$scope.log}`;
+                        console.log(progressPercentage);
+                        if (progressPercentage < 100) {
+                            $scope.progress = progressPercentage;
+                        } else {
+                            $scope.progress = null;
+                        }
                     });
                 } else if (fileType === 'video') {
                     // Upload video
@@ -800,14 +836,26 @@
                             };
 
                             Upload.upload(options).then(function (resp) {
+                                console.log(resp);
                                 $timeout(function () {
                                     $scope.log = `file: ${resp.config.data.file.name}, Response: ${JSON.stringify(resp.data)}
                                     ${$scope.log}`;
+                                    triggerStreamTranscode($scope.video.id, res.key, function (err, res) {
+                                        if (err) {
+                                            console.error(err);
+                                        } else {
+                                            console.log(res);
+                                        }
+                                    });
                                 });
                             }, null, function (evt) {
                                 let progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                                $scope.log = `progress: ${progressPercentage}% ${evt.config.data.file.name}
-                                ${$scope.log}`;
+                                console.log(progressPercentage);
+                                if (progressPercentage < 100) {
+                                    $scope.progress = progressPercentage;
+                                } else {
+                                    $scope.progress = null;
+                                }
                             });
                         }
                     });
@@ -835,6 +883,10 @@
 
             $scope.cancel = function () {
                 $uibModalInstance.dismiss('cancel');
+            };
+
+            $scope.deleteCancel = function (result) {
+                $uibModalInstance.dismiss(result);
             };
         })
         .filter('readyNotReady', function readyNotReadyFilter() {

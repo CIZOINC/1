@@ -1,52 +1,56 @@
 <div class="modal-header">
-    <h3>EDIT VIDEO</h3>
+    <h3>ADD / EDIT VIDEO</h3>
 </div>
 <div class="modal-body">
     <div class="row">
         <div class="col-lg-6">
             <div class="row">
                 <div class="col-lg-12">
-                    <div ng-class="video.featured ? 'panel panel-default ui-ribbon-container ui-ribbon-danger' : 'panel panel-default'">
+                    <div ng-class="video.featured ? 'panel panel-dark ui-ribbon-container ui-ribbon-danger' : 'panel panel-dark'">
                         <div ng-show="video.featured" class="ui-ribbon-wrapper">
                             <div class="ui-ribbon">
-                                Featured
+                                FEATURED
                             </div>
                         </div>
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span> Hero Image</div>
+                            <span class="fa fa-picture-o"></span> Hero Image</div>
                         <div class="panel-body">
-                            <div ngf-drop="uploadFile($file)" ngf-select="uploadFile($file)" ng-model="file" name="file" class="drop-box" ng-style="video.hero_images.hero_image_link_large_banner && {'background-image': 'url(' + video.hero_images.hero_image_link_large_banner + ')'}"ngf-drag-over-class="'dragover'" ngf-pattern="'image/*,video/*'" ngf-accept="'image/*,video/*'">Drop pdfs or images here or click to upload</div>
-                            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
-                            <!-- <img ng-src="{{video.hero_images.hero_image_link_large_banner}}" alt="Hero Image" class="img-responsive" /> -->
-                        </div>
-                        <div class="btn-group btn-group-justified">
-                            <input type="file" title="Change Image" data-ui-file-upload="" style="left: -193px; top: 8px;">
-                            <input type="file" title="Change Video" data-ui-file-upload="" style="left: -193px; top: 8px;">
+                            <img ngf-drop="uploadFile($file)" ngf-select="uploadFile($file)" ng-model="file" name="file" ngf-drag-over-class="'dragover'" ngf-pattern="'image/*'" ngf-accept="'image/*'" ng-src="{{video.hero_images.hero_image_link_large_banner}}" class="img-responsive"
+                            />
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
+                <div class="col-lg-12">
+                    <div class="panel panel-dark">
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span> Mature</div>
-                        <div class="panel-body text-center">
-                            <label class="ui-switch ui-switch-success">
-                                Mature
+                            <span class="fa fa-picture-o"></span> Video Streams</div>
+                        <div class="panel-body" ng-repeat="stream in video.streams">
+                            <div ng-class="{ 'alert-danger': stream.transcode_status === 'error', 'alert-info': stream.transcode_status === 'pending', 'alert-warning': stream.transcode_status === 'progressing', 'alert-success': stream.transcode_status === 'completed' }" class="alert">
+                                <strong>Stream status - {{stream.transcode_status}}</strong>
                                 <br />
-                                <input type="checkbox" ng-model="video.mature_content" ng-checked="video.mature_content">
-                                <i></i>
-                            </label>
+                                <span ng-if="stream.link">
+                                    <a ng-href="{{stream.link}}">Click to view stream</a>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-dark">
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span> Category</div>
-                        <div class="panel-body text-center">
-                            <span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories">{{categoryLookup[video.category_id].title}}</span> {{log}}
+                            <span class="fa fa-cloud-upload"></span> Video / Image Upload</div>
+                        <div class="panel-body">
+                            <div ngf-drop="uploadFile($file)" ngf-select="uploadFile($file)" ng-model="file" name="file" class="drop-box" ngf-drag-over-class="'dragover'" ngf-pattern="'image/*,video/*'" ngf-accept="'image/*,video/*'">Drop an image or video to upload to Cizo</div>
+                            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                        </div>
+                        <div class="panel-body" ng-show="progress">
+                            <strong>Uploading file:</strong>
+                            <br /> {{file.name}}
+                            <uib-progressbar title="Uploading File" class="progressbar-md progress-rounded progress-striped active" value="progress">{{progress}}%</uib-progressbar>
                         </div>
                     </div>
                 </div>
@@ -55,9 +59,9 @@
         <div class="col-lg-6">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="panel panel-default">
+                    <div class="panel panel-dark">
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span> Video title</div>
+                            <span class="fa fa-quote-right"></span> Video title</div>
                         <div class="panel-body">
                             <span editable-text="video.title">{{video.title}}</span>
                         </div>
@@ -66,9 +70,9 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="panel panel-default">
+                    <div class="panel panel-dark">
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span> Video Description</div>
+                            <span class="fa fa-quote-right"></span> Video Description</div>
                         <div class="panel-body">
                             <span editable-textarea="video.description" e-rows="3" e-cols="35">{{video.description}}</span>
                         </div>
@@ -77,11 +81,31 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="panel panel-default">
+                    <div class="panel panel-dark">
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span> Video Tags</div>
+                            <span class="fa fa-hashtag"></span> Video Tags</div>
                         <div class="panel-body">
                             <tags-input ng-model="tags" replace-spaces-with-dashes="false" on-tag-added="tagAdded(tags)" class="ui-tags-input" placeholder="Add a tag"></tags-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2"></div>
+                <div class="col-lg-8">
+                    <div class="panel panel-dark">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-th"></span> Video Settings</div>
+                        <div class="panel-body">
+                            <strong>Mature Content:&nbsp;</strong>
+                            <label class="ui-switch ui-switch-success">
+                                <input type="checkbox" ng-model="video.mature_content" ng-checked="video.mature_content">
+                                <i></i>
+                            </label>
+                        </div>
+                        <div class="panel-body">
+                            <strong>Category:&nbsp;</strong>
+                            <span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories">{{categoryLookup[video.category_id].title}}</span>
                         </div>
                     </div>
                 </div>
@@ -93,4 +117,5 @@
 <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok(video)">Save</button>
     <button class="btn btn-warning" ng-click="cancel(video)">Cancel</button>
+    <button class="btn btn-danger" ng-click="deleteCancel('delete')">Delete</button>
 </div>

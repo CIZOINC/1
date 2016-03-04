@@ -1,6 +1,6 @@
 class V1::VideosController < V1::ApiController
   before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted,:hero_image,:add_featured, :remove_featured]
-
+  before_action :set_arguments, only: [:index, :trending, :search, :featured]
   before_action only: [:create, :update, :hero_image, :destroy,:add_featured, :remove_featured] do
     doorkeeper_authorize! :admin
   end
@@ -10,14 +10,12 @@ class V1::VideosController < V1::ApiController
   end
 
   before_action :check_if_video_deleted, only: [:show, :update, :destroy, :hero_image, :add_featured, :remove_featured]
-  # before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update, :create], if: :current_user
   before_action :check_if_file_presents_in_params, only: [:hero_image]
   before_action :set_bucket, only: [:destroy]
   before_action :able_to_be_featured?, only: [:add_featured]
 
   def index
     @conditions = []
-    @arguments = {}
 
     unless params[:created_before].blank?
       @conditions.push('created_at <= :created_before')
@@ -100,7 +98,6 @@ class V1::VideosController < V1::ApiController
 
   def trending
     @conditions = ["visible = true AND deleted_at IS NULL"]
-    @arguments = {}
     set_mature_content
     @videos = Video.where(@conditions.join(" AND "), @arguments).trending.limit(200)
     render :index
@@ -108,7 +105,6 @@ class V1::VideosController < V1::ApiController
 
   def search
     @conditions = ["deleted_at IS NULL"]
-    @arguments = {}
     if search = params[:search]
       set_mature_content
       set_visibility
@@ -125,7 +121,6 @@ class V1::VideosController < V1::ApiController
   def featured
     @featured = true
     @conditions = ['featured = true AND deleted_at IS NULL']
-    @arguments = {}
     set_mature_content
     if @current_user && as_admin?
       @videos = Video.where(@conditions.join(" AND "), @arguments).order_by_featured
@@ -138,8 +133,9 @@ class V1::VideosController < V1::ApiController
     featured_order = params[:featured_order].try(:to_i)
     featured_videos_count = Video.where('featured = ? AND visible = ? AND deleted_at IS NULL', true, true).count
     if featured_order
-      if ((@video.featured_order && (featured_order > featured_videos_count) && (already_featured = true)) || (!@video.featured_order && (featured_order > featured_videos_count + 1))) || featured_order<=0
-        render_errors ['400.6'], featured_videos_params(already_featured)
+      if ( @video.featured_order && (!featured_order.in?(1..featured_videos_count)))     ||
+         (!@video.featured_order && (!featured_order.in?(1..featured_videos_count + 1) ))
+        render_errors ['400.6'], featured_videos_params(@video.featured)
         return
       end
     end
@@ -155,7 +151,7 @@ class V1::VideosController < V1::ApiController
   private
 
   def hero_image_errors_any?
-    render_errors(['422.23']) and return true if hero_image_is_uploading
+    render_errors(['422.3']) and return true if hero_image_is_uploading
     render_errors(['422.22'], hero_image_params) if hero_image_extension_not_allowed
   end
 
@@ -210,7 +206,15 @@ class V1::VideosController < V1::ApiController
   end
 
   def hero_image_path
-    Rails.env.production? ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
+    unless @video.hero_image.nil?
+      Rails.env.production? ?
+        "production/images/videos/#{@video.id}" :
+        "staging/images/videos/#{@video.id}"
+    end
+  end
+
+  def set_arguments
+    @arguments = {}
   end
 
 end

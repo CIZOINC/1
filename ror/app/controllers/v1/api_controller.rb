@@ -1,7 +1,6 @@
 class V1::ApiController < ApplicationController
   before_action :current_user
 
-
   private
 
   def limited_videos(limit = nil)
@@ -61,7 +60,9 @@ class V1::ApiController < ApplicationController
   end
 
   def visible_conditions
-    (@conditions.push('visible = :visible') && @arguments[:visible] = true) unless params[:deleted] == 'true'
+    unless params[:deleted] == 'true'
+      (@conditions.push('visible = :visible') && @arguments[:visible] = true)
+    end
   end
 
 end

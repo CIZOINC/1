@@ -1,5 +1,4 @@
 class V1::CategoriesController < V1::ApiController
-  prepend Doorkeeper::Rails::Helpers
   before_action :set_category, only: [:show, :update, :destroy]
   before_action except: [:index, :show] do
     doorkeeper_authorize! :admin

@@ -53,3 +53,33 @@
     color: #3c763d;
     background-color: #dff0d8;
 }
+
+.button
+{
+    width: 70px;
+    margin: 10px;
+    /* Safari and Chrome */
+    padding: 10px;
+
+       -moz-appearance: button;
+    /* Firefox */
+    -webkit-appearance: button;
+}
+
+.drop-box
+{
+    width: 90%;
+    height: 150px;
+    margin: 10px;
+    padding-top: 25px;
+
+    text-align: center;
+
+    border: 3px dashed #ddd;
+    background: #f8f8f8;
+}
+
+.dragover
+{
+    border: 5px dashed blue;
+}

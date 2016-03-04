@@ -13,15 +13,40 @@
                             </div>
                         </div>
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span>
-                            Hero Image</div>
+                            <span class="glyphicon glyphicon-th"></span> Hero Image</div>
                         <div class="panel-body">
-                            <img ng-src="{{video.hero_images.hero_image_link_large_banner}}" alt="Description" class="img-responsive"/>
-                            <br/>
-                            <div class="btn-group btn-group-justified">
-                                <input type="file" title="Change Image" data-ui-file-upload="" style="left: -193px; top: 8px;">
-                                <input type="file" title="Change Video" data-ui-file-upload="" style="left: -193px; top: 8px;">
-                            </div>
+                            <div ngf-drop="uploadFile($file)" ngf-select="uploadFile($file)" ng-model="file" name="file" class="drop-box" ng-style="video.hero_images.hero_image_link_large_banner && {'background-image': 'url(' + video.hero_images.hero_image_link_large_banner + ')'}"ngf-drag-over-class="'dragover'" ngf-pattern="'image/*,video/*'" ngf-accept="'image/*,video/*'">Drop pdfs or images here or click to upload</div>
+                            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                            <!-- <img ng-src="{{video.hero_images.hero_image_link_large_banner}}" alt="Hero Image" class="img-responsive" /> -->
+                        </div>
+                        <div class="btn-group btn-group-justified">
+                            <input type="file" title="Change Image" data-ui-file-upload="" style="left: -193px; top: 8px;">
+                            <input type="file" title="Change Video" data-ui-file-upload="" style="left: -193px; top: 8px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-th"></span> Mature</div>
+                        <div class="panel-body text-center">
+                            <label class="ui-switch ui-switch-success">
+                                Mature
+                                <br />
+                                <input type="checkbox" ng-model="video.mature_content" ng-checked="video.mature_content">
+                                <i></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="glyphicon glyphicon-th"></span> Category</div>
+                        <div class="panel-body text-center">
+                            <span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories">{{categoryLookup[video.category_id].title}}</span> {{log}}
                         </div>
                     </div>
                 </div>
@@ -32,8 +57,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span>
-                            Video title</div>
+                            <span class="glyphicon glyphicon-th"></span> Video title</div>
                         <div class="panel-body">
                             <span editable-text="video.title">{{video.title}}</span>
                         </div>
@@ -44,8 +68,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span>
-                            Video Description</div>
+                            <span class="glyphicon glyphicon-th"></span> Video Description</div>
                         <div class="panel-body">
                             <span editable-textarea="video.description" e-rows="3" e-cols="35">{{video.description}}</span>
                         </div>
@@ -56,15 +79,9 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <span class="glyphicon glyphicon-th"></span>
-                            Video Description</div>
+                            <span class="glyphicon glyphicon-th"></span> Video Tags</div>
                         <div class="panel-body">
-                            <span ng-show="video.tag_list.length > 0">Tags -
-                                {{video.tag_list}}<br/></span>
-                            Date Added -
-                            {{video.created_at | date:'medium'}}
-                            <br/>Last Edited -
-                            {{video.updated_at | date:'medium'}}
+                            <tags-input ng-model="tags" replace-spaces-with-dashes="false" on-tag-added="tagAdded(tags)" class="ui-tags-input" placeholder="Add a tag"></tags-input>
                         </div>
                     </div>
                 </div>
@@ -74,6 +91,6 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="ok()">OK</button>
-    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok(video)">Save</button>
+    <button class="btn btn-warning" ng-click="cancel(video)">Cancel</button>
 </div>

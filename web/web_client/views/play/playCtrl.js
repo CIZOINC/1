@@ -36,15 +36,14 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
             featuredItem: ($rootScope.featuredList && $rootScope.featuredList)? $rootScope.featuredList[0] : $scope.featuredList[0],
             videoItem: undefined,
             videoCategoryId: undefined,
-            categoriesList: $rootScope.categoriesList
+            categoriesList: $rootScope.categoriesList,
+            videosFullList: undefined
         });
 
         if (!$scope.videosList || !$scope.videosList.length) {
             $scope.videosList = $rootScope.videosList;
         }
-        if (!$scope.featuredList || !$scope.featuredList.length) {
-            $scope.featuredList = $rootScope.featuredList;
-        }
+        $scope.videosFullList = $scope.videosList;
 
         if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
             $scope.videoCategoryId = Number($stateParams.categoryId);

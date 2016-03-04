@@ -1,0 +1,27 @@
+<div class="list-items" id="category-videos-{{categoryId}}">
+    <div class="list-items_title">
+        <span class="icon-category{{iconName}} list-items_title_icon"></span>
+        <span class="list-items_title_name">{{title}}</span>
+    </div>
+
+    <div class="list-items_videos">
+        <div class="list-items_videos_wrapper">
+            <div class="list-items_videos_item"
+                 ng-repeat="video in videosList"
+                 style="background-image: url('{{video.hero_images.hero_image_link_thumb_banner}}')"
+                 ng-click="moveToPlayPage(video.id)"
+                 ng-attr-id="play-video-item-{{video.id}}"
+            >
+                <div class="list-items_videos_item_overlay">
+                    <span class="list-items_videos_item_overlay_button icon-play"></span>
+                    <span class="list-items_videos_item_overlay_button icon-replay"></span>
+                </div>
+                <div class="list-items_videos_item_title">
+                    <span class="list-items_videos_item_title_date">{{::video.humanizedDate}}</span>
+                    <span class="list-items_videos_item_title_caption">{{::video.title}}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

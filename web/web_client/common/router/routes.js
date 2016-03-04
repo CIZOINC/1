@@ -49,7 +49,7 @@ angular
         {
             state: 'list',
             config: {
-                url: '/list',
+                url: '/list/:listType',
                 templateUrl: 'views/list/list.html',
                 controller: 'ListCtrl',
                 controllerAs: 'list'

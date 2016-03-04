@@ -1,125 +1,117 @@
-<div class="page" data-ng-controller="VideoModalCtrl">
-    <button type="button" class="btn btn-primary btn-lg btn-w-lg" ng-click="openModal()">Add new video</button>
-</div>
-<div class="page page-table" data-ng-controller="VideosCtrl">
-    <section class="panel panel-default table-dynamic">
-        <div class="panel-heading">
-            <strong>
+<div data-ng-controller="VideosCtrl">
+    <div class="page">
+        <button type="button" class="btn btn-primary btn-lg btn-w-lg" ng-click="openModal()">Add new video</button>
+    </div>
+    <div class="page page-table">
+        <section class="panel panel-default table-dynamic">
+            <div class="panel-heading">
+                <strong>
                 <span class="glyphicon glyphicon-th"></span>
                 Current Videos</strong>
-        </div>
+            </div>
 
-        <div class="table-filters">
-            <div class="row">
-                <div class="col-sm-4 col-xs-6">
-                    <form>
-                        <input type="text" placeholder="Search..." class="form-control" data-ng-model="searchKeywords" data-ng-keyup="search()">
-                    </form>
-                </div>
-                <div class="col-sm-3 col-xs-6 filter-result-info">
-                    <span>
+            <div class="table-filters">
+                <div class="row">
+                    <div class="col-sm-4 col-xs-6">
+                        <form>
+                            <input type="text" placeholder="Search..." class="form-control" data-ng-model="searchKeywords" data-ng-keyup="search()">
+                        </form>
+                    </div>
+                    <div class="col-sm-3 col-xs-6 filter-result-info">
+                        <span>
                         Showing
                         {{filteredVideos.length}}/{{videos.data.length}}
                         entries
                     </span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <table class="table table-bordered table-striped table-responsive">
-            <thead>
-                <tr>
-                    <th>
-                        <div class="th"></div>
-                    </th>
-                    <th>
-                        <div class="th">
-                            Name
-                        </div>
-                    </th>
-                    <th>
-                        <div class="th">
-                            Description
-                        </div>
-                    </th>
-                    <th>
-                        <div class="th">
-                            Category
-                        </div>
-                    </th>
-                    <th>
-                        <div class="th">
-                            Mature
-                        </div>
-                    </th>
-                    <th>
-                        <div class="th">
-                            Feed Status
-                        </div>
-                    </th>
-                    <th>
-                        <div class="th">
-                            <a href="#/featured">Featured</a>
-                        </div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr data-ng-repeat="video in currentPageVideos">
-                    <td data-ng-controller="VideoModalCtrl">
-                        <a href ng-click="openModal(video)">Edit</a>
-                    </td>
-                    <td>
-                        <span editable-text="video.title" e-cols="50" onbeforesave="modifyTitle(video, $data)">{{video.title}}</span>
-                    </td>
-                    <td>
-                        <span editable-textarea="video.description" e-rows="3" e-cols="80" onbeforesave="modifyDescription(video, $data)">{{video.description}}</span>
-                    </td>
-                    <td>
-                        <span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories" onbeforesave="modifyCategory(video, $data)">{{categoryLookup[video.category_id].title}}</span>
-                    </td>
-                    <td>
-                        <label class="ui-switch ui-switch-success">
-                            <input type="checkbox" ng-model="video.mature_content" ng-change="matureContent(video)" ng-checked="video.mature_content">
-                            <i></i>
-                        </label>
-                    </td>
-                    <td>
-                        <button type="button" ng-class="videoClasses(video)" ng-click="modifyVisible(video)">{{video | readyNotReady}}</button>
-                    </td>
-                    <td>
-                        <label ng-show="validateVideo(video) && video.visible" class="ui-switch ui-switch-warning">
-                            <input type="checkbox" ng-model="video.featured" ng-change="featuredVideo(video)" ng-checked="video.featured">
-                            <i></i>
-                        </label>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <table class="table table-bordered table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="th"></div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                Name
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                Description
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                Category
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                Mature
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                Feed Status
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
+                                <a href="#/featured">Featured</a>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-ng-repeat="video in currentPageVideos">
+                        <td>
+                            <a href ng-click="openModal(video)">Edit</a>
+                        </td>
+                        <td>
+                            <span editable-text="video.title" e-cols="50" onbeforesave="modifyTitle(video, $data)">{{video.title}}</span>
+                        </td>
+                        <td>
+                            <span editable-textarea="video.description" e-rows="3" e-cols="80" onbeforesave="modifyDescription(video, $data)">{{video.description}}</span>
+                        </td>
+                        <td>
+                            <span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories" onbeforesave="modifyCategory(video, $data)">{{categoryLookup[video.category_id].title}}</span>
+                        </td>
+                        <td>
+                            <label class="ui-switch ui-switch-success">
+                                <input type="checkbox" ng-model="video.mature_content" ng-change="matureContent(video)" ng-checked="video.mature_content">
+                                <i></i>
+                            </label>
+                        </td>
+                        <td>
+                            <button type="button" ng-class="videoClasses(video)" ng-click="modifyVisible(video)">{{video | readyNotReady}}</button>
+                        </td>
+                        <td>
+                            <label ng-show="validateVideo(video) && video.visible" class="ui-switch ui-switch-warning">
+                                <input type="checkbox" ng-model="video.featured" ng-change="featuredVideo(video)" ng-checked="video.featured">
+                                <i></i>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <footer class="table-footer">
-            <div class="row">
-                <div class="col-md-6 page-num-info">
-                    <span>
+            <footer class="table-footer">
+                <div class="row">
+                    <div class="col-md-6 page-num-info">
+                        <span>
                         Show
                         <select data-ng-model="numPerPage" data-ng-options="num for num in numPerPageOpt" data-ng-change="onNumPerPageChange()"></select>
                         entries per page
                     </span>
+                    </div>
+                    <div class="col-md-6 text-right pagination-container">
+                        <uib-pagination class="pagination-sm" ng-model="currentPage" total-items="filteredVideos.length" max-size="4" ng-change="select(currentPage)" items-per-page="numPerPage" rotate="false" previous-text="&lsaquo;" next-text="&rsaquo;" boundary-links="true"></uib-pagination>
+                    </div>
                 </div>
-                <div class="col-md-6 text-right pagination-container">
-                    <uib-pagination
-                        class="pagination-sm"
-                        ng-model="currentPage"
-                        total-items="filteredVideos.length"
-                        max-size="4"
-                        ng-change="select(currentPage)"
-                        items-per-page="numPerPage"
-                        rotate="false"
-                        previous-text="&lsaquo;"
-                        next-text="&rsaquo;"
-                        boundary-links="true"></uib-pagination>
-                </div>
-            </div>
-        </footer>
-    </section>
+            </footer>
+        </section>
+    </div>
 </div>

@@ -42,8 +42,14 @@ module Auth
 
       if user.valid?
         #if user has been logged in as admin at least once - he'll get admin's access token - maybe this functionality should be changed
-        users_scope = (Doorkeeper::AccessToken.where(resource_owner_id: user.id).pluck(:scopes).include? 'admin') ? 'admin' : 'user'
-        @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id, expires_in: 1.week.to_i, scopes:  users_scope, refresh_token: secret(32))
+        users_scope = (Doorkeeper::AccessToken.where(resource_owner_id: user.id)
+                                              .pluck(:scopes).include? 'admin') ?
+                                                'admin' :
+                                                'user'
+        @access_token = Doorkeeper::AccessToken.create(resource_owner_id: user.id,
+                                                       expires_in: 1.week.to_i,
+                                                       scopes:  users_scope,
+                                                       refresh_token: secret(32))
         Doorkeeper::TokensController.new.destroy_useless_tokens(user)
         response = Doorkeeper::OAuth::TokenResponse.new(@access_token)
         self.headers.merge! response.headers
@@ -63,13 +69,19 @@ module Auth
     %w(email birthday).each do |method|
       define_method "check_if_#{method}_exists" do
         if auth_hash.extra.raw_info["#{method}"].blank?
-          redirect_to "/users/auth/facebook?auth_type=rerequest&scope=#{method.gsub('birthday', 'user_birthday')}"
+          redirect_to "/users/auth/facebook?auth_type=rerequest&"\
+                      "scope=#{method.gsub('birthday', 'user_birthday')}"
         end
       end
     end
 
     def secret(number, password=nil)
-      password ? random = SecureRandom.hex(number) : (secret(number) while (Doorkeeper::AccessToken.find_by_refresh_token(random = SecureRandom.hex(number))))
+      random = SecureRandom.hex(number)
+      unless password
+        while Doorkeeper::AccessToken.find_by_refresh_token(random)
+          secret(number)
+        end
+      end
       random
     end
 

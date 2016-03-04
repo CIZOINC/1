@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::Base
-  # include Doorkeeper::Rails::Helpers
   include ErrorsRenderer
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -13,22 +12,18 @@ class ApplicationController < ActionController::Base
   def health_check
   	render text: ENV['RAILS_ENV']
   end
-  
+
   private
 
   def as_admin?
     doorkeeper_token && doorkeeper_token.scopes.to_s == 'admin'
   end
 
-  # def last_token(user)
-  #   Doorkeeper::AccessToken.where(resource_owner_id: user.id).last
-  # end
-
   def password_params
     { min: Devise.password_length.first, max: Devise.password_length.last }
   end
 
-  def featured_videos_params(already_featured=nil)
+  def featured_videos_params(already_featured = nil)
     if already_featured
       { featured_videos_count: Video.where('deleted_at IS NULL AND featured = ?', true).count }
     else

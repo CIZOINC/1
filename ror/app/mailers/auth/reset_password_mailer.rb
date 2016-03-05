@@ -4,6 +4,8 @@ class Auth::ResetPasswordMailer < Devise::Mailer
   # include Devise::Controllers::UrlHelpers
 
   def reset_password_instructions(user, token)
+    # attachments['logo'] = File.read(Rails.root.join('app', 'assets', 'images', 'logo.png'))
+    # attachments['logo']['Content-Type'] = 'image/png'
     @user = user
     @email = user.email
     @token = token

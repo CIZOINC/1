@@ -15,7 +15,7 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
             .then(playerServ.getVideos)
             .then(playerServ.updateVideos)
             .then((videos) => {
-                if ($scope.userAuthorized) {
+                if ($scope.storage.userAuthorized) {
                     userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
                         .then((favorites) => {
                             _.each(videos, (videoItem) => {
@@ -44,6 +44,11 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
             $scope.videosList = $rootScope.videosList;
         }
         $scope.videosFullList = $scope.videosList;
+
+        if (!$scope.featuredList || !$scope.featuredList.length) {
+            $scope.featuredList = $rootScope.featuredList;
+        }
+
 
         if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
             $scope.videoCategoryId = Number($stateParams.categoryId);

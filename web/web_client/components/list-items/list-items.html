@@ -1,7 +1,7 @@
-<div class="list-items" id="category-videos-{{categoryId}}">
+<div class="list-items" id="category-videos-{{categoryId}}" ng-show="isListShown">
     <div class="list-items_title">
-        <span class="icon-category{{iconName}} list-items_title_icon"></span>
-        <span class="list-items_title_name">{{title}}</span>
+        <span class="{{::message.iconName}} list-items_title_icon"></span>
+        <span class="list-items_title_name">{{::message.title}}</span>
     </div>
 
     <div class="list-items_videos">
@@ -14,7 +14,6 @@
             >
                 <div class="list-items_videos_item_overlay">
                     <span class="list-items_videos_item_overlay_button icon-play"></span>
-                    <span class="list-items_videos_item_overlay_button icon-replay"></span>
                 </div>
                 <div class="list-items_videos_item_title">
                     <span class="list-items_videos_item_title_date">{{::video.humanizedDate}}</span>
@@ -23,5 +22,14 @@
             </div>
         </div>
 
+    </div>
+
+</div>
+<div class="list-items_no-items-wrapper" ng-hide="isListShown">
+    <div class="list-items_no-items">
+        <span class="list-items_no-items_icon {{::message.iconName}}"></span>
+        <div class="list-items_no-items_title">{{::message.noItemsTitle}}</div>
+        <div class="list-items_no-items_additional">{{::message.noItemsDescription}}</div>
+        <div class="list-items_no-items_confirm" ng-click="moveToHomePage()">Ok</div>
     </div>
 </div>

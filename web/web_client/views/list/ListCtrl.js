@@ -4,7 +4,7 @@ angular
     .controller('ListCtrl', ListCtrl);
 
 /* @ngInject */
-function ListCtrl($scope, $state, userServ, storageServ) {
+function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, storageServ) {
     "use strict";
 
     if ($rootScope.featuredList && $rootScope.featuredList.length && $rootScope.videosList && $rootScope.videosList.length) {
@@ -15,7 +15,7 @@ function ListCtrl($scope, $state, userServ, storageServ) {
             .then(playerServ.getVideos)
             .then(playerServ.updateVideos)
             .then((videos) => {
-                if ($scope.userAuthorized) {
+                if ($scope.storage.userAuthorized) {
                     userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
                         .then((favorites) => {
                             _.each(videos, (videoItem) => {
@@ -31,7 +31,15 @@ function ListCtrl($scope, $state, userServ, storageServ) {
     function viewSetup() {
         $scope = angular.extend($scope, {
             listName: undefined,
-            videosFullList: undefined
+            videosFullList: undefined,
+            videosList: undefined,
+            listItem: undefined,
+            listType: [
+                'seen',
+                'unseen',
+                'favorite',
+                'skipped'
+            ]
         });
 
         if (!$scope.videosList || !$scope.videosList.length) {
@@ -43,21 +51,23 @@ function ListCtrl($scope, $state, userServ, storageServ) {
             $scope.featuredList = $rootScope.featuredList;
         }
 
-        if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
-            $scope.videoCategoryId = Number($stateParams.categoryId);
-            let filteredVideos = _.filter($scope.videosList, videos => videos.category_id === Number($stateParams.categoryId));
-            $scope.videosList = filteredVideos;
+        if ($stateParams.listType && _.some($scope.listType, state => state === $stateParams.listType)) {
+
+            let storagesMap = {
+                'seen': 'seenItems',
+                'favorite': 'favoritesItems',
+                'unseen': 'unseenItems',
+                'skipped': 'skippedItems'
+            };
+            let storage = $scope.storage[storagesMap[$stateParams.listType]];
+            $scope.listItem = $stateParams.listType;
+            $scope.videosList = _.filter($scope.videosFullList, (video) => {
+                return _.some(storage, storageItem => storageItem === video.id);
+            });
         } else {
-            $scope.videosList = $scope.videosList;
-        }
-
-        if (Number($stateParams.videoId)) {
-            let video = _.find($scope.videosList, video => video.id === Number($stateParams.videoId));
-            video.instantPlay = true;
-            $scope.videoItem = video;
-
+            $state.go('home');
         }
     }
 }
 
-ListCtrl.$inject = ['$scope', '$state', 'userServ', 'storageServ'];
+ListCtrl.$inject = ['$scope', '$state', '$stateParams', '$rootScope', 'userServ', 'storageServ'];

@@ -14,7 +14,7 @@ function listItems($state, _, playerServ, $timeout) {
         transclude: false,
         scope: {
             videos: '=',
-            listId: '@'
+            listType: '@'
         }
     };
 
@@ -23,44 +23,66 @@ function listItems($state, _, playerServ, $timeout) {
             videosList: [],
             title: '',
             iconName:  playerServ.getIconName(scope.categoryId),
-            moveToPlayPage: moveToPlayPage
+            message: undefined,
+            isListShown: false,
+            moveToPlayPage: moveToPlayPage,
+            moveToHomePage: moveToHomePage
         });
 
         scope.$watch('videos', (videos) => {
-            scope.videosList = filterVideos(videos, scope.categoryId);
+            scope.videosList = videos;
+            scope.isListShown = videos.length;
         });
 
-        scope.$watch('categoryId', () => {
-            scope.iconName =  playerServ.getIconName(scope.categoryId);
-            scope.title = getCategoryName(scope.categories, scope.categoryId);
+        scope.$watch('listType', (oldType, newType) => {
+            scope.message = getMessage(newType);
         });
 
-
-        function filterVideos(videos, id) {
-            let videosList;
-            if (parseInt(id)) {
-                videosList = _.filter(videos, video => video.category_id === parseInt(id));
-            } else {
-                videosList = videos;
+        function getMessage(name) {
+            switch (name) {
+                case 'seen':
+                    return {
+                        iconName: 'icon-seen',
+                        title: 'Seen',
+                        noItemsTitle: 'You haven\'t seen any vids',
+                        noItemsDescription: 'Choose and see any video up to the end'
+                     };
+                break;
+                case 'unseen':
+                    return {
+                        iconName: 'icon-unseen',
+                        title: 'Unseen',
+                        noItemsTitle: 'You have no unseen vids',
+                        noItemsDescription: 'Visit us next time'
+                    };
+                break;
+                case 'skipped':
+                    return {
+                        iconName: 'icon-skipped',
+                        title: 'Skipped',
+                        noItemsTitle: 'You haven\'t skipped any vids',
+                        noItemsDescription: ''
+                    };
+                break;
+                case 'favorite':
+                    return {
+                        iconName: 'icon-favorites',
+                        title: 'Favorites',
+                        noItemsTitle: 'You haven\'t favorited any vids',
+                        noItemsDescription: 'Find a video you like? Add it to your favorites.'
+                    };
+                break;
             }
-            return videosList;
+
         }
 
-        function getCategoryName(categories, id) {
-            let result;
-            if (parseInt(id)) {
-                let category = _.find(categories, category => category.id === parseInt(id));
-                if (category && category.title) {
-                    result = category.title;
-                }
-            } else {
-                result = 'All';
-            }
-            return result;
-        }
 
         function moveToPlayPage(id) {
             $state.go('play', {videoId: id});
+        }
+
+        function moveToHomePage() {
+            $state.go('home');
         }
     }
 };

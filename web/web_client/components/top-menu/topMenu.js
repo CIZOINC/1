@@ -15,7 +15,8 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
         scope: {
             categories: '=',
             hostName: '@',
-            videosList: '='
+            videosList: '=',
+            storage: '='
         }
     };
 
@@ -30,7 +31,8 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             categoryClick: categoryClick,
             search: search,
             playFoundVideo: playFoundVideo,
-            toggleSideMenu: toggleSideMenu
+            toggleSideMenu: toggleSideMenu,
+            logout: logout
         });
 
 
@@ -78,6 +80,10 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             }
 
 
+        }
+
+        function logout() {
+            playerServ.userLogout(scope.storage);
         }
 
         function search() {
@@ -145,6 +151,8 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             }
         });
     }
+
+
 }
 
 topMenu.$inject = ['$state', '$anchorScroll', '$http', '$timeout', '$q', '$log', 'playerServ', 'lodash'];

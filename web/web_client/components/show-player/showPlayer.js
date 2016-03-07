@@ -5,7 +5,7 @@ angular
 
 
 /* @ngInject */
-function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ) {
+function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ, userServ) {
     "use strict";
 
     return {
@@ -360,8 +360,11 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             setFavoritesState(scope.video.favorites);
 
             if (!scope.video.favorites) {
+                let itemIndex = _.indexOf(scope.storage.favoritesItems, scope.video.id);
+                scope.storage.favoritesItems.splice(itemIndex, 1);
                 userServ.deleteLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
             } else {
+                scope.storage.favoritesItems.push(scope.video.id);
                 userServ.setLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
             }
         }
@@ -638,4 +641,4 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
     }
 }
-showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'playerServ'];
+showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'playerServ', 'userServ'];

@@ -63,6 +63,6 @@ Rails.application.routes.draw do
       put 'me/videos/seen/:video_id', to: 'users#mark_video_as_seen', on: :collection
     end
   end
-  root 'welcome#index'
+
   get 'health', to: 'application#health_check'
 end

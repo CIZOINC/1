@@ -22,7 +22,7 @@
     }
 
     angular.module('app.videos')
-        .controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, $location, $window, $uibModal) {
+        .controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, $location, $window, $uibModal, configuration) {
             if (!$window.sessionStorage.token) {
                 // Fail out to root without an admin token
                 $location.url('/');

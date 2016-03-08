@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, $window) {
+    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, $window, configuration) {
         if (!$window.sessionStorage.token) {
             // Fail out to root without an admin token
             $location.url('/');

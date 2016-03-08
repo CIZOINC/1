@@ -3,7 +3,7 @@
 (function () {
     angular.module('app.page')
         .controller('invoiceCtrl', ['$scope', '$window', invoiceCtrl])
-        .controller('authCtrl', ['$scope', '$window', '$location', '$http', authCtrl]);
+        .controller('authCtrl', ['$scope', '$window', '$location', '$http', 'configuration', authCtrl]);
 
     function invoiceCtrl($scope, $window) {
         var printContents, originalContents, popupWin;
@@ -18,7 +18,7 @@
         };
     }
 
-    function authCtrl($scope, $window, $location, $http) {
+    function authCtrl($scope, $window, $location, $http, configuration) {
         if ($location.search().logout) {
             delete $window.sessionStorage.token;
         }

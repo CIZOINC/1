@@ -379,7 +379,7 @@
                         expand: true,
                         flatten: true,
                         src: ['./config/config.js'],
-                        dest: '<%= yeoman.app %>/scripts/services/'
+                        dest: '<%= yeoman.app %>/app/services/'
                     }]
                 },
                 staging: {
@@ -392,7 +392,7 @@
                         expand: true,
                         flatten: true,
                         src: ['./config/config.js'],
-                        dest: '<%= yeoman.app %>/scripts/services/'
+                        dest: '<%= yeoman.app %>/app/services/'
                     }]
                 },
                 production: {
@@ -405,13 +405,15 @@
                         expand: true,
                         flatten: true,
                         src: ['./config/config.js'],
-                        dest: '<%= yeoman.app %>/scripts/services/'
+                        dest: '<%= yeoman.app %>/app/services/'
                     }]
                 }
             }
         });
 
         grunt.loadNpmTasks('grunt-replace');
+        grunt.loadNpmTasks('grunt-contrib-watch');
+        grunt.loadNpmTasks('grunt-contrib-compass');
         
         grunt.registerTask('server', function () {
             grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
@@ -419,9 +421,10 @@
 
         grunt.registerTask('serve', function (target) {
             if (target === 'dist') {
-                return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+                return grunt.task.run(['replace:production', 'build', 'open', 'connect:dist:keepalive']);
             }
-            return grunt.task.run(['clean:server', 'concurrent:server', 'connect:livereload', 'replace:development', 'open', 'watch']);
+            console.error('running');
+            return grunt.task.run(['replace:development', 'clean:server', 'concurrent:server', 'connect:livereload', 'replace:development', 'open', 'watch']);
         });
 
         grunt.registerTask('lessServer', function () {
@@ -432,7 +435,7 @@
             if (target === 'dist') {
                 return grunt.task.run(['lessBuild', 'open', 'connect:dist:keepalive']);
             }
-            return grunt.task.run(['clean:server', 'concurrent:lessServer', 'connect:livereload', 'replace:development', 'open', 'watch']);
+            return grunt.task.run(['replace:development', 'clean:server', 'concurrent:lessServer', 'connect:livereload', 'replace:development', 'open', 'watch']);
         });
 
         grunt.registerTask('docs', function () {

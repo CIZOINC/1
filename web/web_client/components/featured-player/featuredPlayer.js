@@ -450,9 +450,12 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         }
 
         function imageBlur() {
-            toggleControlsVisibility(true);
-            scope.topElementsRightSide.classList.add('hidden-layer');
-            scope.buttonLayer.classList.remove('featured-player_buttons-layer--hover');
+            if (scope.isPlaying && !scope.isIntermissionState) {
+                toggleControlsVisibility(true);
+                scope.topElementsRightSide.classList.add('hidden-layer');
+                scope.buttonLayer.classList.remove('featured-player_buttons-layer--hover');
+            }
+
         }
 
         function toggleFullScreen(event) {

@@ -37,6 +37,8 @@ function playItems($state, _, playerServ, $timeout) {
                         videoItem.querySelector('.play-items_videos_item_title').classList.add('play-items_videos_item_title--watched');
                         videoItem.querySelector('.icon-play').classList.add('hidden-layer');
                         videoItem.querySelector('.icon-replay').classList.remove('hidden-layer');
+                    } else {
+                        videoItem.querySelector('.icon-replay').classList.add('hidden-layer');
                     }
                 });
             });

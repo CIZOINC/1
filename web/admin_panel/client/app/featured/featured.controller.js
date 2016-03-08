@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, $window) {
+    angular.module('app.featured').controller('FeaturedCtrl', function FeaturedCtrl($scope, $filter, $http, $window, configuration) {
         if (!$window.sessionStorage.token) {
             // Fail out to root without an admin token
             $location.url('/');
@@ -26,7 +26,7 @@
             // Get the available categories from the API
             let options = {
                 method: 'GET',
-                url: 'https://staging.cizo.com/categories',
+                url: configuration.url + '/categories',
                 headers: {
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }
@@ -43,7 +43,7 @@
             // Get the featured videos from the API
             let options = {
                 method: 'GET',
-                url: 'https://staging.cizo.com/featured',
+                url: configuration.url + '/featured',
                 headers: {
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }
@@ -60,7 +60,7 @@
             // Update the featured_order of a specific video
             let options = {
                 method: 'PUT',
-                url: `https://staging.cizo.com/featured/${videoID}`,
+                url: configuration.url + `/featured/${videoID}`,
                 data: {
                     featured_order: featuredOrder
                 },
@@ -80,7 +80,7 @@
             // Update the featured_order of a specific video
             let options = {
                 method: 'DELETE',
-                url: `https://staging.cizo.com/featured/${videoID}`,
+                url: configuration.url + `/featured/${videoID}`,
                 headers: {
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }

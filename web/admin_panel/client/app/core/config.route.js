@@ -43,6 +43,9 @@
                 .when('/featured', {
                     templateUrl: 'app/featured/featured.html'
                 })
+                .when('/users', {
+                    templateUrl: 'app/users/users.html'
+                })
                 .when('/404', {
                     templateUrl: 'app/page/404.html'
                 })

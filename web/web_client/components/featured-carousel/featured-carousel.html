@@ -1,0 +1,27 @@
+<div class="featured-carousel">
+    <button class="featured-carousel_left icon-back"  ng-click="movePrev()"></button>
+    <div class="featured-carousel_content">
+        <div class="featured-carousel_content_wrapper" ng-style="{'margin-left': itemsOffset}">
+            <div class="featured-carousel_content_item"
+                 ng-repeat="featured in featuredList"
+                 ng-click="playFeatured(featured.id)"
+                 ng-attr-id="{{'featured-carousel-video-' + featured.id}}"
+            >
+                <div class="featured-carousel_content_item_image" style="background-image: url('{{::featured.hero_images.hero_image_link_thumb_banner}}')"></div>
+                <div class="featured-carousel_content_item_overlay">
+                    <span class="featured-carousel_content_item_overlay_button icon-play"></span>
+                </div>
+
+
+
+                <div class="featured-carousel_content_item_label">Featured</div>
+                <div class="featured-carousel_content_item_intermission hidden-layer">
+                    <span class="icon-share featured-carousel_content_item_intermission_button"></span>
+                    <span class="icon-replay featured-carousel_content_item_intermission_button" ng-click="replay()"></span>
+                </div>
+                <div class="featured-carousel_content_item_title">{{::featured.title}}</div>
+            </div>
+        </div>
+    </div>
+    <button class="featured-carousel_right icon-forward" ng-click="moveNext()"></button>
+</div>

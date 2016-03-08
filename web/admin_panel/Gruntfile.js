@@ -124,6 +124,9 @@
             },
             clean: {
                 dist: {
+                    options: {
+                        force: true
+                    },
                     files: [{
                         dot: true,
                         src: ['.tmp', '<%= yeoman.dist %>/*', '!<%= yeoman.dist %>/.git*']
@@ -198,6 +201,7 @@
                 },
                 dist: {
                     options: {
+                        outputStyle: 'compressed',
                         debugInfo: false,
                         noLineComments: true,
                         sourcemap: false
@@ -331,7 +335,6 @@
             },
             concurrent: {
                 server: ['compass:server', 'copy:styles'],
-                dist: ['compass:dist', 'copy:styles', 'htmlmin'],
                 lessServer: ['less:server', 'copy:styles'],
                 lessDist: ['less:dist', 'copy:styles', 'htmlmin']
             },
@@ -367,14 +370,75 @@
                         ext: '.js'
                     }]
                 }
+            },
+            replace: {
+                development: {
+                    options: {
+                        patterns: [{
+                            json: grunt.file.readJSON('./config/environments/development.json')
+                        }]
+                    },
+                    files: [{
+                        expand: true,
+                        flatten: true,
+                        src: ['./config/config.js'],
+                        dest: '<%= yeoman.app %>/app/services/'
+                    }]
+                },
+                staging: {
+                    options: {
+                        patterns: [{
+                            json: grunt.file.readJSON('./config/environments/staging.json')
+                        }]
+                    },
+                    files: [{
+                        expand: true,
+                        flatten: true,
+                        src: ['./config/config.js'],
+                        dest: '<%= yeoman.app %>/app/services/'
+                    }]
+                },
+                production: {
+                    options: {
+                        patterns: [{
+                            json: grunt.file.readJSON('./config/environments/production.json')
+                        }]
+                    },
+                    files: [{
+                        expand: true,
+                        flatten: true,
+                        src: ['./config/config.js'],
+                        dest: '<%= yeoman.app %>/app/services/'
+                    }]
+                }
             }
+        });
+
+        grunt.loadNpmTasks('grunt-replace');
+        grunt.loadNpmTasks('grunt-contrib-watch');
+        grunt.loadNpmTasks('grunt-contrib-compass');
+        
+        grunt.registerTask('server', function () {
+            grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
         });
 
         grunt.registerTask('serve', function (target) {
             if (target === 'dist') {
-                return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+                return grunt.task.run(['replace:production', 'build', 'open', 'connect:dist:keepalive']);
             }
-            return grunt.task.run(['clean:server', 'concurrent:server', 'connect:livereload', 'open', 'watch']);
+            console.error('running');
+            return grunt.task.run(['replace:development', 'clean:server', 'concurrent:server', 'connect:livereload', 'replace:development', 'open', 'watch']);
+        });
+
+        grunt.registerTask('lessServer', function () {
+            grunt.log.warn('The `lessServer` task has been deprecated. Use `grunt lessServe` to start a server.');
+        });
+
+        grunt.registerTask('lessServe', function (target) {
+            if (target === 'dist') {
+                return grunt.task.run(['lessBuild', 'open', 'connect:dist:keepalive']);
+            }
+            return grunt.task.run(['replace:development', 'clean:server', 'concurrent:lessServer', 'connect:livereload', 'replace:development', 'open', 'watch']);
         });
 
         grunt.registerTask('docs', function () {
@@ -385,7 +449,33 @@
             return grunt.task.run(['jade:landing', 'compass:landing', 'connect:landing', 'open', 'watch']);
         });
 
-        grunt.registerTask('build', ['clean:dist', 'useminPrepare', 'concurrent:dist', 'copy:dist', 'cssmin', 'concat', 'babel', 'uglify', 'usemin']);
+        grunt.registerTask('build', ['clean:dist', 'useminPrepare', 'compass:dist', 'copy:styles', 'htmlmin', 'copy:dist', 'cssmin', 'concat', 'babel', 'uglify', 'usemin']);
+
+        grunt.registerTask('build-production', function() {
+            var dest = '../../ror/public/admin_panel/production';
+            yeomanConfig.dist = dest;
+            grunt.config.set('yeoman.dist', dest);
+            return grunt.task.run(['replace:production', 'build']);
+        });
+
+        grunt.registerTask('build-staging', function() {
+            var dest = '../../ror/public/admin_panel/staging';
+            yeomanConfig.dist = dest;
+            grunt.config.set('yeoman.dist', dest);
+            return grunt.task.run(['replace:staging','build']);
+        });
+
+        grunt.registerTask('clean-usemin', function() {
+            grunt.config.set('uglify.generated.files', []);
+            grunt.config.set('cssmin.generated.files', []);
+            grunt.config.set('concat.generated.files', []);
+        });
+
+        grunt.registerTask('build-all', function() {
+            return grunt.task.run(['build-production', 'clean-usemin', 'build-staging']);
+        });
+
+        grunt.registerTask('lessBuild', ['clean:dist', 'useminPrepare', 'concurrent:lessDist', 'copy:dist', 'cssmin', 'concat', 'uglify', 'usemin']);
 
         return grunt.registerTask('default', ['serve']);
     };

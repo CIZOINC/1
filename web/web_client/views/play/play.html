@@ -1,0 +1,17 @@
+<div class="play">
+    <top-menu categories="categoriesList"
+              host-name="{{hostName}}"
+              videos-list="videosList"
+    ></top-menu>
+
+    <show-player class="play_player"
+                 video="videoItem"
+                 videos-list="videosList"
+                 featured-list="featuredList"
+                 host-name="{{hostName}}"></show-player>
+
+    <div class="play_video-items">
+        <play-items category-id="{{videoCategoryId}}" videos="videosList" categories="categoriesList"></play-items>
+    </div>
+
+</div>

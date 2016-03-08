@@ -4,13 +4,60 @@
 @color-dark: #2c3d51;
 @color-darker: #1c1f24;
 
-.searched-player {
+.show-player {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  transition: height 0.5s ease-out;
   margin-bottom: 30px;
+  //background-color: @color-dark;
+  background-color: black;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
 
-  @media (min-width: 992px) {
-    &--play-state {
-      margin-left: 10%;
-      width: 79.8%;
+  &--playing {
+    height: calc(~"100% + 210px");
+    transition: height 0.5s ease-out;
+  }
+
+
+  @video-layer-height: 69%;
+  &_video-layer {
+    left: 0;
+    top: 60px;
+    width: 100%;
+    height: @video-layer-height;
+    position: absolute;
+    z-index: 500;
+    background-color: black;
+
+    &_video {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+    }
+  }
+
+  &_hero-image-layer {
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    object-fit: cover;
+    object-position: 50% 50%;
+    z-index: 550;
+    overflow: hidden;
+    transition: top .6s ease-out;
+    &--playing {
+      top: 70px;
+      height: calc(~"100% + 200px");
+      display: none;
     }
   }
 
@@ -41,16 +88,16 @@
     display: flex;
     user-select: none;
     position: absolute;
-    top: 0;
+    top: 60px;
     left: 0;
     width: 100%;
-    height: 100%;
+    bottom: 0;
     align-items: stretch;
     align-content: stretch;
     flex-direction: column;
     justify-content: flex-end;
     background: transparent;
-    z-index: 100;
+    z-index: 2147483680;
 
     &--fullscreen {
       z-index: 2147483680;
@@ -129,14 +176,15 @@
     display: flex;
     user-select: none;
     position: absolute;
-    top: 0;
+    top: 60px;
     left: 0;
     width: 100%;
-    height: 100%;
+    bottom: -10px;
     align-items: stretch;
     align-content: stretch;
     flex-direction: column;
     background: transparent;
+    z-index: 10000;
 
     &--intermission {
       background-color: rgba(0,0,0,.8);
@@ -152,6 +200,8 @@
 
     &--fullscreen {
       z-index: 2147483647;
+      top: 0;
+      height: 100%;
     }
 
     &_top-elements {
@@ -162,10 +212,10 @@
       height: 10%;
       &_close-button {
         margin-left: 10px;
+        margin-top: 10px;
         color: white;
         font-size: 23px;
         cursor: pointer;
-        cursor: hand;
         z-index: 50;
         &::before {
           margin-top: 15px;
@@ -187,7 +237,6 @@
           font-size: 32px;
           margin: 10px;
           cursor: pointer;
-          cursor: hand;
         }
       }
     }
@@ -205,7 +254,10 @@
         align-content: stretch;
         justify-content: center;
         flex-direction: column;
-        margin-top: 70px;
+
+        &--intermission {
+          margin-top: -150px;
+        }
 
         &_title {
           display: flex;
@@ -213,18 +265,22 @@
           align-content: center;
           justify-content: center;
           flex-direction: column;
-          text-transform: uppercase;
+
           color: @color-mid;
           font-size: 20px;
+          font-family: main-cizo;
+          text-transform: uppercase;
+          margin-bottom: 10px;
 
           &_caption {
             color: white;
             font-size: 35px;
-            text-transform: none;
+            text-transform: uppercase;
           }
         }
 
         &_controls {
+          display: flex;
           align-items: stretch;
           align-content: stretch;
           justify-content: center;
@@ -237,6 +293,7 @@
             align-content: stretch;
             justify-content: center;
             flex-direction: row;
+
           }
 
           &_wrapper-play-pause {
@@ -252,9 +309,6 @@
           }
 
           &_progress {
-            margin-top: 10%;
-            position: absolute;
-            padding-bottom: 0;
             top: 0;
             left: 0;
             right: 0;
@@ -268,6 +322,7 @@
           align-content: stretch;
           justify-content: center;
           flex-direction: row;
+          margin-top: 15px;
         }
       }
 
@@ -278,11 +333,9 @@
         justify-content: center;
         align-items:center;
         align-content: flex-start;
-        margin-top: 15%;
         margin-left: 15px;
         user-select: none;
         cursor: pointer;
-        cursor: hand;
 
         img {
           width: 60%;
@@ -297,10 +350,8 @@
         justify-content: center;
         align-items:center;
         align-content: flex-start;
-        margin-top: 15%;
         user-select: none;
         cursor: pointer;
-        cursor: hand;
 
         img {
           width: 60%;
@@ -340,8 +391,10 @@
         color: white;
         text-transform: uppercase;
         font-family: 'main-cizo';
-        margin-top: 30px;
+        margin-top: 10px;
         font-size: 28px;
+        border: solid 1px white;
+        padding: 15px;
       }
     }
 
@@ -510,8 +563,7 @@ video::-webkit-media-controls-enclosure {
   display:none !important;
 }
 
-searched-player {
-  margin-top: 60px;
+show-player {
   .hidden-layer {
     display: none !important;
   }

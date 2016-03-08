@@ -1,0 +1,32 @@
+<div class="top-menu">
+
+    <div class="top-menu_navigation">
+        <div class="top-menu_main">
+            <span class="icon-menu top-menu_icon"></span>
+            <img class="top-menu_logo" src="images/logo.svg" ng-click="moveToHome()">
+        </div>
+
+        <div class="top-menu_categories">
+            <div class="top-menu_categories_item" ng-repeat="category in categoryList" ng-click="categoryClick($event, category.id)">{{category.title}}</div>
+        </div>
+    </div>
+
+    <div class="top-menu_advanced">
+        <div class="top-menu_search">
+            <div class="top-menu_search_string">
+                <button class="top-menu_search_button icon-search"></button>
+                <input class="top-menu_search_input" placeholder="Search" ng-model="searchText" ng-keyup="search()">
+            </div>
+
+            <div class="top-menu_search_results">
+                <div class="top-menu_search_results_item" ng-repeat="searchItem in searchResult" ng-click="playFoundVideo(searchItem.id)">
+                    <span class="icon-category{{::searchItem.iconName}} top-menu_search_results_item_icon"></span>
+                    <span>{{searchItem.title}}</span>
+                </div>
+            </div>
+        </div>
+        <button class="top-menu_login" ng-click="moveToLogin()"><span class="icon-profile top-menu_login_icon"></span>Sign Up/Log In</button>
+    </div>
+
+
+</div>

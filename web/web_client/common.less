@@ -16,6 +16,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'bold-cizo';
+  src: url('./font/CenturyGothicBold.ttf?78360421') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @screen_gradient_start: #0f1012;
 @screen_gradient_finish: #2b3c4f;
 
@@ -66,7 +73,11 @@ body {
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
+.icon-favorites-filled:before { content: '\46'; } /* 'F' */
+.icon-google:before { content: '\47'; } /* 'G' */
+.icon-reddit:before { content: '\52'; } /* 'R' */
 .icon-all:before { content: '\61'; } /* 'a' */
+.icon-categoryall:before { content: '\61'; } /* 'a' */
 .icon-categorymovie:before { content: '\62'; } /* 'b' */
 .icon-categorygames:before { content: '\63'; } /* 'c' */
 .icon-categorylifestyle:before { content: '\64'; } /* 'd' */
@@ -81,6 +92,8 @@ body {
 .icon-close:before { content: '\6e'; } /* 'n' */
 .icon-search:before { content: '\6f'; } /* 'o' */
 .icon-menu:before { content: '\70'; } /* 'p' */
+.icon-twitter:before { content: '\71'; } /* 'q' */
+.icon-replay:before { content: '\72'; } /* 'r' */
 .icon-share:before { content: '\73'; } /* 's' */
 .icon-forward:before { content: '\74'; } /* 't' */
 .icon-home:before { content: '\75'; } /* 'u' */

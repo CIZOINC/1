@@ -1,0 +1,181 @@
+.featured-carousel {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  padding: 30px 0;
+  background-color: rgba(0,0,0,.8);
+  z-index: 20000;
+  &--played {
+    bottom: auto;
+    top: 100%;
+  }
+
+  .featured-carousel_button_mix {
+    background-color: transparent;
+    color: white;
+    font-size: 40px;
+    width: 50px;
+    cursor: pointer;
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+  &_left {
+    .featured-carousel_button_mix;
+    margin-left: -40px;
+  }
+
+  &_content {
+    display: flex;
+    width: 1220px;
+    overflow-x: hidden;
+
+    &_wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-content: center;
+      align-items: center;
+      transition: margin-left .3s ease-out 0.1s;
+    }
+
+    &_item {
+      min-width:  275px;
+      max-width: 275px;
+      height: 155px;
+      margin: 0 15px;
+
+      font-family: main-cizo;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      text-transform: uppercase;
+      position: relative;
+
+      &_overlay {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 10;
+
+        &_button {
+          color: white;
+          font-size: 65px;
+          text-shadow: 3px 5px 0 rgba(0,0,0,.6);
+          margin-top: -15px;
+        }
+      }
+
+      &_image {
+        min-width:  275px;
+        max-width: 275px;
+        height: 155px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: visible;
+        background-size:  cover;
+        z-index: 1;
+
+        &--intermission {
+          -webkit-filter: grayscale(1) brightness(.2);
+        }
+
+      }
+
+      &_label {
+        margin: 10px 0 0 -5px;
+        position: absolute;
+        top: 0;
+        padding: 5px 10px;
+        background-color: #00ffff;
+        width: 30%;
+        font-size: 12px;
+        font-weight: 900;
+        z-index: 10;
+        &:after {
+          content: "";
+          border-left: .5em solid #00ffff; /* This width determines the arrows length */
+          border-top: 10pt solid transparent; /* This width has to be 50% of 'line-height + padding-top + padding-bottom' */
+          border-bottom: 10pt solid transparent; /* Same for this width */
+          width: 0;
+          height: 0;
+          position: absolute;
+          right: -.5em; /* This has to be the same value as 'border-left's width */
+          top: 0;
+        }
+
+        &:before {
+          content: "";
+          border-right: 5px solid #1c9eb2;
+          border-top: 5px solid transparent;
+          width: 0;
+          height: 0;
+          position: absolute;
+          left: 0;
+          top: -5px;
+        }
+      }
+
+      &_title {
+        background-color: rgba(0,0,0, .8);
+        padding: 15px;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bolder;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        z-index: 10;
+
+        &--playing {
+          background-color: #00ffff;
+          color: black;
+          font-family: bold-cizo;
+        }
+      }
+
+      &_intermission {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        align-content: center;
+        flex-direction: row;
+        top: 0;
+
+        &_button {
+          color: white;
+          font-size: 55px;
+          margin-top: 20px;
+        }
+      }
+    }
+  }
+
+  &_right {
+    .featured-carousel_button_mix;
+    margin-left: -20px;
+  }
+}

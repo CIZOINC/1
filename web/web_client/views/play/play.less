@@ -1,0 +1,25 @@
+.play {
+  display: flex;
+  flex-direction: column;
+  &_player {
+    width: 100%;
+  }
+
+  &_video-items {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    left: 0;
+    background-color: #1c1f24;
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
+    &--playing {
+      top: calc(~"100% + 210px");
+    }
+  }
+}

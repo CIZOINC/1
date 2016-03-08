@@ -1,8 +1,9 @@
+angular.module('app.helpers', []);
 angular.module('app.controls', ['ngSanitize']);
 angular.module('app.wrappers', []);
 angular.module('app.routerHelper', ['ui.router', 'app.wrappers']);
 angular.module('app.services', []);
-angular.module('app.directives', ['app.services']);
+angular.module('app.directives', ['app.services', 'app.helpers']);
 angular.module('templates', []);
 
 angular
@@ -22,18 +23,26 @@ angular
 
 
 /* @ngInject */
-function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ) {
+function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ, playerServ, $timeout) {
 
     $scope = angular.extend($scope, {
         title: 'Cizo',
-        hostName: `http://staging.cizo.com`,
+        hostName: `https://staging.cizo.com`,
+        sharingPath: 'https://staging.cizo.com/app',
+        facebookAppIdStage: '459923084193687',
+        facebookAppIdProd: '459778204208175',
+        videosList: [],
         categoriesList: [],
+        featuredList: [],
+        userAuthorized: false,
 
         storage: {
             storageSeenKey: 'seen',
+            storageFavoritesKey: 'favorites',
             storageUserToken: 'token',
 
             seenItems: [],
+            favoritesItems: [],
             token: undefined
         }
 
@@ -42,16 +51,37 @@ function AppCtrl($scope, routerHelper, routesList, $state, storageServ, userServ
     routerHelper.configureStates(routesList);
 
     $scope.storage.token = storageServ.getItem($scope.storage.storageUserToken);
+
     if ($scope.storage.token && userServ.isUnexpiredToken($scope.storage.token)) {
-        userServ.updateToken($scope.hostName, $scope.storage.token)
-            .then((response) => {
-                storageServ.setItem($scope.storage.storageUserToken, response.data);
-                $scope.storage.token = response.data;
-            });
+
+        $timeout(() => {
+            "use strict";
+            userServ.updateToken($scope.hostName, $scope.storage.token)
+                .then((response) => {
+                    storageServ.setItem($scope.storage.storageUserToken, response.data);
+                    $scope.storage.token = response.data;
+                });
+        }, 30000);
+
+    }
+
+    if (!userServ.isUnexpiredToken($scope.storage.token)) {
+        storageServ.deleteItem($scope.storage.storageUserToken);
+        $scope.userAuthorized = false;
+    } else {
+        $scope.userAuthorized = true;
+    }
+
+    // upload storage
+    $scope.storage.seenItems = storageServ.getItem($scope.storage.storageSeenKey);
+    if ($scope.storage.seenItems == null) {
+        $scope.storage.seenItems = [];
+    }
+    $scope.storage.favoritesItems = storageServ.getItem($scope.storage.storageFavoritesKey);
+    if ($scope.storage.favoritesItems == null) {
+        $scope.storage.favoritesItems = [];
     }
 
 
-    $state.go('main');
-
 }
-AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ'];
+AppCtrl.$inject = ['$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', 'playerServ', '$timeout'];

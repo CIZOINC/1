@@ -22,7 +22,7 @@ var thirdPartyJS = [
     '../node_modules/ui-router/release/angular-ui-router.js',
     '../node_modules/angular-sanitize/angular-sanitize.js',
     '../node_modules/moment/moment.js',
-    '../node_modules/lodash/index.js',
+    '../node_modules/lodash/lodash.js',
     '../node_modules/angularjs-slider/dist/rzslider.js',
     '../node_modules/angular-svg-round-progressbar/build/roundProgress.js'
 ];
@@ -105,7 +105,8 @@ gulp.task('minify_third_party_js', function () {
 gulp.task('minify_ng_js', function () {
     "use strict";
     return gulp.src([
-            './temp/**/*.js'
+            './temp/**/*.js',
+            '!./temp/final/**/*.js'
         ])
         .pipe(sourcemaps.init())
         .pipe(concat('ng.min.js'))

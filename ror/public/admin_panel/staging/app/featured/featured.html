@@ -1,0 +1,43 @@
+<div class="page page-table" data-ng-controller="FeaturedCtrl">
+    <div class="panel panel-default table-dynamic">
+        <div class="panel-heading">
+            <strong>
+                <span class="glyphicon glyphicon-th"></span>
+                Featured Videos</strong>
+        </div>
+
+        <div class="table-filters">
+            <span ng-if="videoModels.locked">
+                <button type="button" class="btn btn-primary" ng-click="updateOrder()">Change Order</button>
+            </span>
+            <span ng-if="!videoModels.locked">
+                <button type="button" class="btn btn-danger" ng-click="updateOrder('true')">Cancel</button>
+            </span>
+            <span ng-if="!videoModels.locked">
+                <button type="button" class="btn btn-info" ng-click="updateOrder()">Save Order</button>
+            </span>
+        </div>
+
+        <div class="panel-body featuredVideoList">
+            <ul class="featuredPanel" dnd-list="featuredVideos.data">
+                <li ng-repeat="video in featuredVideos.data" dnd-disable-if="videoModels.locked" dnd-draggable="video" dnd-moved="updateFeaturedArray($index)" dnd-effect-allowed="move" ng-style="!videoModels.locked && {'cursor': 'move'}">
+                    <span ng-hide="videoModels.locked" class="fa fa-bars">&nbsp;<button class="btn btn-danger btn-xs" ng-hide="videoModels.locked" ng-click="removeFeatured(video)">
+                        <span class="fa fa-ban"></span>
+                        Remove Featured</button>&nbsp;</span>{{video.title}}
+                    <span class="pull-right">
+                        <span
+                            class="label"
+                            ng-class="{'label-success': video.category_id === 11, 'label-warning': video.category_id === 12, 'label-default': video.category_id === 13, 'label-info': video.category_id === 14 }"
+                            ng-style=" video.category_id === 11 && {'color': '#333'}">{{categoryLookup[video.category_id].title}}</span>
+                        <span ng-show="{{video.mature_content}}">
+                            -
+                            <span class="label label-danger">NSFW</span>
+                        </span>
+
+                    </span>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>

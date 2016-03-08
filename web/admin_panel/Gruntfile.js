@@ -124,6 +124,9 @@
             },
             clean: {
                 dist: {
+                    options: {
+                        force: true
+                    },
                     files: [{
                         dot: true,
                         src: ['.tmp', '<%= yeoman.dist %>/*', '!<%= yeoman.dist %>/.git*']
@@ -462,8 +465,14 @@
             return grunt.task.run(['replace:staging','build']);
         });
 
+        grunt.registerTask('clean-usemin', function() {
+            grunt.config.set('uglify.generated.files', []);
+            grunt.config.set('cssmin.generated.files', []);
+            grunt.config.set('concat.generated.files', []);
+        });
+
         grunt.registerTask('build-all', function() {
-            return grunt.task.run(['build-production', 'build-staging']);
+            return grunt.task.run(['build-production', 'clean-usemin', 'build-staging']);
         });
 
         grunt.registerTask('lessBuild', ['clean:dist', 'useminPrepare', 'concurrent:lessDist', 'copy:dist', 'cssmin', 'concat', 'uglify', 'usemin']);

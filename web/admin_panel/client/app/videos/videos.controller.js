@@ -701,7 +701,7 @@
 
             init();
         })
-        .controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $window, $http, $filter, $uibModalInstance, Upload, $timeout, video) {
+        .controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $window, $http, $filter, $uibModalInstance, Upload, $timeout, video, configuration) {
             $scope.video = video;
             $scope.file = {};
 

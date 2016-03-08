@@ -34,6 +34,8 @@
             'app.calendar',
             'app.videos',
             'app.featured',
+            'app.users',
+            'app.featured',
             'services.config'
         ])
         .run(function (editableOptions) {

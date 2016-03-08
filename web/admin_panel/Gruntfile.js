@@ -198,7 +198,6 @@
                 },
                 dist: {
                     options: {
-                        outputStyle: 'compressed',
                         debugInfo: false,
                         noLineComments: true,
                         sourcemap: false
@@ -371,26 +370,11 @@
             }
         });
 
-        grunt.registerTask('server', function () {
-            grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-        });
-
         grunt.registerTask('serve', function (target) {
             if (target === 'dist') {
                 return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
             }
             return grunt.task.run(['clean:server', 'concurrent:server', 'connect:livereload', 'open', 'watch']);
-        });
-
-        grunt.registerTask('lessServer', function () {
-            grunt.log.warn('The `lessServer` task has been deprecated. Use `grunt lessServe` to start a server.');
-        });
-
-        grunt.registerTask('lessServe', function (target) {
-            if (target === 'dist') {
-                return grunt.task.run(['lessBuild', 'open', 'connect:dist:keepalive']);
-            }
-            return grunt.task.run(['clean:server', 'concurrent:lessServer', 'connect:livereload', 'open', 'watch']);
         });
 
         grunt.registerTask('docs', function () {
@@ -402,8 +386,6 @@
         });
 
         grunt.registerTask('build', ['clean:dist', 'useminPrepare', 'concurrent:dist', 'copy:dist', 'cssmin', 'concat', 'babel', 'uglify', 'usemin']);
-
-        grunt.registerTask('lessBuild', ['clean:dist', 'useminPrepare', 'concurrent:lessDist', 'copy:dist', 'cssmin', 'concat', 'uglify', 'usemin']);
 
         return grunt.registerTask('default', ['serve']);
     };

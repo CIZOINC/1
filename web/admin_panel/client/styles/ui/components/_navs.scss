@@ -1,41 +1,53 @@
-.nav-boxed {
+.nav-boxed
+{
+    border-radius: $border-radius-base;
+    background-color: $reverse;
     box-shadow: 0 0 2px rgba(0,0,0,.2);
 
     // overrides Bootstrap
-    &.nav-justified > li > a {
+    &.nav-justified > li > a
+    {
         margin: 0;
     }
 
-    a {
+    a
+    {
         color: $text-color;
     }
-
-    background-color: $reverse;
-    border-radius: $border-radius-base;
-    > li {
-        > a {
+    > li
+    {
+        > a
+        {
             display: block;
+
             padding: 10px 5px;
-            border-left: 0;
+
             border-top: 1px solid $state-default-border-light;
-            @media (min-width: $screen-sm) {
+            border-left: 0;
+            @media (min-width: $screen-sm)
+            {
                 border-top: 0;
                 border-left: 1px solid $state-default-border-light;
             }
 
-            > i {
+            > i
+            {
+                font-size: 30px;
+                line-height: 40px;
+
                 display: block;
+
                 width: 40px;
                 height: 40px;
-                line-height: 40px;
                 margin: 0 auto 2px;
-                font-size: 30px;
             }
         }
-        &:first-child > a {
-            border-left: none;
+        &:first-child > a
+        {
             border-top: 0;
-            @media (min-width: $screen-sm) {
+            border-left: none;
+            @media (min-width: $screen-sm)
+            {
                 border-left: 1px solid $state-default-border-light;
             }
         }

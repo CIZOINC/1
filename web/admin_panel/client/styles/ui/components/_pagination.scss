@@ -1,38 +1,47 @@
-.pagination-lg > li {
-    > a, 
-    span {
+.pagination-lg > li
+{
+    > a,
+    span
+    {
         line-height: 26px;
+
         padding: 10px 18px;
     }
-} 
+}
 
-.pagination {
-    > li {
-
+.pagination
+{
+    > li
+    {
         // overrides Bootstrap
         &:first-child,
-        &:last-child {
+        &:last-child
+        {
             > a,
-            > span {
+            > span
+            {
                 border-radius: $border-radius-base;
             }
         }
 
-        // 
-        > a {
+        //
+        > a
+        {
+            cursor: pointer;
+
             color: $text-color;
             border-radius: $border-radius-base;
-            cursor: pointer;
         }
         > a,
-        > span {
-            padding: 5px 10px;
+        > span
+        {
             margin-left: 10px;
+            padding: 5px 10px;
         }
-
-    }   
+    }
 }
 
-.pagination-sm {
+.pagination-sm
+{
     @include pagination-size(4px, 8px, $font-size-small,  $line-height-computed, $border-radius-small);
 }

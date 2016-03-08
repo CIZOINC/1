@@ -1,93 +1,124 @@
-.ui-ribbon-container {
+.ui-ribbon-container
+{
     position: relative;
-    .ui-ribbon-wrapper {
+    .ui-ribbon-wrapper
+    {
         position: absolute;
-        overflow: hidden;
-        width: 85px;
-        height: 88px;
         top: -3px;
         right: -3px;
+
+        overflow: hidden;
+
+        width: 85px;
+        height: 88px;
     }
 
-    .ui-ribbon {
-        position: relative;
-        display: block;
-        text-align: center;
+    .ui-ribbon
+    {
         font-size: 15px;
         font-weight: bold;
-        color: $reverse;
-        @include transform( rotate(45deg) );
-        padding: 7px 0;
-        left: -5px;
-        top: 15px;
-        width: 120px;
         line-height: 20px;
+
+        position: relative;
+        top: 15px;
+        left: -5px;
+
+        display: block;
+
+        width: 120px;
+        padding: 7px 0;
+
+        text-align: center;
+
+        color: $reverse;
         background-color: $gray;
-        box-shadow: 0 0 3px rgba(0,0,0,0.3);
+        box-shadow: 0 0 3px rgba(0,0,0,.3);
+
+        @include transform( rotate(45deg) );
         &:before,
-        &:after {
-            position: absolute;
-            content: " ";
+        &:after
+        {
             line-height: 0;
-            border-top: 2px solid $gray;
-            border-left: 2px solid transparent;
-            border-right: 2px solid transparent;
+
+            position: absolute;
             bottom: -2px;
+
+            content: ' ';
+
+            border-top: 2px solid $gray;
+            border-right: 2px solid transparent;
+            border-left: 2px solid transparent;
         }
-        &:before {
-            left: 0;
+        &:before
+        {
             bottom: -1px;
+            left: 0;
         }
-        &:after {
+        &:after
+        {
             right: 0;
         }
-        }
+    }
 
     // color
-    &.ui-ribbon-primary {
-        .ui-ribbon {
+    &.ui-ribbon-primary
+    {
+        .ui-ribbon
+        {
             background-color: $brand-primary;
             &:before,
-            &:after {
+            &:after
+            {
                 border-top: 2px solid $brand-primary;
             }
         }
     }
-    &.ui-ribbon-success {
-        .ui-ribbon {
+    &.ui-ribbon-success
+    {
+        .ui-ribbon
+        {
             background-color: $brand-success;
             &:before,
-            &:after {
+            &:after
+            {
                 border-top: 2px solid $brand-success;
             }
         }
     }
-    &.ui-ribbon-info {
-        .ui-ribbon {
+    &.ui-ribbon-info
+    {
+        .ui-ribbon
+        {
             background-color: $brand-info;
             &:before,
-            &:after {
+            &:after
+            {
                 border-top: 2px solid $brand-info;
             }
         }
     }
-    &.ui-ribbon-warning {
-        .ui-ribbon {
+    &.ui-ribbon-warning
+    {
+        .ui-ribbon
+        {
             background-color: $brand-warning;
             &:before,
-            &:after {
+            &:after
+            {
                 border-top: 2px solid $brand-warning;
             }
         }
     }
-    &.ui-ribbon-danger {
-        .ui-ribbon {
+    &.ui-ribbon-danger
+    {
+        .ui-ribbon
+        {
             background-color: $brand-danger;
             &:before,
-            &:after {
+            &:after
+            {
                 border-top: 2px solid $brand-danger;
             }
         }
     }
-
 }

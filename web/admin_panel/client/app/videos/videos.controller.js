@@ -22,7 +22,7 @@
     }
 
     angular.module('app.videos')
-        .controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, $location, $window, $uibModal) {
+        .controller('VideosCtrl', function VideosCtrl($scope, $filter, $http, $location, $window, $uibModal, configuration) {
             if (!$window.sessionStorage.token) {
                 // Fail out to root without an admin token
                 $location.url('/');
@@ -49,7 +49,7 @@
                 // Get the featured videos from the API
                 let options = {
                     method: 'GET',
-                    url: 'https://staging.cizo.com/videos',
+                    url: configuration.url + '/videos',
                     headers: {
                         authorization: `Bearer ${$window.sessionStorage.token}`
                     }
@@ -66,7 +66,7 @@
                 // Get the available categories from the API
                 let options = {
                     method: 'GET',
-                    url: 'https://staging.cizo.com/categories',
+                    url: configuration.url + '/categories',
                     headers: {
                         authorization: `Bearer ${$window.sessionStorage.token}`
                     }
@@ -83,7 +83,7 @@
                 if (inputValues) {
                     let options = {
                         method: 'POST',
-                        url: 'https://staging.cizo.com/videos',
+                        url: configuration.url + '/videos',
                         data: inputValues,
                         headers: {
                             authorization: `Bearer ${$window.sessionStorage.token}`
@@ -111,7 +111,7 @@
                         },
                         options = {
                             method: 'PUT',
-                            url: `https://staging.cizo.com/videos/${videoObject.id}`,
+                            url: configuration.url + `/videos/${videoObject.id}`,
                             data: videoUpdateBody,
                             headers: {
                                 authorization: `Bearer ${$window.sessionStorage.token}`
@@ -131,7 +131,7 @@
             function deleteVideo(videoId, callback) {
                 let options = {
                     method: 'DELETE',
-                    url: `https://staging.cizo.com/videos/${videoId}`,
+                    url: configuration.url + `/videos/${videoId}`,
                     headers: {
                         authorization: `Bearer ${$window.sessionStorage.token}`
                     }
@@ -264,7 +264,7 @@
                     if ($window.sessionStorage.token) {
                         let options = {
                             method: 'PUT',
-                            url: `https://staging.cizo.com/videos/${videoID}`,
+                            url: configuration.url + `/videos/${videoID}`,
                             data: {
                                 mature_content: maturedFlag
                             },
@@ -289,7 +289,7 @@
                         if (featuredFlag === false) {
                             options = {
                                 method: 'DELETE',
-                                url: `https://staging.cizo.com/featured/${videoID}`,
+                                url: configuration.url + `/featured/${videoID}`,
                                 headers: {
                                     authorization: `Bearer ${$window.sessionStorage.token}`
                                 }
@@ -297,7 +297,7 @@
                         } else if (featuredFlag === true) {
                             options = {
                                 method: 'PUT',
-                                url: `https://staging.cizo.com/featured/${videoID}`,
+                                url: configuration.url + `/featured/${videoID}`,
                                 headers: {
                                     authorization: `Bearer ${$window.sessionStorage.token}`
                                 }
@@ -317,7 +317,7 @@
                     if ($window.sessionStorage.token) {
                         let options = {
                             method: 'PUT',
-                            url: `https://staging.cizo.com/videos/${videoID}`,
+                            url: configuration.url + `/videos/${videoID}`,
                             data: {
                                 visible: visibleFlag
                             },
@@ -339,7 +339,7 @@
                     if ($window.sessionStorage.token) {
                         let options = {
                             method: 'PUT',
-                            url: `https://staging.cizo.com/videos/${videoID}`,
+                            url: configuration.url + `/videos/${videoID}`,
                             data: {
                                 description: videoDescription
                             },
@@ -361,7 +361,7 @@
                     if ($window.sessionStorage.token) {
                         let options = {
                             method: 'PUT',
-                            url: `https://staging.cizo.com/videos/${videoID}`,
+                            url: configuration.url + `/videos/${videoID}`,
                             data: {
                                 title: videoTitle
                             },
@@ -383,7 +383,7 @@
                     if ($window.sessionStorage.token) {
                         let options = {
                             method: 'PUT',
-                            url: `https://staging.cizo.com/videos/${videoID}`,
+                            url: configuration.url + `/videos/${videoID}`,
                             data: {
                                 category_id: categoryId
                             },
@@ -405,7 +405,7 @@
                     if ($window.sessionStorage.token) {
                         let options = {
                             method: 'PUT',
-                            url: `https://staging.cizo.com/videos/${videoID}`,
+                            url: configuration.url + `/videos/${videoID}`,
                             data: {
                                 tag_list: tagList
                             },
@@ -718,7 +718,7 @@
 
                 let options = {
                     method: 'GET',
-                    url: `https://staging.cizo.com/videos/${videoId}/upload_ticket`,
+                    url: configuration.url + `/videos/${videoId}/upload_ticket`,
                     headers: {
                         authorization: `Bearer ${$window.sessionStorage.token}`
                     },
@@ -739,7 +739,7 @@
             function triggerStreamTranscode(videoId, keyName, callback) {
                 let options = {
                     method: 'POST',
-                    url: `https://staging.cizo.com/videos/${videoId}/streams`,
+                    url: configuration.url + `/videos/${videoId}/streams`,
                     headers: {
                         authorization: `Bearer ${$window.sessionStorage.token}`
                     },
@@ -759,7 +759,7 @@
                 // Get the available categories from the API
                 let options = {
                     method: 'GET',
-                    url: 'https://staging.cizo.com/categories',
+                    url: configuration.url + '/categories',
                     headers: {
                         authorization: `Bearer ${$window.sessionStorage.token}`
                     }
@@ -793,7 +793,7 @@
                 if (fileType === 'image') {
                     // Upload hero image
                     Upload.upload({
-                        url: `https://staging.cizo.com/videos/${$scope.video.id}/hero_image`,
+                        url: configuration.url + `/videos/${$scope.video.id}/hero_image`,
                         headers: {
                             authorization: `Bearer ${$window.sessionStorage.token}`
                         },

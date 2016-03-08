@@ -33,7 +33,8 @@
             'app.task',
             'app.calendar',
             'app.videos',
-            'app.featured'
+            'app.featured',
+            'services.config'
         ])
         .run(function (editableOptions) {
             editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'

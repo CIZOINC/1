@@ -332,7 +332,6 @@
             },
             concurrent: {
                 server: ['compass:server', 'copy:styles'],
-                dist: ['compass:dist', 'copy:styles', 'htmlmin'],
                 lessServer: ['less:server', 'copy:styles'],
                 lessDist: ['less:dist', 'copy:styles', 'htmlmin']
             },
@@ -368,9 +367,52 @@
                         ext: '.js'
                     }]
                 }
+            },
+            replace: {
+                development: {
+                    options: {
+                        patterns: [{
+                            json: grunt.file.readJSON('./config/environments/development.json')
+                        }]
+                    },
+                    files: [{
+                        expand: true,
+                        flatten: true,
+                        src: ['./config/config.js'],
+                        dest: '<%= yeoman.app %>/scripts/services/'
+                    }]
+                },
+                staging: {
+                    options: {
+                        patterns: [{
+                            json: grunt.file.readJSON('./config/environments/staging.json')
+                        }]
+                    },
+                    files: [{
+                        expand: true,
+                        flatten: true,
+                        src: ['./config/config.js'],
+                        dest: '<%= yeoman.app %>/scripts/services/'
+                    }]
+                },
+                production: {
+                    options: {
+                        patterns: [{
+                            json: grunt.file.readJSON('./config/environments/production.json')
+                        }]
+                    },
+                    files: [{
+                        expand: true,
+                        flatten: true,
+                        src: ['./config/config.js'],
+                        dest: '<%= yeoman.app %>/scripts/services/'
+                    }]
+                }
             }
         });
 
+        grunt.loadNpmTasks('grunt-replace');
+        
         grunt.registerTask('server', function () {
             grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
         });
@@ -379,7 +421,7 @@
             if (target === 'dist') {
                 return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
             }
-            return grunt.task.run(['clean:server', 'concurrent:server', 'connect:livereload', 'open', 'watch']);
+            return grunt.task.run(['clean:server', 'concurrent:server', 'connect:livereload', 'replace:development', 'open', 'watch']);
         });
 
         grunt.registerTask('lessServer', function () {
@@ -390,7 +432,7 @@
             if (target === 'dist') {
                 return grunt.task.run(['lessBuild', 'open', 'connect:dist:keepalive']);
             }
-            return grunt.task.run(['clean:server', 'concurrent:lessServer', 'connect:livereload', 'open', 'watch']);
+            return grunt.task.run(['clean:server', 'concurrent:lessServer', 'connect:livereload', 'replace:development', 'open', 'watch']);
         });
 
         grunt.registerTask('docs', function () {
@@ -401,7 +443,25 @@
             return grunt.task.run(['jade:landing', 'compass:landing', 'connect:landing', 'open', 'watch']);
         });
 
-        grunt.registerTask('build', ['clean:dist', 'useminPrepare', 'concurrent:dist', 'copy:dist', 'cssmin', 'concat', 'babel', 'uglify', 'usemin']);
+        grunt.registerTask('build', ['clean:dist', 'useminPrepare', 'compass:dist', 'copy:styles', 'htmlmin', 'copy:dist', 'cssmin', 'concat', 'babel', 'uglify', 'usemin']);
+
+        grunt.registerTask('build-production', function() {
+            var dest = '../../ror/public/admin_panel/production';
+            yeomanConfig.dist = dest;
+            grunt.config.set('yeoman.dist', dest);
+            return grunt.task.run(['replace:production', 'build']);
+        });
+
+        grunt.registerTask('build-staging', function() {
+            var dest = '../../ror/public/admin_panel/staging';
+            yeomanConfig.dist = dest;
+            grunt.config.set('yeoman.dist', dest);
+            return grunt.task.run(['replace:staging','build']);
+        });
+
+        grunt.registerTask('build-all', function() {
+            return grunt.task.run(['build-production', 'build-staging']);
+        });
 
         grunt.registerTask('lessBuild', ['clean:dist', 'useminPrepare', 'concurrent:lessDist', 'copy:dist', 'cssmin', 'concat', 'uglify', 'usemin']);
 

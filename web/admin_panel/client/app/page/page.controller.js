@@ -33,7 +33,7 @@
 
             $http({
                 method: 'POST',
-                url: 'https://staging.cizo.com/oauth/token',
+                url: configuration.url + '/oauth/token',
                 data: authBody
             }).then(function successCB(response) {
                 $window.sessionStorage.token = response.data.access_token;

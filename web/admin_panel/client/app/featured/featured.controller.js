@@ -26,7 +26,7 @@
             // Get the available categories from the API
             let options = {
                 method: 'GET',
-                url: 'https://staging.cizo.com/categories',
+                url: configuration.url + '/categories',
                 headers: {
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }
@@ -43,7 +43,7 @@
             // Get the featured videos from the API
             let options = {
                 method: 'GET',
-                url: 'https://staging.cizo.com/featured',
+                url: configuration.url + '/featured',
                 headers: {
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }
@@ -60,7 +60,7 @@
             // Update the featured_order of a specific video
             let options = {
                 method: 'PUT',
-                url: `https://staging.cizo.com/featured/${videoID}`,
+                url: configuration.url + `/featured/${videoID}`,
                 data: {
                     featured_order: featuredOrder
                 },
@@ -80,7 +80,7 @@
             // Update the featured_order of a specific video
             let options = {
                 method: 'DELETE',
-                url: `https://staging.cizo.com/featured/${videoID}`,
+                url: configuration.url + `/featured/${videoID}`,
                 headers: {
                     authorization: `Bearer ${$window.sessionStorage.token}`
                 }

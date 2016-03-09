@@ -6,8 +6,9 @@ exports.usersGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
-    "birthday" : "2016-02-23T20:11:01.589+0000",
+    "birthday" : "2016-03-09T19:56:23.569+0000",
     "password" : "aeiou",
+    "password_confirmation" : "aeiou",
     "id" : 123,
     "email" : "aeiou"
   } ]
@@ -24,8 +25,9 @@ exports.usersPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-23T20:11:01.590+0000",
+  "birthday" : "2016-03-09T19:56:23.570+0000",
   "password" : "aeiou",
+  "password_confirmation" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
 };
@@ -55,8 +57,9 @@ exports.usersMeGet = function() {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-23T20:11:01.592+0000",
+  "birthday" : "2016-03-09T19:56:23.572+0000",
   "password" : "aeiou",
+  "password_confirmation" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
 };
@@ -72,8 +75,9 @@ exports.usersMePut = function(body) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-23T20:11:01.593+0000",
+  "birthday" : "2016-03-09T19:56:23.573+0000",
   "password" : "aeiou",
+  "password_confirmation" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
 };
@@ -104,18 +108,25 @@ exports.usersMeVideosLikedGet = function(createdBefore, createdAfter, count) {
       "stream_type" : "aeiou"
     } ],
     "link" : "aeiou",
-    "created_at" : "2016-02-23T20:11:01.594+0000",
+    "created_at" : "2016-03-09T19:56:23.574+0000",
     "description" : "aeiou",
     "title" : "aeiou",
+    "deleted_at" : "2016-03-09T19:56:23.574+0000",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-23T20:11:01.594+0000",
+    "updated_at" : "2016-03-09T19:56:23.574+0000",
     "category_id" : 123,
+    "hero_images" : {
+      "hero_image_link_thumb_banner" : "aeiou",
+      "hero_image_link_medium_banner" : "aeiou",
+      "hero_image_link" : "aeiou",
+      "hero_image_link_large_banner" : "aeiou"
+    },
     "tag_list" : "aeiou",
     "id" : 123,
-    "hero_image_link" : "aeiou",
+    "hero_image_upload_status" : "aeiou",
     "view_count" : 123,
     "skip_count" : 123
   } ]
@@ -161,18 +172,25 @@ exports.usersMeVideosSeenGet = function(createdBefore, createdAfter, count) {
       "stream_type" : "aeiou"
     } ],
     "link" : "aeiou",
-    "created_at" : "2016-02-23T20:11:01.599+0000",
+    "created_at" : "2016-03-09T19:56:23.578+0000",
     "description" : "aeiou",
     "title" : "aeiou",
+    "deleted_at" : "2016-03-09T19:56:23.578+0000",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-23T20:11:01.599+0000",
+    "updated_at" : "2016-03-09T19:56:23.578+0000",
     "category_id" : 123,
+    "hero_images" : {
+      "hero_image_link_thumb_banner" : "aeiou",
+      "hero_image_link_medium_banner" : "aeiou",
+      "hero_image_link" : "aeiou",
+      "hero_image_link_large_banner" : "aeiou"
+    },
     "tag_list" : "aeiou",
     "id" : 123,
-    "hero_image_link" : "aeiou",
+    "hero_image_upload_status" : "aeiou",
     "view_count" : 123,
     "skip_count" : 123
   } ]
@@ -211,18 +229,25 @@ exports.usersMeVideosSkippedGet = function(createdBefore, createdAfter, count) {
       "stream_type" : "aeiou"
     } ],
     "link" : "aeiou",
-    "created_at" : "2016-02-23T20:11:01.603+0000",
+    "created_at" : "2016-03-09T19:56:23.581+0000",
     "description" : "aeiou",
     "title" : "aeiou",
+    "deleted_at" : "2016-03-09T19:56:23.581+0000",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-23T20:11:01.603+0000",
+    "updated_at" : "2016-03-09T19:56:23.581+0000",
     "category_id" : 123,
+    "hero_images" : {
+      "hero_image_link_thumb_banner" : "aeiou",
+      "hero_image_link_medium_banner" : "aeiou",
+      "hero_image_link" : "aeiou",
+      "hero_image_link_large_banner" : "aeiou"
+    },
     "tag_list" : "aeiou",
     "id" : 123,
-    "hero_image_link" : "aeiou",
+    "hero_image_upload_status" : "aeiou",
     "view_count" : 123,
     "skip_count" : 123
   } ]
@@ -261,18 +286,25 @@ exports.usersMeVideosUnseenGet = function(createdBefore, createdAfter, count) {
       "stream_type" : "aeiou"
     } ],
     "link" : "aeiou",
-    "created_at" : "2016-02-23T20:11:01.606+0000",
+    "created_at" : "2016-03-09T19:56:23.583+0000",
     "description" : "aeiou",
     "title" : "aeiou",
+    "deleted_at" : "2016-03-09T19:56:23.583+0000",
     "liked" : true,
     "seen" : true,
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-02-23T20:11:01.606+0000",
+    "updated_at" : "2016-03-09T19:56:23.583+0000",
     "category_id" : 123,
+    "hero_images" : {
+      "hero_image_link_thumb_banner" : "aeiou",
+      "hero_image_link_medium_banner" : "aeiou",
+      "hero_image_link" : "aeiou",
+      "hero_image_link_large_banner" : "aeiou"
+    },
     "tag_list" : "aeiou",
     "id" : 123,
-    "hero_image_link" : "aeiou",
+    "hero_image_upload_status" : "aeiou",
     "view_count" : 123,
     "skip_count" : 123
   } ]
@@ -310,8 +342,9 @@ exports.usersUserIdGet = function(userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-23T20:11:01.608+0000",
+  "birthday" : "2016-03-09T19:56:23.585+0000",
   "password" : "aeiou",
+  "password_confirmation" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
 };
@@ -327,8 +360,9 @@ exports.usersUserIdPut = function(body, userId) {
   var examples = {};
   
   examples['application/json'] = {
-  "birthday" : "2016-02-23T20:11:01.609+0000",
+  "birthday" : "2016-03-09T19:56:23.586+0000",
   "password" : "aeiou",
+  "password_confirmation" : "aeiou",
   "id" : 123,
   "email" : "aeiou"
 };

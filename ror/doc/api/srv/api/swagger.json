@@ -1732,6 +1732,20 @@
   "description" : "Specifies the number of videos to try and retrieve, up to a maximum of 200.",
   "required" : false,
   "type" : "integer"
+},
+        {
+  "name" : "max_id",
+  "in" : "query",
+  "description" : "Specifies the maximum video id to include in the return. Exclusive.",
+  "required" : false,
+  "type" : "integer"
+},
+        {
+  "name" : "since_id",
+  "in" : "query",
+  "description" : "Specifies the minimum video id to include in the return. Exclusive.",
+  "required" : false,
+  "type" : "integer"
 }
         
       ],
@@ -1987,6 +2001,11 @@
       "format" : "date-time",
       "readOnly" : true
     },
+    "deleted_at" : {
+      "type" : "string",
+      "format" : "date-time",
+      "readOnly" : true
+    },
     "title" : {
       "type" : "string",
       "description" : "Title of video."
@@ -2023,9 +2042,14 @@
         "$ref" : "#/definitions/Stream"
       }
     },
-    "hero_image_link" : {
+    "hero_image_upload_status" : {
       "type" : "string",
-      "description" : "Image URL representing the video."
+      "description" : "Hero image up. This property is only visible to clients with an oauth2 scope of 'admin'",
+      "readOnly" : true,
+      "enum" : [ "pending", "processing", "error", "completed", "idle" ]
+    },
+    "hero_images" : {
+      "$ref" : "#/definitions/Video_hero_images"
     },
     "liked" : {
       "type" : "boolean",
@@ -2070,6 +2094,11 @@
     "title" : {
       "type" : "string",
       "description" : "Title of category"
+    },
+    "canonical_title" : {
+      "type" : "string",
+      "description" : "Canonical title of category. This field is suitable for matching on a specific category. For example, if a client wants to find the \"Movies\" category, the client should look for a category with a canonical_title of \"movies\". This field is computed when creating or updating a category.",
+      "readOnly" : true
     }
   }
 },"Stream": {
@@ -2105,6 +2134,10 @@
       "description" : "Email of user"
     },
     "password" : {
+      "type" : "string",
+      "description" : "Password of user. This is omitted from any endpoint returns"
+    },
+    "password_confirmation" : {
       "type" : "string",
       "description" : "Password of user. This is omitted from any endpoint returns"
     },
@@ -2402,6 +2435,25 @@
     "policy" : {
       "type" : "string",
       "description" : "Upload policy"
+    }
+  }
+},"Video_hero_images": {
+  "properties" : {
+    "hero_image_link_thumb_banner" : {
+      "type" : "string",
+      "description" : "Thumb banner hero image URL."
+    },
+    "hero_image_link_medium_banner" : {
+      "type" : "string",
+      "description" : "Medium banner hero image URL."
+    },
+    "hero_image_link" : {
+      "type" : "string",
+      "description" : "Full resolution hero image URL."
+    },
+    "hero_image_link_large_banner" : {
+      "type" : "string",
+      "description" : "Large banner hero image URL."
     }
   }
 }

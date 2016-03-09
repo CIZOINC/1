@@ -176,7 +176,7 @@ paths:
                 type: string
                 format: date-time
         '400':
-          description: Login failed, user didn't want to give access.                
+          description: "Login failed, user didn't want to give access."
   /videos:
     get:
       description: "Returns a list of videos ordered by created_at. At most 200 videos will be returned. For an oauth2 scope of 'admin', this includes all videos. For oauth2 scope of 'user' or unauthenticated clients, this includes only videos with 'visible' set to true. <b>NOTE</b>  If the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old, streams will be null."
@@ -207,7 +207,7 @@ paths:
           format: date-time
         - name: visible
           in: query
-          description: Filter videos by 'visible' field. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the "id" attribute of each video if this query parameter is set to false. 
+          description: Filter videos by 'visible' field. If client is unauthenticated or has a token with a scope of 'user', the videos returned will only contain the "id" attribute of each video if this query parameter is set to false.
           required: false
           type: boolean
         - name: deleted
@@ -223,6 +223,16 @@ paths:
         - name: count
           in: query
           description: Specifies the number of videos to try and retrieve, up to a maximum of 200.
+          required: false
+          type: integer
+        - name: max_id
+          in: query
+          description: Specifies the maximum video id to include in the return. Exclusive.
+          required: false
+          type: integer
+        - name: since_id
+          in: query
+          description: Specifies the minimum video id to include in the return. Exclusive.
           required: false
           type: integer
       responses:
@@ -1390,6 +1400,10 @@ definitions:
         type: string
         format: date-time
         readOnly: true
+      deleted_at:
+        type: string
+        format: date-time
+        readOnly: true
       title:
         type: string
         description: Title of video.
@@ -1418,9 +1432,32 @@ definitions:
         readOnly: true
         items:
           $ref: '#/definitions/Stream'
-      hero_image_link:
+      hero_image_upload_status:
         type: string
-        description: Image URL representing the video.
+        description: Hero image up. This property is only visible to clients with an oauth2 scope of 'admin'
+        readOnly: true
+        enum:
+          - 'pending'
+          - 'processing'
+          - 'error'
+          - 'completed'
+          - 'idle'
+      hero_images:
+        type: object
+        readOnly: true
+        properties:
+          hero_image_link:
+            type: string
+            description: Full resolution hero image URL.
+          hero_image_link_large_banner:
+            type: string
+            description: Large banner hero image URL.
+          hero_image_link_medium_banner:
+            type: string
+            description: Medium banner hero image URL.
+          hero_image_link_thumb_banner:
+            type: string
+            description: Thumb banner hero image URL.
       liked:
         type: boolean
         description: 'Boolean representing whether the current user has liked the video. This property is not present for unauthenticated clients.'
@@ -1461,6 +1498,10 @@ definitions:
       title:
         type: string
         description: Title of category
+      canonical_title:
+        type: string
+        readOnly: true
+        description: 'Canonical title of category. This field is suitable for matching on a specific category. For example, if a client wants to find the "Movies" category, the client should look for a category with a canonical_title of "movies". This field is computed when creating or updating a category.'
   Stream:
     type: object
     required:
@@ -1504,6 +1545,9 @@ definitions:
         type: string
         description: Email of user
       password:
+        type: string
+        description: Password of user. This is omitted from any endpoint returns
+      password_confirmation:
         type: string
         description: Password of user. This is omitted from any endpoint returns
       birthday:

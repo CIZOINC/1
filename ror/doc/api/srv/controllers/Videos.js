@@ -15,9 +15,11 @@ module.exports.videosGet = function videosGet (req, res, next) {
   var deleted = req.swagger.params['deleted'].value;
   var showMatureContent = req.swagger.params['show_mature_content'].value;
   var count = req.swagger.params['count'].value;
+  var maxId = req.swagger.params['max_id'].value;
+  var sinceId = req.swagger.params['since_id'].value;
   
 
-  var result = Videos.videosGet(category, tags, createdBefore, createdAfter, visible, deleted, showMatureContent, count);
+  var result = Videos.videosGet(category, tags, createdBefore, createdAfter, visible, deleted, showMatureContent, count, maxId, sinceId);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

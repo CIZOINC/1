@@ -6,6 +6,7 @@ exports.categoriesGet = function() {
   
   examples['application/json'] = {
   "data" : [ {
+    "canonical_title" : "aeiou",
     "id" : 123,
     "title" : "aeiou"
   } ]
@@ -22,6 +23,7 @@ exports.categoriesPost = function(body) {
   var examples = {};
   
   examples['application/json'] = {
+  "canonical_title" : "aeiou",
   "id" : 123,
   "title" : "aeiou"
 };
@@ -37,6 +39,7 @@ exports.categoriesCategoryIdGet = function(categoryId) {
   var examples = {};
   
   examples['application/json'] = {
+  "canonical_title" : "aeiou",
   "id" : 123,
   "title" : "aeiou"
 };
@@ -52,6 +55,7 @@ exports.categoriesCategoryIdPut = function(body, categoryId) {
   var examples = {};
   
   examples['application/json'] = {
+  "canonical_title" : "aeiou",
   "id" : 123,
   "title" : "aeiou"
 };

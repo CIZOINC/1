@@ -19,7 +19,7 @@ var thirdPartyJS = [
     '../node_modules/angular/angular.js',
     '../node_modules/jquery/dist/jquery.js',
     '../node_modules/bootstrap/dist/js/bootstrap.js',
-    '../node_modules/ui-router/release/angular-ui-router.js',
+    '../node_modules/angular-ui-router/release/angular-ui-router.js',
     '../node_modules/angular-sanitize/angular-sanitize.js',
     '../node_modules/moment/moment.js',
     '../node_modules/lodash/lodash.js',
@@ -107,6 +107,8 @@ gulp.task('compile_appctrl_production', function () {
     "use strict";
     return gulp.src(['AppCtrl.js'])
         .pipe(replace("facebookAppId: '459923084193687'", "facebookAppId: '459778204208175'"))
+        .pipe(replace("hostName: `https://staging.cizo.com`", "hostName: `https://api.cizo.com`"))
+        .pipe(replace("sharingPath: 'https://staging.cizo.com/app'", "sharingPath: 'https://www.cizo.com/'"))
         .pipe(babel({
             presets: ['es2015']
         }))
@@ -233,9 +235,7 @@ gulp.task('send_to_production', function () {
 });
 
 gulp.task('clean_temp', function () {
-    gulp.src([
-        './temp'
-    ]).pipe(rimraf());
+    rimraf('./temp');
 });
 
 gulp.task('default', function () {

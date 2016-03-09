@@ -14,11 +14,14 @@ function storageServ($window) {
     };
 
     function getItem(key) {
-        return JSON.parse($window.localStorage.getItem(key));
+        let value = $window.localStorage.getItem(key);
+
+        return (value === 'undefined')? undefined : JSON.parse($window.localStorage.getItem(key));
     }
 
     function setItem(key, value) {
-        $window.localStorage.setItem(key, JSON.stringify(value));
+        let parsedValue = value ? JSON.stringify(value) : undefined;
+        $window.localStorage.setItem(key, parsedValue);
     }
 
     function deleteItem(key) {

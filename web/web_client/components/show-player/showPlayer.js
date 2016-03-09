@@ -240,6 +240,17 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
                 }
             }, 50);
+
+            //
+
+            scope.isPlaying = false;
+            scope.featuredPlayerInside.classList.remove('featured-player--playing');
+            scope.imageLayer.classList.remove('featured-player_hero-image-layer--playing');
+            scope.bottomElements.classList.add('hidden-layer');
+
+            document.querySelector('.home_video-items').classList.remove('home_video-items--playing');
+
+
         }
 
         function pauseIntermissionToggle(event,isForced) {
@@ -605,8 +616,10 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 if (featuredItem) {
                     scope.carouselItemIntermissionLayer = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_intermission`))[0];
                     scope.carouselItemIntermissionImage = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_image`))[0];
+                    scope.carouselItemPlay = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_overlay`))[0];
                     scope.carouselItemIntermissionLayer.classList[_classAdd(false)]('hidden-layer');
                     scope.carouselItemIntermissionImage.classList[_classAdd(true)]('featured-carousel_content_item_image--intermission');
+                    scope.carouselItemPlay.classList[_classAdd(true)]('hidden-layer');
                 }
 
             } else {
@@ -615,6 +628,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                         .classList[_classAdd(true)]('hidden-layer');
                     angular.element(item.querySelector(`.featured-carousel_content_item_image`))[0]
                         .classList[_classAdd(false)]('featured-carousel_content_item_image--intermission');
+                    angular.element(item.querySelector(`.featured-carousel_content_item_overlay`))[0]
+                        .classList[_classAdd(false)]('hidden-layer');
                 });
             }
 

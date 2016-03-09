@@ -185,6 +185,7 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
     function userLogout(storage) {
         storage.userAuthorized = false;
         storage.token = undefined;
+        storageServ.setItem(storage.storageUserToken, undefined);
         $state.go('home');
     }
 

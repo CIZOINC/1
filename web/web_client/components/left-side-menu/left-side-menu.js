@@ -13,9 +13,7 @@ function leftSideMenu($state) {
         link: linkFn,
         transclude: false,
         scope: {
-            host: '=',
-            searchedVideo: '=',
-            onToggle: '@'
+            storage: '='
         }
     };
 

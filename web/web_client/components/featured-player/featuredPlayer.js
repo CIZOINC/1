@@ -629,10 +629,11 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                     scope.carouselItemIntermissionLayer = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_intermission`))[0];
                     scope.carouselItemIntermissionImage = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_image`))[0];
                     scope.carouselItemPlay = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_overlay`))[0];
+                    scope.carouselItemIntermissionLayer.classList[_classAdd(false)]('hidden-layer');
+                    scope.carouselItemIntermissionImage.classList[_classAdd(true)]('featured-carousel_content_item_image--intermission');
+                    scope.carouselItemPlay.classList[_classAdd(true)]('hidden-layer');
                 }
-                scope.carouselItemIntermissionLayer.classList[_classAdd(false)]('hidden-layer');
-                scope.carouselItemIntermissionImage.classList[_classAdd(true)]('featured-carousel_content_item_image--intermission');
-                scope.carouselItemPlay.classList[_classAdd(true)]('hidden-layer');
+
             } else {
                 _.each(angular.element(element[0].querySelectorAll(`.featured-carousel_content_item`)), (item) => {
                     angular.element(item.querySelector(`.featured-carousel_content_item_intermission`))[0]

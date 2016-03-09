@@ -9,25 +9,25 @@
         <div class="menu_item"  ui-sref="list({listType: 'unseen'})">
             <span class="menu_item_icon icon-unseen"></span>
             <span class="menu_item_title">Unseen</span>
-            <span class="menu_item_counter"></span>
+            <span class="menu_item_counter">{{storage.unseenItems.length ? storage.unseenItems.length : ''}}</span>
             <span class="menu_item_next icon-forward"></span>
         </div>
         <div class="menu_item"  ui-sref="list({listType: 'skipped'})">
             <span class="menu_item_icon icon-skipped"></span>
             <span class="menu_item_title">Skipped</span>
-            <span class="menu_item_counter"></span>
+            <span class="menu_item_counter">{{storage.skippedItems.length ? storage.skippedItems.length : ''}}</span>
             <span class="menu_item_next icon-forward"></span>
         </div>
         <div class="menu_item"  ui-sref="list({listType: 'seen'})">
             <span class="menu_item_icon icon-seen"></span>
             <span class="menu_item_title">Seen</span>
-            <span class="menu_item_counter"></span>
+            <span class="menu_item_counter">{{storage.seenItems.length ? storage.seenItems.length : ''}}</span>
             <span class="menu_item_next icon-forward"></span>
         </div>
         <div class="menu_item"  ui-sref="list({listType: 'favorite'})">
             <span class="menu_item_icon icon-favorites"></span>
             <span class="menu_item_title">Favorites</span>
-            <span class="menu_item_counter"></span>
+            <span class="menu_item_counter">{{storage.favoritesItems.length ? storage.favoritesItems.length : ''}}</span>
             <span class="menu_item_next icon-forward"></span>
         </div>
     </div>

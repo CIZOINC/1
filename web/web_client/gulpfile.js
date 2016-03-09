@@ -235,9 +235,7 @@ gulp.task('send_to_production', function () {
 });
 
 gulp.task('clean_temp', function () {
-    gulp.src([
-        './temp'
-    ]).pipe(rimraf());
+    rimraf('./temp');
 });
 
 gulp.task('default', function () {

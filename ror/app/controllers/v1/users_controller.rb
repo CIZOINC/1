@@ -126,7 +126,7 @@ class V1::UsersController < V1::ApiController
   end
 
   def users_params
-    params.require(:user).permit((@current_user.id == @user.id) ? nil : :is_admin)
+    params.require(:user).permit((@current_user.id == @user.id) ? nil : [:is_admin, :birthday])
   end
 
   def self_params

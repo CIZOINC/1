@@ -1,269 +1,350 @@
 
 // When Nav collapsed
-.app.nav-collapsed-min {
-    .top-header {
-        .logo {
-            @media (min-width: $screen-sm) {
+.app.nav-collapsed-min
+{
+    .top-header
+    {
+        .logo
+        {
+            @media (min-width: $screen-sm)
+            {
                 width: 60px; // 59 + 1 (border)
-            } 
+            }
 
-            .logo-text {
+            .logo-text
+            {
                 display: none;
-            }           
+            }
         }
 
-        .top-nav {
+        .top-nav
+        {
             padding: 0 0 0 60px;
         }
     }
 }
 
-// 
-.header-container {
+//
+.header-container
+{
     // height:( $header_height * 2);
     // @media (min-width:$screen-sm) {
     //     height: $header_height;
     // }
     box-shadow: 0 1px 2px rgba(0,0,0,.15);
 
-    > .top-header {
+    > .top-header
+    {
         // shared
-        a {
+        a
+        {
             color: $header_link_color;
-            &:hover {
+            &:hover
+            {
                 text-decoration: none;
             }
         }
 
-        .dropdown-menu {
-            a {
+        .dropdown-menu
+        {
+            a
+            {
                 color: $text-color;
             }
         }
 
-        .hidden-mobile {
+        .hidden-mobile
+        {
             display: none;
-            @media (min-width: $screen-xs) {
+            @media (min-width: $screen-xs)
+            {
                 display: inline;
             }
         }
 
         //
-        .logo {
+        .logo
+        {
+            line-height: $header_height;
+
             position: absolute;
+
             width: 100%;
             height: $header_height;
-            line-height: $header_height;
+
             text-align: center;
-            @media (min-width: $screen-sm) {
+            @media (min-width: $screen-sm)
+            {
                 display: inline-block;
+
                 width: 220px;
+
                 border-right: 1px solid $header-border;
             }
 
-            .logo-icon {
+            .logo-icon
+            {
                 font-size: 20px;
             }
 
-            > a {
+            > a
+            {
                 font-size: 24px;
+
                 vertical-align: middle;
             }
         }
 
-        // 
-        .menu-button {
-            display: block;
+        //
+        .menu-button
+        {
             position: absolute;
-            top:  ( $header_height/2 - 17px);
+            top: ( $header_height/2 - 17px);
             right: 20px;
+
+            display: block;
+
             width: 46px;
             padding: 10px 12px;
+
             border-radius: 4px;
-            &:hover {
+            &:hover
+            {
                 cursor: pointer;
+
                 background-color: darken($brand-primary, 10%);
             }
 
-            .icon-bar {
+            .icon-bar
+            {
                 display: block;
+
                 width: 22px;
                 height: 2px;
+
                 border-radius: 1px;
                 background-color: #fff;
             }
-            .icon-bar + .icon-bar {
+            .icon-bar + .icon-bar
+            {
                 margin-top: 4px;
             }
 
-            @media (min-width: $screen-sm) {
+            @media (min-width: $screen-sm)
+            {
                 display: none;
             }
         }
 
-        // 
-        .admin-options {
-            z-index: 20;
+        //
+        .admin-options
+        {
             line-height: 20px;
+
+            z-index: 20;
         }
 
-        .skin-options {
-            .panel-body {
+        .skin-options
+        {
+            .panel-body
+            {
                 min-width: 330px;
+
                 background-color: #f9f9f9;
             }
         }
 
-        // 
-        .dropdown-menu.panel {
+        //
+        .dropdown-menu.panel
+        {
             padding: 0;
+
             white-space: nowrap;
-            
+
             .panel-heading,
-            .panel-footer {
+            .panel-footer
+            {
                 padding: 10px 15px;
             }
 
-            .list-group-item {
+            .list-group-item
+            {
                 padding: 10px 15px;
-                > a {
+                > a
+                {
                     display: block;
                 }
             }
 
-            .media {
-                .media-body {
+            .media
+            {
+                .media-body
+                {
                     padding-right: 75px;
                 }
             }
         }
 
 
-        // 
-        .top-nav {
+        //
+        .top-nav
+        {
             width: 100%;
             height: $header_height;
             padding: $header_height 0 0;
-            @media (min-width: $screen-sm) {
+            @media (min-width: $screen-sm)
+            {
                 padding: 0 0 0 220px;
             }
 
-            > ul {
+            > ul
+            {
                 margin-bottom: 0;
             }
 
-            // 
+            //
             .nav-left,
-            .nav-right {
+            .nav-right
+            {
                 font-size: 16px;
                 line-height: $header_line_height;
 
-                > li {
+                > li
+                {
                     float: left;
-                    &.nav-profile {
-                        > a {
+                    &.nav-profile
+                    {
+                        > a
+                        {
                             padding: ( $header_height/2 - 15px ) 15px;
                         }
-                        .hidden-xs {
+                        .hidden-xs
+                        {
                             padding-right: 8px;
                         }
-                        i {
-                            width: 18px;
+                        i
+                        {
                             font-size: 16px;
+
+                            width: 18px;
                             margin-right: 5px;
-                        } 
+                        }
                     }
 
-                    > .toggle-min {
+                    > .toggle-min
+                    {
                         display: none;
-                        @media (min-width:$screen-sm) {
+                        @media (min-width:$screen-sm)
+                        {
                             display: block;
                         }
                     }
 
-                    a {
+                    a
+                    {
                         &:hover,
-                        &:focus {
+                        &:focus
+                        {
                             text-decoration: none;
                         }
                     }
 
                     > .btn-group > a,
-                    > a {
+                    > a
+                    {
                         position: relative;
+
                         display: block;
+
                         height: $header_height;
                         padding: ( ($header_height - $header_line_height)/2 ) 16px;
-                        @media (min-width:$screen-sm) {
+                        @media (min-width:$screen-sm)
+                        {
                             padding: ( ($header_height - $header_line_height)/2 ) 18px;
                         }
 
-                        .badge {
+                        .badge
+                        {
                             position: absolute;
                             top: 6px;
                             right: 3px;
-                            @media (min-width:$screen-sm) {
-                                background-color: transparent;
+                            @media (min-width:$screen-sm)
+                            {
                                 color: $header_link_color;
+                                background-color: transparent;
                             }
                         }
                     }
 
-                    ul.dropdown-menu {
-                        a:hover {
-                            background-color: $skin;
+                    ul.dropdown-menu
+                    {
+                        a:hover
+                        {
                             color: #fff;
+                            background-color: $skin;
                         }
 
-                        .glyphicon {
+                        .glyphicon
+                        {
                             margin-right: 10px;
                         }
                     }
                 }
-
-
-
             }
 
-            .search-box {
+            .search-box
+            {
                 max-width: 180px;
                 padding: ($header_height/2 - 17px) 0;
 
-                .input-group-addon {
+                .input-group-addon
+                {
                     padding: 6px 0 6px 12px;
+
                     border: none;
                     background-color: transparent;
                 }
 
-                .form-control {
+                .form-control
+                {
                     border: none;
                     background: transparent;
                 }
             }
 
-            // 
-            .nav-left {
+            //
+            .nav-left
+            {
                 float: left;
+
                 padding: 0;
-                > li {
+                > li
+                {
                     border-right: 1px solid $header-border;
                 }
             }
 
-            // 
-            .nav-right {
+            //
+            .nav-right
+            {
                 padding: 0;
-                > li {
-                    > a {
+                > li
+                {
+                    > a
+                    {
                         text-align: center;
+
                         color: #fff;
 
-                        .badge {
+                        .badge
+                        {
                             color: #fff;
                         }
                     }
-                    &:last-child {
-                        .dropdown-menu.pull-right {
+                    &:last-child
+                    {
+                        .dropdown-menu.pull-right
+                        {
                             right: 10px;
                         }
                     }
@@ -271,20 +352,27 @@
             }
         }
 
-        // 
-        .langs {
-            .active-flag {
-                .flag {
+        //
+        .langs
+        {
+            .active-flag
+            {
+                .flag
+                {
                     margin-top: -6px;
                 }
             }
 
-            .list-langs {
-                a {
+            .list-langs
+            {
+                a
+                {
                     position: relative;
+
                     padding: 8px 20px 8px 57px;
 
-                    .flag {
+                    .flag
+                    {
                         position: absolute;
                         top: 3px;
                         left: 15px;
@@ -292,103 +380,128 @@
                 }
             }
         }
-
-
     }
-
 }
 
 
 
 
-// 
-.skin-check {
+//
+.skin-check
+{
     position: relative;
+
     display: block;
-    input[type="radio"] {
+    input[type='radio']
+    {
         display: none;
     }
 
-    input[type="radio"] + span:hover {
+    input[type='radio'] + span:hover
+    {
         cursor: pointer;
     }
-    
-    input[type="radio"] + span {
+
+    input[type='radio'] + span
+    {
         position: relative;
-        > .overlay {
-            display: none;
+        > .overlay
+        {
+            line-height: 30px;
+
             position: absolute;
             top: 0;
-            bottom: 0;
             right: 0;
+            bottom: 0;
             left: 0;
+
+            display: none;
+
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,.3);
+
             text-align: center;
-            line-height: 30px; 
-            color: #fff;           
+
+            color: #fff;
+            background-color: rgba(0,0,0,.3);
         }
     }
 
-    input[type="radio"]:checked + span {
-        > .overlay {
+    input[type='radio']:checked + span
+    {
+        > .overlay
+        {
             display: block;
         }
     }
-
 }
 
-.skin-item {
-    overflow: hidden;
+.skin-item
+{
     display: block;
-    box-shadow: 0 0 2px rgba(0,0,0,.1);
+    overflow: hidden;
+
     margin-bottom: 15px;
 
-    > span {
+    box-shadow: 0 0 2px rgba(0,0,0,.1);
+
+    > span
+    {
         display: block;
         float: left;
+
         width: 50%;
         height: 20px;
     }
 
-    .item-header {
+    .item-header
+    {
         height: 10px;
     }
 }
 
 
 // Header - Color
-.header-container {
+.header-container
+{
     // Text color in dropdown is always the same
-    .dropdown {
+    .dropdown
+    {
         color: $text-color;
-        a {
+        a
+        {
             color: $text-color;
-            &:hover {
-                color: $text-color;
-            }
-        }        
-    }
-
-    &.bg-white {
-        color: $text-color;
-
-        .input-group-addon,
-        a {
-            color: $text-color;
-            &:hover {
+            &:hover
+            {
                 color: $text-color;
             }
         }
     }
-    &.bg-dark {
+
+    &.bg-white
+    {
+        color: $text-color;
+
+        .input-group-addon,
+        a
+        {
+            color: $text-color;
+            &:hover
+            {
+                color: $text-color;
+            }
+        }
+    }
+    &.bg-dark
+    {
         color: $bright;
 
         .input-group-addon,
-        a {
+        a
+        {
             color: $bright;
-            &:hover {
+            &:hover
+            {
                 color: $bright;
             }
         }
@@ -398,51 +511,80 @@
     &.bg-info,
     &.bg-info-alt,
     &.bg-warning,
-    &.bg-danger {
+    &.bg-danger
+    {
         color: $bright;
-        a {
+        a
+        {
             color: $bright;
-            &:hover {
+            &:hover
+            {
                 color: $bright;
             }
         }
-        
-        .input-group-addon { color: $gray-lighter; }
-        ::-webkit-input-placeholder { color: #eaeaea; }
-        :-moz-placeholder { color: #eaeaea; } // Firefox 18-
-        ::-moz-placeholder {  color: #eaeaea; } // Firefox 19+
-        :-ms-input-placeholder {color: #eaeaea; }   
 
-        .top-nav .nav-left > li > a .badge {
+        .input-group-addon
+        {
+            color: $gray-lighter;
+        }
+        ::-webkit-input-placeholder
+        {
+            color: #eaeaea;
+        }
+        :-moz-placeholder
+        {
+            color: #eaeaea;
+        } // Firefox 18-
+        ::-moz-placeholder
+        {
+            color: #eaeaea;
+        } // Firefox 19+
+        :-ms-input-placeholder
+        {
+            color: #eaeaea;
+        }
+
+        .top-nav .nav-left > li > a .badge
+        {
             color: #eaeaea;
         }
     }
 
-    // 
-    > .top-header {
-        .logo {
+    //
+    > .top-header
+    {
+        .logo
+        {
             border: 1px solid rgba(0,0,0,.1);
-            @media (min-width: $screen-sm-min) {
+            @media (min-width: $screen-sm-min)
+            {
                 border: 0;
             }
-            &.bg-white {
+            &.bg-white
+            {
                 color: $dark;
-                a {
+                a
+                {
                     color: $dark;
-                    &:hover {
+                    &:hover
+                    {
                         color: $dark;
                     }
                 }
 
-                & + .menu-button {
-                    .icon-bar {
+                & + .menu-button
+                {
+                    .icon-bar
+                    {
                         background-color: $text-color;
                     }
 
-                    &:hover {
-                        .icon-bar {
+                    &:hover
+                    {
+                        .icon-bar
+                        {
                             background-color: $reverse;
-                        }                        
+                        }
                     }
                 }
             }
@@ -453,17 +595,18 @@
             &.bg-info,
             &.bg-info-alt,
             &.bg-warning,
-            &.bg-danger {
+            &.bg-danger
+            {
                 color: $bright;
-                a {
+                a
+                {
                     color: $bright;
-                    &:hover {
+                    &:hover
+                    {
                         color: $bright;
                     }
                 }
-            }        
+            }
         }
-
     }
 }
-

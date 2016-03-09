@@ -1,46 +1,61 @@
-.page-about {
-    h2 {
+.page-about
+{
+    h2
+    {
         font-size: 40px;
         font-weight: 300;
     }
 
-    .intro {
+    .intro
+    {
         margin: 20px 0 70px;
     }
 
-    .stat-container {
+    .stat-container
+    {
         margin-bottom: 30px;
 
-        .stat-item {
+        .stat-item
+        {
             margin-bottom: 20px;
+
             border-bottom: 2px solid $state-default-border;
         }
 
-        .stat-num {
-            display: block;
-            color: $brand-primary;
+        .stat-num
+        {
             font-size: 72px;
             font-weight: 300;
             line-height: 66px;
+
+            display: block;
+
+            color: $brand-primary;
         }
 
-        .stat-desc {
+        .stat-desc
+        {
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 22px;
+
             display: inline-block;
+
             margin-bottom: -2px;
             padding-bottom: 20px;
+
             border-bottom: 2px solid $brand-primary;
-            font-size: 20px;
-            line-height: 22px;
-            font-weight: bold;
         }
     }
 
-    .info-container {
-        .desc {
-            margin-bottom: 30px;
+    .info-container
+    {
+        .desc
+        {
             font-size: 12px;
-            line-height: 20px;        
-        }        
-    }
+            line-height: 20px;
 
+            margin-bottom: 30px;
+        }
+    }
 }

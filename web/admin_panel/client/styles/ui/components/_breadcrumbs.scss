@@ -1,63 +1,87 @@
-.breadcrumb {
-    a {
+.breadcrumb
+{
+    a
+    {
         color: $text-color;
-        &:hover {
+        &:hover
+        {
             text-decoration: none;
         }
     }
 }
 
-.breadcrumb-alt {
+.breadcrumb-alt
+{
     overflow: hidden; // clearfix
-    list-style: none;
+
+    width: 100%;
     margin: 0 0 20px;
     padding: 0;
-    width: 100%;
 
-    > li {
+    list-style: none;
+
+    > li
+    {
         float: left;
+
         margin: 0 25px 0 0;
 
-        > a {
-            position: relative;
-            float: left;
-            background-color: $gray-lighter;
-            color: $text-color;
+        > a
+        {
             font-size: 12px;
+
+            position: relative;
+
+            float: left;
+
             padding: 10px;
-            &:before {
+
+            color: $text-color;
+            background-color: $gray-lighter;
+            &:before
+            {
                 position: absolute;
                 top: 50%;
                 left: -1em;
+
                 margin-top: -1.6em;
-                border-color: $gray-lighter $gray-lighter $gray-lighter rgba(0,0,0,0);
-                border-style: solid;
+
+                content: '';
+
                 border-width: 1.5em 0 1.7em 1em;
-                content: "";
+                border-style: solid;
+                border-color: $gray-lighter $gray-lighter $gray-lighter rgba(0,0,0,0);
             }
-            &:after {
+            &:after
+            {
                 position: absolute;
                 top: 50%;
                 right: -1em;
+
                 margin-top: -1.5em;
+
+                content: '';
+
+                border-top: 1.5em solid rgba(0,0,0,0);
                 border-bottom: 1.5em solid rgba(0,0,0,0);
                 border-left: 1em solid $gray-lighter;
-                border-top: 1.5em solid rgba(0,0,0,0);
-                content: "";
             }
             &:hover,
-            &.active {
+            &.active
+            {
                 text-decoration: none;
-                background-color: $brand-primary;
+
                 color: #fff;
-                &:before{
+                background-color: $brand-primary;
+                &:before
+                {
                     border-color: $brand-primary $brand-primary $brand-primary rgba(0,0,0,0);
                 }
-                &:after {
+                &:after
+                {
                     border-left: 1em solid $brand-primary;
                 }
             }
         }
     }
 }
-

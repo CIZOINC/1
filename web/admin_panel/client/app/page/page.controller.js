@@ -1,7 +1,8 @@
 'use strict';
 
 (function () {
-    angular.module('app.page')
+    angular
+        .module('app.page')
         .controller('invoiceCtrl', ['$scope', '$window', invoiceCtrl])
         .controller('authCtrl', ['$scope', '$window', '$location', '$http', 'configuration', authCtrl]);
 
@@ -46,9 +47,9 @@
         $scope.userLogin = function () {
             if ($scope.user_email && $scope.user_password) {
                 $scope.invalidLogin = false;
-                authenticate($scope.user_email, $scope.user_password, $window, $http, function (err, res) {
+                authenticate($scope.user_email, $scope.user_password, $window, $http, function (err) {
                     if (err) {
-                        $window.sessionStorage.token = undefined;
+                        $window.sessionStorage.token = null;
                         $scope.invalidLogin = true;
                         throw new Error(err);
                     } else {
@@ -56,7 +57,7 @@
                     }
                 });
             } else {
-                $window.sessionStorage.token = undefined;
+                $window.sessionStorage.token = null;
                 $scope.invalidLogin = true;
             }
         };

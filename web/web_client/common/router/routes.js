@@ -20,6 +20,15 @@ angular
             }
         },
         {
+            state: 'reset',
+            config: {
+                url: '/reset',
+                templateUrl: 'views/reset/reset.html',
+                controller: 'ResetCtrl',
+                controllerAs: 'reset'
+            }
+        },
+        {
             state: 'home',
             config: {
                 url: '',
@@ -49,7 +58,7 @@ angular
         {
             state: 'list',
             config: {
-                url: '/list',
+                url: '/list/:listType',
                 templateUrl: 'views/list/list.html',
                 controller: 'ListCtrl',
                 controllerAs: 'list'

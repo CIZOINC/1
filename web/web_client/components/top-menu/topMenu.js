@@ -15,7 +15,8 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
         scope: {
             categories: '=',
             hostName: '@',
-            videosList: '='
+            videosList: '=',
+            storage: '='
         }
     };
 
@@ -29,17 +30,15 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             moveToLogin: moveToLogin,
             categoryClick: categoryClick,
             search: search,
-            playFoundVideo: playFoundVideo
+            playFoundVideo: playFoundVideo,
+            toggleSideMenu: toggleSideMenu,
+            logout: logout
         });
 
 
         scope.$watch('categories', (newCategories) => {
             if (newCategories) {
                 scope.categoryList = newCategories;
-                /*scope.categoryList = [{
-                    id: 0,
-                    title: 'All'
-                }].concat(newCategories);*/
             }
         });
 
@@ -70,7 +69,7 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
 
                 if (scope.videosList && scope.videosList.length) {
                     if (Number(id) === 0) {
-                        $state.go('play', {videoId: scope.videosList[0].id, categoryId: id});
+                        $state.go('play', {videoId: scope.videosList[0].id, category_id: id});
                     } else {
                         let firstCategoryVideoList = _.filter(scope.videosList, video => video.category_id === Number(id));
                         if (firstCategoryVideoList.length) {
@@ -81,6 +80,10 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             }
 
 
+        }
+
+        function logout() {
+            playerServ.userLogout(scope.storage);
         }
 
         function search() {
@@ -110,6 +113,20 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             scope.searchText = '';
             $state.go('play', { videoId: id, categoryId: 0 })
         }
+
+        function toggleSideMenu() {
+            let sideMenu = document.querySelector('left-side-menu .menu_container');
+            let sideMenuOuter = document.querySelector('left-side-menu .menu_container_outer');
+            let sideMenuVisibleSelector = 'menu_container--menu-visible';
+            let sideMenuOuterVisibleSelector = 'menu_container_outer--menu-visible';
+            if (sideMenu.classList.contains(sideMenuVisibleSelector)) {
+                sideMenu.classList.remove(sideMenuVisibleSelector);
+                sideMenuOuter.classList.remove(sideMenuOuterVisibleSelector);
+            } else {
+                sideMenu.classList.add(sideMenuVisibleSelector);
+                sideMenuOuter.classList.add(sideMenuOuterVisibleSelector);
+            }
+        }
     }
 
     function searchVideos(hostName, searchString) {
@@ -134,6 +151,8 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             }
         });
     }
+
+
 }
 
 topMenu.$inject = ['$state', '$anchorScroll', '$http', '$timeout', '$q', '$log', 'playerServ', 'lodash'];

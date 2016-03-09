@@ -1,25 +1,34 @@
-.ui-accordion {
-
-    .panel-group {
-        .panel-heading + .panel-collapse .panel-body {
+.ui-accordion
+{
+    .panel-group
+    {
+        .panel-heading + .panel-collapse .panel-body
+        {
             border-top: 1px solid $state-default-border;
         }
     }
 
-    .panel {
+    .panel
+    {
         border: 1px solid $state-default-border;
     }
 
-    .panel-heading {
+    .panel-heading
+    {
         padding: 0;
+
         background-color: $state-default-bg;
-        .panel-title > a {
-            display: block;
-            padding: 15px;
+        .panel-title > a
+        {
             font-size: 14px;
+
+            display: block;
+
+            padding: 15px;
             &:hover,
             &:active,
-            &:focus {
+            &:focus
+            {
                 cursor: pointer;
                 text-decoration: none;
             }
@@ -27,48 +36,63 @@
     }
 }
 
-.ui-accordion-success {
-    .panel {
+.ui-accordion-success
+{
+    .panel
+    {
         border: 1px solid $brand-success;
     }
-    .panel-heading {
-        background-color: $brand-success;
+    .panel-heading
+    {
         color: $reverse;
+        background-color: $brand-success;
     }
 }
-.ui-accordion-info {
-    .panel {
+.ui-accordion-info
+{
+    .panel
+    {
         border: 1px solid $brand-info;
     }
-    .panel-heading {
-        background-color: $brand-info;
+    .panel-heading
+    {
         color: $reverse;
+        background-color: $brand-info;
     }
 }
-.ui-accordion-warning {
-    .panel {
+.ui-accordion-warning
+{
+    .panel
+    {
         border: 1px solid $brand-warning;
     }
-    .panel-heading {
-        background-color: $brand-warning;
+    .panel-heading
+    {
         color: $reverse;
+        background-color: $brand-warning;
     }
 }
-.ui-accordion-danger {
-    .panel {
+.ui-accordion-danger
+{
+    .panel
+    {
         border: 1px solid $brand-danger;
     }
-    .panel-heading {
-        background-color: $brand-danger;
+    .panel-heading
+    {
         color: $reverse;
+        background-color: $brand-danger;
     }
 }
-.ui-accordion-dark {
-    .panel {
+.ui-accordion-dark
+{
+    .panel
+    {
         border: 1px solid $dark;
     }
-    .panel-heading {
-        background-color: $dark;
+    .panel-heading
+    {
         color: $reverse;
+        background-color: $dark;
     }
 }

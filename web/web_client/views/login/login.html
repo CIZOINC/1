@@ -1,27 +1,29 @@
 <form>
-    <nav class="navbar">
-        <div class="navbar-login">
-            <img class="navbar-login_logo" src="images/logo.svg">
-        </div>
-    </nav>
 
-    <div class="col-xs-12 col-md-6 col-md-offset-3 login-form">
+    <div class="login-form">
         <button class="login-form_facebook-login">
             <span class="icon-facebook"></span>
             Log in with Facebook
         </button>
 
-        <div class="login-form_title">Or, log in with your email address.</div>
+        <div class="login-form_title_wrapper">
+            <div class="login-form_title_decoration"></div>
+            <span class="login-form_title">or with your email</span>
+            <div class="login-form_title_decoration"></div>
+        </div>
+
 
         <input ng-model="login.email" class="login-form_input" placeholder="Email Address" type="email">
         <input ng-model="login.password" class="login-form_input" placeholder="Password" type="password">
 
         <button class="login-form_login" ng-click="processLogin()">Log In</button>
 
-        <div class="login-form_forgot-password">Forgot email address and/or password?</div>
+        <div class="login-form_forgot-password"  ng-click="resetPasswordClick()">Forgot email or password?</div>
     </div>
 
     <div class="want-account">
         Want an account? <span class="want-account_login" ng-click="registerClick()">Sign Up</span>
     </div>
+
+    <div class="icon-close login-form_close" ng-click="closeView()"></div>
 </form>

@@ -1,0 +1,51 @@
+<div class="share" style="background-image: url('{{video.hero_images.hero_image_link}}')"> </div>
+
+<div class="share_close-button icon-close" ng-click="closeShare()"></div>
+
+<div class="share-wrapper">
+    <div class="share_group">
+        <div class="share_group_title">
+            <span class="icon-share"></span>
+            <span>Share this video</span>
+        </div>
+
+        <div class="share_group_video"
+             style="background-image: url('{{video.hero_images.hero_image_link}}')"
+        >
+            <div class="share_group_video_title">
+                <span class="share_group_video_title_caption">{{::video.title}}</span>
+            </div>
+        </div>
+
+        <div class="share_group_social">
+            <div class="share_group_social_item social-facebook" ng-click="shareVideoItem('facebook')">
+                <span class="icon-facebook"></span>
+                <span>Facebook</span>
+            </div>
+            <div class="share_group_social_item social-twitter" ng-click="shareVideoItem('twitter')">
+                <span class="icon-twitter icon-adjust-twitter"></span>
+                <span>Twitter</span>
+            </div>
+            <div class="share_group_social_item social-google" ng-click="shareVideoItem('google')">
+                <span class="icon-google icon-adjust-google"></span>
+                <span>Google</span>
+            </div>
+            <div class="share_group_social_item social-reddit" ng-click="shareVideoItem('reddit')">
+                <span class="icon-reddit icon-adjust-reddit"></span>
+                <span>Reddit</span>
+            </div>
+        </div>
+
+        <div class="share_group_link-title">
+            <div class="share_group_link-title_decoration"></div>
+            <span class="share_group_link-title_caption">Link</span>
+            <div class="share_group_link-title_decoration"></div>
+        </div>
+
+        <span class="share_group_link">{{shareLink}}</span>
+
+
+    </div>
+</div>
+
+<div class="share_overlay"></div>

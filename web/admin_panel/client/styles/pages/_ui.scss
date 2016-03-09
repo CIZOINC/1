@@ -1,0 +1,187 @@
+
+
+// icons
+.themify-icons
+{
+    width: 100%;
+
+    text-align: center;
+
+    .icon-section
+    {
+        overflow: hidden;
+
+        width: 90%;
+        margin: 0 auto 3.5em;
+    }
+
+    .icon-container
+    {
+        display: inline-block;
+
+        width: 30%;
+        margin: 0 0 10px;
+        padding: .5em 0;
+
+        [class^='ti-'],
+        [class*=' ti-']
+        {
+            font-size: 1.5em;
+            line-height: 100px;
+
+            display: block;
+
+            height: 80px;
+
+            transition: all .3s ease-in-out;
+        }
+
+        @media (min-width: $screen-sm-min)
+        {
+            width: 15%;
+        }
+    }
+
+    .icon-name
+    {
+        font-size: .8em;
+
+        display: block;
+
+        margin: 5px 0 0;
+
+        transition: all .3s ease-in-out;
+
+        color: #aaa;
+    }
+
+    .icon-container:hover
+    {
+        .icon-name
+        {
+            color: $dark;
+        }
+
+        [class^='ti-'],
+        [class*=' ti-']
+        {
+            font-size: 3em;
+        }
+    }
+}
+
+// weather icons
+.weather-icons
+{
+    width: 100%;
+
+    text-align: center;
+
+    .icon-section
+    {
+        overflow: hidden;
+
+        width: 90%;
+        margin: 0 auto 3.5em;
+    }
+
+    .example
+    {
+        display: inline-block;
+
+        width: 30%;
+        margin: 0 0 10px;
+        padding: .5em 0;
+
+        .wi
+        {
+            font-size: 1.5em;
+            line-height: 100px;
+
+            display: block;
+
+            height: 80px;
+
+            transition: all .3s ease-in-out;
+        }
+
+        @media (min-width: $screen-sm-min)
+        {
+            width: 15%;
+        }
+    }
+
+    .class
+    {
+        font-size: .8em;
+
+        display: block;
+
+        margin: 5px 0 0;
+
+        transition: all .3s ease-in-out;
+
+        color: #aaa;
+    }
+
+    .example:hover
+    {
+        .class
+        {
+            color: $dark;
+        }
+
+        .wi
+        {
+            font-size: 3em;
+        }
+    }
+}
+
+.page-icons
+{
+    // Bootstrap Glyphicons
+    .bs-glyphicons
+    {
+        overflow: hidden;
+
+        li
+        {
+            font-size: 10px;
+            line-height: 1.4;
+
+            float: left;
+
+            width: 25%;
+            height: 115px;
+            padding: 10px;
+
+            text-align: center;
+
+            border: 1px solid #f9f9f9;
+            // &:hover { color: #fff; background-color: $brand-primary; }
+        }
+
+        .glyphicon
+        {
+            font-size: 24px;
+
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .glyphicon-class
+        {
+            display: block;
+
+            text-align: center;
+            word-wrap: break-word;
+        }
+    }
+    .bs-glyphicons-list
+    {
+        padding-left: 0;
+
+        list-style: none;
+    }
+}

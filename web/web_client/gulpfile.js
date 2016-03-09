@@ -22,7 +22,7 @@ var thirdPartyJS = [
     '../node_modules/ui-router/release/angular-ui-router.js',
     '../node_modules/angular-sanitize/angular-sanitize.js',
     '../node_modules/moment/moment.js',
-    '../node_modules/lodash/index.js',
+    '../node_modules/lodash/lodash.js',
     '../node_modules/angularjs-slider/dist/rzslider.js',
     '../node_modules/angular-svg-round-progressbar/build/roundProgress.js'
 ];
@@ -84,8 +84,29 @@ gulp.task('compile_js', function () {
             './**/*.js',
             '!./**/*-compiled.js',
             '!./temp/**/*.*',
-            '!gulpfile.js'
+            '!gulpfile.js',
+            '!AppCtrl.js'
         ])
+        .pipe(babel({
+            presets: ['es2015']
+        }))
+        .pipe(gulp.dest('./temp'));
+});
+
+gulp.task('compile_appctrl_staging', function () {
+    "use strict";
+    return gulp.src(['AppCtrl.js'])
+        .pipe(replace("facebookAppId: '459923084193687'", "facebookAppId: '459923084193687'"))
+        .pipe(babel({
+            presets: ['es2015']
+        }))
+        .pipe(gulp.dest('./temp'));
+});
+
+gulp.task('compile_appctrl_production', function () {
+    "use strict";
+    return gulp.src(['AppCtrl.js'])
+        .pipe(replace("facebookAppId: '459923084193687'", "facebookAppId: '459778204208175'"))
         .pipe(babel({
             presets: ['es2015']
         }))
@@ -147,7 +168,7 @@ gulp.task('copy_dependencies', function () {
     return gulp.src([
             './images/iconVideoPlay.svg',
             './images/iconVideoPause.svg',
-            './images/**/*.png'
+            './images/logo.svg'
         ])
         .pipe(gulp.dest('./temp/final/images'));
 });
@@ -164,11 +185,51 @@ gulp.task('copy_index_template', function () {
         .pipe(gulp.dest('./temp/final'));
 });
 
+gulp.task('copy_index_template_staging', function () {
+    "use strict";
+    var postfix = Math.round(Math.random() * 100000000) ;
+
+    return gulp.src(['./index_template.html'])
+        .pipe(rename('index.html'))
+        .pipe(replace('all.min.css', 'all.min.css?' + postfix))
+        .pipe(replace('3d-party.min.js', '3d-party.min.js?' + postfix))
+        .pipe(replace('ng.min.js', 'ng.min.js?' + postfix))
+        .pipe(replace('UA-XXXXX-Y', 'UA-74526766-3'))
+        .pipe(gulp.dest('./temp/final'));
+});
+
+gulp.task('copy_index_template_production', function () {
+    "use strict";
+    var postfix = Math.round(Math.random() * 100000000) ;
+
+    return gulp.src(['./index_template.html'])
+        .pipe(rename('index.html'))
+        .pipe(replace('all.min.css', 'all.min.css?' + postfix))
+        .pipe(replace('3d-party.min.js', '3d-party.min.js?' + postfix))
+        .pipe(replace('ng.min.js', 'ng.min.js?' + postfix))
+        .pipe(replace('UA-XXXXX-Y', 'UA-74526766-2'))
+        .pipe(gulp.dest('./temp/final'));
+});
+
 gulp.task('send_to_ror', function () {
     gulp.src([
         './temp/final/**/*.*',
         '!./temp/final/**/*.map'
     ]).pipe(gulp.dest('../../ror/public/web_client'));
+});
+
+gulp.task('send_to_staging', function () {
+    gulp.src([
+        './temp/final/**/*.*',
+        '!./temp/final/**/*.map'
+    ]).pipe(gulp.dest('../../ror/public/web_client/staging'));
+});
+
+gulp.task('send_to_production', function () {
+    gulp.src([
+        './temp/final/**/*.*',
+        '!./temp/final/**/*.map'
+    ]).pipe(gulp.dest('../../ror/public/web_client/production'));
 });
 
 gulp.task('clean_temp', function () {
@@ -195,4 +256,47 @@ gulp.task('default', function () {
             'copy_index_template'
         ],
         'send_to_ror');
+});
+
+
+gulp.task('build-staging', function () {
+    "use strict";
+    runSequence('clean_temp',
+        [
+            'collect_css',
+            'collect_html',
+            'compile_js',
+            'compile_appctrl_staging'
+        ],
+        [
+            'minify_ng_js',
+            'minify_third_party_js',
+            'minify_css',
+            'copy_dependencies',
+            'copy_icon-fonts',
+            'copy_bootstrap_fonts',
+            'copy_index_template_staging'
+        ],
+        'send_to_staging');
+});
+
+gulp.task('build-production', function () {
+    "use strict";
+    runSequence('clean_temp',
+        [
+            'collect_css',
+            'collect_html',
+            'compile_js',
+            'compile_appctrl_production'
+        ],
+        [
+            'minify_ng_js',
+            'minify_third_party_js',
+            'minify_css',
+            'copy_dependencies',
+            'copy_icon-fonts',
+            'copy_bootstrap_fonts',
+            'copy_index_template_production'
+        ],
+        'send_to_production');
 });

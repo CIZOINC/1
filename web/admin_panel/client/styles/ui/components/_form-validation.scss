@@ -1,0 +1,15 @@
+
+// form validation
+.form-validation
+{
+    // When it is first initialized
+    // When the view changes
+    .ng-valid.ng-dirty
+    {
+        border-color: $brand-success;
+    }
+    .ng-invalid.ng-dirty
+    {
+        border-color: $brand-danger;
+    }
+}

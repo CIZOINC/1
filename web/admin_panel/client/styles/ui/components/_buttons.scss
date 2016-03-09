@@ -1,0 +1,766 @@
+
+// mixin
+@mixin button-line-variant($color, $background, $border)
+{
+    color: $text-color;
+    border-color: $border;
+    background-color: transparent;
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active
+    {
+        color: $color;
+        background-color: $background;
+    }
+    .open &
+    {
+        &.dropdown-toggle
+        {
+            color: $color;
+            background-color: $background;
+        }
+    }
+}
+
+@mixin button-icon-variant($size)
+{
+    line-height: $size;
+
+    width: $size;
+    height: $size;
+    i
+    {
+        line-height: $size;
+    }
+    &.btn-icon-lined
+    {
+        line-height: ($size - 4px);
+        i
+        {
+            line-height: ($size - 4px);
+        }
+
+        &.btn-icon-thin
+        {
+            line-height: ($size - 2px);
+            i
+            {
+                line-height: ($size - 2px);
+            }
+        }
+    }
+}
+
+@mixin social-button-variant($background, $border)
+{
+    color: $reverse;
+    border-color: $border;
+    background-color: $background;
+    &:hover
+    {
+        text-decoration: none;
+
+        color: $reverse;
+        border-color: darken($border, 12%);
+        background-color: darken($background, 8%);
+    }
+}
+
+// add to default button
+.btn-info-alt
+{
+    @include button-variant($btn-info-alt-color, $btn-info-alt-bg, $btn-info-alt-border);
+}
+.btn-dark
+{
+    @include button-variant($btn-dark-color, $btn-dark-bg, $btn-dark-border);
+}
+
+// lined version
+.btn-line-default
+{
+    @include button-line-variant($btn-default-color, $btn-default-bg, $btn-default-border);
+}
+.btn-line-primary
+{
+    @include button-line-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+}
+.btn-line-success
+{
+    @include button-line-variant($btn-success-color, $btn-success-bg, $btn-success-border);
+}
+.btn-line-info
+{
+    @include button-line-variant($btn-info-color, $btn-info-bg, $btn-info-border);
+}
+.btn-line-warning
+{
+    @include button-line-variant($btn-warning-color, $btn-warning-bg, $btn-warning-border);
+}
+.btn-line-danger
+{
+    @include button-line-variant($btn-danger-color, $btn-danger-bg, $btn-danger-border);
+}
+.btn-line-dark
+{
+    @include button-line-variant($btn-dark-color, $btn-dark-bg, $btn-dark-border);
+}
+
+//
+.btn-direction
+{
+    line-height: 20px;
+
+    position: relative;
+
+    border: 0;
+}
+.btn-left
+{
+    @include border-left-radius(0);
+    &:before
+    {
+        line-height: 0;
+
+        position: absolute;
+        top: 0;
+        left: -26px;
+
+        content: ' ';
+
+        border: 16px solid transparent;
+        border-right: 10px solid $btn-default-bg;
+    }
+    &:hover
+    {
+        &:before
+        {
+            border-right: 10px solid darken($btn-default-bg, 10%);
+        }
+    }
+
+    // Color
+    &.btn-primary
+    {
+        &:before
+        {
+            border-right: 10px solid $btn-primary-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-right: 10px solid darken($btn-primary-bg, 10%);
+            }
+        }
+    }
+    &.btn-success
+    {
+        &:before
+        {
+            border-right: 10px solid $btn-success-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-right: 10px solid darken($btn-success-bg, 10%);
+            }
+        }
+    }
+    &.btn-info
+    {
+        &:before
+        {
+            border-right: 10px solid $btn-info-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-right: 10px solid darken($btn-info-bg, 10%);
+            }
+        }
+    }
+    &.btn-warning
+    {
+        &:before
+        {
+            border-right: 10px solid $btn-warning-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-right: 10px solid darken($btn-warning-bg, 10%);
+            }
+        }
+    }
+    &.btn-danger
+    {
+        &:before
+        {
+            border-right: 10px solid $btn-danger-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-right: 10px solid darken($btn-danger-bg, 10%);
+            }
+        }
+    }
+}
+.btn-right
+{
+    @include border-right-radius(0);
+    &:before
+    {
+        line-height: 0;
+
+        position: absolute;
+        top: 0;
+        right: -26px;
+
+        content: ' ';
+
+        border: 16px solid transparent;
+        border-left: 10px solid $btn-default-bg;
+    }
+    &:hover
+    {
+        &:before
+        {
+            border-left: 10px solid darken($btn-default-bg, 10%);
+        }
+    }
+
+    // Color
+    &.btn-primary
+    {
+        &:before
+        {
+            border-left: 10px solid $btn-primary-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-left: 10px solid darken($btn-primary-bg, 10%);
+            }
+        }
+    }
+    &.btn-success
+    {
+        &:before
+        {
+            border-left: 10px solid $btn-success-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-left: 10px solid darken($btn-success-bg, 10%);
+            }
+        }
+    }
+    &.btn-info
+    {
+        &:before
+        {
+            border-left: 10px solid $btn-info-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-left: 10px solid darken($btn-info-bg, 10%);
+            }
+        }
+    }
+    &.btn-warning
+    {
+        &:before
+        {
+            border-left: 10px solid $btn-warning-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-left: 10px solid darken($btn-warning-bg, 10%);
+            }
+        }
+    }
+    &.btn-danger
+    {
+        &:before
+        {
+            border-left: 10px solid $btn-danger-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-left: 10px solid darken($btn-danger-bg, 10%);
+            }
+        }
+    }
+}
+
+$btn_arrow_width: 8px;
+.btn-up
+{
+    &:before
+    {
+        line-height: 0;
+
+        position: absolute;
+        top: -16px;
+        left: 50%;
+
+        margin-left: -$btn_arrow_width;
+
+        content: ' ';
+
+        border: $btn_arrow_width solid transparent;
+        border-bottom: $btn_arrow_width solid $btn-default-bg;
+    }
+    &:hover
+    {
+        &:before
+        {
+            border-bottom: $btn_arrow_width solid darken($btn-default-bg, 10%);
+        }
+    }
+
+    // Color
+    &.btn-primary
+    {
+        &:before
+        {
+            border-bottom: $btn_arrow_width solid $btn-primary-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-bottom: $btn_arrow_width solid darken($btn-primary-bg, 10%);
+            }
+        }
+    }
+    &.btn-success
+    {
+        &:before
+        {
+            border-bottom: $btn_arrow_width solid $btn-success-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-bottom: $btn_arrow_width solid darken($btn-success-bg, 10%);
+            }
+        }
+    }
+    &.btn-info
+    {
+        &:before
+        {
+            border-bottom: $btn_arrow_width solid $btn-info-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-bottom: $btn_arrow_width solid darken($btn-info-bg, 10%);
+            }
+        }
+    }
+    &.btn-warning
+    {
+        &:before
+        {
+            border-bottom: $btn_arrow_width solid $btn-warning-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-bottom: $btn_arrow_width solid darken($btn-warning-bg, 10%);
+            }
+        }
+    }
+    &.btn-danger
+    {
+        &:before
+        {
+            border-bottom: $btn_arrow_width solid $btn-danger-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-bottom: $btn_arrow_width solid darken($btn-danger-bg, 10%);
+            }
+        }
+    }
+}
+.btn-down
+{
+    &:before
+    {
+        line-height: 0;
+
+        position: absolute;
+        bottom: -16px;
+        left: 50%;
+
+        margin-left: -$btn_arrow_width;
+
+        content: ' ';
+
+        border: $btn_arrow_width solid transparent;
+        border-top: $btn_arrow_width solid $btn-default-bg;
+    }
+    &:hover
+    {
+        &:before
+        {
+            border-top: $btn_arrow_width solid darken($btn-default-bg, 10%);
+        }
+    }
+
+    // Color
+    &.btn-primary
+    {
+        &:before
+        {
+            border-top: $btn_arrow_width solid $btn-primary-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-top: $btn_arrow_width solid darken($btn-primary-bg, 10%);
+            }
+        }
+    }
+    &.btn-success
+    {
+        &:before
+        {
+            border-top: $btn_arrow_width solid $btn-success-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-top: $btn_arrow_width solid darken($btn-success-bg, 10%);
+            }
+        }
+    }
+    &.btn-info
+    {
+        &:before
+        {
+            border-top: $btn_arrow_width solid $btn-info-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-top: $btn_arrow_width solid darken($btn-info-bg, 10%);
+            }
+        }
+    }
+    &.btn-warning
+    {
+        &:before
+        {
+            border-top: $btn_arrow_width solid $btn-warning-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-top: $btn_arrow_width solid darken($btn-warning-bg, 10%);
+            }
+        }
+    }
+    &.btn-danger
+    {
+        &:before
+        {
+            border-top: $btn_arrow_width solid $btn-danger-bg;
+        }
+        &:hover
+        {
+            &:before
+            {
+                border-top: $btn_arrow_width solid darken($btn-danger-bg, 10%);
+            }
+        }
+    }
+}
+
+//
+.btn-w-xs
+{
+    min-width: 80px;
+}
+.btn-w-sm
+{
+    min-width: 100px;
+}
+.btn-w-md
+{
+    min-width: 120px;
+}
+.btn-w-lg
+{
+    min-width: 150px;
+}
+
+//
+.btn-round
+{
+    border-radius: 2em;
+}
+.btn-gap
+{
+    margin: 5px;
+}
+.btn-gap-h
+{
+    margin: 0 5px;
+}
+.btn-gap-v
+{
+    margin: 0 0 5px;
+}
+
+//
+.btn-icon
+{
+    display: inline-block;
+
+    text-align: center;
+
+    border-radius: $border-radius-base;
+
+    @include button-icon-variant(35px);
+    &:hover
+    {
+        color: $reverse;
+    }
+}
+.btn-icon-lined
+{
+    display: inline-block;
+
+    text-align: center;
+
+    color: $text-color;
+    border-width: 2px;
+    border-style: solid;
+    border-color: $text-color;
+    border-radius: $border-radius-base;
+    background-color: $reverse;
+
+    @include button-icon-variant(35px);
+    &.btn-icon-thin
+    {
+        border-width: 1px;
+    }
+    &:hover
+    {
+        color: $reverse;
+        background-color: $reverse;
+    }
+
+    //
+    &.btn-default-light
+    {
+        color: #bbb;
+        border: 2px solid #bbb;
+
+        &:hover
+        {
+            color: #bbb;
+            border: 2px solid #bbb;
+        }
+    }
+    &.btn-default
+    {
+        color: $gray-light;
+        border-color: $gray-light;
+
+        &:hover
+        {
+            color: $gray-light;
+            border-color: $gray-light;
+        }
+    }
+    &.btn-primary
+    {
+        color: $brand-primary;
+        border-color: $brand-primary;
+    }
+    &.btn-success
+    {
+        color: $brand-success;
+        border-color: $brand-success;
+    }
+    &.btn-info
+    {
+        color: $brand-info;
+        border-color: $brand-info;
+    }
+    &.btn-warning
+    {
+        color: $brand-warning;
+        border-color: $brand-warning;
+    }
+    &.btn-danger
+    {
+        color: $brand-danger;
+        border-color: $brand-danger;
+    }
+}
+.btn-icon-round
+{
+    border-radius: 50%;
+}
+.btn-icon-sm
+{
+    @include button-icon-variant(30px);
+}
+.btn-icon-md
+{
+    @include button-icon-variant(45px);
+}
+.btn-icon-lg
+{
+    @include button-icon-variant(65px);
+}
+.btn-icon-lg-alt
+{
+    @include button-icon-variant(70px);
+}
+.btn-icon-xl
+{
+    @include button-icon-variant(80px);
+}
+
+
+// social buttons
+.btn-twitter
+{
+    @include social-button-variant(#00c7f7, #00c7f7);
+}
+.btn-facebook
+{
+    @include social-button-variant(#335397, #335397);
+}
+.btn-gplus,
+.btn-google-plus
+{
+    @include social-button-variant(#dd4a38, #dd4a38);
+}
+.btn-instagram
+{
+    @include social-button-variant(#82685a, #82685a);
+}
+.btn-vimeo
+{
+    @include social-button-variant(#63879c, #63879c);
+}
+.btn-flickr
+{
+    @include social-button-variant(#0061db, #0061db);
+}
+.btn-github
+{
+    @include social-button-variant(#3b3b3b, #3b3b3b);
+}
+.btn-pinterest
+{
+    @include social-button-variant(#d73532, #d73532);
+}
+.btn-tumblr
+{
+    @include social-button-variant(#586980, #586980);
+}
+.btn-linkedin
+{
+    @include social-button-variant(#018faf, #018faf);
+}
+.btn-dribbble
+{
+    @include social-button-variant(#ea73a0, #ea73a0);
+}
+.btn-stumbleupon
+{
+    @include social-button-variant(#ea4b24, #ea4b24);
+}
+.btn-lastfm
+{
+    @include social-button-variant(#b80638, #b80638);
+}
+.btn-evernote
+{
+    @include social-button-variant(#3bab27, #3bab27);
+}
+.btn-skype
+{
+    @include social-button-variant(#00b0f6, #00b0f6);
+}
+.btn-soundcloud
+{
+    @include social-button-variant(#06f, #06f);
+}
+.btn-behance
+{
+    @include social-button-variant(#b80638, #b80638);
+}
+.btn-rss
+{
+    @include social-button-variant(#f79638, #f79638);
+}
+.btn-youtube
+{
+    @include social-button-variant(#cc181e, #cc181e);
+}
+
+
+// Button metro
+.btn-metro
+{
+    font-size: 21px;
+
+    position: relative;
+
+    width: 180px;
+    height: 180px;
+    padding: 0;
+
+    text-align: center;
+
+    border: 0;
+
+    i
+    {
+        font-size: 48px;
+        line-height: 180px;
+    }
+
+    span
+    {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+    }
+}

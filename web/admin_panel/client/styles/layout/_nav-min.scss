@@ -1,0 +1,129 @@
+@media (min-width: $screen-sm)
+{
+    .app.nav-collapsed-min
+    {
+        // default
+        .slimScrollDiv
+        {
+            overflow: visible !important; // overrides slimScroll plugin
+
+            height: auto !important;
+
+            .slimScrollBar,
+            .slimScrollRail
+            {
+                display: none !important;
+            }
+        }
+
+        #nav-container
+        {
+            width: 60px;
+        }
+
+        .content-container
+        {
+            margin-left: 60px;
+        }
+
+        #nav-wrapper
+        {
+            overflow: visible !important;
+        }
+        #nav
+        {
+            overflow: visible !important;
+            > li
+            {
+                // width: 50px;
+                > a
+                {
+                    padding: 15px 15px;
+
+                    text-align: center;
+
+                    > i
+                    {
+                        font-size: 20px;
+
+                        margin: 0;
+                    }
+                    > span
+                    {
+                        display: none;
+                    }
+                }
+
+                .icon-has-ul
+                {
+                    display: none;
+                }
+
+                > ul
+                {
+                    position: absolute;
+                    z-index: 9;
+                    top: 0;
+                    left: 100%;
+
+                    width: 220px;
+
+                    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+
+                    @include border-right-radius($border-radius-base);
+                }
+
+                &:hover,
+                &.open
+                {
+                    > ul
+                    {
+                        display: block !important;
+                    }
+                }
+            }
+        }
+
+        .nav-title
+        {
+            display: none;
+        }
+
+
+        // Horizontal menu
+        .nav-horizontal
+        {
+            &#nav-container
+            {
+                width: auto;
+            }
+
+            & + .content-container
+            {
+                margin: 0;
+            }
+
+            &.nav-fixed + .content-container
+            {
+                margin: 50px 0 0;
+            }
+
+            #nav
+            {
+                > li
+                {
+                    > .icon-has-ul-h
+                    {
+                        display: none;
+                    }
+
+                    > ul
+                    {
+                        top: 100%;
+                        left: 0;
+                    }
+                }
+            }
+        }
+    }
+}

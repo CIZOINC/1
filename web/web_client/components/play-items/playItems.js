@@ -4,7 +4,7 @@ angular
     .directive('playItems', playItems);
 
 /* @ngInject */
-function playItems($state, _) {
+function playItems($state, _, playerServ, $timeout) {
     "use strict";
 
     return {
@@ -23,19 +23,30 @@ function playItems($state, _) {
         scope = angular.extend(scope, {
             videosList: [],
             title: '',
-
+            iconName:  playerServ.getIconName(scope.categoryId),
             moveToPlayPage: moveToPlayPage
         });
 
         scope.$watch('videos', (videos) => {
             scope.videosList = filterVideos(videos, scope.categoryId);
+            $timeout(() => {
+                _.each(scope.videosList, (video) => {
+                    let videoItem = document.querySelector(`#play-video-item-${video.id}`);
+                    if (videoItem && video.isWatched) {
+                        videoItem.querySelector('.play-items_videos_item_overlay').classList.add('play-items_videos_item_overlay--watched');
+                        videoItem.querySelector('.play-items_videos_item_title').classList.add('play-items_videos_item_title--watched');
+                        videoItem.querySelector('.icon-play').classList.add('hidden-layer');
+                        videoItem.querySelector('.icon-replay').classList.remove('hidden-layer');
+                    } else {
+                        videoItem.querySelector('.icon-replay').classList.add('hidden-layer');
+                    }
+                });
+            });
         });
 
-        scope.$watch('categories', (categories) => {
-            scope.title = getCategoryName(categories, scope.categoryId);
-            if (scope.title) {
-                scope.iconName = scope.title.toLowerCase();
-            }
+        scope.$watch('categoryId', () => {
+            scope.iconName =  playerServ.getIconName(scope.categoryId);
+            scope.title = getCategoryName(scope.categories, scope.categoryId);
         });
 
 
@@ -67,4 +78,4 @@ function playItems($state, _) {
         }
     }
 };
-playItems.$inject = ['$state', 'lodash'];
+playItems.$inject = ['$state', 'lodash', 'playerServ', '$timeout'];

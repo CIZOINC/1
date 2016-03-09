@@ -4,7 +4,7 @@ angular
     .directive('topMenu', topMenu);
 
 /* @ngInject */
-function topMenu($state, $anchorScroll) {
+function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _) {
     "use strict";
 
     return {
@@ -13,26 +13,32 @@ function topMenu($state, $anchorScroll) {
         link: linkFn,
         transclude: false,
         scope: {
-            categories: '='
+            categories: '=',
+            hostName: '@',
+            videosList: '=',
+            storage: '='
         }
     };
 
     function linkFn(scope) {
         scope = angular.extend(scope, {
             categoryList: undefined,
+            searchText: '',
+            searchResult: [],
 
             moveToHome: moveToHome,
             moveToLogin: moveToLogin,
-            categoryClick: categoryClick
+            categoryClick: categoryClick,
+            search: search,
+            playFoundVideo: playFoundVideo,
+            toggleSideMenu: toggleSideMenu,
+            logout: logout
         });
 
 
         scope.$watch('categories', (newCategories) => {
             if (newCategories) {
-                scope.categoryList = [{
-                    id: 0,
-                    title: 'All'
-                }].concat(newCategories);
+                scope.categoryList = newCategories;
             }
         });
 
@@ -44,13 +50,109 @@ function topMenu($state, $anchorScroll) {
             $state.go('login');
         }
 
+
+        /**
+         * scrolls down to selected category on home page and loads category videos with playing first item on others
+         * if user hits all category out of the home page then app plays first video on the video list
+         *
+         * @param event
+         * @param id
+         */
         function categoryClick(event, id) {
             if (event) {
                 event.stopPropagation();
             }
-            $anchorScroll(`category-videos-${id}`);
+
+            if ($state.includes('home') || $state.includes('main')) {
+                $anchorScroll(`category-videos-${id}`);
+            } else {
+
+                if (scope.videosList && scope.videosList.length) {
+                    if (Number(id) === 0) {
+                        $state.go('play', {videoId: scope.videosList[0].id, category_id: id});
+                    } else {
+                        let firstCategoryVideoList = _.filter(scope.videosList, video => video.category_id === Number(id));
+                        if (firstCategoryVideoList.length) {
+                            $state.go('play', {videoId: firstCategoryVideoList[0].id, categoryId: id});
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+        function logout() {
+            playerServ.userLogout(scope.storage);
+        }
+
+        function search() {
+            $timeout(() => {
+                if (scope.searchText.length > 2) {
+                    searchVideos(scope.hostName, scope.searchText)
+                        .then((response) => {
+                            if (response.length) {
+                                _.each(response, (videoItem) => {
+                                    videoItem.iconName = playerServ.getIconName(videoItem.category_id);
+                                });
+
+                                scope.searchResult = response;
+                            } else {
+                                scope.searchResult = [];
+                            }
+                        });
+                } else {
+                    scope.searchResult = [];
+                }
+            }, 200);
+
+        }
+
+        function playFoundVideo(id) {
+            scope.searchResult = [];
+            scope.searchText = '';
+            $state.go('play', { videoId: id, categoryId: 0 })
+        }
+
+        function toggleSideMenu() {
+            let sideMenu = document.querySelector('left-side-menu .menu_container');
+            let sideMenuOuter = document.querySelector('left-side-menu .menu_container_outer');
+            let sideMenuVisibleSelector = 'menu_container--menu-visible';
+            let sideMenuOuterVisibleSelector = 'menu_container_outer--menu-visible';
+            if (sideMenu.classList.contains(sideMenuVisibleSelector)) {
+                sideMenu.classList.remove(sideMenuVisibleSelector);
+                sideMenuOuter.classList.remove(sideMenuOuterVisibleSelector);
+            } else {
+                sideMenu.classList.add(sideMenuVisibleSelector);
+                sideMenuOuter.classList.add(sideMenuOuterVisibleSelector);
+            }
         }
     }
+
+    function searchVideos(hostName, searchString) {
+        return $q(function (resolve, reject) {
+
+            $http({
+                method: 'GET',
+                url: hostName + `/search`,
+                params: {
+                    search: searchString
+                }
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('searched videos found');
+                resolve(response.data.data);
+            }
+
+            function error(response) {
+                $log.info('searched videos returned error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+
 }
 
-topMenu.$inject = ['$state', '$anchorScroll'];
+topMenu.$inject = ['$state', '$anchorScroll', '$http', '$timeout', '$q', '$log', 'playerServ', 'lodash'];

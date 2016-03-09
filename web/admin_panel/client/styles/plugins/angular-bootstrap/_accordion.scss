@@ -1,0 +1,98 @@
+.ui-accordion
+{
+    .panel-group
+    {
+        .panel-heading + .panel-collapse .panel-body
+        {
+            border-top: 1px solid $state-default-border;
+        }
+    }
+
+    .panel
+    {
+        border: 1px solid $state-default-border;
+    }
+
+    .panel-heading
+    {
+        padding: 0;
+
+        background-color: $state-default-bg;
+        .panel-title > a
+        {
+            font-size: 14px;
+
+            display: block;
+
+            padding: 15px;
+            &:hover,
+            &:active,
+            &:focus
+            {
+                cursor: pointer;
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.ui-accordion-success
+{
+    .panel
+    {
+        border: 1px solid $brand-success;
+    }
+    .panel-heading
+    {
+        color: $reverse;
+        background-color: $brand-success;
+    }
+}
+.ui-accordion-info
+{
+    .panel
+    {
+        border: 1px solid $brand-info;
+    }
+    .panel-heading
+    {
+        color: $reverse;
+        background-color: $brand-info;
+    }
+}
+.ui-accordion-warning
+{
+    .panel
+    {
+        border: 1px solid $brand-warning;
+    }
+    .panel-heading
+    {
+        color: $reverse;
+        background-color: $brand-warning;
+    }
+}
+.ui-accordion-danger
+{
+    .panel
+    {
+        border: 1px solid $brand-danger;
+    }
+    .panel-heading
+    {
+        color: $reverse;
+        background-color: $brand-danger;
+    }
+}
+.ui-accordion-dark
+{
+    .panel
+    {
+        border: 1px solid $dark;
+    }
+    .panel-heading
+    {
+        color: $reverse;
+        background-color: $dark;
+    }
+}

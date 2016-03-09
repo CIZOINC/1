@@ -1,0 +1,265 @@
+$wz-color-default: #e6e6e6;
+$wz-color-current: #808080;
+$wz-color-done: $brand-success;
+$wz-color-editing: $brand-primary;
+
+.ui-angular-wizard
+{
+    .steps
+    {
+        margin-bottom: 3em;
+        padding: 0;
+
+        border: 1px solid #e1e1e1;
+        border-radius: $border-radius-base;
+
+        h2
+        {
+            font-size: $font-size-h4;
+            line-height: 1;
+
+            margin: 0;
+            padding: 1.2em 1em;
+
+            text-transform: uppercase;
+
+            border-bottom: 1px solid #e1e1e1;
+        }
+    }
+
+    .ui-wizard-content
+    {
+        padding: 3em 1em;
+
+        background-color: #fafafa;
+    }
+
+    .ui-wizard-actions
+    {
+        margin: 0;
+        padding: 1.2em 1em;
+
+        text-align: right;
+
+        border-top: 1px solid #e1e1e1;
+    }
+}
+
+.steps-indicator
+{
+    /* ---- steps quantity ---- */
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    height: 30px;
+    margin: 0;
+    padding: 20px 0 0 0;
+
+    list-style: none;
+
+
+
+    &:before
+    {
+        position: absolute;
+
+        height: 1px;
+
+        content: '';
+
+        background-color: $wz-color-default;
+    }
+
+    &.steps-2:before
+    {
+        right: calc(100% / 2 / 2);
+        left: calc(100% / 2 / 2);
+    }
+
+    &.steps-3:before
+    {
+        right: calc(100% / 3 / 2);
+        left: calc(100% / 3 / 2);
+    }
+
+    &.steps-4:before
+    {
+        right: calc(100% / 4 / 2);
+        left: calc(100% / 4 / 2);
+    }
+
+    &.steps-5:before
+    {
+        right: calc(100% / 5 / 2);
+        left: calc(100% / 5 / 2);
+    }
+
+    &.steps-6:before
+    {
+        right: calc(100% / 6 / 2);
+        left: calc(100% / 6 / 2);
+    }
+
+    &.steps-7:before
+    {
+        right: calc(100% / 7 / 2);
+        left: calc(100% / 7 / 2);
+    }
+
+    &.steps-8:before
+    {
+        right: calc(100% / 8 / 2);
+        left: calc(100% / 8 / 2);
+    }
+
+    &.steps-9:before
+    {
+        right: calc(100% / 9 / 2);
+        left: calc(100% / 9 / 2);
+    }
+
+    &.steps-10:before
+    {
+        right: calc(100% / 10 / 2);
+        left: calc(100% / 10 / 2);
+    }
+
+    /* --- http://www.paulirish.com/2012/box-sizing-border-box-ftw/ ---- */
+    *
+    {
+        -webkit-box-sizing: border-box;
+           -moz-box-sizing: border-box;
+                box-sizing: border-box;
+    }
+
+
+    li
+    {
+        line-height: 15px;
+
+        position: relative;
+
+        float: left;
+
+        margin: 0;
+        padding: 0;
+        padding-top: 10px;
+
+        text-align: center;
+
+        a
+        {
+            font-weight: bold;
+
+            cursor: pointer;
+            transition: .25s;
+            text-decoration: none;
+            text-transform: uppercase;
+
+            color: $wz-color-current;
+
+            &:before
+            {
+                position: absolute;
+                top: -7px;
+                left: calc(50% - 7px);
+
+                width: 14px;
+                height: 14px;
+
+                content: '';
+                transition: .25s;
+
+                border-radius: 100%;
+                background-color: $wz-color-default;
+            }
+
+            &:hover
+            {
+                color: darken($wz-color-current, 20%);
+            }
+        }
+    }
+
+    &.steps-2  li
+    {
+        width: calc(100% / 2);
+    }
+
+    &.steps-3  li
+    {
+        width: calc(100% / 3);
+    }
+
+    &.steps-4  li
+    {
+        width: calc(100% / 4);
+    }
+
+    &.steps-5  li
+    {
+        width: calc(100% / 5);
+    }
+
+    &.steps-6  li
+    {
+        width: calc(100% / 6);
+    }
+
+    &.steps-7  li
+    {
+        width: calc(100% / 7);
+    }
+
+    &.steps-8  li
+    {
+        width: calc(100% / 8);
+    }
+
+    &.steps-9  li
+    {
+        width: calc(100% / 9);
+    }
+
+    &.steps-10 li
+    {
+        width: calc(100% / 10);
+    }
+
+    &.steps-11 li
+    {
+        width: calc(100% / 11);
+    }
+
+    li.default
+    {
+        pointer-events: none;
+
+        a:hover
+        {
+            color: $wz-color-current;
+        }
+    }
+
+    li.current,
+    li.editing
+    {
+        pointer-events: none;
+    }
+
+    li.current a:before
+    {
+        background-color: $wz-color-current;
+    }
+
+    li.done a:before
+    {
+        background-color: $wz-color-done;
+    }
+
+    li.editing a:before
+    {
+        background-color: $wz-color-editing;
+    }
+}

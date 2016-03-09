@@ -1,184 +1,126 @@
-var gulp = require('gulp');
-var inject = require('gulp-inject');
-var angularFilesort = require('gulp-angular-filesort');
-var concat = require('gulp-concat');
-var ngAnnotate = require('gulp-ng-annotate');
-var uglify = require('gulp-uglify');
-var sourcemaps = require('gulp-sourcemaps');
-var cssmin = require('gulp-cssmin');
-var templateCache = require('gulp-angular-templatecache');
-var less = require('gulp-less');
-var babel = require('gulp-babel');
-var rimraf = require('gulp-rimraf');
-var rename = require('gulp-rename');
-var runSequence = require('run-sequence');
+'use strict';
 
-var thirdPartyJSLibraries = [
-    '../node_modules/angular/angular.js',
-    '../node_modules/jquery/dist/jquery.js',
-    '../node_modules/bootstrap/dist/js/bootstrap.js',
-    '../node_modules/ui-router/release/angular-ui-router.js',
-    '../node_modules/angular-sanitize/angular-sanitize.js',
-    '../node_modules/lodash/index.js',
-    '../node_modules/moment/moment.js',
-    '../node_modules/jquery/dist/jquery.js'
-];
+var gulp = require('gulp'),
+    debug = require('gulp-debug'),
+    sass = require('gulp-sass'),
+    del = require('del'),
+    logger = require('tracer').colorConsole(),
+    spritesmith = require('gulp.spritesmith'),
+    merge = require('merge-stream'),
+    browserSync = require('browser-sync');
 
-var thirdPartyCSSLibraries = [
-    '../node_modules/angular/angular-csp.css',
-    '../node_modules/bootstrap/dist/css/bootstrap.css'
-];
+var paths = {
+        source: {
+            styles: {
+                base: `${__dirname}/client/styles`,
+                files: [`${__dirname}/client/styles/**/*.scss`, '!**/_*.scss'],
+                sprites: `${__dirname}/client/styles/ui/images/flags/*.png`
+            },
+            html: {
+                base: `${__dirname}/client/app`,
+                files: `${__dirname}/client/app/**/*.html`
+            },
+            i18n: {
+                base: `${__dirname}/client/i18n`,
+                files: `${__dirname}/client/i18n/**/*.json`
+            },
+            images: {
+                base: `${__dirname}/client/images`,
+                files: `${__dirname}/client/images/**/*`
+            },
+            js: ''
+        },
+        dest: {
+            prod: `${__dirname}/build`,
+            serve: ''
+        },
+        watch: {
+            styles: [`${__dirname}/client/**/*.scss`],
+            html: [`${__dirname}/client/**/*.html`],
+            images: [`${__dirname}/client/images/**.*`]
+        }
+    },
+    prod = false;
 
-
-gulp.task('collect_css', function () {
-    "use strict";
-
-    return gulp.src([ './**/*.less' ])
-        .pipe(less())
-        .pipe(gulp.dest('./temp'));
+// Clean files task
+gulp.task('clean', function () {
+    return del([paths.dest.prod]);
 });
 
-gulp.task('collect_html', function () {
-    "use strict";
-    gulp.src([
-            '!index.html',
-            '!./temp/**/*.html',
-            './**/*.html'
-        ])
-        .pipe(templateCache())
-        .pipe(gulp.dest('common'));
+gulp.task('copy', ['clean', 'copy:html', 'copy:i18n', 'copy:images']);
+
+// Copy HTML task
+gulp.task('copy:html', ['clean'], function () {
+    return gulp
+        .src(paths.source.html.files)
+        // .pipe(debug())
+        .pipe(gulp.dest(`${paths.dest.prod}/app`));
 });
 
-gulp.task('compile_js', function () {
-    "use strict";
-    return gulp.src([
-        './**/*.js',
-        '!./**/*-compiled.js',
-        '!./temp/**/*.*',
-        '!gulpfile.js'
-    ])
-        .pipe(babel({
-            presets: ['es2015']
-        }))
-        .pipe(gulp.dest('./temp'));
+// Copy Images task
+gulp.task('copy:images', ['clean'], function () {
+    return gulp
+        .src(paths.source.images.files)
+        // .pipe(debug())
+        .pipe(gulp.dest(`${paths.dest.prod}/images`));
 });
 
-
-
-gulp.task('DEVELOP_index_compile', function () {
-    "use strict";
-    gulp.src([
-            '!index.html',
-            './**/*.html',
-            '!./temp/**/*.html'
-        ])
-        .pipe(templateCache())
-        .pipe(gulp.dest('common'));
-
-    gulp.src('./index.html')
-        .pipe(inject(gulp.src(thirdPartyJSLibraries.concat(thirdPartyCSSLibraries),
-            {read: false}), {name: 'third_party', addRootSlash: false}))
-        .pipe(inject(gulp.src([
-            './**/*.css',
-            '!./temp/**/*.css'
-        ], {read: false}), {name: 'css_common', addRootSlash: false}))
-        .pipe(inject(gulp.src([
-            '!gulpfile*.js',
-            '!./temp/**/*.js',
-            './**/*-compiled.js'
-
-        ])
-        .pipe(angularFilesort()), {addRootSlash: false}))
-        .pipe(gulp.dest('.'));
-
-
+// Copy HTML task
+gulp.task('copy:i18n', ['clean'], function () {
+    return gulp
+        .src(paths.source.i18n.files)
+        // .pipe(debug())
+        .pipe(gulp.dest(`${paths.dest.prod}/i18n`));
 });
 
-gulp.task('minify_third_party_js', function () {
-    "use strict";
-    return gulp.src(thirdPartyJSLibraries)
-        .pipe(sourcemaps.init())
-        .pipe(concat('3d-party.min.js', {newLine: ';'}))
-        .pipe(uglify({mangle: true}))
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./temp/final'));
+gulp.task('styles', ['clean', 'styles:sass'], function () {
+    logger.info('Finished running all style stuff');
 });
 
-gulp.task('minify_ng_js', function () {
-    "use strict";
-    return gulp.src([
-            './temp/**/*.js'
-        ])
-        .pipe(sourcemaps.init())
-        .pipe(concat('ng.min.js'))
-        .pipe(ngAnnotate())
-        .pipe(uglify({mangle: true}))
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./temp/final'));
+// SASS task
+gulp.task('styles:sass', ['clean', 'styles:sprites'], function () {
+    return gulp
+        .src(paths.source.styles.files)
+        // .pipe(debug())
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest(`${paths.dest.prod}/styles`));
 });
 
-gulp.task('minify_css', function () {
-    "use strict";
-   return gulp.src([
-           '../node_modules/angular/angular-csp.css',
-           '../node_modules/bootstrap/dist/css/bootstrap.css',
-           './temp/**/*.css'
-       ])
-       .pipe(concat('all.min.css'))
-       .pipe(cssmin())
-       .pipe(gulp.dest('./temp/final'));
+// Sprites task
+gulp.task('styles:sprites', ['clean'], function () {
+    // Generate our spritesheet
+    let spriteData = gulp
+        .src(paths.source.styles.sprites)
+        // .pipe(debug())
+        .pipe(spritesmith({
+            imgName: 'flags.png',
+            cssName: '_sprites.scss',
+            algorithm: 'top-down'
+        }));
+    // Pipe image stream through image optimizer and onto disk
+    let imgStream = spriteData.img
+        // DEV: We must buffer our stream into a Buffer for `imagemin`
+        .pipe(gulp.dest(`${paths.source.styles.base}/ui/components/`));
+
+    // Pipe CSS stream through CSS optimizer and onto disk
+    let cssStream = spriteData.css
+        .pipe(gulp.dest(`${paths.source.styles.base}/ui/components/`));
+
+    // Return a merged stream to handle both `end` events
+    return merge(imgStream, cssStream);
 });
 
-gulp.task('copy_bootstrap_fonts', function () {
-    "use strict";
-    return gulp.src(['../node_modules/bootstrap/fonts/**.*'])
-        .pipe(gulp.dest('./temp/final/fonts'));
+// Watch task
+// Browsersync task
+
+// build
+gulp.task('build', ['clean', 'default'], function (cb) {
+    logger.info(cb);
 });
 
-gulp.task('copy_dependencies', function () {
-    "use strict";
-    return gulp.src([
-            'fonts/**/*.*',
-            './images/**/*.svg'
-        ])
-        .pipe(gulp.dest('./temp/final/images'));
-});
-
-gulp.task('copy_index_template', function () {
-    "use strict";
-    return gulp.src(['./index_template.html'])
-        .pipe(rename('index.html'))
-        .pipe(gulp.dest('./temp/final'));
-});
-
-gulp.task('send_to_ror', function () {
-    gulp.src([
-        './temp/final/**/*.*',
-        '!./temp/final/**/*.map'
-    ]).pipe(gulp.dest('../../ror/public/admin_panel'));
-});
-
-gulp.task('clean_temp', function () {
-    gulp.src([
-        './temp'
-    ]).pipe(rimraf());
-});
-
-gulp.task('default', function () {
-    "use strict";
-    runSequence('clean_temp',
-    [
-        'collect_css',
-        'collect_html',
-        'compile_js'
-    ],
-    [
-        'minify_ng_js',
-        'minify_third_party_js',
-        'minify_css',
-        'copy_dependencies',
-        'copy_bootstrap_fonts',
-        'copy_index_template'
-    ],
-    'send_to_ror');
+// Default task
+gulp.task('default', ['clean', 'styles', 'copy'], function () {
+    gulp.watch(paths.watch.styles, ['styles']);
+    gulp.watch(paths.watch.html, ['copy:html']);
+    gulp.watch(paths.watch.images, ['copy:images']);
 });

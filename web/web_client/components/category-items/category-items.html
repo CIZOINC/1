@@ -5,15 +5,29 @@
     </div>
 
     <div class="category-items_videos">
-        <div class="category-items_videos_item"
-             ng-repeat="video in videosList"
-             style="background-image: url('{{video.hero_images.hero_image_link}}')"
-             ng-click="moveToPlayPage(video.id)"
-        >
-            <div class="category-items_videos_item_title">
-                <span class="category-items_videos_item_title_date">{{::video.humanizedDate}}</span>
-                <span class="category-items_videos_item_title_caption">{{::video.title}}</span>
+
+        <div class="category-items_videos_wrapper">
+            <div class="category-items_videos_item"
+                 ng-repeat="video in videosList"
+                 style="background-image: url('{{video.hero_images.hero_image_link_thumb_banner}}')"
+                 ng-click="moveToPlayPage(video.id)"
+                 ng-attr-id="category-play-item-{{video.id}}"
+            >
+                <div class="category-items_videos_item_overlay">
+                    <span class="category-items_videos_item_overlay_button icon-play"></span>
+                    <span class="category-items_videos_item_overlay_button icon-replay hidden-layer"></span>
+                </div>
+
+                <div class="category-items_videos_item_title">
+                    <span class="category-items_videos_item_title_date">{{::video.humanizedDate}}</span>
+                    <span class="category-items_videos_item_title_caption">{{::video.title}}</span>
+                </div>
+            </div>
+
+            <div class="category-items_videos_item-view-all" ng-show="manyItems" ng-click="moveToPlayPage(videosList[0].id)">
+                <span class="category-items_videos_item-view-all_title">View all</span>
             </div>
         </div>
+
     </div>
 </div>

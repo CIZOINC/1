@@ -1,0 +1,124 @@
+.ui-ribbon-container
+{
+    position: relative;
+    .ui-ribbon-wrapper
+    {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+
+        overflow: hidden;
+
+        width: 85px;
+        height: 88px;
+    }
+
+    .ui-ribbon
+    {
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 20px;
+
+        position: relative;
+        top: 15px;
+        left: -5px;
+
+        display: block;
+
+        width: 120px;
+        padding: 7px 0;
+
+        text-align: center;
+
+        color: $reverse;
+        background-color: $gray;
+        box-shadow: 0 0 3px rgba(0,0,0,.3);
+
+        @include transform( rotate(45deg) );
+        &:before,
+        &:after
+        {
+            line-height: 0;
+
+            position: absolute;
+            bottom: -2px;
+
+            content: ' ';
+
+            border-top: 2px solid $gray;
+            border-right: 2px solid transparent;
+            border-left: 2px solid transparent;
+        }
+        &:before
+        {
+            bottom: -1px;
+            left: 0;
+        }
+        &:after
+        {
+            right: 0;
+        }
+    }
+
+    // color
+    &.ui-ribbon-primary
+    {
+        .ui-ribbon
+        {
+            background-color: $brand-primary;
+            &:before,
+            &:after
+            {
+                border-top: 2px solid $brand-primary;
+            }
+        }
+    }
+    &.ui-ribbon-success
+    {
+        .ui-ribbon
+        {
+            background-color: $brand-success;
+            &:before,
+            &:after
+            {
+                border-top: 2px solid $brand-success;
+            }
+        }
+    }
+    &.ui-ribbon-info
+    {
+        .ui-ribbon
+        {
+            background-color: $brand-info;
+            &:before,
+            &:after
+            {
+                border-top: 2px solid $brand-info;
+            }
+        }
+    }
+    &.ui-ribbon-warning
+    {
+        .ui-ribbon
+        {
+            background-color: $brand-warning;
+            &:before,
+            &:after
+            {
+                border-top: 2px solid $brand-warning;
+            }
+        }
+    }
+    &.ui-ribbon-danger
+    {
+        .ui-ribbon
+        {
+            background-color: $brand-danger;
+            &:before,
+            &:after
+            {
+                border-top: 2px solid $brand-danger;
+            }
+        }
+    }
+}

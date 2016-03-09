@@ -1,7 +1,5 @@
 class V1::ApiController < ApplicationController
   before_action :current_user
-  before_action :as_admin?, if: :current_user
-  helper_method :as_admin?
 
   private
 
@@ -11,14 +9,6 @@ class V1::ApiController < ApplicationController
 
   def check_if_video_deleted
     render_errors ['404.1'] if @video.deleted_at
-  end
-
-  # def user_age_meets_requirement
-  #   @user_age_meets_requirement = @current_user.is_admin ? true : @current_user.user_age_meets_requirement!
-  # end
-
-  def as_admin?
-    doorkeeper_token.scopes.to_s == 'admin'
   end
 
   def current_user
@@ -70,7 +60,9 @@ class V1::ApiController < ApplicationController
   end
 
   def visible_conditions
-    (@conditions.push('visible = :visible') && @arguments[:visible] = true) unless params[:deleted] == 'true'
+    unless params[:deleted] == 'true'
+      (@conditions.push('visible = :visible') && @arguments[:visible] = true)
+    end
   end
 
 end

@@ -1,6 +1,5 @@
 class Video < ActiveRecord::Base
   include PgSearch
-  attr_accessor :skip_validation
   pg_search_scope :full_search,
                   associated_against: {tags: :name},
                   against: {
@@ -16,7 +15,6 @@ class Video < ActiveRecord::Base
 
   mount_uploader :hero_image, HeroImageUploader
   process_in_background :hero_image
-  store_in_background :hero_image
   acts_as_taggable
 
   belongs_to :category
@@ -24,24 +22,15 @@ class Video < ActiveRecord::Base
   has_many :liked_videos, dependent: :destroy
   has_many :skipped_videos, dependent: :destroy
   has_many :seen_videos, dependent: :destroy
-
-  # validates :title, :description, :category_id, presence: true
-  # validates :featured_order, numericality: {greater_than_or_equal_to: 1}, allow_nil: true
-  # validates_with VideoCustomValidator, unless: :skip_validation
-  validates_with HeroImageValidator, if: :skip_validation
-  validates_with VideoCustomValidator, unless: :skip_validation
+  validates :hero_image_upload_status,
+            inclusion: {in: %w(pending processing error completed idle)},
+            allow_nil: true
+  validates_with VideoCustomValidator
   scope :desc_order, ->(){ order(created_at: :desc)}
   scope :order_by_featured, ->(){order(featured_order: :asc)}
+  scope :trending, ->(){ order(view_count: :desc)}
 
   after_create :create_streams
-
-  def create_streams
-    ActiveRecord::Base.transaction do
-      %w(hls mp4).each do |type|
-        self.streams.build(stream_type: type).save(validate: false)
-      end
-    end
-  end
 
   %w(skip view).each do |i|
     define_method("increase_#{i}_count!") do
@@ -109,20 +98,18 @@ class Video < ActiveRecord::Base
     end
   end
 
-  # def set_param_to_nil(*params)
-  #   params.each do |param|
-  #     update_column(param, nil) if self["#{param}"]
-  #   end
-  # end
-
  protected
+
+ def create_streams
+   ActiveRecord::Base.transaction do
+     %w(hls mp4).each do |type|
+       self.streams.build(stream_type: type).save(validate: false)
+     end
+   end
+ end
 
   def params
     {user_id: @user_id, video_id: self.id}
-  end
-
-  def reset_streams
-    streams.map {|stream| stream.update_column(:transcode_status, 'pending')}
   end
 
   def update_self_params
@@ -137,38 +124,38 @@ class Video < ActiveRecord::Base
 
   def sql_query(sql)
     case sql
-      when 'delete_featured'
-        "UPDATE videos
-            SET featured_order = (featured_order-1)
-            WHERE id IN (
-              SELECT id
-              FROM videos
-              WHERE featured_order > #{featured_order}
-            )"
-      when 'featured_order_not_presents_yet'
-        "UPDATE videos
-            SET featured_order = (featured_order+1)
-            WHERE id IN (
-              SELECT id
-              FROM videos
-              WHERE featured_order >= #{@f_o}
-            )"
-      when 'start_fo_less_than_finish_fo'
-        "UPDATE videos
-            SET featured_order = (featured_order-1)
-            WHERE id IN (
-              SELECT id
-              FROM videos
-              WHERE featured_order > #{@start_fo} AND featured_order <= #{@finish_fo}
-            ) "
-       when 'start_fo_more_than_finish_fo'
-         "UPDATE videos
-            SET featured_order = (featured_order+1)
-            WHERE id IN (
-              SELECT id
-              FROM videos
-              WHERE featured_order < #{@start_fo} AND featured_order >= #{@finish_fo}
-            ) "
+    when 'delete_featured'
+      "UPDATE videos
+          SET featured_order = (featured_order-1)
+          WHERE id IN (
+            SELECT id
+            FROM videos
+            WHERE featured_order > #{featured_order}
+          )"
+    when 'featured_order_not_presents_yet'
+      "UPDATE videos
+          SET featured_order = (featured_order+1)
+          WHERE id IN (
+            SELECT id
+            FROM videos
+            WHERE featured_order >= #{@f_o}
+          )"
+    when 'start_fo_less_than_finish_fo'
+      "UPDATE videos
+          SET featured_order = (featured_order-1)
+          WHERE id IN (
+            SELECT id
+            FROM videos
+            WHERE featured_order > #{@start_fo} AND featured_order <= #{@finish_fo}
+          ) "
+     when 'start_fo_more_than_finish_fo'
+       "UPDATE videos
+          SET featured_order = (featured_order+1)
+          WHERE id IN (
+            SELECT id
+            FROM videos
+            WHERE featured_order < #{@start_fo} AND featured_order >= #{@finish_fo}
+          ) "
     end
   end
 

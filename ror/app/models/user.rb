@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  # Include default devise modules.
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable,
          :omniauthable, :omniauth_providers => [:facebook]
@@ -13,10 +13,6 @@ class User < ActiveRecord::Base
 
   before_destroy :prevent_user_from_destroy, if: :last_admin?
   after_destroy :destroy_self_tokens
-
-  # def user_age_meets_requirement!
-  #   (self.birthday.to_date < 18.years.ago || self.is_admin) ? true : false
-  # end
 
   def set_reset_password_token
     raw, enc = Devise.token_generator.generate(self.class, :reset_password_token)
@@ -48,7 +44,7 @@ class User < ActiveRecord::Base
 
   def update_tokens
     if tokens = Doorkeeper::AccessToken.where(resource_owner_id: self.id)
-      self.is_admin ? set_scopes!(tokens, 'admin') : set_scopes!(tokens, 'user')
+      set_scopes!(tokens, 'user') if not self.is_admin # downgrade all existing tokens to 'user' scope if a user is no longer an admin
     end
   end
 

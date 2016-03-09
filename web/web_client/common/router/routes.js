@@ -1,15 +1,6 @@
 angular
     .module('app.routes', [])
     .constant('routesList', [
-        /*{
-            state: 'main',
-            config: {
-                url: '/',
-                templateUrl: 'views/main/main.html',
-                controller: 'MainCtrl',
-                controllerAs: 'main'
-            }
-        },*/
         {
             state: 'register',
             config: {
@@ -29,7 +20,25 @@ angular
             }
         },
         {
+            state: 'reset',
+            config: {
+                url: '/reset',
+                templateUrl: 'views/reset/reset.html',
+                controller: 'ResetCtrl',
+                controllerAs: 'reset'
+            }
+        },
+        {
             state: 'home',
+            config: {
+                url: '',
+                templateUrl: 'views/home/home.html',
+                controller: 'HomeCtrl',
+                controllerAs: 'home'
+            }
+        },
+        {
+            state: 'main',
             config: {
                 url: '/',
                 templateUrl: 'views/home/home.html',
@@ -49,10 +58,28 @@ angular
         {
             state: 'list',
             config: {
-                url: '/list',
+                url: '/list/:listType',
                 templateUrl: 'views/list/list.html',
                 controller: 'ListCtrl',
                 controllerAs: 'list'
+            }
+        },
+        {
+            state: 'share',
+            config: {
+                url: '/share/:videoId',
+                templateUrl: 'views/share/share.html',
+                controller: 'ShareCtrl',
+                controllerAs: 'share'
+            }
+        },
+        {
+            state: 'shared_play',
+            config: {
+                url: '/videos/:videoId',
+                templateUrl: 'views/play/play.html',
+                controller: 'PlayCtrl',
+                controllerAs: 'play'
             }
         }
     ]);

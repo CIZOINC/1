@@ -9,7 +9,7 @@ class V1::StreamsController < V1::ApiController
   before_action :check_if_filename_presents_in_params, only: :upload_ticket
   before_action :check_if_stream_meets_requirements?, only: :create
   before_action :set_bucket, only: [:upload_ticket, :create]
-  # before_action :check_for_requirement, only: :show
+  before_action :check_for_headers, only: :transcode_notification
 
 
   def show
@@ -23,16 +23,6 @@ class V1::StreamsController < V1::ApiController
     apply_format!(@filename)
     valid_filename?(@filename)
     @form = @bucket.presigned_post(key: file_folder + "#{SecureRandom.uuid}/" + @filename, expires: Time.now + 300)
-
-    # obj = bucket.object(file_folder+filename)
-    # @url = URI.parse(obj.presigned_url(:put, key: file_folder + filename))
-    # body = File.read('/home/karetnikov_kirill/Downloads/Simpsons.mp4')
-    # Net::HTTP.start(@url.host) do |http|
-    #     http.send_request("PUT", @url.request_uri, body, {
-    #       "content-type" => "",
-    #     })
-    #   puts "Uploaded"
-    # end
   end
 
   def create
@@ -79,7 +69,7 @@ class V1::StreamsController < V1::ApiController
 
   def transcode_notification
     @stream = Stream.find_by(job_id: params[:jobId])
-    nothing 404 and return if @stream.nil?
+    nothing 404 and return if (@stream.nil? || params[:jobId].nil?)
     @stream.update_attribute(:transcode_status, params[:state].downcase )
 
     #Give access to the key if job completed
@@ -93,16 +83,15 @@ class V1::StreamsController < V1::ApiController
         end
       end
     end
-
-    #delete input file from bucket if no jobs connected with input key
-    # if no_more_jobs_for(params[:input][:key])
-    #   object = Aws::S3::Object.new(bucket_name: bucket_name, region: region, key: params[:input][:key])
-    #   object.delete
-    # end
     nothing 202
   end
 
   private
+
+  def check_for_headers
+    nothing 401 and return if request.headers['x-api-key'].blank?
+    nothing 403 and return unless request.headers['x-api-key'] == Rails.application.secrets.internal_api_key
+  end
 
   def make_public(object_key)
     @client.put_object_acl(acl:'public-read', bucket: bucket_name, key: object_key)
@@ -150,16 +139,13 @@ class V1::StreamsController < V1::ApiController
   def stream_meets_requirements?
     streams = @video.streams
     streams.each do |s|
-      return false unless s.transcode_status == 'pending' || s.transcode_status == 'completed' || s.transcode_status == 'error' || s.transcode_status == 'canceled' || s.transcode_status.nil?
+      return false unless s.transcode_status == 'pending'   ||
+                          s.transcode_status == 'completed' ||
+                          s.transcode_status == 'error'     ||
+                          s.transcode_status == 'canceled'  ||
+                          s.transcode_status.nil?
     end
   end
-
-  #check if no progressing jobs for this input
-  # def no_more_jobs_for(raw_file)
-  #   client = Aws::ElasticTranscoder::Client.new(region: region)
-  #   jobs = client.list_jobs_by_pipeline(pipeline_id: @pipeline_id).jobs.select{|i| i.input.key == raw_file}
-  #   jobs.select{|job| job.output.status == "Progressing"}.empty?
-  # end
 
   def set_video
     @video = Video.find_by(id: params[:video_id])
@@ -227,9 +213,5 @@ class V1::StreamsController < V1::ApiController
   def set_stream
     @stream = @video.streams.find_by(stream_type: params[:stream_type])
   end
-
-  # def check_for_requirement
-  #   render_errors ['403.5'] if (@video.mature_content && (@current_user.nil? || !@current_user.user_age_meets_requirement!))
-  # end
 
 end

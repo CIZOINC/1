@@ -82,4 +82,9 @@ Rails.application.configure do
   # log to STDOUT so logs appear in puma logs
   Rails.logger = Logger.new(STDOUT)
 
+  config.action_mailer.default_url_options = {:host => 'https://www.cizo.com'}
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default :charset => "utf-8"
+
 end

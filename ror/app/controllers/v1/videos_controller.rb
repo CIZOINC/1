@@ -1,6 +1,6 @@
 class V1::VideosController < V1::ApiController
   before_action :set_video, only: [:show, :destroy, :update, :check_if_video_deleted,:hero_image,:add_featured, :remove_featured]
-
+  before_action :set_arguments, only: [:index, :trending, :search, :featured]
   before_action only: [:create, :update, :hero_image, :destroy,:add_featured, :remove_featured] do
     doorkeeper_authorize! :admin
   end
@@ -10,14 +10,12 @@ class V1::VideosController < V1::ApiController
   end
 
   before_action :check_if_video_deleted, only: [:show, :update, :destroy, :hero_image, :add_featured, :remove_featured]
-  # before_action :user_age_meets_requirement, only: [:index, :show, :trending, :featured, :search, :update, :create], if: :current_user
   before_action :check_if_file_presents_in_params, only: [:hero_image]
   before_action :set_bucket, only: [:destroy]
   before_action :able_to_be_featured?, only: [:add_featured]
 
   def index
     @conditions = []
-    @arguments = {}
 
     unless params[:created_before].blank?
       @conditions.push('created_at <= :created_before')
@@ -30,8 +28,11 @@ class V1::VideosController < V1::ApiController
     end
 
     unless params[:category].blank?
-      @conditions.push("category_id = (SELECT id FROM categories WHERE title = :category)")
-      @arguments[:category] = params[:category]
+      @conditions.push("category_id = (SELECT id FROM categories WHERE canonical_title = :category)")
+      @arguments[:category] = params[:category].to_canonical
+      puts params[:category].to_canonical
+      puts @arguments
+      puts @conditions
     end
 
     if params[:deleted] == 'true'
@@ -91,22 +92,19 @@ class V1::VideosController < V1::ApiController
   end
 
   def hero_image
-    @video.skip_validation = true
-    @video.hero_image = params[:file]
-    @video.save ? nothing(202) : (render_errors @video.errors[:codes], hero_image_params)
+    return if hero_image_errors_any?
+    nothing 202 if @video.update_attributes(hero_image: @file, hero_image_upload_status: "pending")
   end
 
   def trending
     @conditions = ["visible = true AND deleted_at IS NULL"]
-    @arguments = {}
     set_mature_content
-    @videos = Video.where(@conditions.join(" AND "), @arguments).desc_order.limit(200)
+    @videos = Video.where(@conditions.join(" AND "), @arguments).trending.limit(200)
     render :index
   end
 
   def search
     @conditions = ["deleted_at IS NULL"]
-    @arguments = {}
     if search = params[:search]
       set_mature_content
       set_visibility
@@ -123,7 +121,6 @@ class V1::VideosController < V1::ApiController
   def featured
     @featured = true
     @conditions = ['featured = true AND deleted_at IS NULL']
-    @arguments = {}
     set_mature_content
     if @current_user && as_admin?
       @videos = Video.where(@conditions.join(" AND "), @arguments).order_by_featured
@@ -136,8 +133,9 @@ class V1::VideosController < V1::ApiController
     featured_order = params[:featured_order].try(:to_i)
     featured_videos_count = Video.where('featured = ? AND visible = ? AND deleted_at IS NULL', true, true).count
     if featured_order
-      if ((@video.featured_order && (featured_order > featured_videos_count) && (already_featured = true)) || (!@video.featured_order && (featured_order > featured_videos_count + 1))) || featured_order<=0
-        render_errors ['400.6'], featured_videos_params(already_featured)
+      if ( @video.featured_order && (!featured_order.in?(1..featured_videos_count)))     ||
+         (!@video.featured_order && (!featured_order.in?(1..featured_videos_count + 1) ))
+        render_errors ['400.6'], featured_videos_params(@video.featured)
         return
       end
     end
@@ -152,17 +150,42 @@ class V1::VideosController < V1::ApiController
 
   private
 
+  def hero_image_errors_any?
+    render_errors(['422.3']) and return true if hero_image_is_uploading
+    render_errors(['422.22'], hero_image_params) if hero_image_extension_not_allowed
+  end
+
+  def carrierwave_jobs
+    djs = Delayed::Job.where(queue: "carrierwave")
+    djs.map{|x| YAML.load(x.handler)}
+  end
+
+  def carrierwave_jobs_ids
+    carrierwave_jobs.map(&:id).map(&:to_i)
+  end
+
+  def hero_image_is_uploading
+    @video.id.in? carrierwave_jobs_ids
+  end
+
   def hero_image_params
-    @uploader = HeroImageValidator.new
     {allowed_types: allowed_types , uploaded_file_extension: uploaded_file_extension}
   end
 
   def allowed_types
-    (@uploader.send (:extension_white_list)).join(", ")
+    extension_white_list.join(", ")
   end
 
   def uploaded_file_extension
-    @uploader.send(:hero_image_extension, params[:file])
+    @file.original_filename.split('.').last
+  end
+
+  def extension_white_list
+    %w(jpg jpeg png bmp)
+  end
+
+  def hero_image_extension_not_allowed
+    !uploaded_file_extension.in? extension_white_list
   end
 
   def videos_params
@@ -183,7 +206,15 @@ class V1::VideosController < V1::ApiController
   end
 
   def hero_image_path
-    Rails.env.production? ? "production/images/videos/#{@video.id}" : "staging/images/videos/#{@video.id}" unless @video.hero_image.nil?
+    unless @video.hero_image.nil?
+      Rails.env.production? ?
+        "production/images/videos/#{@video.id}" :
+        "staging/images/videos/#{@video.id}"
+    end
+  end
+
+  def set_arguments
+    @arguments = {}
   end
 
 end

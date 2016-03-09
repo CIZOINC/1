@@ -1,3 +1,5 @@
+@json = json
+@video = video
 if @show_invisible || @show_deleted
   json.extract! video, :id
 else
@@ -13,11 +15,16 @@ else
   json.featured_order video.featured_order if @featured
 
   if @current_user
-    json.deleted_at video.deleted_at if as_admin?
+    if as_admin?
+      json.deleted_at video.deleted_at
+      json.hero_image_upload_status video.hero_image_upload_status
+    end
+
     %w(view skip).each {|i| json.set! "#{i}_count", video["#{i}_count"] } if as_admin?
-    @liked ? (json.liked true) : (LikedVideo.find_by(user_id: @current_user.id, video_id: video.id) ? (json.liked true) : (json.liked false))
-    @unseen ? (json.seen false) : (@seen ? (json.seen true) : (SeenVideo.find_by(user_id: @current_user.id, video_id: video.id) ? (json.seen true) : (json.seen false)))
-    @skipped ? (json.skipped true) : (SkippedVideo.find_by(user_id: @current_user.id, video_id: video.id) ? (json.skipped true) : (json.skipped false))
+
+    liked
+    @unseen ? (json.seen false) : seen
+    skipped
   end
 
   json.link video_link(video.id)

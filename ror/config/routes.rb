@@ -40,7 +40,7 @@ Rails.application.routes.draw do
     get :trending, to: "videos#trending"
     get :search, to: 'videos#search'
 
-    resources :users, except: [:destroy] do
+    resources :users do
       get :me, on: :collection
       delete :me, on: :collection, to: "users#destroy_self_account"
       put :me, on: :collection, to: "users#update_self_account"
@@ -63,6 +63,6 @@ Rails.application.routes.draw do
       put 'me/videos/seen/:video_id', to: 'users#mark_video_as_seen', on: :collection
     end
   end
-  root 'welcome#index'
+
   get 'health', to: 'application#health_check'
 end

@@ -1,0 +1,106 @@
+
+// weather icons
+.weather-icon-list
+{
+    text-align: center;
+    .example
+    {
+        margin: 10px 3px;
+
+        text-align: center;
+
+        .icon
+        {
+            font-size: 24px;
+        }
+    }
+}
+
+// glyphicons icons
+.bs-glyphicons
+{
+    overflow: hidden;
+
+    margin-bottom: 20px;
+    padding-bottom: 1px;
+    padding-left: 0;
+
+    list-style: none;
+
+    .glyphicon
+    {
+        font-size: 24px;
+
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+
+    .glyphicon-class
+    {
+        display: block;
+
+        text-align: center;
+    }
+
+    li
+    {
+        font-size: 12px;
+        line-height: 1.4;
+
+        float: left;
+
+        width: 25%;
+        height: 115px;
+        margin: 0 -1px -1px 0;
+        padding: 10px;
+
+        text-align: center;
+
+        border: 1px solid #ddd;
+        @media (min-width: 768px)
+        {
+            width: 12.5%;
+        }
+    }
+}
+
+.page-grid .grid-structure .row
+{
+    margin-top: 10px;
+
+    .widget-container
+    {
+        min-height: 0;
+        margin-top: 5px;
+        padding: 10px 15px 12px;
+
+        border-radius: $border-radius-base;
+        background: #eee;
+    }
+}
+
+// form
+.page-form-ele
+{
+    .list-checkbox-radio li
+    {
+        &:nth-child(even)
+        {
+            margin-bottom: 20px;
+        }
+
+        & > div
+        {
+            float: left;
+
+            margin-right: 10px;
+        }
+    }
+}
+
+// demo slider
+.demoslider-container
+{
+    max-width: 600px;
+    margin: auto;
+}

@@ -1,0 +1,25 @@
+# Admin panel .gitignore
+
+## Ignore the ./ignored folder
+ignored
+
+## Make sure we get all source files
+!.bowerrc
+!bower.json
+!build
+
+## Node and Bower downloaded modules
+node_modules
+client/bower_components
+
+## Temp Files / System Files
+.tmp
+.sass-cache
+.DS_Store
+npm-debug.log
+
+## Admin Panel Extras
+/preview/preview.zip
+/landing/css/main.css
+/landing/index.html
+/documentation/index.html

@@ -20,6 +20,15 @@ angular
             }
         },
         {
+            state: 'reset',
+            config: {
+                url: '/reset',
+                templateUrl: 'views/reset/reset.html',
+                controller: 'ResetCtrl',
+                controllerAs: 'reset'
+            }
+        },
+        {
             state: 'home',
             config: {
                 url: '',

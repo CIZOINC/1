@@ -1,11 +1,5 @@
 <form>
-    <nav class="navbar">
-        <div class="navbar-register">
-            <img class="navbar-register_logo" src="images/logo.svg">
-        </div>
-    </nav>
-
-    <div class="col-xs-12 col-md-6 col-md-offset-3 register-form">
+    <div class="register-form">
         <button class="register-form_facebook-login" ng-click="facebookRegister()">
             <span class="icon-facebook"></span>
             Continue with Facebook
@@ -34,4 +28,6 @@
     <div class="have-account">
         Already have an account? <span class="have-account_login">Log in</span>
     </div>
+
+    <div class="icon-close register-form_close" ng-click="closeView()"></div>
 </form>

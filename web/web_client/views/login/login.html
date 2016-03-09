@@ -18,10 +18,12 @@
 
         <button class="login-form_login" ng-click="processLogin()">Log In</button>
 
-        <div class="login-form_forgot-password">Forgot email or password?</div>
+        <div class="login-form_forgot-password"  ng-click="resetPasswordClick()">Forgot email or password?</div>
     </div>
 
     <div class="want-account">
         Want an account? <span class="want-account_login" ng-click="registerClick()">Sign Up</span>
     </div>
+
+    <div class="icon-close login-form_close" ng-click="closeView()"></div>
 </form>

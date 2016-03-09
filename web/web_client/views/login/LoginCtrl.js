@@ -15,7 +15,9 @@ function LoginCtrl($scope, $state, userServ, storageServ) {
         },
 
         processLogin: processLogin,
-        registerClick: registerClick
+        registerClick: registerClick,
+        resetPasswordClick: resetPasswordClick,
+        closeView: closeView
     });
 
     function processLogin() {
@@ -76,6 +78,14 @@ function LoginCtrl($scope, $state, userServ, storageServ) {
 
     function registerClick() {
         $state.go('register');
+    }
+
+    function resetPasswordClick() {
+        $state.go('reset');
+    }
+
+    function closeView() {
+        $state.go('home');
     }
 }
 

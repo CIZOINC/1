@@ -33,7 +33,8 @@ function RegisterCtrl($scope, $log, userServ, moment) {
         months: months,
 
         registerUser: registerUser,
-        facebookRegister: facebookRegister
+        facebookRegister: facebookRegister,
+        closeView: closeView
     });
 
     function registerUser() {
@@ -57,6 +58,10 @@ function RegisterCtrl($scope, $log, userServ, moment) {
 
     function facebookRegister() {
         userServ.facebookAuth($scope.hostName);
+    }
+
+    function closeView() {
+        $state.go('home');
     }
 }
 

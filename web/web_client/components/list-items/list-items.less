@@ -1,7 +1,40 @@
-.category-items {
+.list-items {
   color: white;
-  //margin-left: 100px;
   width: 100%;
+
+  &_no-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+    color: white;
+
+    &_icon {
+      font-size: 80px;
+    }
+
+    &_title {
+      font-family: main-cizo;
+      text-transform: uppercase;
+      font-size: 34px;
+    }
+
+    &_additional {
+      font-family: main-cizo;
+      font-size: 25px;
+    }
+
+    &_confirm {
+      font-family: main-cizo;
+      font-size: 25px;
+      text-transform: uppercase;
+      border: solid 1px white;
+      padding: 5px 50px;
+      margin-top: 30px;
+    }
+  }
+
   &_title {
     display: flex;
     flex-direction: row;
@@ -20,6 +53,19 @@
     }
   }
 
+  &_no-items-wrapper {
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     background-color: rgba(0,0,0,.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+   }
 
   &_videos {
     display: flex;
@@ -38,6 +84,8 @@
       align-content: center;
       align-items: center;
     }
+
+
 
     &_item {
       width: 275px;
@@ -60,7 +108,7 @@
         color: black;
       }
 
-      &:hover > .category-items_videos_item_title {
+      &:hover > .play-items_videos_item_title {
         background-color: #00ffff;
       }
 
@@ -76,10 +124,6 @@
         top: 0;
         left: 0;
         z-index: 10;
-
-        &--watched {
-          background-color: rgba(22, 22, 22, 0.9);
-        }
 
         &_button {
           font-size: 65px;
@@ -101,7 +145,6 @@
       &_title {
         background-color: rgba(22, 22, 22, 0.9);
         padding: 10px;
-
         text-align: center;
         font-size: 16px;
         font-weight: bolder;
@@ -109,10 +152,6 @@
         display: flex;
         flex-direction: column;
         z-index: 100;
-
-        &--watched {
-          background-color: transparent;
-        }
 
         &_date {
           font-size: 12px;
@@ -127,23 +166,6 @@
       }
     }
 
-    &_item-view-all {
-      border: solid 2px #315c73;
-      display: flex;
-      justify-content: center;
-      align-content: center;
-      align-items: center;
-      min-width: 275px;
-      max-width: 275px;
-      height: 150px;
-      margin: 5px 15px;
-      cursor: pointer;
-      &_title {
-        font-family: main-cizo;
-        font-size: 34px;
-        text-transform: uppercase;
-        color: #315c73;
-      }
-    }
+
   }
 }

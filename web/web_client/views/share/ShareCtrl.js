@@ -41,7 +41,7 @@ function ShareCtrl($scope, $rootScope, $stateParams, _, $state, playerServ) {
         let fullPath = `${$scope.sharingPath}#/videos/${$scope.video.id}`;
         let socialMap = {
             'facebook': 'https://www.facebook.com/dialog/share?' +
-                `app_id=${$scope.facebookAppIdStage}&display=popup` +
+                `app_id=${$scope.facebookAppId}&display=popup` +
                 `&href=${encodeURIComponent(fullPath)}` +
                 `&redirect_uri=${encodeURIComponent(fullPath)}`,
             'google': 'https://plus.google.com/share?url=',

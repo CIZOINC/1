@@ -1,9 +1,8 @@
-(function () {
-    'use strict';
+'use strict';
 
+(function () {
     angular.module('app.page')
         .directive('customPage', customPage);
-
 
     // add class for specific pages to achieve fullscreen, custom background etc.
     function customPage() {
@@ -47,5 +46,4 @@
             });
         }
     }
-
 })();

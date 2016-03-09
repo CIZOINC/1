@@ -14,7 +14,6 @@
   height: 100%;
   transition: height 0.5s ease-out;
   margin-bottom: 30px;
-  //background-color: @color-dark;
   background-color: black;
   position: absolute;
   left: 0;
@@ -237,6 +236,16 @@
           font-size: 32px;
           margin: 10px;
           cursor: pointer;
+
+          &_favorites.icon-favorites-filled {
+            font-size: 40px;
+            margin-top: 5px;
+            margin-left: 55px;
+            &:before {
+              padding: 0;
+              margin: 0;
+            }
+          }
         }
       }
     }
@@ -514,20 +523,36 @@
           color: white;
           font-size: 35px;
           cursor: pointer;
-          cursor: hand;
+        }
+
+        &_volume {
+          color: white;
+          font-size: 35px;
+          cursor: pointer;
+        }
+
+        &_volume-wrapper {
+          overflow: visible;
+          margin-top: -80px;
+        }
+
+        &_volume-slider {
+          height: 80px !important;
+          & .rz-pointer {
+            opacity: 0 !important;
+          }
         }
 
         &_collapse {
           color: white;
           font-size: 35px;
           cursor: pointer;
-          cursor: hand;
         }
 
         &_slider {
           width: 85%;
           cursor: pointer;
-          cursor: hand;
+          margin-bottom: 5px;
         }
 
         &_time-position {

@@ -1,21 +1,30 @@
 // Dependency: Angular UI Bootstrap
 
-.ui-tab {
-    .nav-tabs {
+.ui-tab
+{
+    .nav-tabs
+    {
         margin-bottom: 15px;
-        &.nav-justified {
-            > li {
-                &.active {
-                    > a {
+        &.nav-justified
+        {
+            > li
+            {
+                &.active
+                {
+                    > a
+                    {
                         border-bottom-color: transparent;
                     }
                 }
             }
         }
 
-        > li {
-            &.active {
-                > a {
+        > li
+        {
+            &.active
+            {
+                > a
+                {
                     background-color: $reverse;
                     // &:focus,
                     // &:hover,
@@ -25,34 +34,44 @@
                 }
             }
         }
-        a {
+        a
+        {
             color: $text-color;
-            &:hover {
+            &:hover
+            {
                 cursor: pointer;
             }
         }
     }
 }
 
-.ui-tab-container {
-    .nav-tabs {
+.ui-tab-container
+{
+    .nav-tabs
+    {
         margin-bottom: 0;
-        &.nav-justified {
-            > li {
-                &:last-child {
+        &.nav-justified
+        {
+            > li
+            {
+                &:last-child
+                {
                     border-right: 0;
                 }
                 &:hover,
                 &:active,
-                &:focus {
-                    > a {
+                &:focus
+                {
+                    > a
+                    {
                         border-width: 0 0 1px 0;
                         border-style: solid;
                         border-color: $nav-tabs-border-color;
                     }
                 }
 
-                > a {
+                > a
+                {
                     border-width: 0 0 1px 0;
                     border-style: solid;
                     border-color: $nav-tabs-border-color;
@@ -60,117 +79,147 @@
             }
         }
 
-        > li {
-            &.active {
-                > a {
+        > li
+        {
+            &.active
+            {
+                > a
+                {
                     color: $link-color;
-                }                
+                }
             }
 
             &:hover,
             &:active,
-            &:focus {
-                > a {
+            &:focus
+            {
+                > a
+                {
                     border: 0;
                     background-color: transparent;
                 }
             }
-            > a {
-                margin: 0;
-                border: 0;
-                padding: 15px 15px;
+            > a
+            {
                 font-weight: bold;
+
+                margin: 0;
+                padding: 15px 15px;
+
+                border: 0;
                 border-radius: 0;
             }
         }
     }
 
-    .tab-content {
+    .tab-content
+    {
         padding: 15px 15px;
     }
 }
 
-.ui-tab-horizontal {
+.ui-tab-horizontal
+{
     border: 1px solid $nav-tabs-border-color;
     border-radius: $border-radius-base;
-    .nav-tabs {
+    .nav-tabs
+    {
         background-color: $state-default-bg;
 
-        > li {
+        > li
+        {
             border-right: 1px solid $nav-tabs-border-color;
-            &.active {
+            &.active
+            {
                 &:hover,
                 &:active,
-                &:focus {
-                    > a {
+                &:focus
+                {
+                    > a
+                    {
                         border: 0;
                         background-color: #fff;
                     }
                 }
 
-                > a {
+                > a
+                {
                     &:focus,
                     &:hover,
-                    &:active {
+                    &:active
+                    {
                         border: 0;
                     }
                 }
             }
         }
-
     }
 }
 
-.ui-tab-vertical {
+.ui-tab-vertical
+{
     position: relative;
+
     padding: 0 0 0 30%;
-    .nav-tabs {
+    .nav-tabs
+    {
         position: absolute;
-        left: 0;
         top: 0;
+        left: 0;
+
         width: 30%;
-        background-color: $state-default-bg;
+
         border-width: 1px 0 1px 1px;
-        border-radius: $border-radius-base 0 0 $border-radius-base;
-        border-color: $nav-tabs-border-color;
         border-style: solid;
-        > li {
-            width: 100%;
+        border-color: $nav-tabs-border-color;
+        border-radius: $border-radius-base 0 0 $border-radius-base;
+        background-color: $state-default-bg;
+        > li
+        {
             float: none;
-            border-bottom: 1px solid $nav-tabs-border-color;
+
+            width: 100%;
             margin: 0;
-            &:last-child {
+
+            border-bottom: 1px solid $nav-tabs-border-color;
+            &:last-child
+            {
                 border-bottom: 0;
             }
-            &.active {
+            &.active
+            {
                 &:hover,
                 &:active,
-                &:focus {
-                    > a {
+                &:focus
+                {
+                    > a
+                    {
                         border: 0;
                         background-color: #fff;
                     }
                 }
 
-                > a {
+                > a
+                {
                     margin-right: -1px;
                     &:focus,
                     &:hover,
-                    &:active {
+                    &:active
+                    {
                         border: 0;
                     }
                 }
             }
-            > a {
+            > a
+            {
                 display: block;
             }
-        }        
+        }
     }
 
-    .tab-content {
+    .tab-content
+    {
         border: 1px solid $nav-tabs-border-color;
         border-radius: 0 $border-radius-base $border-radius-base 0;
     }
-
 }
-

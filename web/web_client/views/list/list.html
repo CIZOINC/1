@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="list">
+    <left-side-menu storage="storage"></left-side-menu>
 
-</body>
-</html>
+    <top-menu categories="categoriesList"
+              host-name="{{hostName}}"
+              videos-list="videosFullList"
+              storage="storage"
+    ></top-menu>
+
+    <div class="list_video-items">
+        <list-items videos="videosList" list_type="{{listItem}}"></list-items>
+    </div>
+
+</div>

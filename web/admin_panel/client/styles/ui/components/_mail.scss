@@ -1,31 +1,40 @@
 $border_color: #f1f1f1;
 
-.page.page-mail {
+.page.page-mail
+{
     padding: 0;
 
-    > .row {
+    > .row
+    {
         display: table;
+
         width: 100%;
         margin: 0;
     }
 
     .col-sm-3,
-    .col-sm-9 {
-        float: none;
+    .col-sm-9
+    {
         display: table-cell;
-        vertical-align: top;
+        float: none;
+
         padding: 0;
+
+        vertical-align: top;
     }
 
-    .col-sm-3 {
+    .col-sm-3
+    {
         padding-bottom: 180px;
     }
-    .col-sm-9 {
+    .col-sm-9
+    {
         background-color: $reverse;
     }
 }
 
-.mail-categories {
+.mail-categories
+{
     background-color: #f6f6f6;
     // &:before { // Full height background
     //     position: absolute; // position based on html, body, thus parents' position should be 'static'
@@ -39,45 +48,60 @@ $border_color: #f1f1f1;
     //     line-height: 0;
     // }
 
-    a {
+    a
+    {
         color: $text-color;
     }
 
-    .btn-primary {
+    .btn-primary
+    {
         color: $reverse;
     }
 
-    .category-heading {
+    .category-heading
+    {
         padding: 13px 15px;
     }
 
-    .list-group {
-        .list-group-item {
+    .list-group
+    {
+        .list-group-item
+        {
             padding: 0;
+
             border-width: 1px 0;
             border-color: rgba(0,0,0,.02);
             background-color: transparent;
-            &.active {
-                > a {
+            &.active
+            {
+                > a
+                {
                     color: $brand-primary;
-                    background-color: $reverse;                    
+                    background-color: $reverse;
                 }
             }
 
-            > a {
+            > a
+            {
                 display: block;
+
                 padding: 15px;
+
                 text-decoration: none;
-                &:hover {
+                &:hover
+                {
                     color: $brand-primary;
                     background-color: #fafafa;
                 }
 
-                > i {
+                > i
+                {
                     font-size: 14px;
+
                     width: 18px;
                     margin-right: 6px;
-                    &.fa-circle {
+                    &.fa-circle
+                    {
                         font-size: $font-size-base;
                     }
                 }
@@ -86,90 +110,119 @@ $border_color: #f1f1f1;
     }
 }
 
-.mail-container {
-    &.panel {
-        border: 0;
+.mail-container
+{
+    &.panel
+    {
         margin: 0;
+
+        border: 0;
     }
 
-    .panel-heading {
-        padding: 20px;
+    .panel-heading
+    {
         font-size: 22px;
+
+        padding: 20px;
     }
 
-    .mail-options {
+    .mail-options
+    {
         padding: 12px;
     }
 
-    .table {
+    .table
+    {
         margin-bottom: 0;
+
         border-top: 1px solid $table-border-color;
-        tr {
-            &:hover {
+        tr
+        {
+            &:hover
+            {
                 cursor: pointer;
             }
 
-            > td {
+            > td
+            {
                 padding: 12px;
 
-                .ti-star {
+                .ti-star
+                {
                     color: #ccc;
 
-                    &.active {
+                    &.active
+                    {
                         color: $brand-danger;
                     }
                 }
             }
         }
 
-        label.ui-checkbox {
+        label.ui-checkbox
+        {
             margin-bottom: 0;
         }
 
-        .mail-unread {
+        .mail-unread
+        {
             font-weight: bold;
+
             color: $gray-dark;
         }
-        .mail-hightlight {
-            td {
+        .mail-hightlight
+        {
+            td
+            {
                 background-color: $state-warning-bg;
             }
         }
     }
 
-    .mail-header {
+    .mail-header
+    {
         padding: 15px 0;
-        h3 {
+        h3
+        {
             margin-top: 0;
         }
     }
-    .mail-info {
+    .mail-info
+    {
         padding: 10px 15px;
+
         border-top: 1px solid $border_color;
         border-bottom: 1px solid $border_color;
 
         .col-md-8,
-        .col-md-4 {
+        .col-md-4
+        {
             padding: 0;
         }
     }
-    .mail-content {
+    .mail-content
+    {
         padding: 15px 0;
+
         border-bottom: 1px solid $border_color;
     }
-    .mail-attachments {
+    .mail-attachments
+    {
         padding: 15px 0;
+
         border-bottom: 1px solid $border_color;
-    
-        .list-attachs {
-            img {
+
+        .list-attachs
+        {
+            img
+            {
                 max-width: 200px;
                 max-height: 200px;
             }
         }
     }
-    .mail-actions {
+    .mail-actions
+    {
         margin-top: 10px;
     }
 }
-

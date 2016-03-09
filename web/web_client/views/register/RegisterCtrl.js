@@ -4,7 +4,7 @@ angular
     .controller('RegisterCtrl', RegisterCtrl);
 
 /* @ngInject */
-function RegisterCtrl($scope, $log, userServ, moment) {
+function RegisterCtrl($scope, $log, $state, userServ, moment) {
     "use strict";
 
     let months = [
@@ -26,14 +26,16 @@ function RegisterCtrl($scope, $log, userServ, moment) {
         register: {
             email: '',
             password: '',
-            month: 0,
+            month: { 'key': 0, 'name': 'January'},
             day: '',
             year: ''
         },
         months: months,
 
         registerUser: registerUser,
-        facebookRegister: facebookRegister
+        facebookRegister: facebookRegister,
+        closeView: closeView,
+        loginClick: loginClick
     });
 
     function registerUser() {
@@ -58,6 +60,14 @@ function RegisterCtrl($scope, $log, userServ, moment) {
     function facebookRegister() {
         userServ.facebookAuth($scope.hostName);
     }
+
+    function loginClick() {
+        $state.go('login');
+    }
+
+    function closeView() {
+        $state.go('home');
+    }
 }
 
-RegisterCtrl.$inject = ['$scope', '$log', 'userServ', 'moment'];
+RegisterCtrl.$inject = ['$scope', '$log', '$state', 'userServ', 'moment'];

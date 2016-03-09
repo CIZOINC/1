@@ -1,50 +1,65 @@
 
 
 // layout for horizontal nav
-@media (min-width: $screen-sm) {
-    .app {
-        > .main-container {
-            > .nav-container {
-                &.nav-horizontal {
+@media (min-width: $screen-sm)
+{
+    .app
+    {
+        > .main-container
+        {
+            > .nav-container
+            {
+                &.nav-horizontal
+                {
                     z-index: 9; // less then header, for dropdowns
+
                     border-width: 0 0 1px;
                     border-style: solid;
                     border-color: darken($horizontal_sidebar_bg, 10%);
-                    &:before {
+                    &:before
+                    {
                         border: 0;
                     }
 
                     .nav-title,
-                    .nav-divider {
+                    .nav-divider
+                    {
                         display: none;
                     }
 
-                    &.nav-fixed {
-                        border-width: 0 1px 1px 0;
-                        left: 0;
+                    &.nav-fixed
+                    {
                         right: 0;
                         bottom: auto;
+                        left: 0;
 
-                        #nav {
+                        border-width: 0 1px 1px 0;
+
+                        #nav
+                        {
                             text-align: center;
-                            > li {
+                            > li
+                            {
                                 display: inline-block;
                                 float: none;
                                 &.nav-title,
-                                &.nav-divider {
+                                &.nav-divider
+                                {
                                     display: none;
                                 }
-                                > a {
+                                > a
+                                {
                                     padding: 15px 28px;
                                 }
                             }
                         }
 
-                        & + .content-container {
+                        & + .content-container
+                        {
                             margin: 80px 0 0;
                         }
                     }
-                }            
+                }
             }
         }
     }
@@ -52,113 +67,157 @@
 
 
 // Horizontal nav is desktop only
-@media (min-width: $screen-sm-min) {
-
-    .main-container {
-
-        > .nav-container.nav-horizontal {
+@media (min-width: $screen-sm-min)
+{
+    .main-container
+    {
+        > .nav-container.nav-horizontal
+        {
             float: none;
+
             width: auto;
-            
+
             // content
-            & + .content-container {
+            & + .content-container
+            {
                 margin-left: 0;
             }
         }
     }
 
-    .nav-horizontal {
+    .nav-horizontal
+    {
         background-color: $horizontal_sidebar_bg;
 
-        .slimScrollDiv {
+        .slimScrollDiv
+        {
             overflow: visible !important; // overrides slimScroll plugin
+
             height: auto !important;
 
             .slimScrollBar,
-            .slimScrollRail {
+            .slimScrollRail
+            {
                 display: none !important;
             }
-        }     
+        }
 
-        .nav {
+        .nav
+        {
             overflow: visible !important;
 
-            > li {
+            > li
+            {
                 position: relative;
+
                 float: left;
-                &:hover {
-                    > a {
+                &:hover
+                {
+                    > a
+                    {
+                        color: $text-color;
                         background-color: darken($horizontal_sidebar_bg, 5%);
+                    }
+                    > i
+                    {
                         color: $text-color;
                     }
-                    > i { color: $text-color; }
                 }
-                &.active {
-                    > a {
+                &.active
+                {
+                    > a
+                    {
+                        color: $horizontal_link_active_color;
                         background-color: $horizontal_link_active_bg;
+                    }
+                    > .icon-has-ul-h
+                    {
                         color: $horizontal_link_active_color;
                     }
-                    > .icon-has-ul-h { color: $horizontal_link_active_color; }
                 }
 
-                > a {
-                    padding: 15px 30px;
-                    text-align: center;
+                > a
+                {
                     font-weight: normal;
 
-                    > i {
-                        margin: 0;
+                    padding: 15px 30px;
+
+                    text-align: center;
+
+                    > i
+                    {
                         font-size: 26px;
                         line-height: 1;
-                    }
 
-                    span {
                         margin: 0;
-                        display: block;
-                        font-size: 12px;
                     }
 
-                    .badge {
+                    span
+                    {
+                        font-size: 12px;
+
+                        display: block;
+
+                        margin: 0;
+                    }
+
+                    .badge
+                    {
                         top: 15px;
                     }
                 }
 
-                > .icon-has-ul-h { // icon for horizontal nav
-                    display: block;
-                    position: absolute;
-                    bottom: 16px;
-                    right: 10px;
+                > .icon-has-ul-h
+                {
                     font-size: 10px;
+
+                    position: absolute;
+                    right: 10px;
+                    bottom: 16px;
+                    // icon for horizontal nav
+
+                    display: block;
                 }
 
-                > .icon-has-ul { // icon for default vertical nav
+                > .icon-has-ul
+                {
+                    // icon for default vertical nav
                     display: none;
                 }
 
-                &:hover {
-                    > ul {
+                &:hover
+                {
+                    > ul
+                    {
                         display: block !important;
                     }
                 }
 
 
-                
+
                 // sub menu
-                > ul {
-                    z-index: 9; // less then header, so that it's below header dropdown
+                > ul
+                {
                     position: absolute;
-                    left: 0;
+                    z-index: 9; // less then header, so that it's below header dropdown
                     top: 100%;
-                    min-width: 100%;
+                    left: 0;
+
                     width: auto;
+                    min-width: 100%;
+
                     background-color: $horizontal_sub_nav_bg;
+
                     @include border-bottom-radius($border-radius-base);
 
-                    li {
+                    li
+                    {
                         white-space: nowrap;
                         &:hover,
-                        &.active {
-                            > a {
+                        &.active
+                        {
+                            > a
+                            {
                                 color: $brand-primary;
                             }
                         }
@@ -168,7 +227,8 @@
                         //     }
                         // }
 
-                        > a {
+                        > a
+                        {
                             padding: 13px 40px 13px 20px;
                         }
                     }
@@ -176,6 +236,4 @@
             }
         }
     }
-
-
 }

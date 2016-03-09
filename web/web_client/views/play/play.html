@@ -1,14 +1,19 @@
 <div class="play">
+    <left-side-menu storage="storage"></left-side-menu>
+
     <top-menu categories="categoriesList"
               host-name="{{hostName}}"
-              videos-list="videosList"
+              videos-list="videosFullList"
+              storage="storage"
     ></top-menu>
 
     <show-player class="play_player"
                  video="videoItem"
                  videos-list="videosList"
                  featured-list="featuredList"
-                 host-name="{{hostName}}"></show-player>
+                 host-name="{{hostName}}"
+                 storage="storage"
+    ></show-player>
 
     <div class="play_video-items">
         <play-items category-id="{{videoCategoryId}}" videos="videosList" categories="categoriesList"></play-items>

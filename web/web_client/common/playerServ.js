@@ -21,7 +21,9 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
         updateVideos: updateVideos,
 
         getIconName: getIconName,
-        setVideoWatched: setVideoWatched
+        setVideoWatched: setVideoWatched,
+
+        userLogout: userLogout
     };
 
     function getElementFullscreenState() {
@@ -155,13 +157,13 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
                     video.instantPlay = false;
                 }
 
-                if (scope.userAuthorized) {
+                if (scope.storage.userAuthorized) {
                     if (scope.storage.seenItems && scope.storage.seenItems.length) {
-                        video.isWatched = _.some(scope.storage.seenItems, video.id);
+                        video.isWatched = _.some(scope.storage.seenItems, item => item === video.id);
                     }
 
                     if (scope.storage.favoritesItems && scope.storage.favoritesItems.length) {
-                        video.favorites = _.some(scope.storage.favoritesItems, video.id);
+                        video.favorites = _.some(scope.storage.favoritesItems, item => item === video.id);
                     } else {
                         video.favorites = false;
                     }
@@ -178,6 +180,13 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
         storage.seenItems = _.uniq(storage.seenItems);
         storageServ.setItem(storage.storageSeenKey, storage.seenItems);
         userServ.setVideoSeen(hostName, storage.token.access_token, videoId);
+    }
+
+    function userLogout(storage) {
+        storage.userAuthorized = false;
+        storage.token = undefined;
+        storageServ.setItem(storage.storageUserToken, undefined);
+        $state.go('home');
     }
 
     function getIconName(iconId) {

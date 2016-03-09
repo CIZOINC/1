@@ -2,7 +2,7 @@
 
     <div class="top-menu_navigation">
         <div class="top-menu_main">
-            <span class="icon-menu top-menu_icon"></span>
+            <span class="icon-menu top-menu_icon" ng-click="toggleSideMenu()"></span>
             <img class="top-menu_logo" src="images/logo.svg" ng-click="moveToHome()">
         </div>
 
@@ -25,7 +25,12 @@
                 </div>
             </div>
         </div>
-        <button class="top-menu_login" ng-click="moveToLogin()"><span class="icon-profile top-menu_login_icon"></span>Sign Up/Log In</button>
+        <button class="top-menu_login" ng-click="moveToLogin()" ng-hide="storage.userAuthorized">
+            <span class="icon-profile top-menu_login_icon"></span> Sign Up/Log In
+        </button>
+        <button class="top-menu_login" ng-click="logout()" ng-show="storage.userAuthorized">
+            Logout
+        </button>
     </div>
 
 

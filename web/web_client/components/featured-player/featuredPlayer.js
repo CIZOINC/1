@@ -35,6 +35,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             screenList: angular.element(element[0].querySelector('div.video-layer video')),
             screen: angular.element(element[0].querySelector('div.video-layer video'))[0],
             sliderModel: new SliderModel(),
+            soundSliderModel: new SoundSliderModel(),
 
             featuredPlayer: angular.element(document.querySelector(`featured-player`))[0],
             featuredPlayerInside: angular.element(document.querySelector(`.featured-player`))[0],
@@ -69,10 +70,15 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             slider: angular.element(element[0].querySelector(`.featured-player_buttons-layer_bottom-elements_controls_slider`))[0],
             expandButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_bottom-elements_controls_expand`))[0],
             collapseButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_bottom-elements_controls_collapse`))[0],
+            soundButton: angular.element(element[0].querySelector(`.featured-player_buttons-layer_bottom-elements_controls_volume`))[0],
+            soundSlider: angular.element(element[0].querySelector(`.featured-player_buttons-layer_bottom-elements_controls_volume-slider`))[0],
 
             togglePlayPause: togglePlayPause,
             imageHover: imageHover,
             imageBlur: imageBlur,
+
+            soundHover: soundHover,
+            soundBlur: soundBlur,
 
             toggleFullScreen: toggleFullScreen,
             toggleControlsVisibility: toggleControlsVisibility,
@@ -89,6 +95,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             shareVideo: shareVideo,
             toggleFavorites: toggleFavorites,
             setWatched: setWatched,
+            toggleMute: toggleMute,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -103,6 +110,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
             scope.sliderModel.value = scope.screen.currentTime;
             scope.sliderModel.options.ceil = scope.screen.duration;
+
             scope.$apply();
 
 
@@ -135,6 +143,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 scope.nextVideo = getNextVideo();
                 scope.isIntermissionPaused = false;
 
+
                 setFavoritesState(scope.video.favorites);
 
                 $timeout( () => {
@@ -153,6 +162,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                         scope.carouselItemTitle = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_title`))[0];
                         scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
                     }
+                    scope.soundSliderModel.value = scope.screen.volume * 10;
                 });
 
 
@@ -178,6 +188,27 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                             scope.sliderModel.start = 0;
                         }
                         scope.screen.currentTime = scope.sliderModel.value;
+                    }
+                }
+            }
+        }
+
+        function SoundSliderModel() {
+            return {
+                start: 0,
+                value: 0,
+                options: {
+                    floor: 0,
+                    ceil: 10,
+                    hideLimitLabels: true,
+                    vertical: true,
+                    onChange: function () {
+                        console.log('change to ' + scope.soundSliderModel.value);
+                        if (scope.soundSliderModel.start > 0) {
+                            scope.soundSliderModel.value = scope.soundSliderModel.start;
+                            scope.soundSliderModel.start = 0;
+                        }
+                        scope.screen.volume = scope.soundSliderModel.value / 10;
                     }
                 }
             }
@@ -370,9 +401,12 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             setFavoritesState(scope.video.favorites);
 
             if (!scope.video.favorites) {
-                userServ.deleteLiked(scope.hostName, scope.token.access_token, scope.video.id);
+                let itemIndex = _.indexOf(scope.storage.favoritesItems, scope.video.id);
+                scope.storage.favoritesItems.splice(itemIndex, 1);
+                userServ.deleteLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
             } else {
-                userServ.setLiked(scope.hostName, scope.token.access_token, scope.video.id);
+                scope.storage.favoritesItems.push(scope.video.id);
+                userServ.setLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
             }
         }
 
@@ -381,8 +415,33 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
             let watchedVideo = _.filter(scope.videos, video => video.id === scope.video.id);
             watchedVideo.isWatched = true;
+
+
+            let categoryItem = document.querySelector(`#category-play-item-${scope.video.id}`);
+            if (categoryItem) {
+                categoryItem.querySelector('.category-items_videos_item_overlay').classList.add('category-items_videos_item_overlay--watched');
+                categoryItem.querySelector('.category-items_videos_item_title').classList.add('category-items_videos_item_title--watched');
+                categoryItem.querySelector('.icon-play').classList.add('hidden-layer');
+                categoryItem.querySelector('.icon-replay').classList.remove('hidden-layer');
+            }
+
             scope.$apply();
             playerServ.setVideoWatched(scope.storage, scope.hostName, scope.video.id);
+        }
+
+        function toggleMute(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            if (scope.screen.muted) {
+                scope.screen.muted = false;
+                scope.soundButton.classList.add('icon-volume');
+                scope.soundButton.classList.remove('icon-volumemute');
+            } else {
+                scope.screen.muted = true;
+                scope.soundButton.classList.add('icon-volumemute');
+                scope.soundButton.classList.remove('icon-volume');
+            }
         }
 
         function  showControlsOnMove() {
@@ -437,9 +496,19 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         }
 
         function imageBlur() {
-            toggleControlsVisibility(true);
-            scope.topElementsRightSide.classList.add('hidden-layer');
-            scope.buttonLayer.classList.remove('featured-player_buttons-layer--hover');
+            if (scope.isPlaying && !scope.isIntermissionState) {
+                toggleControlsVisibility(true);
+                scope.topElementsRightSide.classList.add('hidden-layer');
+                scope.buttonLayer.classList.remove('featured-player_buttons-layer--hover');
+            }
+        }
+
+        function soundHover() {
+            scope.soundSlider.classList.remove('hidden-layer');
+        }
+
+        function soundBlur() {
+            scope.soundSlider.classList.add('hidden-layer');
         }
 
         function toggleFullScreen(event) {
@@ -560,10 +629,11 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                     scope.carouselItemIntermissionLayer = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_intermission`))[0];
                     scope.carouselItemIntermissionImage = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_image`))[0];
                     scope.carouselItemPlay = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_overlay`))[0];
+                    scope.carouselItemIntermissionLayer.classList[_classAdd(false)]('hidden-layer');
+                    scope.carouselItemIntermissionImage.classList[_classAdd(true)]('featured-carousel_content_item_image--intermission');
+                    scope.carouselItemPlay.classList[_classAdd(true)]('hidden-layer');
                 }
-                scope.carouselItemIntermissionLayer.classList[_classAdd(false)]('hidden-layer');
-                scope.carouselItemIntermissionImage.classList[_classAdd(true)]('featured-carousel_content_item_image--intermission');
-                scope.carouselItemPlay.classList[_classAdd(true)]('hidden-layer');
+
             } else {
                 _.each(angular.element(element[0].querySelectorAll(`.featured-carousel_content_item`)), (item) => {
                     angular.element(item.querySelector(`.featured-carousel_content_item_intermission`))[0]

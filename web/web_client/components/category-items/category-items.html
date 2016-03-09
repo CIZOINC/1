@@ -11,10 +11,11 @@
                  ng-repeat="video in videosList"
                  style="background-image: url('{{video.hero_images.hero_image_link_thumb_banner}}')"
                  ng-click="moveToPlayPage(video.id)"
+                 ng-attr-id="category-play-item-{{video.id}}"
             >
                 <div class="category-items_videos_item_overlay">
-                    <span class="category-items_videos_item_overlay_button icon-play" ng-hide="video.isWatched"></span>
-                    <span class="category-items_videos_item_overlay_button icon-replay" ng-show="video.isWatched"></span>
+                    <span class="category-items_videos_item_overlay_button icon-play"></span>
+                    <span class="category-items_videos_item_overlay_button icon-replay hidden-layer"></span>
                 </div>
 
                 <div class="category-items_videos_item_title">

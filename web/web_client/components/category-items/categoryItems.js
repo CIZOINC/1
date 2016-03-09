@@ -4,7 +4,7 @@ angular
     .directive('categoryItems', categoryItems);
 
 /* @ngInject */
-function categoryItems($state, _, playerServ) {
+function categoryItems($state, _, playerServ, $timeout) {
     "use strict";
 
     return {
@@ -30,6 +30,17 @@ function categoryItems($state, _, playerServ) {
 
         scope.$watch('videos', (videos) => {
             scope.videosList = filterVideos(videos, scope.categoryId);
+            $timeout(() => {
+                _.each(scope.videosList, (video) => {
+                    let videoItem = document.querySelector(`#category-play-item-${video.id}`);
+                    if (videoItem && video.isWatched) {
+                        videoItem.querySelector('.category-items_videos_item_overlay').classList.add('category-items_videos_item_overlay--watched');
+                        videoItem.querySelector('.category-items_videos_item_title').classList.add('category-items_videos_item_title--watched');
+                        videoItem.querySelector('.icon-play').classList.add('hidden-layer');
+                        videoItem.querySelector('.icon-replay').classList.remove('hidden-layer');
+                    }
+                });
+            });
         });
 
         scope.$watch('categories', (categories) => {
@@ -75,4 +86,4 @@ function categoryItems($state, _, playerServ) {
         }
     }
 };
-categoryItems.$inject = ['$state', 'lodash', 'playerServ'];
+categoryItems.$inject = ['$state', 'lodash', 'playerServ', '$timeout'];

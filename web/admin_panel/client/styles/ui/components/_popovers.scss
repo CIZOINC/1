@@ -1,12 +1,16 @@
 // .popover {}
 
-.popover-title {
-    padding: 8px 14px 0;
-    color: #aaa;
+.popover-title
+{
     font-weight: bold;
+
+    padding: 8px 14px 0;
+
+    color: #aaa;
     border-bottom: none;
 }
 
-.popover-content {
+.popover-content
+{
     color: $bright;
 }

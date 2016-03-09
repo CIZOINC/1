@@ -4,11 +4,10 @@ class Auth::ResetPasswordMailer < Devise::Mailer
   # include Devise::Controllers::UrlHelpers
 
   def reset_password_instructions(user, token)
-    # attachments['logo'] = File.read(Rails.root.join('app', 'assets', 'images', 'logo.png'))
-    # attachments['logo']['Content-Type'] = 'image/png'
-    @user = user
     @email = user.email
-    @token = token
+    @web_app_url = Rails.env.production? ? "https://wwww.cizo.com/" : "https://staging.cizo.com/app/"
+    @reset_url = @web_app_url + "#/resetPassword?token=" + token
+
     mail(to: @email, subject: 'Reset password instructions')
   end
 end

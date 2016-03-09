@@ -1,82 +1,117 @@
-.pricing-table {
+.pricing-table
+{
     margin-bottom: 20px;
     padding: 5em 3em;
-    background-color: #fcfcfc;
+
     color: $text-color;
     border-radius: $border-radius-base;
+    background-color: #fcfcfc;
     box-shadow: none;
 
-    header {
-        h2 {
-            margin-bottom: 24px;
+    header
+    {
+        h2
+        {
             font-size: 24px;
-            color: $brand-primary;
+
+            margin-bottom: 24px;
+
             text-transform: uppercase;
 
-            span {
-                margin-left: .6em;
+            color: $brand-primary;
+
+            span
+            {
                 font-size: 12px;
+
+                margin-left: .6em;
+
                 color: $text-color;
             }
         }
     }
 
-    .pricing-price {
-        margin-bottom: .4em;
+    .pricing-price
+    {
         font-size: 40px;
         line-height: 1;
+
+        margin-bottom: .4em;
+
         color: $dark;
         // font-weight: $headings-font-weight;
-        span {
-            margin-left: .4em;
-            text-transform: uppercase;
+        span
+        {
             font-size: 22px;
             line-height: 1;
+
+            margin-left: .4em;
+
+            text-transform: uppercase;
         }
     }
 
-    .pricing-price-detail {
-        margin-bottom: 1.3em;
+    .pricing-price-detail
+    {
         font-size: $font-size-small;
-        color: #a1a8b9;
         line-height: 20px;
-        &:after {
-            content: "";
-            height: 0px;
-            width: 100px;
-            padding-top: 1.3em;
-            border-bottom: solid 3px #eff0f3;
+
+        margin-bottom: 1.3em;
+
+        color: #a1a8b9;
+        &:after
+        {
             display: block;
+
+            width: 100px;
+            height: 0;
+            padding-top: 1.3em;
+
+            content: '';
+
+            border-bottom: solid 3px #eff0f3;
         }
     }
 
-    .pricing-plan-details {
-        .ti-check {
-            margin-right: .4em;
+    .pricing-plan-details
+    {
+        .ti-check
+        {
             font-weight: bold;
+
+            margin-right: .4em;
+
             color: $brand-primary;
         }
 
-        > ul {
-            margin: 0;
-            padding: 0;
-            list-style: none;
+        > ul
+        {
             font-size: 16px;
             line-height: 2em;
-        }
-    }
 
-    > footer {
-        margin-top: 50px;
-        > a {
-            display: block;
             margin: 0;
-            font-size: 16px;
+            padding: 0;
+
+            list-style: none;
         }
     }
 
-    // 
-    &.pricing-table-highlight {
+    > footer
+    {
+        margin-top: 50px;
+        > a
+        {
+            font-size: 16px;
+
+            display: block;
+
+            margin: 0;
+        }
+    }
+
+    //
+    &.pricing-table-highlight
+    {
         background-color: $state-info-bg;
     }
 }

@@ -1,53 +1,75 @@
-.page-contact {
-    .contactmap-container {
+.page-contact
+{
+    .contactmap-container
+    {
         margin: -15px -15px 0;
     }
 
-    .contact-info-container {
+    .contact-info-container
+    {
         margin: 0 -15px 50px;
+
         background-color: $reverse;
+
         @include box-shadow( 0 0 5px rgba(0,0,0,.1) );
 
-        >ul {
+        > ul
+        {
+            font-size: 18px;
+
             display: block;
+
             margin: 0;
             padding: 0;
+
             list-style: none;
-            font-size: 18px;
+
             text-align: center;
 
-            li {
+            li
+            {
                 display: block;
-                border-top: 1px solid $state-default-border;
+
                 padding: 20px;
-                @media (min-width: $screen-md) {
+
+                border-top: 1px solid $state-default-border;
+                @media (min-width: $screen-md)
+                {
                     display: inline-block;
                     // float: left;
+
                     padding: 30px 20px;
+
                     border-top: 0;
-                    border-right: 1px solid $state-default-border;   
-                    &:first-child {
+                    border-right: 1px solid $state-default-border;
+                    &:first-child
+                    {
                         border-left: 1px solid $state-default-border;
-                    }                 
+                    }
                 }
 
-                > i {
-                    margin-right: 10px;
+                > i
+                {
                     font-size: 22px;
+
+                    margin-right: 10px;
                 }
 
-                a {
+                a
+                {
                     color: $text-color;
                 }
             }
         }
     }
 
-    .social-item-container {
+    .social-item-container
+    {
         max-width: 900px;
         margin: auto;
     }
-    .social-item {
+    .social-item
+    {
         margin-bottom: 15px;
     }
 }

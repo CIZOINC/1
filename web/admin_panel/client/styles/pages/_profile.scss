@@ -1,50 +1,67 @@
-.page-profile {
+.page-profile
+{
     margin: -15px 0 0;
 
-    .profile-header {
+    .profile-header
+    {
         position: relative;
+
         margin: 0 -15px 15px;
         padding: 50px 30px 90px;
-        background: url('../images/background/3.jpg') no-repeat center center fixed; 
+
+        background: url('../images/background/3.jpg') no-repeat center center fixed;
         -webkit-background-size: cover;
-        -moz-background-size: cover;
-        background-size: cover;
+           -moz-background-size: cover;
+                background-size: cover;
     }
 
-    .profile-img {
+    .profile-img
+    {
         display: inline-block;
+
         margin-right: 20px;
-        img {
+        img
+        {
             max-width: 120px;
             height: auto;
+
             box-shadow: 0 0 0 5px rgba(255,255,255,.5), 0 0 10px rgba(0,0,0,.2);
         }
     }
 
-    .profile-social {
+    .profile-social
+    {
         display: inline-block;
-        > a {
+        > a
+        {
             margin-right: 15px;
+
             box-shadow: 0 0 5px rgba(0,0,0,.2);
         }
     }
 
-    .profile-info {
+    .profile-info
+    {
+        line-height: 20px;
+
         position: absolute;
-        left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(0,0,0,.3);
-        line-height: 20px;
-        padding: 10px 30px;
-        color: $bright;
+        left: 0;
 
-        ul {
+        padding: 10px 30px;
+
+        color: $bright;
+        background-color: rgba(0,0,0,.3);
+
+        ul
+        {
             margin: 0;
         }
     }
 
-    img.media-object {
+    img.media-object
+    {
         border-radius: $border-radius-base;
     }
 }

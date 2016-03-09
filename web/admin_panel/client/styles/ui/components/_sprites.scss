@@ -1,6 +1,144 @@
+/*
+SCSS variables are information about icon's compiled state, stored under its original file name
 
-// @import "icons-s/*.png"; // You don't need to set to "../images/phone/*.png", since images path has already specified in config.rb file
-// @include all-icons-s-sprites(true); // set true so that compass also show the dimesion
+.icon-home {
+  width: $icon-home-width;
+}
 
-@import "flags/*.png";
-@include all-flags-sprites(true);
+The large array-like variables contain all information about a single icon
+$icon-home: x y offset_x offset_y width height total_width total_height image_path;
+
+At the bottom of this section, we provide information about the spritesheet itself
+$spritesheet: width height image $spritesheet-sprites;
+*/
+$american-name: 'american';
+$american-x: 0px;
+$american-y: 0px;
+$american-offset-x: 0px;
+$american-offset-y: 0px;
+$american-width: 32px;
+$american-height: 32px;
+$american-total-width: 32px;
+$american-total-height: 192px;
+$american-image: 'flags.png';
+$american: (0px, 0px, 0px, 0px, 32px, 32px, 32px, 192px, 'flags.png', 'american', );
+$china-name: 'china';
+$china-x: 0px;
+$china-y: 32px;
+$china-offset-x: 0px;
+$china-offset-y: -32px;
+$china-width: 32px;
+$china-height: 32px;
+$china-total-width: 32px;
+$china-total-height: 192px;
+$china-image: 'flags.png';
+$china: (0px, 32px, 0px, -32px, 32px, 32px, 32px, 192px, 'flags.png', 'china', );
+$japan-name: 'japan';
+$japan-x: 0px;
+$japan-y: 64px;
+$japan-offset-x: 0px;
+$japan-offset-y: -64px;
+$japan-width: 32px;
+$japan-height: 32px;
+$japan-total-width: 32px;
+$japan-total-height: 192px;
+$japan-image: 'flags.png';
+$japan: (0px, 64px, 0px, -64px, 32px, 32px, 32px, 192px, 'flags.png', 'japan', );
+$portugal-name: 'portugal';
+$portugal-x: 0px;
+$portugal-y: 96px;
+$portugal-offset-x: 0px;
+$portugal-offset-y: -96px;
+$portugal-width: 32px;
+$portugal-height: 32px;
+$portugal-total-width: 32px;
+$portugal-total-height: 192px;
+$portugal-image: 'flags.png';
+$portugal: (0px, 96px, 0px, -96px, 32px, 32px, 32px, 192px, 'flags.png', 'portugal', );
+$russia-name: 'russia';
+$russia-x: 0px;
+$russia-y: 128px;
+$russia-offset-x: 0px;
+$russia-offset-y: -128px;
+$russia-width: 32px;
+$russia-height: 32px;
+$russia-total-width: 32px;
+$russia-total-height: 192px;
+$russia-image: 'flags.png';
+$russia: (0px, 128px, 0px, -128px, 32px, 32px, 32px, 192px, 'flags.png', 'russia', );
+$spain-name: 'spain';
+$spain-x: 0px;
+$spain-y: 160px;
+$spain-offset-x: 0px;
+$spain-offset-y: -160px;
+$spain-width: 32px;
+$spain-height: 32px;
+$spain-total-width: 32px;
+$spain-total-height: 192px;
+$spain-image: 'flags.png';
+$spain: (0px, 160px, 0px, -160px, 32px, 32px, 32px, 192px, 'flags.png', 'spain', );
+$spritesheet-width: 32px;
+$spritesheet-height: 192px;
+$spritesheet-image: 'flags.png';
+$spritesheet-sprites: ($american, $china, $japan, $portugal, $russia, $spain, );
+$spritesheet: (32px, 192px, 'flags.png', $spritesheet-sprites, );
+
+/*
+The provided mixins are intended to be used with the array-like variables
+
+.icon-home {
+  @include sprite-width($icon-home);
+}
+
+.icon-email {
+  @include sprite($icon-email);
+}
+
+Here are example usages in HTML:
+
+`display: block` sprite:
+<div class="icon-home"></div>
+
+`display: inline-block` sprite:
+<img class="icon-home" />
+*/
+@mixin sprite-width($sprite) {
+  width: nth($sprite, 5);
+}
+
+@mixin sprite-height($sprite) {
+  height: nth($sprite, 6);
+}
+
+@mixin sprite-position($sprite) {
+  $sprite-offset-x: nth($sprite, 3);
+  $sprite-offset-y: nth($sprite, 4);
+  background-position: $sprite-offset-x  $sprite-offset-y;
+}
+
+@mixin sprite-image($sprite) {
+  $sprite-image: nth($sprite, 9);
+  background-image: url(#{$sprite-image});
+}
+
+@mixin sprite($sprite) {
+  @include sprite-image($sprite);
+  @include sprite-position($sprite);
+  @include sprite-width($sprite);
+  @include sprite-height($sprite);
+}
+
+/*
+The `sprites` mixin generates identical output to the CSS template
+  but can be overridden inside of SCSS
+
+@include sprites($spritesheet-sprites);
+*/
+@mixin sprites($sprites) {
+  @each $sprite in $sprites {
+    $sprite-name: nth($sprite, 10);
+    .#{$sprite-name} {
+      @include sprite($sprite);
+    }
+  }
+}

@@ -148,6 +148,18 @@
 
             <div class="show-player_buttons-layer_bottom-elements_controls_duration">{{duration}}</div>
 
+            <div class="show-player_buttons-layer_bottom-elements_controls_volume-wrapper" ng-mouseenter="soundHover()"
+                 ng-mouseleave="soundBlur()">
+                <rzslider ng-click="$event.stopPropagation()"
+                          rz-slider-high="soundSliderModel.value"
+                          rz-slider-model="soundSliderModel.start"
+                          rz-slider-options="soundSliderModel.options"
+                          class="show-player_buttons-layer_bottom-elements_controls_volume-slider hidden-layer"
+                >
+                </rzslider>
+                <div class="icon-volume show-player_buttons-layer_bottom-elements_controls_volume" ng-click="toggleMute($event)"></div>
+            </div>
+
             <span class="icon-expand show-player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen($event)"></span>
             <span class="icon-collapse show-player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen($event)"></span>
         </div>

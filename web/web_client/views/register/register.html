@@ -5,15 +5,19 @@
             Continue with Facebook
         </button>
 
-        <div class="register-form_title">Or, sign up with your email address</div>
+        <div class="register-form_title_wrapper">
+            <div class="login-form_title_decoration"></div>
+            <span class="login-form_title">or with your email</span>
+            <div class="login-form_title_decoration"></div>
+        </div>
 
         <input ng-model="register.email" class="register-form_input" placeholder="Email Address" type="email">
         <input ng-model="register.password" class="register-form_input" placeholder="Password" type="password">
-        <div class="register-form_input_date">
-            <select name="month" ng-model="register.month" class="register-form_input--date-month"
+        <div class="register-form_input_date-wrapper">
+            <select name="month" ng-model="register.month" class="register-form_input_date--month"
                     ng-options="month as month.name for month in months track by month.key"></select>
-            <input ng-model="register.day" class="register-form_input--date" placeholder="Day">
-            <input ng-model="register.year" class="register-form_input--date" placeholder="Year">
+            <input ng-model="register.day" class="register-form_input_date" placeholder="Day">
+            <input ng-model="register.year" class="register-form_input_date" placeholder="Year">
         </div>
 
         <div class="register-form_description">
@@ -26,7 +30,7 @@
     </div>
 
     <div class="have-account">
-        Already have an account? <span class="have-account_login">Log in</span>
+        Already have an account? <span class="have-account_login" ng-click="loginClick()">Log in</span>
     </div>
 
     <div class="icon-close register-form_close" ng-click="closeView()"></div>

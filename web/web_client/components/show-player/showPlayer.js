@@ -34,6 +34,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             screenList: angular.element(element[0].querySelector('div.video-layer video')),
             screen: angular.element(element[0].querySelector('div.video-layer video'))[0],
             sliderModel: new SliderModel(),
+            soundSliderModel: new SoundSliderModel(),
 
             showPlayer: angular.element(document.querySelector(`show-player`))[0],
             showPlayerInside: angular.element(document.querySelector(`.show-player`))[0],
@@ -69,10 +70,15 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             slider: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_controls_slider`))[0],
             expandButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_controls_expand`))[0],
             collapseButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_controls_collapse`))[0],
+            soundButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_controls_volume`))[0],
+            soundSlider: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_controls_volume-slider`))[0],
 
             togglePlayPause: togglePlayPause,
             imageHover: imageHover,
             imageBlur: imageBlur,
+
+            soundHover: soundHover,
+            soundBlur: soundBlur,
 
             toggleFullScreen: toggleFullScreen,
             toggleControlsVisibility: toggleControlsVisibility,
@@ -89,6 +95,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             shareVideo: shareVideo,
             toggleFavorites: toggleFavorites,
             setWatched: setWatched,
+            toggleMute: toggleMute,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -151,6 +158,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                         scope.carouselItemTitle = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_title`))[0];
                         scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
                     }
+                    scope.soundSliderModel.value = scope.screen.volume * 10;
                 });
 
 
@@ -182,6 +190,27 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                             scope.sliderModel.start = 0;
                         }
                         scope.screen.currentTime = scope.sliderModel.value;
+                    }
+                }
+            }
+        }
+
+        function SoundSliderModel() {
+            return {
+                start: 0,
+                value: 0,
+                options: {
+                    floor: 0,
+                    ceil: 10,
+                    hideLimitLabels: true,
+                    vertical: true,
+                    onChange: function () {
+                        console.log('change to ' + scope.soundSliderModel.value);
+                        if (scope.soundSliderModel.start > 0) {
+                            scope.soundSliderModel.value = scope.soundSliderModel.start;
+                            scope.soundSliderModel.start = 0;
+                        }
+                        scope.screen.volume = scope.soundSliderModel.value / 10;
                     }
                 }
             }
@@ -441,6 +470,29 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             toggleControlsVisibility(true);
             scope.topElementsRightSide.classList.add('hidden-layer');
             scope.buttonLayer.classList.remove('show-player_buttons-layer--hover');
+        }
+
+        function soundHover() {
+            scope.soundSlider.classList.remove('hidden-layer');
+        }
+
+        function soundBlur() {
+            scope.soundSlider.classList.add('hidden-layer');
+        }
+
+        function toggleMute(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            if (scope.screen.muted) {
+                scope.screen.muted = false;
+                scope.soundButton.classList.add('icon-volume');
+                scope.soundButton.classList.remove('icon-volumemute');
+            } else {
+                scope.screen.muted = true;
+                scope.soundButton.classList.add('icon-volumemute');
+                scope.soundButton.classList.remove('icon-volume');
+            }
         }
 
         function toggleFullScreen(event) {

@@ -35,8 +35,18 @@ function RegisterCtrl($scope, $log, $state, userServ, moment) {
         registerUser: registerUser,
         facebookRegister: facebookRegister,
         closeView: closeView,
-        loginClick: loginClick
+        loginClick: loginClick,
+        showMessage: showMessage,
+        message: {
+            title: '123',
+            description: 'this is it',
+            callback: function () {
+
+            }
+        }
     });
+
+    //showMessage();
 
     function registerUser() {
         let birthday = moment({
@@ -67,6 +77,10 @@ function RegisterCtrl($scope, $log, $state, userServ, moment) {
 
     function closeView() {
         $state.go('home');
+    }
+
+    function showMessage() {
+        document.querySelector('message-overlay.register-form').classList.remove('hidden-layer');
     }
 }
 

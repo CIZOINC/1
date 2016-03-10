@@ -81,5 +81,32 @@ angular
                 controller: 'PlayCtrl',
                 controllerAs: 'play'
             }
+        },
+        {
+            state: 'terms',
+            config: {
+                url: '/terms',
+                templateUrl: 'views/terms/terms.html',
+                controller: 'TermsCtrl',
+                controllerAs: 'terms'
+            }
+        },
+        {
+            state: 'privacy',
+            config: {
+                url: '/privacy',
+                templateUrl: 'views/privacy/privacy.html',
+                controller: 'PrivacyCtrl',
+                controllerAs: 'privacy'
+            }
+        },
+        {
+            state: 'resetPassword',
+            config: {
+                url: '/resetPassword/:resetToken',
+                templateUrl: 'views/reset-password/reset-password.html',
+                controller: 'resetPasswordCtrl',
+                controllerAs: 'resetPassword'
+            }
         }
     ]);

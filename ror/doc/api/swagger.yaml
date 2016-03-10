@@ -1329,16 +1329,19 @@ paths:
         '204':
           description: "Video has been marked as seen."
   /users/password_reset:
-    parameters:
-      - name: email
-        in: query
-        description: Valid email
-        type: string
-        required: true
     post:
       description: "Sends email with reset password instructions"
       tags:
         - Users
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            properties:
+              email:
+                type: string
+                description: 'Unique identifier representing a specific video'
       responses:
         '200':
           description: "Email with reset password instructions has been sent."
@@ -1359,21 +1362,22 @@ paths:
         '400':
           description: "Token is expired or invalid"
   /users/password:
-    parameters:
-      - name: password
-        in: query
-        description: New valid password.
-        type: string
-        required: true
-      - name: reset_password_token
-        in: query
-        description: Valid reset_password_token
-        type: string
-        required: true
     put:
       description: "Update user's password"
       tags:
         - Users
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            properties:
+              password:
+                type: string
+                description: New password
+              reset_password_token: 
+                type: string
+                description: Valid password reset token
       responses:
         '200':
           description: "Password has been changed"

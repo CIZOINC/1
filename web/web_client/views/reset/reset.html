@@ -1,10 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<form>
+    <div class="reset-form">
+        <div class="reset-form_facebook-login">
+            Reset password
+        </div>
 
-</body>
-</html>
+        <span class="reset-form_title">To reset your password, enter the address you use to sign in to Cizo.</span>
+
+        <input ng-model="email" class="reset-form_input" placeholder="Email Address" type="email">
+
+        <button class="reset-form_sign-up" ng-click="resetPassword()">Send Reset Link</button>
+
+    </div>
+
+    <div class="icon-close reset-form_close" ng-click="closeView()"></div>
+</form>

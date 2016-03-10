@@ -259,7 +259,7 @@ gulp.task('default', function () {
 });
 
 
-gulp.task('build-staging', function () {
+gulp.task('build-staging', function (cb) {
     "use strict";
     runSequence('clean_temp',
         [
@@ -277,10 +277,10 @@ gulp.task('build-staging', function () {
             'copy_bootstrap_fonts',
             'copy_index_template_staging'
         ],
-        'send_to_staging');
+        'send_to_staging', cb);
 });
 
-gulp.task('build-production', function () {
+gulp.task('build-production', function (cb) {
     "use strict";
     runSequence('clean_temp',
         [
@@ -298,5 +298,9 @@ gulp.task('build-production', function () {
             'copy_bootstrap_fonts',
             'copy_index_template_production'
         ],
-        'send_to_production');
+        'send_to_production', cb);
+});
+
+gulp.task('build-all', function (cb) {
+    runSequence('build-staging', 'build-production', cb)
 });

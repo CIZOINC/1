@@ -1,13 +1,10 @@
 <div data-ng-controller="UsersCtrl">
-    <div class="page">
-        <button type="button" class="btn btn-primary btn-lg btn-w-lg" ng-click="openModal()">Add new video</button>
-    </div>
     <div class="page page-table">
         <section class="panel panel-default table-dynamic">
             <div class="panel-heading">
                 <strong>
                 <span class="glyphicon glyphicon-th"></span>
-                Current Videos</strong>
+                Current Users</strong>
             </div>
 
             <div class="table-filters">
@@ -20,7 +17,7 @@
                     <div class="col-sm-3 col-xs-6 filter-result-info">
                         <span>
                         Showing
-                        {{filteredVideos.length}}/{{videos.data.length}}
+                        {{filteredUsers.length}}/{{users.data.length}}
                         entries
                     </span>
                     </div>
@@ -31,69 +28,53 @@
                 <thead>
                     <tr>
                         <th>
-                            <div class="th"></div>
-                        </th>
-                        <th>
                             <div class="th">
-                                Name
+                                User ID #
                             </div>
                         </th>
                         <th>
                             <div class="th">
-                                Description
+                                E-Mail Address
                             </div>
                         </th>
                         <th>
                             <div class="th">
-                                Category
+                                Birthday (Age)
                             </div>
                         </th>
                         <th>
                             <div class="th">
-                                Mature
+                                Administrator
                             </div>
                         </th>
                         <th>
                             <div class="th">
-                                Feed Status
-                            </div>
-                        </th>
-                        <th>
-                            <div class="th">
-                                <a href="#/featured">Featured</a>
+                                Reset Password
                             </div>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="video in currentPageVideos">
+                    <tr data-ng-repeat="user in currentPageUsers">
                         <td>
-                            <a href ng-click="openModal(video)">Edit</a>
+                            {{user.id}}
                         </td>
                         <td>
-                            <span editable-text="video.title" e-cols="50" onbeforesave="modifyTitle(video, $data)">{{video.title}}</span>
+                            <a ng-href="mailto:{{user.email}}">{{user.email}}</a>
                         </td>
                         <td>
-                            <span editable-textarea="video.description" e-rows="3" e-cols="80" onbeforesave="modifyDescription(video, $data)">{{video.description}}</span>
-                        </td>
-                        <td>
-                            <span editable-select="video.category_id" e-ng-options="cat.id as cat.title for cat in videoCategories" onbeforesave="modifyCategory(video, $data)">{{categoryLookup[video.category_id].title}}</span>
+                            <a href="#" editable-bsdate="user.birthday" e-ng-click="opened = !opened" e-class="form-control" e-is-open="opened" e-datepicker-popup="dd-MM-yyyy" e-name="date" onbeforesave="modifyBirthdate(user, $data)">{{(user.birthday | date:"MM/dd/yyyy") || 'empty'}}</a>                            <strong>({{calculateAge(user)}})</strong>
                         </td>
                         <td>
                             <label class="ui-switch ui-switch-success">
-                                <input type="checkbox" ng-model="video.mature_content" ng-change="matureContent(video)" ng-checked="video.mature_content">
+                                <input type="checkbox" ng-model="user.is_admin" ng-change="toggleAdmin(user)" ng-checked="user.is_admin">
                                 <i></i>
                             </label>
                         </td>
                         <td>
-                            <button type="button" ng-class="videoClasses(video)" ng-click="modifyVisible(video)">{{video | readyNotReady}}</button>
+                            <button type="button" class="btn btn-w-sm btn-gap-v btn-primary" ng-click="resetPassword(user)">Reset Password</button>
                         </td>
-                        <td>
-                            <label ng-show="validateVideo(video) && video.visible" class="ui-switch ui-switch-warning">
-                                <input type="checkbox" ng-model="video.featured" ng-change="featuredVideo(video)" ng-checked="video.featured">
-                                <i></i>
-                            </label>
-                        </td>
+
                     </tr>
                 </tbody>
             </table>
@@ -108,7 +89,7 @@
                     </span>
                     </div>
                     <div class="col-md-6 text-right pagination-container">
-                        <uib-pagination class="pagination-sm" ng-model="currentPage" total-items="filteredVideos.length" max-size="4" ng-change="select(currentPage)" items-per-page="numPerPage" rotate="false" previous-text="&lsaquo;" next-text="&rsaquo;" boundary-links="true"></uib-pagination>
+                        <uib-pagination class="pagination-sm" ng-model="currentPage" total-items="filteredUsers.length" max-size="4" ng-change="select(currentPage)" items-per-page="numPerPage" rotate="false" previous-text="&lsaquo;" next-text="&rsaquo;" boundary-links="true"></uib-pagination>
                     </div>
                 </div>
             </footer>

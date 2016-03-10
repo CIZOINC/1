@@ -667,7 +667,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_7"
+    "$ref" : "#/definitions/body_9"
   }
 },
         {
@@ -717,11 +717,12 @@
       "operationId": "usersPasswordResetPost",
       "parameters": [
         {
-  "name" : "email",
-  "in" : "query",
-  "description" : "Valid email",
+  "in" : "body",
+  "name" : "body",
   "required" : true,
-  "type" : "string"
+  "schema" : {
+    "$ref" : "#/definitions/body_8"
+  }
 }
         
       ],
@@ -1180,18 +1181,12 @@
       "operationId": "usersPasswordPut",
       "parameters": [
         {
-  "name" : "password",
-  "in" : "query",
-  "description" : "New valid password.",
+  "in" : "body",
+  "name" : "body",
   "required" : true,
-  "type" : "string"
-},
-        {
-  "name" : "reset_password_token",
-  "in" : "query",
-  "description" : "Valid reset_password_token",
-  "required" : true,
-  "type" : "string"
+  "schema" : {
+    "$ref" : "#/definitions/body_7"
+  }
 }
         
       ],
@@ -1621,7 +1616,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_9"
+    "$ref" : "#/definitions/body_11"
   }
 },
         {
@@ -1780,7 +1775,7 @@
   "name" : "body",
   "required" : true,
   "schema" : {
-    "$ref" : "#/definitions/body_8"
+    "$ref" : "#/definitions/body_10"
   }
 }
         
@@ -2334,13 +2329,31 @@
     }
   }
 },"body_7": {
+  "properties" : {
+    "password" : {
+      "type" : "string",
+      "description" : "New password"
+    },
+    "reset_password_token" : {
+      "type" : "string",
+      "description" : "Valid password reset token"
+    }
+  }
+},"body_8": {
+  "properties" : {
+    "email" : {
+      "type" : "string",
+      "description" : "Unique identifier representing a specific video"
+    }
+  }
+},"body_9": {
   "type" : "object",
   "properties" : {
     "user" : {
       "$ref" : "#/definitions/User"
     }
   }
-},"body_8": {
+},"body_10": {
   "required" : [ "category_id", "description", "title" ],
   "properties" : {
     "title" : {
@@ -2407,7 +2420,7 @@
       "description" : "Title of video."
     }
   }
-},"body_9": {
+},"body_11": {
   "properties" : {
     "key" : {
       "type" : "string",

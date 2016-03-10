@@ -264,11 +264,10 @@ module.exports.usersMeVideosUnseenGet = function usersMeVideosUnseenGet (req, re
 };
 
 module.exports.usersPasswordPut = function usersPasswordPut (req, res, next) {
-  var password = req.swagger.params['password'].value;
-  var resetPasswordToken = req.swagger.params['reset_password_token'].value;
+  var body = req.swagger.params['body'].value;
   
 
-  var result = Users.usersPasswordPut(password, resetPasswordToken);
+  var result = Users.usersPasswordPut(body);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');
@@ -293,10 +292,10 @@ module.exports.usersPasswordEditGet = function usersPasswordEditGet (req, res, n
 };
 
 module.exports.usersPasswordResetPost = function usersPasswordResetPost (req, res, next) {
-  var email = req.swagger.params['email'].value;
+  var body = req.swagger.params['body'].value;
   
 
-  var result = Users.usersPasswordResetPost(email);
+  var result = Users.usersPasswordResetPost(body);
 
   if(typeof result !== 'undefined') {
     res.setHeader('Content-Type', 'application/json');

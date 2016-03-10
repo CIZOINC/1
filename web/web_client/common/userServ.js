@@ -12,6 +12,8 @@ function userServ($http, $q, $log, moment) {
         login: login,
         facebookAuth: facebookAuth,
         updateToken: updateToken,
+        resetPassword: resetPassword,
+        updatePassword: updatePassword,
         isUnexpiredToken: isUnexpiredToken,
 
         getUnseenList: getUnseenList,
@@ -99,6 +101,44 @@ function userServ($http, $q, $log, moment) {
 
             function error(response) {
                 $log.info('user login obtaining error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function resetPassword(hostName, email) {
+        return $q(function (resolve, reject) {
+            $http({
+                method: 'POST',
+                url: hostName + `/users/password_reset?email=${email}`
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('password link successfully sent');
+                resolve(response);
+            }
+
+            function error(response) {
+                $log.info('password link sending error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function updatePassword(hostName, pass, token) {
+        return $q(function (resolve, reject) {
+            $http({
+                method: 'PUT',
+                url: hostName + `/users/password?password=${pass}&reset_password_token=${token}`
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('password successfully updated');
+                resolve(response);
+            }
+
+            function error(response) {
+                $log.info('password updating error with status ' + response.status);
                 reject(response);
             }
         });

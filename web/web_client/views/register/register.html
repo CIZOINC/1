@@ -22,7 +22,7 @@
 
         <div class="register-form_description">
             By clicking on Sign Up, you agree to<br>
-            <span class="register-form_terms">Cizo's terms of use</span> and <span class="register-form_terms">privacy policy</span>
+            <span ui-sref="terms" class="register-form_terms">Cizo's terms of use</span> and <span ui-sref="privacy" class="register-form_terms">privacy policy</span>
         </div>
 
         <button class="register-form_sign-up" ng-click="registerUser()">Sign up</button>
@@ -35,3 +35,6 @@
 
     <div class="icon-close register-form_close" ng-click="closeView()"></div>
 </form>
+
+
+<message-overlay params="message" class="register-form hidden-layer"></message-overlay>

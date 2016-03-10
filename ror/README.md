@@ -1,4 +1,4 @@
-# CIZO Web App
+# CIZO
 
 ### Getting Started
 
@@ -55,32 +55,24 @@ where `<JIRA-ISSUE>` is replaced with the JIRA issue number. For example,
 ror/feature/SEN-30_Deployment
 ```
 
+Development for both the web app and admin panel is done on the web/develop branch. This branch is then merged into ror/develop and, subsequently, ror/master for deployment. 
+
 ### Deploying
 
 Deployment is done using AWS's Elastic Beanstalk. To deploy a new version use the following command to deploy to staging, replacing <version> with the current version (eg v0.0.1).
 
 ```
-eb deploy --profile cizo cizo-staging --label "`git describe  --abbrev=0`"  --message "commit `git rev-parse --short HEAD`" 
+eb deploy --profile cizo cizo-staging --label "api-`git rev-parse HEAD`"
 ```
 
 Once deployment has completed and has been validated, use the following command to deploy that version to production
 
 ```
-eb deploy --profile cizo cizo-production --version "`git describe  --abbrev=0`"
+eb deploy --profile cizo cizo-production --version "api-`git rev-parse HEAD`"
 ```
+
+Deploys to staging occur automatically after merging into ror/master. Once an automatic deploy is completed, it is tested using the tests/integration branch. All of this is handled by [Jenkins](http://ci-web.weezlabs.com:8070/login?from=%2F). Production deploys must be done using the above command or through the Elastic Beanstalk console. 
 
 ### SSL
 
-At this time, both staging and production are not configured to use SSL. 
-
-To enable SSL, the following needs to be done:
-- Purchase wildcard SSL certificate
-- [Upload SSL certificate to IAM](http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_server-certs_manage.html)
-- Update the 'SSLCertificateId' of '01-load-balancer.config.bak' with the one returned from the previous step
-- Update the server.crt and server.key content of '02-nginx-proxy.config.bak' with the certificate and private key of the wildcard SSL certificate
-- Rename '01-load-balancer.config.bak' to '01-load-balancer.config'
-- Rename '02-nginx-proxy.config.bak' to '02-nginx-proxy.config'
-- Deploy to staging using `eb deploy cizo-staging`
-- Validate staging
-- Deploy to production using `eb deploy cizo-production`
-- Validate production
+Both staging and production are provisioned with an SSL certificate provided by Amazon's Certificate Manager. SSL was enabled using [this tutorial](https://medium.com/@arcdigital/enabling-ssl-via-aws-certificate-manager-on-elastic-beanstalk-b953571ef4f8#.np32hxx2s). SSL certificate rotation is handled automatically by Amazon.

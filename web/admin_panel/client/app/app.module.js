@@ -10,13 +10,11 @@
             // 3rd Party Modules
             'ui.bootstrap',
             'ui.tree',
-            'ngMap',
             'ngTagsInput',
             'textAngular',
             'angular-loading-bar',
-            'ui.calendar',
             'duScroll',
-            'mgo-angular-wizard',
+            // 'mgo-angular-wizard',
             'xeditable',
             'dndLists',
             'ngFileUpload',
@@ -30,8 +28,8 @@
             'app.ui.form.validation',
             'app.page',
             'app.table',
-            'app.task',
-            'app.calendar',
+            // 'app.task',
+            // 'app.calendar',
             'app.videos',
             'app.featured',
             'app.users',
@@ -41,5 +39,4 @@
         .run(function (editableOptions) {
             editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
         });
-
 })();

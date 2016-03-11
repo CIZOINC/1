@@ -14,6 +14,7 @@ function userServ($http, $q, $log, moment) {
         updateToken: updateToken,
         resetPassword: resetPassword,
         updatePassword: updatePassword,
+        updatePasswordOnline: updatePasswordOnline,
         isUnexpiredToken: isUnexpiredToken,
 
         getUnseenList: getUnseenList,
@@ -120,6 +121,32 @@ function userServ($http, $q, $log, moment) {
 
             function error(response) {
                 $log.info('password link sending error with status ' + response.status);
+                reject(response);
+            }
+        });
+    }
+
+    function updatePasswordOnline(hostName, pass, token) {
+        return $q(function (resolve, reject) {
+            $http({
+                method: 'PUT',
+                url: hostName + `/users/me`,
+                data: {
+                    "user": {
+                        "password": pass,
+                        "password_confirmation": pass
+                    }
+                },
+                headers: {'Authorization': `Bearer ${token}`}
+            }).then(success, error);
+
+            function success(response) {
+                $log.info('password successfully updated');
+                resolve(response);
+            }
+
+            function error(response) {
+                $log.info('password updating error with status ' + response.status);
                 reject(response);
             }
         });

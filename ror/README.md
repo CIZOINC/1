@@ -73,6 +73,19 @@ eb deploy --profile cizo cizo-production --version "api-`git rev-parse HEAD`"
 
 Deploys to staging occur automatically after merging into ror/master. Once an automatic deploy is completed, it is tested using the tests/integration branch. All of this is handled by [Jenkins](http://ci-web.weezlabs.com:8070/login?from=%2F). Production deploys must be done using the above command or through the Elastic Beanstalk console. 
 
+
+### Server Provisioning
+
+Server provisioning is handled by AWS's Elastic Beanstalk. Servers are built using the enivornment's base configuration and modified using files located within the .ebextensions folder. More information regarding Elastic Beanstalk can be found [here](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/Welcome.html).
+
+### Auto Scaling
+
+Auto scaling is handled by via Auto Scaling groups configured by Elastic Beanstalk. 
+
+### DNS 
+
+DNS is handled through AWS's Route 53. More information regarding Route 53 can be found [here](http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html).
+
 ### SSL
 
-Both staging and production are provisioned with an SSL certificate provided by Amazon's Certificate Manager. SSL was enabled using [this tutorial](https://medium.com/@arcdigital/enabling-ssl-via-aws-certificate-manager-on-elastic-beanstalk-b953571ef4f8#.np32hxx2s). SSL certificate rotation is handled automatically by Amazon.
+Both staging and production are provisioned with an SSL certificate provided by AWS's Certificate Manager. SSL was enabled using [this tutorial](https://medium.com/@arcdigital/enabling-ssl-via-aws-certificate-manager-on-elastic-beanstalk-b953571ef4f8#.np32hxx2s). SSL certificate rotation is handled automatically by Amazon. More information regarding Certificate Manager can be found [here](https://aws.amazon.com/certificate-manager/).

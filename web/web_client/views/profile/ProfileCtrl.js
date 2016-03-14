@@ -1,15 +1,15 @@
 /*global angular*/
 angular
     .module('app.controls')
-    .controller('ResetCtrl', ResetCtrl);
+    .controller('ProfileCtrl', ProfileCtrl);
 
 /* @ngInject */
-function ResetCtrl($scope, $state, userServ, playerServ) {
+function ProfileCtrl($scope, $state, userServ, playerServ) {
     "use strict";
 
 
     $scope = angular.extend($scope, {
-        email: '',
+        pass: '',
         message: {
             title: '123',
             description: 'this is it',
@@ -19,18 +19,18 @@ function ResetCtrl($scope, $state, userServ, playerServ) {
             }
         },
         closeView: closeView,
-        resetPassword: resetPassword
+        updatePassword: updatePassword
     });
 
     function closeView() {
         $state.go('home');
     }
 
-    function resetPassword() {
-        if ($scope.email.length) {
-            userServ.resetPassword($scope.hostName, $scope.email)
+    function updatePassword() {
+        if ($scope.pass.length) {
+            userServ.updatePasswordOnline($scope.hostName, $scope.pass, $scope.storage.token.access_token)
                 .then(() => {
-                    playerServ.showMessage($scope, 'Success', 'Check your email to reset password', () => {
+                    playerServ.showMessage($scope, 'Success', 'Password successfully updated', () => {
                         $state.go('home');
                     });
                 })
@@ -41,9 +41,9 @@ function ResetCtrl($scope, $state, userServ, playerServ) {
                     playerServ.showMessage($scope, 'Error', errors.join(', '));
                 })
         } else {
-            playerServ.showMessage($scope, 'Error', 'Please enter your email');
+            playerServ.showMessage($scope, 'Error', 'Please enter your new password');
         }
     }
 }
 
-ResetCtrl.$inject = ['$scope', '$state', 'userServ', 'playerServ'];
+ProfileCtrl.$inject = ['$scope', '$state', 'userServ', 'playerServ'];

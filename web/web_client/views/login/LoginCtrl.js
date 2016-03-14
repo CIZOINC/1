@@ -4,7 +4,7 @@ angular
     .controller('LoginCtrl', LoginCtrl);
 
 /* @ngInject */
-function LoginCtrl($scope, $state, userServ, storageServ) {
+function LoginCtrl($scope, $state, userServ, storageServ, playerServ) {
     "use strict";
 
 
@@ -12,6 +12,14 @@ function LoginCtrl($scope, $state, userServ, storageServ) {
         login: {
             email: '',
             password: ''
+        },
+        message: {
+            title: '123',
+            description: 'this is it',
+            isVisible: false,
+            callback: function () {
+
+            }
         },
 
         processLogin: processLogin,
@@ -73,6 +81,12 @@ function LoginCtrl($scope, $state, userServ, storageServ) {
 
 
             $state.go('home');
+        })
+        .catch((response) => {
+            let errors = _.map(response.data.errors, (error) => {
+                return error.message;
+            });
+            playerServ.showMessage($scope, 'Error', errors.join(', '));
         });
     }
 
@@ -89,4 +103,4 @@ function LoginCtrl($scope, $state, userServ, storageServ) {
     }
 }
 
-LoginCtrl.$inject = ['$scope', '$state', 'userServ', 'storageServ'];
+LoginCtrl.$inject = ['$scope', '$state', 'userServ', 'storageServ', 'playerServ'];

@@ -23,7 +23,8 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
         getIconName: getIconName,
         setVideoWatched: setVideoWatched,
 
-        userLogout: userLogout
+        userLogout: userLogout,
+        showMessage: showMessage
     };
 
     function getElementFullscreenState() {
@@ -187,6 +188,16 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
         storage.token = undefined;
         storageServ.setItem(storage.storageUserToken, undefined);
         $state.go('home');
+    }
+
+    function showMessage(scope, title, description, cb) {
+        scope.message.title = title;
+        scope.message.description = description;
+        if (cb) {
+            scope.message.callback = cb;
+        }
+
+        scope.message.isVisible = true;
     }
 
     function getIconName(iconId) {

@@ -1,0 +1,33 @@
+<left-side-menu storage="storage"></left-side-menu>
+
+<top-menu categories="categoriesList"
+          host-name="{{hostName}}"
+          videos-list="videosFullList"
+          storage="storage"
+></top-menu>
+
+<form class="profile">
+    <div class="profile-form">
+
+        <div class="profile-form_logo">
+            <span class="icon-profile"></span>
+            <span class="">My Profile</span>
+        </div>
+
+        <div class="profile-form_decoration"></div>
+
+        <div class="profile-form_title">
+            Update password
+        </div>
+
+        <span class="profile-form_description">To reset your password, enter the address you use to sign in to Cizo.</span>
+
+        <input ng-model="pass" class="profile-form_input" placeholder="Update password" type="password">
+
+        <button class="profile-form_sign-up" ng-click="updatePassword()">Update</button>
+
+    </div>
+
+</form>
+
+<message-overlay params="message"></message-overlay>

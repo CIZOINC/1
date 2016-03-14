@@ -4,7 +4,7 @@ angular
     .controller('RegisterCtrl', RegisterCtrl);
 
 /* @ngInject */
-function RegisterCtrl($scope, $log, $state, userServ, moment) {
+function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ) {
     "use strict";
 
     let months = [
@@ -36,17 +36,15 @@ function RegisterCtrl($scope, $log, $state, userServ, moment) {
         facebookRegister: facebookRegister,
         closeView: closeView,
         loginClick: loginClick,
-        showMessage: showMessage,
         message: {
             title: '123',
             description: 'this is it',
+            isVisible: false,
             callback: function () {
 
             }
         }
     });
-
-    //showMessage();
 
     function registerUser() {
         let birthday = moment({
@@ -61,9 +59,22 @@ function RegisterCtrl($scope, $log, $state, userServ, moment) {
                 password: $scope.register.password,
                 password_confirmation: $scope.register.password,
                 birthday: birthday.format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z'
-            });
+            })
+                .then( (response) => {
+                    if (response.status === 200) {
+                        showMessage($scope, 'Success', 'You\'re successfully registered. Please enter your credentials in login screen.', () => {
+                            $state.go('home');
+                        })
+                    }
+                })
+                .catch((response) => {
+                    let errors = _.map(response.data.errors, (error) => {
+                        return error.message;
+                    });
+                    playerServ.showMessage($scope, 'Error', errors.join(', '));
+                });
         } else {
-            $log.log('date error');
+            showMessage($scope, 'Error', 'Please enter correct date');
         }
     }
 
@@ -79,9 +90,6 @@ function RegisterCtrl($scope, $log, $state, userServ, moment) {
         $state.go('home');
     }
 
-    function showMessage() {
-        document.querySelector('message-overlay.register-form').classList.remove('hidden-layer');
-    }
 }
 
-RegisterCtrl.$inject = ['$scope', '$log', '$state', 'userServ', 'moment'];
+RegisterCtrl.$inject = ['$scope', '$log', '$state', 'userServ', 'moment', 'playerServ'];

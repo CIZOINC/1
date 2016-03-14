@@ -17,16 +17,16 @@ function messageOverlay() {
         }
     };
 
-    function linkFn(scope, element) {
+    function linkFn(scope) {
         scope = angular.extend(scope, {
             closeView: closeView
         });
 
         function closeView() {
-            angular.element(element[0])[0].classList.add('hidden-layer');
             if (scope.params && scope.params.callback && typeof scope.params.callback === 'function') {
                 scope.params.callback();
             }
+            scope.params.isVisible = false;
         }
 
 

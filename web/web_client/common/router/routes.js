@@ -108,5 +108,14 @@ angular
                 controller: 'resetPasswordCtrl',
                 controllerAs: 'resetPassword'
             }
+        },
+        {
+            state: 'profile',
+            config: {
+                url: '/profile',
+                templateUrl: 'views/profile/profile.html',
+                controller: 'ProfileCtrl',
+                controllerAs: 'profile'
+            }
         }
     ]);

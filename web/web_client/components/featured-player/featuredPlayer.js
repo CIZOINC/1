@@ -134,40 +134,42 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         });
 
         scope.$watch('video', () => {
-            if (scope.video && scope.video.streams) {
-                scope.sources = scope.video.streams.map((source) => {
-                    return {src: $sce.trustAsResourceUrl(source.link), type: `video/${source.stream_type}`}
-                });
-                scope.iconTitle = scope.video && scope.video.category_id ? categoryIcon(scope.video.category_id) : '';
-                scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
-                scope.nextVideo = getNextVideo();
-                scope.isIntermissionPaused = false;
-
-
-                setFavoritesState(scope.video.favorites);
-
-                $timeout( () => {
-                    if (!scope.featuredPlayer.classList.contains('hidden-layer') && scope.video.instantPlay) {
-                        togglePlayPause();
-                        scope.video.instantPlay = false;
-                    }
-
-                    // update playing status for carousel
-                    _.each(angular.element(element[0].querySelectorAll(`.featured-carousel_content_item`)), (item) => {
-                        angular.element(item.querySelector(`.featured-carousel_content_item_title`))[0]
-                            .classList.remove('featured-carousel_content_item_title--playing');
+            if (scope.video && scope.video.mature_content && !userServ.isUnexpiredToken()) {
+                scope.storage.showMatureScreen = true;
+            } else {
+                if (scope.video && scope.video.streams) {
+                    scope.sources = scope.video.streams.map((source) => {
+                        return {src: $sce.trustAsResourceUrl(source.link), type: `video/${source.stream_type}`}
                     });
-                    let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
-                    if (featuredItem) {
-                        scope.carouselItemTitle = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_title`))[0];
-                        scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
-                    }
-                    scope.soundSliderModel.value = scope.screen.volume * 10;
-                });
+                    scope.iconTitle = scope.video && scope.video.category_id ? categoryIcon(scope.video.category_id) : '';
+                    scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
+                    scope.nextVideo = getNextVideo();
+                    scope.isIntermissionPaused = false;
 
 
+                    setFavoritesState(scope.video.favorites);
 
+                    $timeout( () => {
+                        if (!scope.featuredPlayer.classList.contains('hidden-layer') && scope.video.instantPlay) {
+                            togglePlayPause();
+                            scope.video.instantPlay = false;
+                        }
+
+                        // update playing status for carousel
+                        _.each(angular.element(element[0].querySelectorAll(`.featured-carousel_content_item`)), (item) => {
+                            angular.element(item.querySelector(`.featured-carousel_content_item_title`))[0]
+                                .classList.remove('featured-carousel_content_item_title--playing');
+                        });
+                        let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
+                        if (featuredItem) {
+                            scope.carouselItemTitle = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_title`))[0];
+                            scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
+                        }
+                        scope.soundSliderModel.value = scope.screen.volume * 10;
+                    });
+                }
             }
+
         });
 
 

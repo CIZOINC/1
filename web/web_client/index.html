@@ -38,6 +38,18 @@
 
 <div ui-view></div>
 
+<div class="mature-overlay" ng-show="checkMature()">
+    <div class="mature-overlay_window mature-window">
+        <span class="icon-close mature-window_icon" ng-click="linkToHome()"></span>
+
+        <span class="mature-window_title">One more step</span>
+        <span class="mature-window_description">Due to nature of this content, please sign in to confirm your age.</span>
+
+        <button class="mature-window_sign" ng-click="linkToLogin()">sign in</button>
+        <button class="mature-window_cancel" ng-click="linkToHome()">not now</button>
+    </div>
+</div>
+
 <!-- third_party:js -->
 <script src="../node_modules/angular/angular.js"></script>
 <script src="../node_modules/jquery/dist/jquery.js"></script>

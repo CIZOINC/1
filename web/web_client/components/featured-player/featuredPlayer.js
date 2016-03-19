@@ -134,7 +134,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         });
 
         scope.$watch('video', () => {
-            if (scope.video && scope.video.mature_content && !userServ.isUnexpiredToken()) {
+            if (scope.video && scope.video.mature_content && !userServ.isUnexpiredToken(scope.storage.token)) {
                 scope.storage.showMatureScreen = true;
             } else {
                 if (scope.video && scope.video.streams) {

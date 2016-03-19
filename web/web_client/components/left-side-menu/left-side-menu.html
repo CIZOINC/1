@@ -30,7 +30,7 @@
             <span class="menu_item_counter">{{storage.favoritesItems.length ? storage.favoritesItems.length : ''}}</span>
             <span class="menu_item_next icon-forward"></span>
         </div>
-        <div class="menu_item" ui-sref="profile">
+        <div class="menu_item" ui-sref="profile" ng-show="isUserAuthorized()">
             <span class="menu_item_icon icon-profile"></span>
             <span class="menu_item_title">Profile</span>
             <span class="menu_item_counter"></span>

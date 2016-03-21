@@ -25,7 +25,9 @@ function LoginCtrl($scope, $state, userServ, storageServ, playerServ) {
         processLogin: processLogin,
         registerClick: registerClick,
         resetPasswordClick: resetPasswordClick,
-        closeView: closeView
+        closeView: closeView,
+        changeFocusOnEnter: changeFocusOnEnter,
+        loginOnEnter: loginOnEnter
     });
 
     function processLogin() {
@@ -100,6 +102,21 @@ function LoginCtrl($scope, $state, userServ, storageServ, playerServ) {
 
     function closeView() {
         $state.go('home');
+    }
+
+    function changeFocusOnEnter(event) {
+        if (event && event.keyCode === 13) {
+            let passInput = document.querySelector('.login-form_input--pass');
+            if (passInput) {
+                passInput.focus();
+            }
+        }
+    }
+    
+    function loginOnEnter(event) {
+        if (event && event.keyCode === 13) {
+            processLogin();
+        }
     }
 }
 

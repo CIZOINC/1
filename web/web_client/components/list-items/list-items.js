@@ -35,7 +35,12 @@ function listItems($state, _, playerServ, $timeout) {
         });
 
         scope.$watch('listType', (oldType, newType) => {
-            scope.message = getMessage(newType);
+            if (oldType.length) {
+                scope.message = getMessage(oldType);
+            }
+            if (newType.length) {
+                scope.message = getMessage(newType);
+            }
         });
 
         function getMessage(name) {

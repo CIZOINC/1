@@ -24,12 +24,11 @@
 }
 
 body {
-  //background: linear-gradient(45deg, @screen_gradient_start, @screen_gradient_finish);
   background-color: #1c1f24;
 }
 
 .hidden-layer {
-  display: none;
+  display: none !important;
 }
 
 .stop-selection {
@@ -39,6 +38,80 @@ body {
   user-select: none;          /* Likely future */
 }
 
+
+.mature-overlay {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 31000000;
+
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
+  background-color: rgba(0,0,0,.8);
+
+  &_window {
+    width: 600px;
+    background-color: #1c1f24;
+    position: relative;
+  }
+}
+
+.mature-window {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-direction: column;
+  color: white;
+  font-family: main-cizo;
+  &_icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 7px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  &_title {
+    margin-top: 30px;
+    text-transform: uppercase;
+    font-size: 25px;
+  }
+
+  &_description {
+    margin: 15px 0;
+    font-size: 16px;
+    width: 50%;
+    text-align: center;
+  }
+
+  .button_mix {
+    border: none;
+    outline: none;
+    font-size: 18px;
+    width: 60%;
+    padding: 10px;
+  }
+  &_sign {
+    .button_mix;
+    text-transform: uppercase;
+    background-color: #25aabd;
+  }
+
+  &_cancel {
+    .button_mix;
+    text-transform: capitalize;
+    background-color: transparent;
+    margin-bottom: 20px;
+    color: #356780;
+  }
+}
 
 
 /* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */

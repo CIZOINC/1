@@ -4,7 +4,7 @@ angular
     .directive('leftSideMenu', leftSideMenu);
 
 /* @ngInject */
-function leftSideMenu($state) {
+function leftSideMenu($state, userServ) {
     "use strict";
 
     return {
@@ -27,6 +27,7 @@ function leftSideMenu($state) {
             menuContainerOuter: document.querySelector('.menu_container_outer'),
 
             toggleSideMenu: toggleSideMenu,
+            isUserAuthorized: isUserAuthorized,
             goHome: goHome
         });
 
@@ -52,6 +53,10 @@ function leftSideMenu($state) {
             }
         }
 
+        function isUserAuthorized() {
+            return userServ.isUnexpiredToken(scope.storage.token);
+        }
+
         function goHome() {
             $state.go('home');
         }
@@ -60,4 +65,4 @@ function leftSideMenu($state) {
 
 }
 
-leftSideMenu.$inject = ['$state'];
+leftSideMenu.$inject = ['$state', 'userServ'];

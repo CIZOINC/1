@@ -23,20 +23,25 @@ angular
 
 
 /* @ngInject */
-function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, playerServ, $timeout) {
+function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, $timeout) {
 
     $scope = angular.extend($scope, {
         title: 'Cizo',
         hostName: `https://staging.cizo.com`,
         sharingPath: 'https://staging.cizo.com/app',
         facebookAppId: '459923084193687',
-        //facebookAppIdProd: '459778204208175',
         videosList: [],
         categoriesList: [],
         featuredList: [],
 
+        checkMature: function () {
+            return $scope.storage.showMatureScreen;
+        },
+
         storage: {
             userAuthorized: false,
+            showMatureScreen: false,
+
 
             storageSeenKey: 'seen',
             storageFavoritesKey: 'favorites',
@@ -49,9 +54,22 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
             unseenItems: [],
             skippedItems: [],
             token: undefined
-        }
+        },
+
+        linkToLogin: linkToLogin,
+        linkToHome: linkToHome
 
     });
+
+    function linkToLogin() {
+        $scope.storage.showMatureScreen = false;
+        $state.go('login');
+    }
+
+    function linkToHome() {
+        $scope.storage.showMatureScreen = false;
+        $state.go('home');
+    }
 
     routerHelper.configureStates(routesList);
 
@@ -140,4 +158,4 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
 
 
 }
-AppCtrl.$inject = ['$rootScope', '$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', 'playerServ', '$timeout'];
+AppCtrl.$inject = ['$rootScope', '$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', '$timeout'];

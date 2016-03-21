@@ -4,7 +4,7 @@ angular
     .controller('ListCtrl', ListCtrl);
 
 /* @ngInject */
-function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, storageServ) {
+function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ) {
     "use strict";
 
     if ($rootScope.featuredList && $rootScope.featuredList.length && $rootScope.videosList && $rootScope.videosList.length) {
@@ -32,7 +32,6 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, storageSer
         $scope = angular.extend($scope, {
             listName: undefined,
             videosFullList: undefined,
-            videosList: undefined,
             listItem: undefined,
             listType: [
                 'seen',
@@ -70,4 +69,4 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, storageSer
     }
 }
 
-ListCtrl.$inject = ['$scope', '$state', '$stateParams', '$rootScope', 'userServ', 'storageServ'];
+ListCtrl.$inject = ['$scope', '$state', '$stateParams', '$rootScope', 'userServ', 'playerServ'];

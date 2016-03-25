@@ -1,16 +1,14 @@
 module Auth
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     before_action :check_if_email_exists, only: [:facebook]
-    before_action :check_if_birthday_exists, only: [:facebook]
+    before_action :check_if_age_range_exists, only: [:facebook]
     before_action :check_for_access_token_presence, only: [:fetch_user_by_facebook_token]
 
     def fetch_user_by_facebook_token
       begin
-        uri = "https://graph.facebook.com/me?fields=email,birthday&access_token=" + params[:access_token]
+        uri = "https://graph.facebook.com/me?fields=email,age_range&access_token=" + params[:access_token]
         @response = JSON.parse(open(uri).read[0..-1])
-        # @response['birthday'] = @response['birthday'] ? format_date(@response['birthday']) : time_to_valid_format(Time.now)
-        birthday = @response['birthday']
-        birthday = format_date(birthday) if birthday #here we can set user's birthday to Time.now if birthday is blank.
+        birthday = birthday_from_age_range(@response['age_range'])
         find_or_create_user_by(@response['email'], birthday)
       rescue OpenURI::HTTPError => e
         # error = e.as_json(only: 'io')['io'][0].gsub("\\","")
@@ -22,8 +20,9 @@ module Auth
     def facebook
       raw_info = auth_hash['extra']['raw_info']
       email = raw_info['email']
-      birthday = format_date(raw_info['birthday'])
-      find_or_create_user_by(email, birthday)
+      age_range = raw_info['age_range']
+
+      find_or_create_user_by(email, birthday_from_age_range(age_range))
     end
 
     def failure
@@ -66,11 +65,11 @@ module Auth
       request.env['omniauth.auth']
     end
 
-    %w(email birthday).each do |method|
+    %w(email age_range).each do |method|
       define_method "check_if_#{method}_exists" do
         if auth_hash.extra.raw_info["#{method}"].blank?
           redirect_to "/users/auth/facebook?auth_type=rerequest&"\
-                      "scope=#{method.gsub('birthday', 'user_birthday')}"
+                      "scope=#{method.gsub('age_range', 'public_profile')}"
         end
       end
     end
@@ -85,15 +84,10 @@ module Auth
       random
     end
 
-    def format_date(date)
-      date = date.split('/')
-      date.insert(2, date[0]).shift
-      date = date.join('/')
-      time_to_valid_format(date)
-    end
-
-    def time_to_valid_format(date)
-      date.to_time.strftime('%FT%T.%LZ')
+    def birthday_from_age_range(age_range)
+      min_age = age_range['min']
+      fake_birthday = Time.now - min_age.years
+      fake_birthday.strftime('%FT%T.%LZ')
     end
 
     def check_for_access_token_presence

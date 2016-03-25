@@ -117,5 +117,14 @@ angular
                 controller: 'ProfileCtrl',
                 controllerAs: 'profile'
             }
+        },
+        {
+            state: 'contact',
+            config: {
+                url: '/contact',
+                templateUrl: 'views/contact/contact.html',
+                controller: 'ContactCtrl',
+                controllerAs: 'contact'
+            }
         }
     ]);

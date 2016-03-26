@@ -13,6 +13,7 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
         playerServ.getFeaturedList($scope)
             .then(playerServ.getCategories)
             .then(playerServ.getVideos)
+            .then(playerServ.updateCategories)
             .then(playerServ.updateVideos)
             .then((videos) => {
                 if ($scope.storage.userAuthorized) {

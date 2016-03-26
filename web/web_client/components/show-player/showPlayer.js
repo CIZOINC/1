@@ -85,6 +85,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             toggleDescription: toggleDescription,
             setIntermission: setIntermission,
             pauseIntermissionToggle: pauseIntermissionToggle,
+            isInIntermission: () => scope.isIntermissionState,
             nextVideo: getNextVideo(),
             playNextVideo: playNextVideo,
             getNextVideo: getNextVideo,
@@ -131,8 +132,15 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         });
 
         scope.$watch('video', () => {
+            if (scope.storage.showMatureScreen) {
+                return;
+            }
             if (scope.video && scope.video.mature_content && !userServ.isUnexpiredToken(scope.storage.token)) {
                 scope.storage.showMatureScreen = true;
+                scope.screen.pause();
+                if (scope.intermissionStopTimer) {
+                    $interval.cancel(scope.intermissionStopTimer);
+                }
             } else {
                 if (scope.video && scope.video.streams) {
                     scope.sources = scope.video.streams.map((source) => {
@@ -644,7 +652,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             scope.countDown.classList[_classAdd(!isIntermission)]('hidden-layer');
             scope.intermissionTitle.classList[_classAdd(!isIntermission)]('hidden-layer');
             scope.intermissionPause.classList[_classAdd(!isIntermission)]('hidden-layer');
-
+            scope.playButton.classList[_classAdd(isIntermission)]('show-player_buttons-layer_center-elements_play-button--intermission');
             scope.titlesOverlayLayer.classList[_classAdd(isIntermission)]('hidden-layer');
             scope.controlsOverlayLayer.classList[_classAdd(isIntermission)]('hidden-layer');
             scope.imageNextLayer.classList[_classAdd(!isIntermission)]('hidden-layer');

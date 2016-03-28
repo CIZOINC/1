@@ -15,6 +15,7 @@ function HomeCtrl($scope, $rootScope, playerServ, userServ, _, storageServ) {
     playerServ.getFeaturedList($scope)
         .then(playerServ.getCategories)
         .then(playerServ.getVideos)
+        .then(playerServ.updateCategories)
         .then(playerServ.updateVideos)
         .then((videos) => {
             $rootScope.featuredList = $scope.featuredList;

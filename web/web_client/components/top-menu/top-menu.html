@@ -7,11 +7,15 @@
         </div>
 
         <div class="top-menu_categories">
-            <div class="top-menu_categories_item" ng-repeat="category in categoryList" ng-click="categoryClick($event, category.id)">{{category.title}}</div>
+            <div class="top-menu_categories_item"
+                 ng-repeat="category in categoryList"
+                 ng-click="categoryClick($event, category.id)">
+                {{category.title}}
+            </div>
         </div>
     </div>
 
-    <div class="top-menu_advanced">
+    <div class="top-menu_advanced" ng-show="onShowAdvanced()">
         <div class="top-menu_search">
             <div class="top-menu_search_string">
                 <button class="top-menu_search_button icon-search"></button>

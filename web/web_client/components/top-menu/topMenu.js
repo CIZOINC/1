@@ -16,7 +16,8 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             categories: '=',
             hostName: '@',
             videosList: '=',
-            storage: '='
+            storage: '=',
+            showAdvanced: '='
         }
     };
 
@@ -32,7 +33,8 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             search: search,
             playFoundVideo: playFoundVideo,
             toggleSideMenu: toggleSideMenu,
-            logout: logout
+            logout: logout,
+            onShowAdvanced: () => scope.showAdvanced
         });
 
 

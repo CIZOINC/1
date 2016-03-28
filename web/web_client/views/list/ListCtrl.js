@@ -4,7 +4,7 @@ angular
     .controller('ListCtrl', ListCtrl);
 
 /* @ngInject */
-function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ) {
+function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ, _) {
     "use strict";
 
     if ($rootScope.featuredList && $rootScope.featuredList.length && $rootScope.videosList && $rootScope.videosList.length) {
@@ -13,6 +13,7 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ
         playerServ.getFeaturedList($scope)
             .then(playerServ.getCategories)
             .then(playerServ.getVideos)
+            .then(playerServ.updateCategories)
             .then(playerServ.updateVideos)
             .then((videos) => {
                 if ($scope.storage.userAuthorized) {
@@ -69,4 +70,4 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ
     }
 }
 
-ListCtrl.$inject = ['$scope', '$state', '$stateParams', '$rootScope', 'userServ', 'playerServ'];
+ListCtrl.$inject = ['$scope', '$state', '$stateParams', '$rootScope', 'userServ', 'playerServ', 'lodash'];

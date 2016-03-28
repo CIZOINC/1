@@ -170,6 +170,7 @@ gulp.task('copy_dependencies', function () {
     return gulp.src([
             './images/iconVideoPlay.svg',
             './images/iconVideoPause.svg',
+            './images/iconVideoPlayIntermission.svg',
             './images/bgTbnVideo.svg',
             './images/logo.svg'
         ])

@@ -17,6 +17,7 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
 
         getFeaturedList: getFeaturedList,
         getCategories: getCategories,
+        updateCategories: updateCategories,
         getVideos: getVideos,
         updateVideos: updateVideos,
 
@@ -126,6 +127,15 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
                     $rootScope.categoriesList = response.data.data;
                     resolve(scope);
                 });
+        });
+    }
+
+    function updateCategories(scope) {
+        return $q( (resolve) => {
+            let filteredCategories = _.filter(scope.categoriesList, category => _.some(scope.videosList, video => video.category_id === category.id));
+            scope.categoriesList = filteredCategories;
+            $rootScope.categoriesList = filteredCategories;
+            resolve(scope);
         });
     }
 

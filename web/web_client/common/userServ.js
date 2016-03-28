@@ -72,20 +72,27 @@ function userServ($http, $q, $log, moment) {
     }
 
     function facebookAuth(hostName) {
-        $http({
-            method: 'GET',
-            url: hostName + `/users/auth/facebook`
-        }).then(success, error);
+        return $q(function (resolve, reject) {
+            let fbAuthWindow = window.open(hostName + `/users/auth/facebook`, "_blank", "height=600, width=550, status=yes, toolbar=no, menubar=no, location=no, addressbar=no");
+            let timer = setInterval(checkChild, 500);
 
-        function success(response) {
-            $log.info('user logged in');
-            resolve(response);
-        }
+            function checkChild() {
+                if (fbAuthWindow.closed) {
+                    $log.log('facebook auth window was closed');
+                    clearInterval(timer);
+                    reject();
+                }
+                let dataContainer = fbAuthWindow.document.querySelector('pre');
+                if (dataContainer) {
+                    clearInterval(timer);
+                    let tokenRaw = dataContainer.innerHTML;
+                    let token = JSON.parse(tokenRaw);
+                    fbAuthWindow.close();
+                    resolve(token);
+                }
 
-        function error(response) {
-            $log.info('user login obtaining error with status ' + response.status);
-            reject(response);
-        }
+            }
+        });
     }
 
     function updateToken(hostName, tokenData) {

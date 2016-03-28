@@ -4,7 +4,7 @@ angular
     .controller('RegisterCtrl', RegisterCtrl);
 
 /* @ngInject */
-function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ) {
+function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ, _) {
     "use strict";
 
     let months = [
@@ -63,7 +63,7 @@ function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ) {
                 .then( (response) => {
                     if (response.status === 200) {
                         showMessage($scope, 'Success', 'You\'re successfully registered. Please enter your credentials in login screen.', () => {
-                            $state.go('home');
+                            $state.go('login');
                         })
                     }
                 })
@@ -79,7 +79,60 @@ function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ) {
     }
 
     function facebookRegister() {
-        userServ.facebookAuth($scope.hostName);
+        userServ.facebookAuth($scope.hostName)
+            .then((response) => {
+                storageServ.setItem($scope.storage.storageUserToken, response);
+                $scope.storage.token = response;
+                $scope.storage.userAuthorized = true;
+
+                /**/
+                userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
+                    .then((favorites) => {
+                        let favoritesArray = _.map(favorites, fav => fav.id);
+                        let storedArray = storageServ.getItem($scope.storage.storageFavoritesKey);
+
+                        let newArray = _.union(favoritesArray, storedArray);
+                        storageServ.setItem($scope.storage.storageFavoritesKey, newArray);
+                        $scope.storage.favoritesItems = newArray;
+                    });
+
+                userServ.getVideoSeen($scope.hostName, $scope.storage.token.access_token)
+                    .then((seen) => {
+                        let seenArray = _.map(seen, seenItem => seenItem.id);
+                        let storedArray = storageServ.getItem($scope.storage.storageSeenKey);
+
+                        let newArray = _.union(seenArray, storedArray);
+                        storageServ.setItem($scope.storage.storageSeenKey, newArray);
+                        $scope.storage.seenItems = newArray;
+                    });
+
+                userServ.getUnseenList($scope.hostName, $scope.storage.token.access_token)
+                    .then((unseen) => {
+                        let unseenArray = _.map(unseen, unseenItem => unseenItem.id);
+                        let storedArray = storageServ.getItem($scope.storage.storageUnseenKey);
+
+                        let newArray = _.union(unseenArray, storedArray);
+                        storageServ.setItem($scope.storage.storageUnseenKey, newArray);
+                        $scope.storage.unseenItems = newArray;
+                    });
+
+                userServ.getSkipped($scope.hostName, $scope.storage.token.access_token)
+                    .then((skipped) => {
+                        let unseenArray = _.map(skipped, skippedItem => skippedItem.id);
+                        let storedArray = storageServ.getItem($scope.storage.storageSkippedKey);
+
+                        let newArray = _.union(unseenArray, storedArray);
+                        storageServ.setItem($scope.storage.storageSkippedKey, newArray);
+                        $scope.storage.skippedItems = newArray;
+                    });
+                /**/
+
+
+                $state.go('home');
+            })
+            .catch(() => {
+                playerServ.showMessage($scope, 'Error', 'Please try to register via Facebook later');
+            });
     }
 
     function loginClick() {
@@ -92,4 +145,4 @@ function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ) {
 
 }
 
-RegisterCtrl.$inject = ['$scope', '$log', '$state', 'userServ', 'moment', 'playerServ'];
+RegisterCtrl.$inject = ['$scope', '$log', '$state', 'userServ', 'moment', 'playerServ', 'lodash'];

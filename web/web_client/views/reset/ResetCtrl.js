@@ -31,7 +31,7 @@ function ResetCtrl($scope, $state, userServ, playerServ) {
             userServ.resetPassword($scope.hostName, $scope.email)
                 .then(() => {
                     playerServ.showMessage($scope, 'Success', 'Check your email to reset password', () => {
-                        $state.go('home');
+                        //$state.go('home');
                     });
                 })
                 .catch((response) => {

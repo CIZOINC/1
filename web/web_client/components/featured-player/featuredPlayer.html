@@ -1,7 +1,7 @@
 
 
 <div class="featured-player" video-id="{{video.id}}">
-    <top-menu categories="categoriesList" host-name="{{hostName}}" storage="storage"></top-menu>
+    <top-menu categories="categoriesList" host-name="{{hostName}}" storage="storage" show-advanced="true"></top-menu>
     <!-- video layer -->
     <div class="video-layer featured-player_video-layer">
         <video class="featured-player_video-layer_video" video-src="sources" preload='none'></video>
@@ -100,7 +100,8 @@
                         </svg>
                     </div>
                     <div class="featured-player_buttons-layer_center-elements_group_controls_wrapper-play-pause">
-                        <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="featured-player_buttons-layer_center-elements_play-button">
+                        <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="featured-player_buttons-layer_center-elements_play-button" ng-hide="isInIntermission()">
+                        <img src="images/iconVideoPlayIntermission.svg" ng-click="togglePlayPause($event)" class="featured-player_buttons-layer_center-elements_play-button" ng-show="isInIntermission()">
                         <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="featured-player_buttons-layer_center-elements_pause-button hidden-layer">
                     </div>
 

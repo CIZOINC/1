@@ -85,6 +85,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             toggleDescription: toggleDescription,
             setIntermission: setIntermission,
             pauseIntermissionToggle: pauseIntermissionToggle,
+            isInIntermission: () => scope.isIntermissionState,
             nextVideo: getNextVideo(),
             playNextVideo: playNextVideo,
             getNextVideo: getNextVideo,
@@ -105,6 +106,9 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
 
         scope.screenList.bind('timeupdate', () => {
+            if (scope.storage.showMatureScreen && scope.screen.played) {
+                scope.screen.pause();
+            }
             scope.timePassed = moment().startOf('year').add(scope.screen.currentTime, 's').format('mm:ss');
             scope.duration = moment().startOf('year').add(scope.screen.duration, 's').format('mm:ss');
 
@@ -136,6 +140,10 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         scope.$watch('video', () => {
             if (scope.video && scope.video.mature_content && !userServ.isUnexpiredToken(scope.storage.token)) {
                 scope.storage.showMatureScreen = true;
+                scope.screen.pause();
+                if (scope.intermissionStopTimer) {
+                    $interval.cancel(scope.intermissionStopTimer);
+                }
             } else {
                 if (scope.video && scope.video.streams) {
                     scope.sources = scope.video.streams.map((source) => {
@@ -551,6 +559,9 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         function togglePlayPause(event) {
             if (event) {
                 event.stopPropagation();
+            }
+            if (scope.storage.showMatureScreen) {
+                return;
             }
             scope.isPlaying = true;
             scope.featuredPlayerInside.classList.add('featured-player--playing');

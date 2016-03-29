@@ -5,9 +5,21 @@
     <title>Cizo</title>
     <link rel="stylesheet" href="all.min.css">
 </head>
-<body ng-controller="AppCtrl">
+<body ng-controller="AppCtrl" ng-cloak>
 
 <div ui-view></div>
+
+<div class="mature-overlay" ng-show="checkMature()">
+    <div class="mature-overlay_window mature-window">
+        <span class="icon-close mature-window_icon" ng-click="linkToHome()"></span>
+
+        <span class="mature-window_title">One more step</span>
+        <span class="mature-window_description">Due to nature of this content, please sign in to confirm your age.</span>
+
+        <button class="mature-window_sign" ng-click="linkToLogin()">sign in</button>
+        <button class="mature-window_cancel" ng-click="linkToHome()">not now</button>
+    </div>
+</div>
 
 <script src="3d-party.min.js"></script>
 <script src="ng.min.js"></script>

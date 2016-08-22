@@ -58,14 +58,15 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
          * if user hits all category out of the home page then app plays first video on the video list
          *
          * @param event
-         * @param id
+         * @param category
          */
-        function categoryClick(event, id) {
+        function categoryClick(event, category) {
             if (event) {
                 event.stopPropagation();
             }
+            let id = category.id;
 
-            if ($state.includes('home') || $state.includes('main')) {
+            if (!category.empty && ($state.includes('home') || $state.includes('main'))) {
                 $anchorScroll(`category-videos-${id}`);
             } else {
 

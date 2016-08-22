@@ -132,7 +132,12 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
 
     function updateCategories(scope) {
         return $q( (resolve) => {
-            let filteredCategories = _.filter(scope.categoriesList, category => _.some(scope.videosList, video => video.category_id === category.id));
+            let filteredCategories = _.map(scope.categoriesList, category => {
+                if (!_.some(scope.videosList, video => video.category_id === category.id)) {
+                    category.empty = true;
+                }
+                return category;
+            });
             scope.categoriesList = filteredCategories;
             $rootScope.categoriesList = filteredCategories;
             resolve(scope);

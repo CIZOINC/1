@@ -9,6 +9,7 @@
         <div class="top-menu_categories">
             <div class="top-menu_categories_item"
                  ng-repeat="category in categoryList"
+                 ng-class="{ 'top-menu_categories_item_empty' : category.empty }"
                  ng-click="categoryClick($event, category)">
                 {{category.title}}
             </div>

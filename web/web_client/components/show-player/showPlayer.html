@@ -1,7 +1,7 @@
 
 
 <div class="show-player" video-id="{{video.id}}">
-
+    <div class="show-player__filler"></div>
 
     <!-- video layer -->
     <div class="video-layer show-player_video-layer">
@@ -34,8 +34,7 @@
                         </span>
             </div>
         </div>
-        <div class="show-player_description-layer_container_text">
-            {{video.description}}
+        <div class="show-player_description-layer_container_text" ng-bind-html="video.description">
         </div>
     </div>
 </div>

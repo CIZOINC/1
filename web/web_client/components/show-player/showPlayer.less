@@ -20,9 +20,22 @@
   top: 0;
   overflow: hidden;
 
+  &__filler {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: black;
+    z-index: 1;
+  }
+
   &--playing {
     height: calc(~"100% + 210px");
     transition: height 0.5s ease-out;
+    .show-player__filler {
+      display: none;
+    }
   }
 
 
@@ -65,12 +78,21 @@
     overflow: hidden;
     background-size: cover;
     background-color: rgba(0,0,0,.9);
-
     &:before {
       display: block;
       content: '';
       width: 100%;
       padding-top: 56.25%;
+    }
+
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: black;
+      content: '';
     }
 
     & > .content {
@@ -414,6 +436,15 @@
         font-size: 28px;
         border: solid 1px white;
         padding: 15px;
+        cursor: pointer;
+        cursor: hand;
+        width: 175px;
+        text-align: center;
+        &:hover {
+          background-color: #00ffff;
+          color: black;
+          font-family: bold-cizo;
+        }
       }
     }
 
@@ -577,7 +608,6 @@
       }
     }
   }
-
 }
 
 

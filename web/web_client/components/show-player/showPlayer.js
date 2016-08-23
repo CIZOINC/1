@@ -17,7 +17,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             video: '=',
             videosList: '=',
             featuredList: '=',
-            featuredItem: '=',
             hostName: '@',
             storage: '='
         }
@@ -185,6 +184,16 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         scope.$watch('featuredItem', () => {
             if (scope.featuredItem) {
                 scope.video = scope.featuredItem;
+            }
+        });
+
+        scope.$watch('video.shouldToBePlayed', (value) => {
+            if (!value) {
+                return false;
+            }
+            scope.video.shouldToBePlayed = false;
+            if (!scope.isPlaying || scope.screen.paused) {
+                togglePlayPause();
             }
         });
 

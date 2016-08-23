@@ -23,8 +23,17 @@ angular
     .filter('nl2br', function($sce){
         return function(msg,is_xhtml) {
             var is_xhtml = is_xhtml || true;
+            //add linebreaks
             var breakTag = (is_xhtml) ? '<br />' : '<br>';
             var msg = (msg + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
+            return $sce.trustAsHtml(msg);
+        }
+    })
+    .filter('parseLinks', function ($sce) {
+        return function(msg,is_xhtml) {
+            //parse links
+            var exp = /\b(?:https?|ftp|file):\/\/([-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            var msg = (msg+'').replace(exp,"<a href='$1'>$1</a>");
             return $sce.trustAsHtml(msg);
         }
     });

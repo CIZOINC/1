@@ -23,6 +23,19 @@
   &--playing {
     height: calc(~"100% + 210px");
     transition: height 0.5s ease-out;
+    .featured-player__filler {
+      display: none;
+    }
+  }
+
+  &__filler {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: black;
+    z-index: 1;
   }
 
 
@@ -411,6 +424,15 @@
         font-size: 28px;
         border: solid 1px white;
         padding: 15px;
+        cursor: pointer;
+        cursor: hand;
+        width: 175px;
+        text-align: center;
+        &:hover {
+          background-color: #00ffff;
+          color: black;
+          font-family: bold-cizo;
+        }
       }
     }
 

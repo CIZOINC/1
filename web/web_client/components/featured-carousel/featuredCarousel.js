@@ -35,7 +35,8 @@ function featuredCarousel( _) {
             let selected = _.find(scope.featuredList, featured => featured.id === parseInt(id));
             selected.instantPlay = true;
             scope.selectedVideo = selected;
-            selected.shouldToBePlayed = true;
+            scope.$emit('replayVideo', selected);
+            scope.$broadcast('replayVideo', selected);
         }
 
         function moveNext() {

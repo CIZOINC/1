@@ -4,7 +4,7 @@ angular
     .directive('categoryItems', categoryItems);
 
 /* @ngInject */
-function categoryItems($state, _, playerServ, $timeout) {
+function categoryItems($state, $rootScope, _, playerServ, $timeout) {
     "use strict";
 
     return {
@@ -83,7 +83,9 @@ function categoryItems($state, _, playerServ, $timeout) {
 
         function moveToPlayPage(id) {
             $state.go('play', {videoId: id, categoryId: scope.categoryId});
+            $rootScope.$emit('replayVideo');
+            $rootScope.$broadcast('replayVideo');
         }
     }
 };
-categoryItems.$inject = ['$state', 'lodash', 'playerServ', '$timeout'];
+categoryItems.$inject = ['$state', '$rootScope', 'lodash', 'playerServ', '$timeout'];

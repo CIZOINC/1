@@ -24,8 +24,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
 
     function linkFn(scope, element, attrs) {
-        console.log($filter);
-
         scope = angular.extend(scope, {
             isPlaying: false,
             isIntermissionState: false,
@@ -137,8 +135,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 return;
             }
             if (scope.video && scope.video.description) {
-                scope.video.description = $filter('nl2br')(scope.video.description);
-                scope.video.description = $filter('parseLinks')(scope.video.description);
+                scope.videoDescription = $filter('nl2br')(scope.video.description);
+                scope.videoDescription = $filter('parseLinks')(scope.videoDescription);
             }
             if (scope.video && scope.video.mature_content && !userServ.isUnexpiredToken(scope.storage.token)) {
                 scope.storage.showMatureScreen = true;
@@ -187,14 +185,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             }
         });
 
-        scope.$watch('video.shouldToBePlayed', (value) => {
-            if (!value) {
-                return false;
-            }
-            scope.video.shouldToBePlayed = false;
-            if (!scope.isPlaying || scope.screen.paused) {
-                togglePlayPause();
-            }
+        scope.$on('replayVideo', () => {
+            console.log('tigr');
+            replayVideo();
         });
 
 

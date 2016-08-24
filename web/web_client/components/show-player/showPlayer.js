@@ -24,8 +24,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
 
     function linkFn(scope, element, attrs) {
-        console.log($filter);
-
         scope = angular.extend(scope, {
             isPlaying: false,
             isIntermissionState: false,
@@ -187,14 +185,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             }
         });
 
-        scope.$watch('video.shouldToBePlayed', (value) => {
-            if (!value) {
-                return false;
-            }
-            scope.video.shouldToBePlayed = false;
-            if (!scope.isPlaying || scope.screen.paused) {
-                togglePlayPause();
-            }
+        scope.$on('replayVideo', () => {
+            console.log('tigr');
+            replayVideo();
         });
 
 

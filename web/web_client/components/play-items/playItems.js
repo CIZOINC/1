@@ -4,7 +4,7 @@ angular
     .directive('playItems', playItems);
 
 /* @ngInject */
-function playItems($state, _, playerServ, $timeout) {
+function playItems($state, $rootScope, _, playerServ, $timeout) {
     "use strict";
 
     return {
@@ -74,8 +74,10 @@ function playItems($state, _, playerServ, $timeout) {
         }
 
         function moveToPlayPage(id) {
+            $rootScope.$emit('replayVideo');
+            $rootScope.$broadcast('replayVideo');
             $state.go('play', {videoId: id});
         }
     }
 };
-playItems.$inject = ['$state', 'lodash', 'playerServ', '$timeout'];
+playItems.$inject = ['$state', '$rootScope', 'lodash', 'playerServ', '$timeout'];

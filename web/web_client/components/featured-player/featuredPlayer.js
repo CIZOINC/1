@@ -182,14 +182,8 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
         });
 
-        scope.$watch('video.shouldToBePlayed', (value) => {
-            if (!value) {
-                return false;
-            }
-            scope.video.shouldToBePlayed = false;
-            if (!scope.isPlaying || scope.screen.paused) {
-                togglePlayPause();
-            }
+        scope.$on('replayVideo', () => {
+            replayVideo();
         });
 
         ////////////////////////////////////////////

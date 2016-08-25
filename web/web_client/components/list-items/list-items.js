@@ -83,9 +83,10 @@ function listItems($state, $rootScope, _, playerServ, $timeout) {
 
 
         function moveToPlayPage(id) {
-            $rootScope.$emit('replayVideo');
-            $rootScope.$broadcast('replayVideo');
-            $state.go('play', {videoId: id});
+            let obj = {videoId: id};
+            $rootScope.$emit('replayVideo', obj);
+            $rootScope.$broadcast('replayVideo', obj);
+            $state.go('play', obj);
         }
 
         function moveToHomePage() {

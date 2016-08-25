@@ -182,8 +182,10 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
         });
 
-        scope.$on('replayVideo', () => {
-            replayVideo();
+        scope.$on('replayVideo', (event, obj) => {
+            if (obj.videoId == scope.video.id) {
+                replayVideo();
+            }
         });
 
         ////////////////////////////////////////////

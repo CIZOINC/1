@@ -185,9 +185,10 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             }
         });
 
-        scope.$on('replayVideo', () => {
-            console.log('tigr');
-            replayVideo();
+        scope.$on('replayVideo', (event, obj) => {
+            if (obj.videoId == scope.video.id) {
+                replayVideo();
+            }
         });
 
 

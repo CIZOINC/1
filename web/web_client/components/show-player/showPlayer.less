@@ -2,7 +2,7 @@
 @color-lite: #24aabc;
 @color-mid: #356781;
 @color-dark: #2c3d51;
-@color-darker: #1c1f24;
+@color-darker: #1b1c1e;
 
 .show-player {
   display: flex;
@@ -26,7 +26,7 @@
     left: 0;
     right: 0;
     height: 60px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,.53) 100%);
+    background: rgba(0,0,0,0.8);
     z-index: 1;
   }
 
@@ -119,6 +119,10 @@
     justify-content: flex-end;
     background: transparent;
     z-index: 2147483680;
+
+    a {
+      color: #24aabc;
+    }
 
     &--fullscreen {
       z-index: 2147483680;
@@ -441,9 +445,8 @@
         width: 175px;
         text-align: center;
         &:hover {
-          background-color: #00ffff;
-          color: black;
-          font-family: bold-cizo;
+          border-color: #00ffff;
+          color: #00ffff;
         }
       }
     }

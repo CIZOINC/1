@@ -82,9 +82,10 @@ function categoryItems($state, $rootScope, _, playerServ, $timeout) {
         }
 
         function moveToPlayPage(id) {
-            $state.go('play', {videoId: id, categoryId: scope.categoryId});
-            $rootScope.$emit('replayVideo');
-            $rootScope.$broadcast('replayVideo');
+            let obj = {videoId: id};
+            $rootScope.$emit('replayVideo', obj);
+            $rootScope.$broadcast('replayVideo', obj);
+            $state.go('play', obj);
         }
     }
 };

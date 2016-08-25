@@ -34,7 +34,7 @@
     left: 0;
     right: 0;
     height: 60px;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,.53) 100%);
+    background: rgba(0,0,0,0.8);
     z-index: 1;
   }
 
@@ -109,7 +109,9 @@
     justify-content: flex-end;
     background: transparent;
     z-index: 2147483680;
-
+    a {
+      color: #24aabc;
+    }
     &--fullscreen {
       z-index: 2147483680;
     }
@@ -429,9 +431,8 @@
         width: 175px;
         text-align: center;
         &:hover {
-          background-color: #00ffff;
-          color: black;
-          font-family: bold-cizo;
+          border-color: #00ffff;
+          color: #00ffff;
         }
       }
     }
@@ -614,7 +615,7 @@ video::-webkit-media-controls-enclosure {
 }
 
 featured-player {
-  background-color: #1c1f24;
+  background-color: #1b1c1e;
   .hidden-layer {
     display: none !important;
   }

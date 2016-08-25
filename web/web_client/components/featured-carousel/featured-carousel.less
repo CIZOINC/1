@@ -49,18 +49,30 @@
     }
 
     &_item {
-      min-width:  275px;
+      min-width: 275px;
       max-width: 275px;
       height: 155px;
-      margin: 0 15px;
-
-      font-family: main-cizo;
+      margin: 0px 15px;
+      background-size:  cover;
+      border: solid 1px #1c1f24;
 
       display: flex;
+      position: relative;
       flex-direction: column;
       justify-content: flex-end;
+      font-family: main-cizo;
       text-transform: uppercase;
-      position: relative;
+      cursor: pointer;
+      color: white;
+
+      &:hover {
+        border: solid 1px #00ffff;
+        color: black;
+        > .featured-carousel_content_item_title {
+          background-color: #00ffff;
+          color: black;
+        }
+      }
 
       &_overlay {
         display: flex;
@@ -84,9 +96,9 @@
       }
 
       &_image {
-        min-width:  275px;
-        max-width: 275px;
-        height: 155px;
+        min-width:  273px;
+        max-width: 273px;
+        height: 153px;
         position: absolute;
         top: 0;
         left: 0;

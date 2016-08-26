@@ -62,7 +62,7 @@ function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ, _) {
             })
                 .then( (response) => {
                     if (response.status === 200) {
-                        showMessage($scope, 'Success', 'You\'re successfully registered. Please enter your credentials in login screen.', () => {
+                        playerServ.showMessage($scope, 'Success', 'You\'re successfully registered. Please enter your credentials in login screen.', () => {
                             $state.go('login');
                         })
                     }
@@ -74,7 +74,7 @@ function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ, _) {
                     playerServ.showMessage($scope, 'Error', errors.join(', '));
                 });
         } else {
-            showMessage($scope, 'Error', 'Please enter correct date');
+            playerServ.showMessage($scope, 'Error', 'Please enter correct date');
         }
     }
 

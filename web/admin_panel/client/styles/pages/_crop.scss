@@ -1,0 +1,42 @@
+.crop-area {
+    &__thumb {
+        width: 275px;
+        height: 155px;
+        position: relative;
+        overflow: hidden;
+    }
+    &__preview {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        &-container {
+            float: left;
+            margin-right: 15px;
+        }
+        &-thumbnail {
+            width: 275px;
+            height: 275px;
+            background-position: top;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        &-iphone-feed {
+            height: 197px;
+            width: 375px;
+        }
+        &-iphone-featured {
+            height: 155px;
+            width: 263px;
+        }
+        &-hero {
+            width: 100%;
+            &:before {
+                display: block;
+                content: '';
+                width: 100%;
+                padding-top: 56.25%;
+            }
+        }
+    }
+}

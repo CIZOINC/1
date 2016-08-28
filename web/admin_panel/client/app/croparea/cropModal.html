@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <h3>Crop hero image</h3>
+</div>
+<div class="crop-area__modal modal-body">
+    <div class="crop-area__origin">
+        <canvas width="860" height="480" id="canvas" image-cropper image="cropper.sourceImage"
+                cropped-image="cropper.croppedImage" crop-width="1366" crop-height="768"
+                min-width="100" min-height="50" keep-aspect="true" crop-area-bounds="bounds">
+        </canvas>
+    </div>
+    <div ng-show="cropper.croppedImage!=null" class="container-fluid">
+
+        <h4>Web hero image preview:</h4>
+        <div class="crop-area__preview crop-area__preview-hero" style="background-image: url({{cropper.croppedImage}})"></div>
+
+        <div class="crop-area__preview-container">
+            <h4>Web thumb preview:</h4>
+            <div class="crop-area__thumb">
+                <div class="crop-area__preview crop-area__preview-thumbnail" style="background-image: url({{cropper.croppedImage}})"></div>
+            </div>
+        </div>
+
+        <div class="crop-area__preview-container">
+            <h4>Iphone6 video-feed preview: </h4>
+            <div class="crop-area__preview crop-area__preview-iphone-feed" style="background-image: url({{cropper.croppedImage}})"></div>
+        </div>
+
+        <div class="crop-area__preview-container">
+            <h4>Iphone6 featured preview: </h4>
+            <div class="crop-area__preview crop-area__preview-iphone-featured" style="background-image: url({{cropper.croppedImage}})"></div>
+        </div>
+    </div>
+
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok(cropper.croppedImage)">Save</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

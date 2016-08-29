@@ -1,0 +1,60 @@
+<div class="modal-header">
+    <h3>Crop hero image</h3>
+</div>
+<div class="crop-area crop-area__modal modal-body">
+    <div class="crop-area__origin">
+        <image-cropper image-url="{{sourceImage}}"
+                       width="1366"
+                       height="768"
+                       show-controls="false"
+                       fit-on-init="true"
+                       center-on-init="true"
+                       api="getCropperApi"
+                       crop-callback="cropCallback"
+                       check-cross-origin="false"
+                       zoom-step="0.05"
+                       action-labels="myButtonLabels"
+                       ng-if="sourceImage"
+        ></image-cropper>
+        <br>
+        <div class="btn-group">
+            <span class="btn btn-dark" ng-click="zoomIn()">
+                <i class="glyphicon glyphicon-zoom-in"></i>
+            </span>
+            <span class="btn btn-dark" ng-click="zoomOut()">
+                <i class="glyphicon glyphicon-zoom-out"></i>
+            </span>
+            <div class="btn btn-dark" ng-click="crop()">
+                Crop!
+            </div>
+        </div>
+    </div>
+    <div ng-show="croppedImage" class="container-fluid">
+
+        <h4>Web hero image preview:</h4>
+        <div class="crop-area__preview crop-area__preview-hero" style="background-image: url({{croppedImage}})"></div>
+
+        <div class="crop-area__preview-container">
+            <h4>Web thumb preview:</h4>
+            <div class="crop-area__thumb">
+                <div class="crop-area__preview crop-area__preview-thumbnail" style="background-image: url({{croppedImage}})"></div>
+            </div>
+        </div>
+
+        <div class="crop-area__preview-container">
+            <h4>Iphone6 video-feed preview: </h4>
+            <div class="crop-area__preview crop-area__preview-iphone-feed" style="background-image: url({{croppedImage}})"></div>
+        </div>
+
+        <div class="crop-area__preview-container">
+            <h4>Iphone6 featured preview: </h4>
+            <div class="crop-area__preview crop-area__preview-iphone-featured" style="background-image: url({{croppedImage}})"></div>
+        </div>
+    </div>
+
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-disabled="!croppedImage" ng-click="ok()">Save</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

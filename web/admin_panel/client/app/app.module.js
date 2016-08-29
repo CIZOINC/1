@@ -18,6 +18,7 @@
             'xeditable',
             'dndLists',
             'ngFileUpload',
+            'imageCropper',
 
             // Custom modules
             'app.nav',
@@ -26,6 +27,7 @@
             'app.ui',
             'app.ui.form',
             'app.ui.form.validation',
+            'app.ui.crop',
             'app.page',
             'app.table',
             // 'app.task',

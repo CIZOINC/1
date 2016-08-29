@@ -1,0 +1,19 @@
+<svg id="iconVidPlay" xmlns="http://www.w3.org/2000/svg" width="60" height="77" viewBox="0 0 60 77">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-1 {
+        opacity: 0.5;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <path id="iconVidPlay-2" data-name="iconVidPlay" class="cls-1" d="M-0.007,76.995V51.185l7.757-7.867V63.526L45.26,41.079,7.749,18.94V31.519l-7.757,7.866V5.709L60.007,41.014Z"/>
+  <path id="iconVidPlay-3" data-name="iconVidPlay" class="cls-2" d="M-0.007,71.291V45.481l7.757-7.866V57.822L45.26,35.376,7.749,13.236V25.815l-7.757,7.866V0.005L60.007,35.311Z"/>
+</svg>

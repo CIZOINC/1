@@ -343,12 +343,11 @@
 
           &_wrapper-play-pause {
             position: absolute;
-            display: flex;
-            align-items: center;
-            align-content: center;
-            justify-content: center;
+            display: block;
+            width: 96px;
+            height: 96px;
             top: 0;
-            left: 0;
+            left: -15px;
             right: 0;
             bottom: 0;
           }
@@ -372,19 +371,26 @@
       }
 
       &_play-button {
-        display: flex;
+        display: block;
         width: 96px;
         height: 96px;
-        justify-content: center;
-        align-items:center;
-        align-content: flex-start;
         margin-left: 15px;
         user-select: none;
         cursor: pointer;
-
         img {
-          width: 60%;
-          height: 60%;
+          width: 100%;
+          height: 100%;
+        }
+        &--onhover {
+          display: none;
+        }
+        &:hover {
+          .featured-player_buttons-layer_center-elements_play-button--onhover {
+            display: block;
+          }
+          .featured-player_buttons-layer_center-elements_play-button--onhoverout {
+            display: none;
+          }
         }
       }
 

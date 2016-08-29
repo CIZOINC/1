@@ -100,7 +100,11 @@
                         </svg>
                     </div>
                     <div class="show-player_buttons-layer_center-elements_group_controls_wrapper-play-pause">
-                        <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="show-player_buttons-layer_center-elements_play-button" ng-hide="isInIntermission()">
+                        <div class="show-player_buttons-layer_center-elements_play-button" ng-click="togglePlayPause($event)"
+                             ng-hide="isInIntermission()">
+                            <img src="images/iconVideoPlay.svg" class="featured-player_buttons-layer_center-elements_play-button--onhoverout">
+                            <img src="images/iconVideoPlayIntermission.svg" class="featured-player_buttons-layer_center-elements_play-button--onhover">
+                        </div>
                         <img src="images/iconVideoPlayIntermission.svg" ng-click="togglePlayPause($event)" class="show-player_buttons-layer_center-elements_play-button" ng-show="isInIntermission()">
                         <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="show-player_buttons-layer_center-elements_pause-button hidden-layer">
                     </div>

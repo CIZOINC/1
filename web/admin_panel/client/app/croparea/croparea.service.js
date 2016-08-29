@@ -27,22 +27,47 @@
     cropArea.$inject = ['$uibModal'];
 
     angular.module('app.ui.crop')
-        .controller('cropModalCtrl', ['$scope', '$uibModalInstance', 'Upload', 'image', function ($scope, $uibModalInstance, Upload, image) {
-            $scope.bounds = {};
-            $scope.bounds.left = 0;
-            $scope.bounds.right = 0;
-            $scope.bounds.top = 0;
-            $scope.bounds.bottom = 0;
-
+        .controller('cropModalCtrl', ['$scope', '$uibModalInstance', '$timeout', 'Upload', 'image',
+            function ($scope, $uibModalInstance, $timeout, Upload, image) {
             Upload.base64DataUrl(image).then(
                 function (url){
-                    $scope.cropper = {};
-                    $scope.cropper.sourceImage = url;
-                    $scope.cropper.croppedImage = null;
+                    $scope.sourceImage = url;
+                    $scope.croppedImage = null;
                 });
 
+            $scope.cropCallback = function (croppedImage) {
+                $scope.croppedImage = croppedImage;
+                $scope.$apply();
+            };
+
+            $scope.myButtonLabels = {
+                rotateLeft: ' <span>Rotate left</span> ',
+                rotateRight: ' <span>Rotate right</span>',
+                zoomIn: ' <i class="glyphicon glyphicon-zoom-in"></i>Zoom in',
+                zoomOut: ' <i class="glyphicon glyphicon-zoom-out"></i>Zoom out ',
+                fit: 'Fit image',
+                crop: '<i>class="glyphicon glyphicon-scissors></i>Crop!'
+            };
+
+            $scope.getCropperApi = function (api) {
+                let zoomStep = 0.5;
+                $scope.zoomIn = function () {
+                    api.zoomIn(zoomStep);
+                };
+                $scope.zoomOut = function () {
+                    api.zoomOut(zoomStep);
+                };
+                $scope.crop = () => {
+                    $timeout(function () {
+                        api.crop();
+                    }, 0);
+
+                }
+
+            };
+
             $scope.ok = function () {
-                Upload.urlToBlob($scope.cropper.croppedImage).then(function (blob) {
+                Upload.urlToBlob($scope.croppedImage).then(function (blob) {
                     var fileOfBlob = new File([blob], 'example.jpg',  {type: blob.type});
                     $uibModalInstance.close(fileOfBlob);
                 });

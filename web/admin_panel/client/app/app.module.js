@@ -18,7 +18,7 @@
             'xeditable',
             'dndLists',
             'ngFileUpload',
-            'angular-img-cropper',
+            'imageCropper',
 
             // Custom modules
             'app.nav',

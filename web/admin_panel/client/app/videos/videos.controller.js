@@ -701,7 +701,7 @@
 
             init();
         })
-        .controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $window, $http, $filter, $uibModalInstance, Upload, $timeout, video, configuration) {
+        .controller('VideoModalInstanceCtrl', function VideoModalInstanceCtrl($scope, $window, $http, $filter, $uibModalInstance, Upload, $timeout, video, configuration, cropArea) {
             $scope.video = video;
             $scope.file = {};
 
@@ -791,28 +791,33 @@
                 let fileType = file.type.split('/')[0].toLowerCase();
 
                 if (fileType === 'image') {
-                    // Upload hero image
-                    Upload.upload({
-                        url: configuration.url + `/videos/${$scope.video.id}/hero_image`,
-                        headers: {
-                            authorization: `Bearer ${$window.sessionStorage.token}`
-                        },
-                        data: {
-                            file: file
-                        }
-                    }).then(function (resp) {
-                        $timeout(function () {
-                            $scope.log = `file: ${resp.config.data.file.name}, Response: ${JSON.stringify(resp.data)}
+                    //open crop dialog
+                    cropArea.openCropModal(file).then(function (file) {
+                        // Upload hero image
+                        Upload.upload({
+                            url: configuration.url + `/videos/${$scope.video.id}/hero_image`,
+                            headers: {
+                                authorization: `Bearer ${$window.sessionStorage.token}`
+                            },
+                            data: {
+                                file: file
+                            }
+                        }).then(function (resp) {
+                            $timeout(function () {
+                                $scope.log = `file: ${resp.config.data.file.name}, Response: ${JSON.stringify(resp.data)}
                             ${$scope.log}`;
+                            });
+                        }, null, function (evt) {
+                            let progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                            console.log(progressPercentage);
+                            if (progressPercentage < 100) {
+                                $scope.progress = progressPercentage;
+                            } else {
+                                $scope.progress = null;
+                            }
                         });
-                    }, null, function (evt) {
-                        let progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                        console.log(progressPercentage);
-                        if (progressPercentage < 100) {
-                            $scope.progress = progressPercentage;
-                        } else {
-                            $scope.progress = null;
-                        }
+                    }, function (err) {
+
                     });
                 } else if (fileType === 'video') {
                     // Upload video

@@ -184,6 +184,10 @@
         };
     }
 
+    function cropVideoCtrl() {
+
+    }
+
     function ModalInstanceCtrl($scope, $uibModalInstance, items) {
         $scope.items = items;
 

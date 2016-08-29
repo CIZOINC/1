@@ -788,6 +788,9 @@
             });
 
             $scope.uploadFile = function (file) {
+                if (!file) {
+                    return false;
+                }
                 let fileType = file.type.split('/')[0].toLowerCase();
 
                 if (fileType === 'image') {

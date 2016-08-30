@@ -58,7 +58,11 @@
 
         <div class="featured-player_buttons-layer_top-elements_rightside hidden-layer">
             <span class="icon-favorites featured-player_buttons-layer_top-elements_rightside_buttons featured-player_buttons-layer_top-elements_rightside_buttons_favorites"
-                  ng-click="toggleFavorites($event)"  ></span>
+                  ng-click="toggleFavorites($event)"  >
+                <i class="icon-favorites__onhover">
+                    <img src="images/iconFavoritesFilled.svg" alt="">
+                </i>
+            </span>
             <span class="icon-info featured-player_buttons-layer_top-elements_rightside_buttons" ng-click="toggleDescription($event, true)"></span>
             <span class="icon-share featured-player_buttons-layer_top-elements_rightside_buttons" ng-click="shareVideo($event)"></span>
         </div>

@@ -30,7 +30,7 @@
     "angular-xeditable": "^0.1.9",
     "angular-drag-and-drop-lists": "^1.4.0",
     "ng-file-upload": "^12.0.1",
-    "ng-image-cropper": "https://npmcdn.com/angular-image-cropper/bower.zip#^1.1.8"
+    "ng-image-cropper": "https://npmcdn.com/angular-image-cropper/bower.zip"
   },
   "devDependencies": {
     "bourbon": "~4.2.0",

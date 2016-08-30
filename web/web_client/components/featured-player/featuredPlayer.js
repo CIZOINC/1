@@ -167,11 +167,13 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
 
                         // update playing status for carousel
                         _.each(angular.element(element[0].querySelectorAll(`.featured-carousel_content_item`)), (item) => {
+                            item.classList.remove('featured-carousel_content_item--playing');
                             angular.element(item.querySelector(`.featured-carousel_content_item_title`))[0]
                                 .classList.remove('featured-carousel_content_item_title--playing');
                         });
                         let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
                         if (featuredItem) {
+                            featuredItem.classList.add('featured-carousel_content_item--playing');
                             scope.carouselItemTitle = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_title`))[0];
                             scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
                         }

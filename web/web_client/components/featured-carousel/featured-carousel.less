@@ -65,12 +65,15 @@
       cursor: pointer;
       color: white;
 
+      &--playing {
+        border: solid 1px #00ffff;
+      }
+      
       &:hover {
         border: solid 1px #00ffff;
         color: black;
         > .featured-carousel_content_item_title {
-          background-color: #00ffff;
-          color: black;
+          color: #00ffff;
         }
       }
 
@@ -161,8 +164,7 @@
         z-index: 10;
         text-transform: capitalize;
         &--playing {
-          background-color: #00ffff;
-          color: black;
+          color: #00ffff;
           font-family: bold-cizo;
         }
       }

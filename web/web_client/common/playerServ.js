@@ -215,15 +215,19 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
         scope.message.isVisible = true;
     }
 
-    function getIconName(iconId) {
+    function getIconName(id) {
+        let foundCategory = _.find($rootScope.categoriesList, (category)=> {console.log(category.id, id); return category.id == id} );
+        if (!foundCategory) {
+            return 'all';
+        }
         let iconMap = {
-            0: 'all',
-            11: 'movie',
-            12: 'tv',
-            13: 'games',
-            14: 'lifestyle'
+            'movies': 'movie',
+            'tv': 'tv',
+            'games': 'games',
+            'tech': 'tech',
+            'lifestyle': 'lifestyle'
         };
-        return iconMap[Number(iconId)];
+        return iconMap[foundCategory.canonical_title];
     }
 
 }

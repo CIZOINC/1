@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h3>Crop hero image</h3>
+    <h3>Crop image</h3>
 </div>
 <div class="crop-area crop-area__modal modal-body">
     <div class="crop-area__origin">
@@ -30,26 +30,41 @@
         </div>
     </div>
     <div ng-show="croppedImage" class="container-fluid">
-
-        <h4>Web hero image preview:</h4>
-        <div class="crop-area__preview crop-area__preview-hero" style="background-image: url({{croppedImage}})"></div>
-
         <div class="crop-area__preview-container">
-            <h4>Web thumb preview:</h4>
+            <h4>Web Feature Hero Image:</h4>
+            <div class="crop-area__preview crop-area__preview-hero" style="background-image: url({{croppedImage}})"></div>
+        </div>
+        <div class="crop-area__preview-container">
+            <h4>Web Thumbnail Image:</h4>
             <div class="crop-area__thumb">
                 <div class="crop-area__preview crop-area__preview-thumbnail" style="background-image: url({{croppedImage}})"></div>
             </div>
         </div>
-
         <div class="crop-area__preview-container">
-            <h4>Iphone6 video-feed preview: </h4>
+            <h4>iPhone 4S Video Feed Image: </h4>
+            <div class="crop-area__preview crop-area__preview-iphone-featured" style="background-image: url({{croppedImage}}); width: 320px; height: 197px"></div>
+        </div>
+        <div class="crop-area__preview-container">
+            <h4>iPhone 6 Video Feed Image: </h4>
             <div class="crop-area__preview crop-area__preview-iphone-feed" style="background-image: url({{croppedImage}})"></div>
         </div>
-
         <div class="crop-area__preview-container">
-            <h4>Iphone6 featured preview: </h4>
+            <h4>iPhone 6 Plus Video Feed Image: </h4>
+            <div class="crop-area__preview crop-area__preview-iphone-featured" style="background-image: url({{croppedImage}}); width: 414px; height: 197px;"></div>
+        </div>
+        <div class="crop-area__preview-container">
+            <h4>iPhone 4S Featured Carousel Image: </h4>
+            <div class="crop-area__preview crop-area__preview-iphone-featured" style="background-image: url({{croppedImage}}); width: 208px; height: 155px;"></div>
+        </div>
+        <div class="crop-area__preview-container">
+            <h4>iPhone 6 Featured Carousel Image: </h4>
             <div class="crop-area__preview crop-area__preview-iphone-featured" style="background-image: url({{croppedImage}})"></div>
         </div>
+        <div class="crop-area__preview-container">
+            <h4>iPhone 6 Plus Featured Carousel Image: </h4>
+            <div class="crop-area__preview crop-area__preview-iphone-featured" style="background-image: url({{croppedImage}}); width: 302px; height: 155px;"></div>
+        </div>
+
     </div>
 
 

@@ -29,13 +29,12 @@
         background-size: cover;
         background-position: center;
         &-container {
-            float: left;
-            margin-right: 15px;
+
         }
         &-thumbnail {
             width: 275px;
             height: 275px;
-            background-position: top;
+            background-position: center top;
             position: absolute;
             top: 0;
             left: 0;

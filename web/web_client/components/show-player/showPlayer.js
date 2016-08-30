@@ -469,13 +469,19 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
 
         function categoryIcon(id) {
-            let iconMap = {
-                '11': 'movie',
-                '12': 'tv',
-                '13': 'games',
-                '14': 'lifestyle'
-            };
-            return `show-player_buttons-layer_bottom-elements_titles_current_category icon-category${$sce.trustAsHtml(iconMap[String(id)])}`;
+            let foundCategory = _.find(scope.$root.categoriesList, (category)=> category.id == id );
+            if (!foundCategory) {
+                return false;
+            } else {
+                let iconMap = {
+                    'movies': 'movie',
+                    'tv': 'tv',
+                    'games': 'games',
+                    'tech': 'tech',
+                    'lifestyle': 'lifestyle'
+                };
+                return `show-player_buttons-layer_bottom-elements_titles_current_category icon-category${$sce.trustAsHtml(iconMap[String(foundCategory.canonical_title)])}`;
+            }
         }
 
         function createdTimeHumanized(date) {

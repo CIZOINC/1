@@ -174,7 +174,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                         let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
                         if (featuredItem) {
                             scope.carouselItem = featuredItem;
-                            if (!scope.$root.isInitialLoad) {
+                            if (!scope.$root.isInitLoad) {
                                 markAsSelected();
                             }
                         }
@@ -265,8 +265,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 if (scope.intermissionCountdownValue > scope.intermissionCountdownMax) {
                     $interval.cancel(scope.intermissionStopTimer);
                     scope.playNextVideo();
-
-
                 }
             }, 50);
         }

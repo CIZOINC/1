@@ -171,9 +171,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                         let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
                         if (featuredItem) {
                             scope.carouselItem = featuredItem;
-                            if (!scope.$root.isInitialLoad) {
-                                markAsSelected();
-                            }
+                            markAsSelected();
                         }
                         scope.soundSliderModel.value = scope.screen.volume * 10;
                     });
@@ -599,7 +597,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.screen.play();
                 $log.info('start playing');
                 setPlayPauseState(true);
-
+                if (scope.$root.isInitLoad) {
+                    scope.$root.isInitLoad = false;
+                }
             } else {
                 scope.screen.pause();
                 $log.info('set to pause');

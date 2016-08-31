@@ -170,9 +170,10 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                         });
                         let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
                         if (featuredItem) {
-                            featuredItem.classList.add('featured-carousel_content_item--playing');
-                            scope.carouselItemTitle = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_title`))[0];
-                            scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
+                            scope.carouselItem = featuredItem;
+                            if (!scope.$root.isInitialLoad) {
+                                markAsSelected();
+                            }
                         }
                         scope.soundSliderModel.value = scope.screen.volume * 10;
                     });
@@ -180,6 +181,12 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             }
 
         });
+
+        function markAsSelected() {
+            scope.carouselItem.classList.add('featured-carousel_content_item--playing');
+            scope.carouselItemTitle = angular.element(scope.carouselItem.querySelector(`.featured-carousel_content_item_title`))[0];
+            scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
+        }
 
         scope.$watch('featuredItem', () => {
             if (scope.featuredItem) {

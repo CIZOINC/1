@@ -173,9 +173,10 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                         });
                         let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
                         if (featuredItem) {
-                            featuredItem.classList.add('featured-carousel_content_item--playing');
-                            scope.carouselItemTitle = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_title`))[0];
-                            scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
+                            scope.carouselItem = featuredItem;
+                            if (!scope.$root.isInitialLoad) {
+                                markAsSelected();
+                            }
                         }
                         scope.soundSliderModel.value = scope.screen.volume * 10;
                     });
@@ -183,6 +184,12 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             }
 
         });
+        
+        function markAsSelected() {
+            scope.carouselItem.classList.add('featured-carousel_content_item--playing');
+            scope.carouselItemTitle = angular.element(scope.carouselItem.querySelector(`.featured-carousel_content_item_title`))[0];
+            scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
+        }
 
         scope.$on('replayVideo', (event, obj) => {
             if (obj.videoId == scope.video.id) {
@@ -583,7 +590,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.imageLayer.classList.add('featured-player_hero-image-layer--playing');
             scope.bottomElements.classList.remove('hidden-layer');
 
-
             document.querySelector('.home_video-items').classList.add('home_video-items--playing');
 
             if (scope.isIntermissionState) {
@@ -605,7 +611,10 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 scope.screen.play();
                 $log.info('start playing');
                 setPlayPauseState(true);
-
+                if (scope.$root.isInitLoad) {
+                    scope.$root.isInitLoad = false;
+                    markAsSelected();
+                }
             } else {
                 scope.screen.pause();
                 $log.info('set to pause');

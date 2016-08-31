@@ -216,7 +216,7 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
     }
 
     function getIconName(id) {
-        let foundCategory = _.find($rootScope.categoriesList, (category)=> {console.log(category.id, id); return category.id == id} );
+        let foundCategory = _.find($rootScope.categoriesList, (category)=> { return category.id == id} );
         if (!foundCategory) {
             return 'all';
         }

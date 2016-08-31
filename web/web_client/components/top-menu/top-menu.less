@@ -74,18 +74,24 @@
   }
 
   &_search {
-    background-color: rgba(0,0,0,.8);
+    background-color: rgba(255,255,255,.1);
     display: flex;
     flex-direction: column;
     color: black;
     justify-content: space-between;
     align-content: flex-start;
     margin-right: 20px;
-    border-radius: 5px;
+    border-radius: 9px;
     position: relative;
     overflow-y: visible;
-    border: solid 1px white;
-    height: 35px;
+    border: 1px solid transparent;
+    height: 33px;
+    width: 482px;
+    &--opened {
+      border: 1px solid white;
+      background-color: rgba(0,0,0,.9);
+      border-radius: 9px 9px 0 0;
+    }
     &_string {
       display: flex;
       flex-direction: row;
@@ -99,9 +105,9 @@
       background-color: transparent;
       border: none;
       font-family: main-cizo;
-      font-size: 18px;
-      width: 400px;
-      padding: 3px;
+      font-size: 16px;
+      width: 456px;
+      padding: 5px;
       color: white;
       outline: none;
     }
@@ -110,19 +116,21 @@
       background-color: transparent;
       color: white;
       border: none;
-      padding: 3px;
+      padding: 5px;
+      font-size: 16px;
     }
 
     &_results {
-      background-color: #0f0f0f;
       margin-top: 30px;
+      margin-left: -1px;
       z-index: 1;
-      background-color: rgba(0,0,0,.8);
+      background-color: rgba(0,0,0,.9);
       border-bottom: solid 1px white;
       border-left: solid 1px white;
       border-right: solid 1px white;
-      border-bottom-left-radius: 5px;
-      border-bottom-right-radius: 5px;
+      border-bottom-left-radius: 9px;
+      border-bottom-right-radius: 9px;
+      width: 482px;
       &_item {
         color: white;
         padding: 10px;
@@ -132,6 +140,12 @@
         justify-content: flex-start;
         align-items: center;
         align-content: center;
+        height: 73px;
+        border-bottom: 2px solid rgba(255,255,255,.2);
+        &:last-child {
+          border-radius: 0 0 9px 9px;
+          border-bottom: none;
+        }
 
         &_icon {
           font-size: 25px;

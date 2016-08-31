@@ -16,14 +16,14 @@
         </div>
     </div>
 
-    <div class="top-menu_advanced" ng-show="onShowAdvanced()">
-        <div class="top-menu_search">
+    <div class="top-menu_advanced" ng-show="onShowAdvanced()" >
+        <div class="top-menu_search" ng-class="{'top-menu_search--opened': searchResult && searchResult.length}">
             <div class="top-menu_search_string">
                 <button class="top-menu_search_button icon-search"></button>
                 <input class="top-menu_search_input" placeholder="Search" ng-model="searchText" ng-keyup="search()">
             </div>
 
-            <div class="top-menu_search_results">
+            <div class="top-menu_search_results" ng-if="searchResult && searchResult.length">
                 <div class="top-menu_search_results_item" ng-repeat="searchItem in searchResult" ng-click="playFoundVideo(searchItem.id)">
                     <span class="icon-category{{::searchItem.iconName}} top-menu_search_results_item_icon"></span>
                     <span>{{searchItem.title}}</span>

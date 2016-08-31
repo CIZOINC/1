@@ -63,7 +63,7 @@
                 };
 
                 $scope.getCropperApi = function (api) {
-                    let zoomStep = 0.5;
+                    let zoomStep = 0.05;
                     $scope.zoomIn = function () {
                         api.zoomIn(zoomStep);
                     };

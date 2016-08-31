@@ -38,6 +38,8 @@ angular
 /* @ngInject */
 function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, $timeout) {
 
+    $rootScope.isInitLoad = true;
+
     $scope = angular.extend($scope, {
         title: 'Cizo',
         hostName: `https://staging.cizo.com`,

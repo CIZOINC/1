@@ -398,6 +398,10 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             }
             setIntermissionState(false);
 
+            if (scope.$root.isInitLoad) {
+                scope.$root.isInitLoad = false;
+                markAsSelected();
+            }
             scope.isPlaying = true;
             scope.featuredPlayerInside.classList.add('featured-player--playing');
             scope.imageLayer.classList.add('featured-player_hero-image-layer--playing');

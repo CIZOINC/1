@@ -4,7 +4,7 @@
     angular
         .module('app.page')
         .controller('invoiceCtrl', ['$scope', '$window', invoiceCtrl])
-        .controller('authCtrl', ['$scope', '$window', '$location', '$http', 'configuration', authCtrl]);
+        .controller('authCtrl', ['$scope', '$window', '$location', '$http', '$q', 'configuration', authCtrl]);
 
     function invoiceCtrl($scope, $window) {
         var printContents, originalContents, popupWin;
@@ -19,7 +19,7 @@
         };
     }
 
-    function authCtrl($scope, $window, $location, $http, configuration) {
+    function authCtrl($scope, $window, $location, $http, $q, configuration) {
         if ($location.search().logout) {
             delete $window.sessionStorage.token;
         }
@@ -62,8 +62,29 @@
             }
         };
 
+        $scope.resetPassword = function (email) {
+            console.log($scope);
+            return $q(function (resolve, reject) {
+                $http({
+                    method: 'POST',
+                    url: configuration.url + `/users/password_reset?email=${$scope.email}`
+                }).then(success, error);
+
+                function success(response) {
+                    $location.url('/');
+                }
+
+                function error(response) {
+                    // $log.info('password link sending error with status ' + response.status);
+                    $window.sessionStorage.token = null;
+                    $scope.invalidLogin = true;
+                    throw new Error(response.data);
+                }
+            });
+        };
+
         var init = function init() {
-            if ($window.sessionStorage.token) {
+            if ($window.sessionStorage.token && $window.sessionStorage.token != 'null') {
                 $location.url('/dashboard');
             }
         };

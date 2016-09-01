@@ -163,7 +163,7 @@ function userServ($http, $q, $log, moment) {
         return $q(function (resolve, reject) {
             $http({
                 method: 'PUT',
-                url: hostName + `/users/password?password=${pass}&reset_password_token=${token}`
+                url: hostName + `/users/password?password=${encodeURIComponent(pass)}&reset_password_token=${encodeURIComponent(token)}`
             }).then(success, error);
 
             function success(response) {

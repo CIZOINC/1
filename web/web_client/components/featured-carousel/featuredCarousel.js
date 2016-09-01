@@ -25,7 +25,6 @@ function featuredCarousel( _) {
         scope = angular.extend(scope, {
             itemsOffset: 0,
             currentStep: 1,
-
             playFeatured: playFeatured,
             moveNext: moveNext,
             movePrev: movePrev

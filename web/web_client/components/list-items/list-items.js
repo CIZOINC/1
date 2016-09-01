@@ -14,6 +14,7 @@ function listItems($state, $rootScope, _, playerServ, $timeout) {
         transclude: false,
         scope: {
             videos: '=',
+            storage: '=',
             listType: '@'
         }
     };
@@ -44,38 +45,60 @@ function listItems($state, $rootScope, _, playerServ, $timeout) {
         });
 
         function getMessage(name) {
+            function returner(originObj) {
+                let newObj = {};
+                let isAuth = scope.storage.userAuthorized;
+                _.each(originObj, function (item, key) {
+                    if (!item.hasOwnProperty('authValue')) {
+                        newObj[key] = item;
+                    }
+                    if (item.hasOwnProperty('authValue')) {
+                        if (isAuth && item.authValue) {
+                            newObj[key] = item.authValue;
+                        } else if (!isAuth && item.value) {
+                            newObj[key] = item.value;
+                        }
+                    }
+                });
+                return newObj;
+            }
             switch (name) {
                 case 'seen':
                     return {
                         iconName: 'icon-seen',
                         title: 'Seen',
-                        noItemsTitle: 'You haven\'t seen any vids',
-                        noItemsDescription: 'Choose and see any video up to the end'
+                        noItemsTitle: 'You haven\'t WATCHED ANY VIDEOS, THAT MAKES US SAD. DON\'T MAKE US SAD.'
                      };
                 break;
                 case 'unseen':
                     return {
                         iconName: 'icon-unseen',
                         title: 'Unseen',
-                        noItemsTitle: 'You have no unseen vids',
-                        noItemsDescription: 'Visit us next time'
+                        noItemsTitle: 'BRACE YOURSELF, NEW VIDEOS ARE COMING...'
                     };
                 break;
                 case 'skipped':
                     return {
                         iconName: 'icon-skipped',
                         title: 'Skipped',
-                        noItemsTitle: 'You haven\'t skipped any vids',
+                        noItemsTitle: 'YOU HAVEN\'T SKIPPED ANY VIDEOS. YOU\'RE A TRUE PATRIOT.',
                         noItemsDescription: ''
                     };
                 break;
                 case 'favorite':
-                    return {
+                    let msgObj = {
                         iconName: 'icon-favorites',
                         title: 'Favorites',
-                        noItemsTitle: 'You haven\'t favorited any vids',
-                        noItemsDescription: 'Find a video you like? Add it to your favorites.'
+                        noItemsTitle: {
+                            value: 'TO SEE YOUR FAVORITES, LOG IN OR SIGN UP.',
+                            authValue: 'YOU HAVEN\'T LIKED ANY VIDEOS... YET'
+                        },
+                        noItemsDescription: {
+                            value: 'See something you like? Just tap the heart!',
+                            authValue: ''
+                        }
                     };
+                    return returner(msgObj);
                 break;
             }
 

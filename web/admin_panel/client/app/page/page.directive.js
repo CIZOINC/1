@@ -35,7 +35,7 @@
                     return $element.addClass('body-wide body-lock');
                 }
             };
-
+            
             addBg($location.path());
 
             $scope.$watch(path, function (newVal, oldVal) {

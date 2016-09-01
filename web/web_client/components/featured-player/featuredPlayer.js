@@ -403,6 +403,8 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.imageLayer.classList.add('featured-player_hero-image-layer--playing');
             scope.bottomElements.classList.remove('hidden-layer');
 
+            document.querySelector('.home_video-items').classList.add('home_video-items--playing');
+
             scope.screen.currentTime = 0;
             scope.isIntermissionState = false;
             $timeout( () => {

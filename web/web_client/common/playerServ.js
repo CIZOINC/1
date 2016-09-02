@@ -8,6 +8,8 @@ angular
 function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageServ, userServ, _) {
     "use strict";
 
+    var service = this;
+
     return {
         toggleFullScreen: toggleFullScreen,
         getElementFullscreenState: getElementFullscreenState,
@@ -25,8 +27,32 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
         setVideoWatched: setVideoWatched,
 
         userLogout: userLogout,
-        showMessage: showMessage
+        showMessage: showMessage,
+        addFullScreenWatcher,
+        isFullScreen: false
     };
+    
+    function addFullScreenWatcher(callback) {
+        function action() {
+            service.isFullScreen = !service.isFullScreen;
+            callback && callback();
+        }
+        document.addEventListener("fullscreenchange", function () {
+            action();
+        }, false);
+
+        document.addEventListener("mozfullscreenchange", function () {
+            action();
+        }, false);
+
+        document.addEventListener("webkitfullscreenchange", function () {
+            action();
+        }, false);
+
+        document.addEventListener("msfullscreenchange", function () {
+            action();
+        }, false);
+    }
 
     function getElementFullscreenState() {
         return (!document.fullscreenElement &&    // alternative standard method

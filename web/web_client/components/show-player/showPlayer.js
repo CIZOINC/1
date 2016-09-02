@@ -103,6 +103,11 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         ///////////////// setup ////////////////////
         $anchorScroll.yOffset = 150;
 
+        playerServ.addFullScreenWatcher(function () {
+            let fullscreenState = playerServ.getElementFullscreenState();
+            setFullscreenState(fullscreenState);
+        });
+
 
         scope.screenList.bind('timeupdate', () => {
             scope.timePassed = moment().startOf('year').add(scope.screen.currentTime, 's').format('mm:ss');
@@ -545,8 +550,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             return $q((resolve) => {
                 playerServ.toggleFullScreen(scope)
                     .then(() => {
-                        let fullscreenState = playerServ.getElementFullscreenState();
-                        setFullscreenState(fullscreenState);
                         resolve();
                     })
             });

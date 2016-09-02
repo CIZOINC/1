@@ -103,6 +103,10 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         ///////////////// setup ////////////////////
         $anchorScroll.yOffset = 150;
 
+        playerServ.addFullScreenWatcher(function () {
+            let fullscreenState = playerServ.getElementFullscreenState();
+            setFullscreenState(fullscreenState);
+        });
 
         scope.screenList.bind('timeupdate', () => {
             if (scope.storage.showMatureScreen && scope.screen.played) {
@@ -554,12 +558,11 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             return $q((resolve) => {
                 playerServ.toggleFullScreen(scope)
                     .then(() => {
-                        let fullscreenState = playerServ.getElementFullscreenState();
-                        setFullscreenState(fullscreenState);
                         resolve();
                     })
             });
         }
+
 
         function toggleControlsVisibility(hideControls) {
             if (scope.isIntermissionState) {

@@ -54,8 +54,7 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
 
 
         /**
-         * scrolls down to selected category on home page and loads category videos with playing first item on others
-         * if user hits all category out of the home page then app plays first video on the video list
+         * app plays first video on the video list
          *
          * @param event
          * @param category
@@ -65,20 +64,11 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
                 event.stopPropagation();
             }
             let id = category.id;
-
-            if (!category.empty && ($state.includes('home') || $state.includes('main'))) {
-                $anchorScroll(`category-videos-${id}`);
-            } else {
-
-                if (scope.videosList && scope.videosList.length) {
-                    if (Number(id) === 0) {
-                        $state.go('play', {videoId: scope.videosList[0].id, category_id: id});
-                    } else {
-                        let firstCategoryVideoList = _.filter(scope.videosList, video => video.category_id === Number(id));
-                        if (firstCategoryVideoList.length) {
-                            $state.go('play', {videoId: firstCategoryVideoList[0].id, categoryId: id});
-                        }
-                    }
+            let videos = scope.$parent.videos ? scope.$parent.videos : scope.videosList;
+            if (!category.empty) {
+                let firstCategoryVideoList = _.filter(videos, video => video.category_id === Number(id));
+                if (firstCategoryVideoList.length) {
+                    $state.go('play', {videoId: firstCategoryVideoList[0].id, categoryId: id});
                 }
             }
 

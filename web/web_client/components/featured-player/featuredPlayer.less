@@ -19,6 +19,7 @@
   left: 0;
   top: 0;
   overflow: hidden;
+  min-height: 740px;
 
   &--playing {
     height: calc(~"100% + 210px");
@@ -201,6 +202,12 @@
 
     &--intermission {
       background-color: rgba(0,0,0,.8);
+      .featured-player_buttons-layer_top-elements {
+        display: none;
+      }
+      .featured-player_buttons-layer_center-elements {
+        height: 100%;
+      }
     }
 
     &--hover {
@@ -280,6 +287,7 @@
 
         &--intermission {
           margin-top: -150px;
+          min-height: 700px;
         }
 
         &_title {

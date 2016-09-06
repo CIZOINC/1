@@ -168,11 +168,7 @@ gulp.task('copy_icon-fonts', function () {
 gulp.task('copy_dependencies', function () {
     "use strict";
     return gulp.src([
-            './images/iconVideoPlay.svg',
-            './images/iconVideoPause.svg',
-            './images/iconVideoPlayIntermission.svg',
-            './images/bgTbnVideo.svg',
-            './images/logo.svg'
+            './images/**/*.*'
         ])
         .pipe(gulp.dest('./temp/final/images'));
 });
@@ -305,4 +301,8 @@ gulp.task('build-production', function (cb) {
 
 gulp.task('build-all', function (cb) {
     runSequence('build-staging', 'build-production', cb)
+});
+
+gulp.task('watch', function () {
+    gulp.watch('./**/*.html', ['Index_files_gathering']);
 });

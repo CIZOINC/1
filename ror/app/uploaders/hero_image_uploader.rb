@@ -18,15 +18,15 @@ class HeroImageUploader < CarrierWave::Uploader::Base
   end
 
   version :large_banner do
-    process resize_to_fill: [1000, 476]
+    process resize_to_fit: [1000, 500] # Use 1000 to maintain aspect ratio. The height will be the constraining factor
   end
 
   version :medium_banner do
-    process resize_to_fill: [500, 238]
+    process resize_to_fit: [1000, 300] # Use 1000 to maintain aspect ratio. The height will be the constraining factor
   end
 
   version :thumb_banner do
-    process resize_to_fill: [250, 250]
+    process resize_to_fit: [1000, 155] # Use 1000 to maintain aspect ratio. The height will be the constraining factor
     after :store, :completed
   end
 

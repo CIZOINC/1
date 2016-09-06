@@ -19,10 +19,24 @@
   left: 0;
   top: 0;
   overflow: hidden;
+  min-height: 740px;
 
   &--playing {
     height: calc(~"100% + 210px");
     transition: height 0.5s ease-out;
+    .featured-player__filler {
+      display: none;
+    }
+  }
+
+  &__filler {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(0,0,0,0.8);
+    z-index: 1;
   }
 
 
@@ -96,7 +110,9 @@
     justify-content: flex-end;
     background: transparent;
     z-index: 2147483680;
-
+    a {
+      color: #24aabc;
+    }
     &--fullscreen {
       z-index: 2147483680;
     }
@@ -186,6 +202,12 @@
 
     &--intermission {
       background-color: rgba(0,0,0,.8);
+      .featured-player_buttons-layer_top-elements {
+        display: none;
+      }
+      .featured-player_buttons-layer_center-elements {
+        height: 100%;
+      }
     }
 
     &--hover {
@@ -200,6 +222,16 @@
       z-index: 2147483647;
       top: 0;
       height: 100%;
+      .featured-player_buttons-layer_center-elements {
+        height: 40%;
+        top: 30%;
+        bottom: 30%;
+        position: absolute;
+        width: 100%;
+      }
+      .featured-player_buttons-layer_top-elements {
+        height: 70%;
+      }
     }
 
     &_top-elements {
@@ -235,16 +267,6 @@
           font-size: 32px;
           margin: 10px;
           cursor: pointer;
-
-          &_favorites.icon-favorites-filled {
-            font-size: 40px;
-            margin-top: 5px;
-            margin-left: 55px;
-            &:before {
-              padding: 0;
-              margin: 0;
-            }
-          }
         }
       }
     }
@@ -264,7 +286,8 @@
         flex-direction: column;
 
         &--intermission {
-          margin-top: -150px;
+          border-bottom: 200px solid transparent;
+          min-height: 690px;
         }
 
         &_title {
@@ -279,7 +302,6 @@
           font-family: main-cizo;
           text-transform: uppercase;
           margin-bottom: 10px;
-
           &_caption {
             color: white;
             font-size: 35px;
@@ -306,14 +328,12 @@
 
           &_wrapper-play-pause {
             position: absolute;
-            display: flex;
-            align-items: center;
-            align-content: center;
-            justify-content: center;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            display: block;
+            width: 96px;
+            height: 96px;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
           }
 
           &_progress {
@@ -335,36 +355,35 @@
       }
 
       &_play-button {
-        display: flex;
-        width: 120px;
-        height: 120px;
-        justify-content: center;
-        align-items:center;
-        align-content: flex-start;
+        display: block;
+        width: 96px;
+        height: 96px;
         margin-left: 15px;
         user-select: none;
         cursor: pointer;
-
         img {
-          width: 60%;
-          height: 60%;
+          width: 100%;
+          height: 100%;
+        }
+        &--onhover {
+          display: none;
+        }
+        &:hover {
+          .featured-player_buttons-layer_center-elements_play-button--onhover {
+            display: block;
+          }
+          .featured-player_buttons-layer_center-elements_play-button--onhoverout {
+            display: none;
+          }
         }
       }
 
       &_pause-button {
-        display: flex;
-        width: 120px;
-        height: 120px;
-        justify-content: center;
-        align-items:center;
-        align-content: flex-start;
+        display: block;
+        width: 96px;
+        height: 96px;
         user-select: none;
         cursor: pointer;
-
-        img {
-          width: 60%;
-          height: 60%;
-        }
       }
 
       &_prev-next-wrapper {
@@ -401,6 +420,14 @@
         font-size: 28px;
         border: solid 1px white;
         padding: 15px;
+        cursor: pointer;
+        cursor: hand;
+        width: 175px;
+        text-align: center;
+        &:hover {
+          border-color: #00ffff;
+          color: #00ffff;
+        }
       }
     }
 
@@ -418,12 +445,7 @@
         justify-content: space-between;
         flex-direction: row;
         color: white;
-
-        &--hero-image {
-          background-color: #1d1d1d;
-          opacity: 0.8;
-        }
-
+        
         &_current {
           display: flex;
           align-items: flex-end;
@@ -582,7 +604,7 @@ video::-webkit-media-controls-enclosure {
 }
 
 featured-player {
-  background-color: #1c1f24;
+  background-color: #1b1c1e;
   .hidden-layer {
     display: none !important;
   }

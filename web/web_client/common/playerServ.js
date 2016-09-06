@@ -8,6 +8,8 @@ angular
 function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageServ, userServ, _) {
     "use strict";
 
+    var service = this;
+
     return {
         toggleFullScreen: toggleFullScreen,
         getElementFullscreenState: getElementFullscreenState,
@@ -25,8 +27,32 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
         setVideoWatched: setVideoWatched,
 
         userLogout: userLogout,
-        showMessage: showMessage
+        showMessage: showMessage,
+        addFullScreenWatcher,
+        isFullScreen: false
     };
+    
+    function addFullScreenWatcher(callback) {
+        function action() {
+            service.isFullScreen = !service.isFullScreen;
+            callback && callback();
+        }
+        document.addEventListener("fullscreenchange", function () {
+            action();
+        }, false);
+
+        document.addEventListener("mozfullscreenchange", function () {
+            action();
+        }, false);
+
+        document.addEventListener("webkitfullscreenchange", function () {
+            action();
+        }, false);
+
+        document.addEventListener("msfullscreenchange", function () {
+            action();
+        }, false);
+    }
 
     function getElementFullscreenState() {
         return (!document.fullscreenElement &&    // alternative standard method
@@ -132,7 +158,12 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
 
     function updateCategories(scope) {
         return $q( (resolve) => {
-            let filteredCategories = _.filter(scope.categoriesList, category => _.some(scope.videosList, video => video.category_id === category.id));
+            let filteredCategories = _.map(scope.categoriesList, category => {
+                if (!_.some(scope.videosList, video => video.category_id === category.id)) {
+                    category.empty = true;
+                }
+                return category;
+            });
             scope.categoriesList = filteredCategories;
             $rootScope.categoriesList = filteredCategories;
             resolve(scope);
@@ -210,15 +241,19 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
         scope.message.isVisible = true;
     }
 
-    function getIconName(iconId) {
+    function getIconName(id) {
+        let foundCategory = _.find($rootScope.categoriesList, (category)=> { return category.id == id} );
+        if (!foundCategory) {
+            return 'all';
+        }
         let iconMap = {
-            0: 'all',
-            11: 'movie',
-            12: 'tv',
-            13: 'games',
-            14: 'lifestyle'
+            'movies': 'movie',
+            'tv': 'tv',
+            'games': 'games',
+            'tech': 'tech',
+            'lifestyle': 'lifestyle'
         };
-        return iconMap[Number(iconId)];
+        return iconMap[foundCategory.canonical_title];
     }
 
 }

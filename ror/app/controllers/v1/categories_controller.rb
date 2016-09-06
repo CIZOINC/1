@@ -8,7 +8,7 @@ class V1::CategoriesController < V1::ApiController
   end
 
   def index
-    @categories = Category.all
+    @categories = Category.order(:display_order)
   end
 
   def create

@@ -5,7 +5,7 @@ angular
 
 
 /* @ngInject */
-function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, playerServ, userServ) {
+function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, $filter, playerServ, userServ) {
     "use strict";
 
     return {
@@ -17,14 +17,13 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             video: '=',
             videosList: '=',
             featuredList: '=',
-            featuredItem: '=',
             hostName: '@',
             storage: '='
         }
     };
 
-    function linkFn(scope, element, attrs) {
 
+    function linkFn(scope, element, attrs) {
         scope = angular.extend(scope, {
             isPlaying: false,
             isIntermissionState: false,
@@ -104,6 +103,11 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         ///////////////// setup ////////////////////
         $anchorScroll.yOffset = 150;
 
+        playerServ.addFullScreenWatcher(function () {
+            let fullscreenState = playerServ.getElementFullscreenState();
+            setFullscreenState(fullscreenState);
+        });
+
 
         scope.screenList.bind('timeupdate', () => {
             scope.timePassed = moment().startOf('year').add(scope.screen.currentTime, 's').format('mm:ss');
@@ -135,6 +139,10 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             if (scope.storage.showMatureScreen) {
                 return;
             }
+            if (scope.video && scope.video.description) {
+                scope.videoDescription = $filter('nl2br')(scope.video.description);
+                scope.videoDescription = $filter('parseLinks')(scope.videoDescription);
+            }
             if (scope.video && scope.video.mature_content && !userServ.isUnexpiredToken(scope.storage.token)) {
                 scope.storage.showMatureScreen = true;
                 scope.screen.pause();
@@ -161,13 +169,14 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
                         // update playing status for carousel
                         _.each(angular.element(element[0].querySelectorAll(`.featured-carousel_content_item`)), (item) => {
+                            item.classList.remove('featured-carousel_content_item--playing');
                             angular.element(item.querySelector(`.featured-carousel_content_item_title`))[0]
                                 .classList.remove('featured-carousel_content_item_title--playing');
                         });
                         let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
                         if (featuredItem) {
-                            scope.carouselItemTitle = angular.element(featuredItem.querySelector(`.featured-carousel_content_item_title`))[0];
-                            scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
+                            scope.carouselItem = featuredItem;
+                            markAsSelected();
                         }
                         scope.soundSliderModel.value = scope.screen.volume * 10;
                     });
@@ -176,9 +185,21 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
         });
 
+        function markAsSelected() {
+            scope.carouselItem.classList.add('featured-carousel_content_item--playing');
+            scope.carouselItemTitle = angular.element(scope.carouselItem.querySelector(`.featured-carousel_content_item_title`))[0];
+            scope.carouselItemTitle.classList.add('featured-carousel_content_item_title--playing');
+        }
+
         scope.$watch('featuredItem', () => {
             if (scope.featuredItem) {
                 scope.video = scope.featuredItem;
+            }
+        });
+
+        scope.$on('replayVideo', (event, obj) => {
+            if (obj.videoId == scope.video.id) {
+                replayVideo();
             }
         });
 
@@ -460,13 +481,19 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
 
         function categoryIcon(id) {
-            let iconMap = {
-                '11': 'movie',
-                '12': 'tv',
-                '13': 'games',
-                '14': 'lifestyle'
-            };
-            return `show-player_buttons-layer_bottom-elements_titles_current_category icon-category${$sce.trustAsHtml(iconMap[String(id)])}`;
+            let foundCategory = _.find(scope.$root.categoriesList, (category)=> category.id == id );
+            if (!foundCategory) {
+                return false;
+            } else {
+                let iconMap = {
+                    'movies': 'movie',
+                    'tv': 'tv',
+                    'games': 'games',
+                    'tech': 'tech',
+                    'lifestyle': 'lifestyle'
+                };
+                return `show-player_buttons-layer_bottom-elements_titles_current_category icon-category${$sce.trustAsHtml(iconMap[String(foundCategory.canonical_title)])}`;
+            }
         }
 
         function createdTimeHumanized(date) {
@@ -523,8 +550,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             return $q((resolve) => {
                 playerServ.toggleFullScreen(scope)
                     .then(() => {
-                        let fullscreenState = playerServ.getElementFullscreenState();
-                        setFullscreenState(fullscreenState);
                         resolve();
                     })
             });
@@ -575,7 +600,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.screen.play();
                 $log.info('start playing');
                 setPlayPauseState(true);
-
+                if (scope.$root.isInitLoad) {
+                    scope.$root.isInitLoad = false;
+                }
             } else {
                 scope.screen.pause();
                 $log.info('set to pause');
@@ -718,4 +745,4 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
     }
 }
-showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', 'playerServ', 'userServ'];
+showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', '$filter', 'playerServ', 'userServ'];

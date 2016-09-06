@@ -1,6 +1,7 @@
 
 
 <div class="featured-player" video-id="{{video.id}}">
+    <div class="featured-player__filler"></div>
     <top-menu categories="categoriesList" host-name="{{hostName}}" storage="storage" show-advanced="true"></top-menu>
     <!-- video layer -->
     <div class="video-layer featured-player_video-layer">
@@ -33,8 +34,7 @@
                         </span>
             </div>
         </div>
-        <div class="featured-player_description-layer_container_text">
-            {{video.description}}
+        <div class="featured-player_description-layer_container_text" ng-bind-html="videoDescription">
         </div>
     </div>
 </div>
@@ -58,7 +58,11 @@
 
         <div class="featured-player_buttons-layer_top-elements_rightside hidden-layer">
             <span class="icon-favorites featured-player_buttons-layer_top-elements_rightside_buttons featured-player_buttons-layer_top-elements_rightside_buttons_favorites"
-                  ng-click="toggleFavorites($event)"  ></span>
+                  ng-click="toggleFavorites($event)"  >
+                <i class="icon-favorites__onhover">
+                    <img src="images/iconFavoritesFilled.svg" alt="">
+                </i>
+            </span>
             <span class="icon-info featured-player_buttons-layer_top-elements_rightside_buttons" ng-click="toggleDescription($event, true)"></span>
             <span class="icon-share featured-player_buttons-layer_top-elements_rightside_buttons" ng-click="shareVideo($event)"></span>
         </div>
@@ -100,8 +104,14 @@
                         </svg>
                     </div>
                     <div class="featured-player_buttons-layer_center-elements_group_controls_wrapper-play-pause">
-                        <img src="images/iconVideoPlay.svg" ng-click="togglePlayPause($event)" class="featured-player_buttons-layer_center-elements_play-button" ng-hide="isInIntermission()">
-                        <img src="images/iconVideoPlayIntermission.svg" ng-click="togglePlayPause($event)" class="featured-player_buttons-layer_center-elements_play-button" ng-show="isInIntermission()">
+                        <div class="featured-player_buttons-layer_center-elements_play-button" ng-click="togglePlayPause($event)"
+                             ng-hide="isInIntermission()">
+                            <img src="images/iconVideoPlay.svg" class="featured-player_buttons-layer_center-elements_play-button--onhoverout">
+                            <img src="images/iconVidPlayHover.svg" class="featured-player_buttons-layer_center-elements_play-button--onhover">
+                        </div>
+                        <img src="images/iconVideoPlayIntermission.svg" ng-click="togglePlayPause($event)"
+                             class="featured-player_buttons-layer_center-elements_play-button"
+                             ng-show="isInIntermission()">
                         <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="featured-player_buttons-layer_center-elements_pause-button hidden-layer">
                     </div>
 

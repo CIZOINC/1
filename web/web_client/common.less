@@ -24,7 +24,7 @@
 }
 
 body {
-  background-color: #1c1f24;
+  background-color: #1b1c1e;
 }
 
 .hidden-layer {
@@ -160,7 +160,29 @@ body {
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon-favorites-filled:before { content: '\e800'; } /* '' */
+.icon-favorites {
+  &:before { content: '\e80a'; }
+  &__onhover {
+    display: none;
+    font-size: 0;
+    transform: translateY(1px) translateX(1px);
+    img {
+      display: block;
+      height: 41px;
+      width: 41px;
+    }
+  }
+  &-filled {
+    line-height: 36px;
+    &:before {
+      content: '';
+      display: none;
+    }
+    .icon-favorites__onhover {
+      display: inline-block;
+    }
+  }
+}
 .icon-google:before { content: '\e801'; } /* '' */
 .icon-reddit:before { content: '\e802'; } /* '' */
 .icon-all:before { content: '\e803'; } /* '' */
@@ -168,9 +190,9 @@ body {
 .icon-categorygames:before { content: '\e805'; } /* '' */
 .icon-categorylifestyle:before { content: '\e806'; } /* '' */
 .icon-categorytv:before { content: '\e807'; } /* '' */
+.icon-categorytech:before { content: '\e81f'; } /* '' */
 .icon-facebook:before { content: '\e808'; } /* '' */
 .icon-info:before { content: '\e809'; } /* '' */
-.icon-favorites:before { content: '\e80a'; } /* '' */
 .icon-play:before { content: '\e80b'; } /* '' */
 .icon-pause:before { content: '\e80c'; } /* '' */
 .icon-expand:before { content: '\e80d'; } /* '' */

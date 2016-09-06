@@ -19,11 +19,26 @@ angular
         'rzModule',
         'angular-svg-round-progress'
     ])
-    .controller('AppCtrl', AppCtrl);
+    .controller('AppCtrl', AppCtrl)
+    .filter('nl2br', function($sce){
+        return function(msg) {
+            var newMsg = (msg + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ '<br>' +'$2');
+            return $sce.trustAsHtml(newMsg);
+        }
+    })
+    .filter('parseLinks', function ($sce) {
+        return function(msg) {
+            var exp = /\b((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            var newMsg = (msg+'').replace(exp, "<a href='$1'>$1</a>");
+            return $sce.trustAsHtml(newMsg);
+        }
+    });
 
 
 /* @ngInject */
 function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, $timeout) {
+
+    $rootScope.isInitLoad = true;
 
     $scope = angular.extend($scope, {
         title: 'Cizo',

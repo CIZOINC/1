@@ -49,18 +49,33 @@
     }
 
     &_item {
-      min-width:  275px;
+      min-width: 275px;
       max-width: 275px;
       height: 155px;
-      margin: 0 15px;
-
-      font-family: main-cizo;
+      margin: 0px 15px;
+      background-size:  cover;
+      border: solid 1px #1c1f24;
 
       display: flex;
+      position: relative;
       flex-direction: column;
       justify-content: flex-end;
+      font-family: main-cizo;
       text-transform: uppercase;
-      position: relative;
+      cursor: pointer;
+      color: white;
+
+      &--playing {
+        border: solid 1px #00ffff;
+      }
+      
+      &:hover {
+        border: solid 1px #00ffff;
+        color: black;
+        > .featured-carousel_content_item_title {
+          color: #00ffff;
+        }
+      }
 
       &_overlay {
         display: flex;
@@ -77,16 +92,16 @@
 
         &_button {
           color: white;
-          font-size: 65px;
+          font-size: 36px;
           text-shadow: 3px 5px 0 rgba(0,0,0,.6);
           margin-top: -15px;
         }
       }
 
       &_image {
-        min-width:  275px;
-        max-width: 275px;
-        height: 155px;
+        min-width:  273px;
+        max-width: 273px;
+        height: 153px;
         position: absolute;
         top: 0;
         left: 0;
@@ -110,6 +125,7 @@
         font-size: 12px;
         font-weight: 900;
         z-index: 10;
+        color: black;
         &:after {
           content: "";
           border-left: .5em solid #00ffff; /* This width determines the arrows length */
@@ -136,19 +152,19 @@
 
       &_title {
         background-color: rgba(0,0,0, .8);
-        padding: 15px;
+        padding: 10px;
         color: white;
         text-align: center;
-        font-size: 16px;
+        font-size: 14px;
+        height: 40px;
         font-weight: bolder;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
         z-index: 10;
-
+        text-transform: capitalize;
         &--playing {
-          background-color: #00ffff;
-          color: black;
+          color: #00ffff;
           font-family: bold-cizo;
         }
       }

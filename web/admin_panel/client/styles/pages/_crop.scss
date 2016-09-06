@@ -1,0 +1,64 @@
+.crop-area {
+    &__origin {
+        position: relative;
+    }
+    &__controls {
+        cursor: pointer;
+        display: inline-block;
+        font-size: 18px;
+        padding: 5px;
+        outline: none;
+        background: white;
+        line-height: 18px;
+    }
+    &__zoom {
+        position: absolute;
+        width: 30px;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    &__thumb {
+        width: 275px;
+        height: 155px;
+        position: relative;
+        overflow: hidden;
+    }
+    &__preview {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        &-container {
+
+        }
+        &-thumbnail {
+            width: 275px;
+            height: 155px;
+        }
+        &-iphone-feed {
+            height: 197px;
+            width: 375px;
+        }
+        &-iphone-featured {
+            height: 155px;
+            width: 263px;
+        }
+        &-hero {
+            width: 100%;
+            &:before {
+                display: block;
+                content: '';
+                width: 100%;
+                padding-top: 56.25%;
+            }
+        }
+    }
+}
+.imgCropper-controls {
+    padding-top: 10px;
+    button {
+        background: none;
+        border: none;
+        outline: none;
+    }
+}

@@ -1,3 +1,7 @@
+category-items {
+  width: 100%;
+  max-width: 1250px;
+}
 .category-items {
   color: white;
   //margin-left: 100px;
@@ -12,6 +16,9 @@
     margin-left: 20px;
     &_icon {
       font-size: 45px;
+      &.icon-categorytech {
+        font-size: 32px;
+      }
     }
 
     &_name {
@@ -57,11 +64,7 @@
 
       &:hover {
         border: solid 1px #00ffff;
-        color: black;
-      }
-
-      &:hover > .category-items_videos_item_title {
-        background-color: #00ffff;
+        color: #00ffff;
       }
 
       &_overlay {
@@ -82,9 +85,9 @@
         }
 
         &_button {
-          font-size: 65px;
+          font-size: 36px;
           text-shadow: 3px 5px 0 rgba(0,0,0,.6);
-          margin-top: -45px;
+          margin-top: -15px;
           color: white;
         }
       }
@@ -99,11 +102,12 @@
       }
 
       &_title {
-        background-color: rgba(22, 22, 22, 0.9);
+        background-color: rgba(29, 29, 29, 0.902);
         padding: 10px;
 
         text-align: center;
-        font-size: 16px;
+        font-size: 14px;
+        height: 40px;
         font-weight: bolder;
 
         display: flex;
@@ -123,6 +127,7 @@
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
+          text-transform: capitalize;
         }
       }
     }
@@ -135,9 +140,10 @@
       min-width: 275px;
       max-width: 275px;
       height: 150px;
-      margin: 5px 15px;
+      margin: 5px 15px 5px 10px;
       cursor: pointer;
       background-size: 275px 150px !important;
+      padding-right: 50px;
 
       &_title {
         font-family: main-cizo;

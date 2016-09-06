@@ -25,7 +25,6 @@ function featuredCarousel( _) {
         scope = angular.extend(scope, {
             itemsOffset: 0,
             currentStep: 1,
-
             playFeatured: playFeatured,
             moveNext: moveNext,
             movePrev: movePrev
@@ -35,6 +34,8 @@ function featuredCarousel( _) {
             let selected = _.find(scope.featuredList, featured => featured.id === parseInt(id));
             selected.instantPlay = true;
             scope.selectedVideo = selected;
+            scope.$emit('replayVideo', {videoId: selected.id});
+            scope.$broadcast('replayVideo', {videoId: selected.id});
         }
 
         function moveNext() {

@@ -4,7 +4,7 @@ angular
     .directive('categoryItems', categoryItems);
 
 /* @ngInject */
-function categoryItems($state, _, playerServ, $timeout) {
+function categoryItems($state, $rootScope, _, playerServ, $timeout) {
     "use strict";
 
     return {
@@ -25,7 +25,8 @@ function categoryItems($state, _, playerServ, $timeout) {
             title: '',
             manyItems: false,
             moveToPlayPage: moveToPlayPage,
-            iconName:  playerServ.getIconName(scope.categoryId)
+            iconName:  playerServ.getIconName(scope.categoryId),
+            moveToCategory: moveToCategory
         });
 
         scope.$watch('videos', (videos) => {
@@ -82,8 +83,20 @@ function categoryItems($state, _, playerServ, $timeout) {
         }
 
         function moveToPlayPage(id) {
-            $state.go('play', {videoId: id, categoryId: scope.categoryId});
+            let obj = {videoId: id};
+            $rootScope.$emit('replayVideo', obj);
+            $rootScope.$broadcast('replayVideo', obj);
+            $state.go('play', obj);
+        }
+
+        /**
+         * app plays first video on the video list
+         *
+         * @param categoryId
+         */
+        function moveToCategory(categoryId) {
+            $state.go('play', {videoId: scope.videosList[0].id, categoryId: categoryId});
         }
     }
 };
-categoryItems.$inject = ['$state', 'lodash', 'playerServ', '$timeout'];
+categoryItems.$inject = ['$state', '$rootScope', 'lodash', 'playerServ', '$timeout'];

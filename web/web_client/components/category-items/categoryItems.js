@@ -25,7 +25,8 @@ function categoryItems($state, $rootScope, _, playerServ, $timeout) {
             title: '',
             manyItems: false,
             moveToPlayPage: moveToPlayPage,
-            iconName:  playerServ.getIconName(scope.categoryId)
+            iconName:  playerServ.getIconName(scope.categoryId),
+            moveToCategory: moveToCategory
         });
 
         scope.$watch('videos', (videos) => {
@@ -86,6 +87,15 @@ function categoryItems($state, $rootScope, _, playerServ, $timeout) {
             $rootScope.$emit('replayVideo', obj);
             $rootScope.$broadcast('replayVideo', obj);
             $state.go('play', obj);
+        }
+
+        /**
+         * app plays first video on the video list
+         *
+         * @param categoryId
+         */
+        function moveToCategory(categoryId) {
+            $state.go('play', {videoId: scope.videosList[0].id, categoryId: categoryId});
         }
     }
 };

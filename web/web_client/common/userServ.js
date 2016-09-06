@@ -56,7 +56,7 @@ function userServ($http, $q, $log, moment) {
         return $q(function (resolve, reject) {
             $http({
                 method: 'POST',
-                url: hostName + `/oauth/token?grant_type=password&username=${loginData.login}&password=${loginData.password}`
+                url: hostName + `/oauth/token?grant_type=password&username=${encodeURIComponent(loginData.login)}&password=${encodeURIComponent(loginData.password)}`
             }).then(success, error);
 
             function success(response) {
@@ -118,7 +118,7 @@ function userServ($http, $q, $log, moment) {
         return $q(function (resolve, reject) {
             $http({
                 method: 'POST',
-                url: hostName + `/users/password_reset?email=${email}`
+                url: hostName + `/users/password_reset?email=${encodeURIComponent(email)}`
             }).then(success, error);
 
             function success(response) {

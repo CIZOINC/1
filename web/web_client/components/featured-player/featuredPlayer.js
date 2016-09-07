@@ -262,7 +262,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.imageLayer.classList.remove('featured-player_hero-image-layer--playing');
             scope.bottomElements.classList.add('hidden-layer');
 
-            document.querySelector('.home_video-items').classList.remove('home_video-items--playing');
+            document.querySelector('.home_wrapper').classList.remove('home_wrapper--playing');
 
             scope.intermissionStopTimer = $interval(() => {
                 scope.intermissionCountdownValue++;
@@ -331,7 +331,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.imageLayer.classList.add('featured-player_hero-image-layer--playing');
             scope.bottomElements.classList.remove('hidden-layer');
 
-            document.querySelector('.home_video-items').classList.add('home_video-items--playing');
+            document.querySelector('.home_wrapper').classList.add('home_wrapper--playing');
 
             pauseIntermissionToggle(undefined, true);
             let nextVideo = getNextVideo();
@@ -360,7 +360,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.imageLayer.classList.add('featured-player_hero-image-layer--playing');
             scope.bottomElements.classList.remove('hidden-layer');
 
-            document.querySelector('.home_video-items').classList.add('home_video-items--playing');
+            document.querySelector('.home_wrapper').classList.add('home_wrapper--playing');
 
             pauseIntermissionToggle(undefined, true);
             let prevVideo = getPreviousVideo(scope.video, scope.featuredList);
@@ -411,7 +411,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.imageLayer.classList.add('featured-player_hero-image-layer--playing');
             scope.bottomElements.classList.remove('hidden-layer');
 
-            document.querySelector('.home_video-items').classList.add('home_video-items--playing');
+            document.querySelector('.home_wrapper').classList.add('home_wrapper--playing');
 
             scope.screen.currentTime = 0;
             scope.isIntermissionState = false;
@@ -597,7 +597,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             scope.imageLayer.classList.add('featured-player_hero-image-layer--playing');
             scope.bottomElements.classList.remove('hidden-layer');
 
-            document.querySelector('.home_video-items').classList.add('home_video-items--playing');
+            document.querySelector('.home_wrapper').classList.add('home_wrapper--playing');
 
             if (scope.isIntermissionState) {
                 scope.isIntermissionState = false;

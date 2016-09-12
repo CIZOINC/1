@@ -41,7 +41,7 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
     $rootScope.isInitLoad = true;
 
     $scope = angular.extend($scope, {
-        title: 'Cizo',
+        title: 'CIZO',
         hostName: `https://staging.cizo.com`,
         sharingPath: 'https://staging.cizo.com/app',
         facebookAppId: '459923084193687',

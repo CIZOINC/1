@@ -71,7 +71,7 @@ Once deployment has completed and has been validated, use the following command 
 eb deploy --profile cizo cizo-production --version "api-`git rev-parse HEAD`"
 ```
 
-Deploys to staging occur automatically after merging into ror/master. Once an automatic deploy is completed, it is tested using the tests/integration branch. All of this is handled by [Jenkins](http://ci-web.weezlabs.com:8070/login?from=%2F). Production deploys must be done using the above command or through the Elastic Beanstalk console. 
+Deploys to staging occur automatically after merging into ror/master. Once an automatic deploy is completed, it is tested using the tests/integration branch. All of this is handled by [Jenkins](http://ci-web.weezlabs.com:8050/login?from=%2F). Production deploys must be done using the above command or through the Elastic Beanstalk console. 
 
 
 ### Server Provisioning

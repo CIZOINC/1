@@ -11,3 +11,5 @@ web:
     - .:/srv/app/current
   ports: 
     - "80:80"
+  links:
+    - postgres:postgres

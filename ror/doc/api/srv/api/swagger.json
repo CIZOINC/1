@@ -2005,6 +2005,14 @@
       "type" : "string",
       "description" : "Title of video."
     },
+    "subtitle" : {
+      "type" : "string",
+      "description" : "Subtitle of video"
+    },
+    "description_title" : {
+      "type" : "string",
+      "description" : "Title of video description"
+    },
     "description" : {
       "type" : "string",
       "description" : "Description of video."
@@ -2360,10 +2368,18 @@
       "type" : "string",
       "description" : "Title of video."
     },
+    "subtitle" : {
+      "type" : "string",
+      "description" : "Subtitle of video"
+    },
     "category_id" : {
       "type" : "integer",
       "format" : "int32",
       "description" : "Unique identifier of category"
+    },
+    "description_title" : {
+      "type" : "string",
+      "description" : "Title of video description"
     },
     "description" : {
       "type" : "string",
@@ -2400,6 +2416,10 @@
       "type" : "string",
       "description" : "Comma seperated list of tags associated with video."
     },
+    "subtitle" : {
+      "type" : "string",
+      "description" : "Subtitle of video"
+    },
     "created_at" : {
       "type" : "string",
       "format" : "date-time",
@@ -2418,6 +2438,10 @@
     "title" : {
       "type" : "string",
       "description" : "Title of video."
+    },
+    "description_title" : {
+      "type" : "string",
+      "description" : "Title of video description"
     }
   }
 },"body_11": {

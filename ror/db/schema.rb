@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160301131708) do
+ActiveRecord::Schema.define(version: 20161121204302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,10 +19,11 @@ ActiveRecord::Schema.define(version: 20160301131708) do
   enable_extension "fuzzystrmatch"
 
   create_table "categories", force: :cascade do |t|
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.string   "title",           null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.string   "title",                       null: false
     t.string   "canonical_title"
+    t.integer  "display_order",   default: 0
   end
 
   add_index "categories", ["title"], name: "index_categories_on_title", unique: true, using: :btree
@@ -180,6 +181,8 @@ ActiveRecord::Schema.define(version: 20160301131708) do
     t.boolean  "hero_image_processing",    default: false,  null: false
     t.string   "hero_image_tmp"
     t.string   "hero_image_upload_status", default: "idle"
+    t.string   "subtitle"
+    t.string   "description_title"
   end
 
   add_index "videos", ["featured_order"], name: "index_videos_on_featured_order", using: :btree

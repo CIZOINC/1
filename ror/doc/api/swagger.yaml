@@ -269,10 +269,16 @@ paths:
               title:
                 type: string
                 description: Title of video.
+              subtitle:
+                type: string
+                description: Subtitle of video
               category_id:
                 type: integer
                 format: int32
                 description: 'Unique identifier of category'
+              description_title:
+                type: string
+                description: Title of video description
               description:
                 type: string
                 description: Description of video.
@@ -316,6 +322,12 @@ paths:
               title:
                 type: string
                 description: Title of video.
+              subtitle:
+                type: string
+                description: Subtitle of video
+              description_title:
+                type: string
+                description: Title of video description
               description:
                 type: string
                 description: Description of video.
@@ -1411,6 +1423,12 @@ definitions:
       title:
         type: string
         description: Title of video.
+      subtitle:
+        type: string
+        description: Subtitle of video
+      description_title:
+        type: string
+        description: Title of video description
       description:
         type: string
         description: Description of video.

@@ -2005,6 +2005,10 @@
       "type" : "string",
       "description" : "Title of video."
     },
+    "subtitle" : {
+      "type" : "string",
+      "description" : "Subtitle of video"
+    },
     "description" : {
       "type" : "string",
       "description" : "Description of video."
@@ -2360,6 +2364,10 @@
       "type" : "string",
       "description" : "Title of video."
     },
+    "subtitle" : {
+      "type" : "string",
+      "description" : "Subtitle of video"
+    },
     "category_id" : {
       "type" : "integer",
       "format" : "int32",
@@ -2399,6 +2407,10 @@
     "tag_list" : {
       "type" : "string",
       "description" : "Comma seperated list of tags associated with video."
+    },
+    "subtitle" : {
+      "type" : "string",
+      "description" : "Subtitle of video"
     },
     "created_at" : {
       "type" : "string",

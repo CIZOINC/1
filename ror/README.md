@@ -20,14 +20,14 @@ docker-compose build
 After the build completes, run:
 
 ```
-docker-compose --x-networking up 
+docker-compose up 
 ```
 
 Once the launch has completed (when no additional logs are outputted to the screen), open a new shell and then run the following two commands:
 
 ```
-docker-compose --x-networking run web rake db:create
-docker-compose --x-networking run web rake db:migrate
+docker-compose  run web rake db:create
+docker-compose  run web rake db:migrate
 ```
 
 Once completed, exit the original shell by pressing `ctrl+c`.
@@ -35,13 +35,13 @@ Once completed, exit the original shell by pressing `ctrl+c`.
 To run the environment, use the following command:
 
 ```
-docker-compose --x-networking up
+docker-compose up
 ```
 
 Migrations can be performed by running the following:
 
 ```
-docker-compose --x-networking run web rake db:migrate
+docker-compose run web rake db:migrate
 ```
 
 Development should be done on seperate feature branches. Pull requests should be submitted to merge the feature branches into develop. 

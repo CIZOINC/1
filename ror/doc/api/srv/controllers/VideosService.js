@@ -13,15 +13,16 @@ exports.videosGet = function(category, tags, createdBefore, createdAfter, visibl
       "stream_type" : "aeiou"
     } ],
     "link" : "aeiou",
-    "created_at" : "2016-11-21T20:28:14.653+0000",
+    "created_at" : "2016-11-21T20:55:13.331+0000",
     "description" : "aeiou",
     "title" : "aeiou",
-    "deleted_at" : "2016-11-21T20:28:14.653+0000",
+    "deleted_at" : "2016-11-21T20:55:13.331+0000",
     "liked" : true,
     "seen" : true,
+    "description_title" : "aeiou",
     "skipped" : true,
     "mature_content" : true,
-    "updated_at" : "2016-11-21T20:28:14.653+0000",
+    "updated_at" : "2016-11-21T20:55:13.331+0000",
     "category_id" : 123,
     "hero_images" : {
       "hero_image_link_thumb_banner" : "aeiou",
@@ -51,13 +52,14 @@ exports.videosPost = function(body) {
   examples['application/json'] = {
   "mature_content" : true,
   "category_id" : 123,
-  "updated_at" : "2016-11-21T20:28:14.656+0000",
+  "updated_at" : "2016-11-21T20:55:13.334+0000",
   "tag_list" : "aeiou",
   "subtitle" : "aeiou",
-  "created_at" : "2016-11-21T20:28:14.656+0000",
+  "created_at" : "2016-11-21T20:55:13.334+0000",
   "description" : "aeiou",
   "id" : 123,
-  "title" : "aeiou"
+  "title" : "aeiou",
+  "description_title" : "aeiou"
 };
   
 
@@ -78,15 +80,16 @@ exports.videosVideoIdGet = function(videoId) {
     "stream_type" : "aeiou"
   } ],
   "link" : "aeiou",
-  "created_at" : "2016-11-21T20:28:14.658+0000",
+  "created_at" : "2016-11-21T20:55:13.335+0000",
   "description" : "aeiou",
   "title" : "aeiou",
-  "deleted_at" : "2016-11-21T20:28:14.658+0000",
+  "deleted_at" : "2016-11-21T20:55:13.335+0000",
   "liked" : true,
   "seen" : true,
+  "description_title" : "aeiou",
   "skipped" : true,
   "mature_content" : true,
-  "updated_at" : "2016-11-21T20:28:14.658+0000",
+  "updated_at" : "2016-11-21T20:55:13.335+0000",
   "category_id" : 123,
   "hero_images" : {
     "hero_image_link_thumb_banner" : "aeiou",
@@ -120,15 +123,16 @@ exports.videosVideoIdPut = function(body, videoId) {
     "stream_type" : "aeiou"
   } ],
   "link" : "aeiou",
-  "created_at" : "2016-11-21T20:28:14.658+0000",
+  "created_at" : "2016-11-21T20:55:13.336+0000",
   "description" : "aeiou",
   "title" : "aeiou",
-  "deleted_at" : "2016-11-21T20:28:14.658+0000",
+  "deleted_at" : "2016-11-21T20:55:13.336+0000",
   "liked" : true,
   "seen" : true,
+  "description_title" : "aeiou",
   "skipped" : true,
   "mature_content" : true,
-  "updated_at" : "2016-11-21T20:28:14.658+0000",
+  "updated_at" : "2016-11-21T20:55:13.336+0000",
   "category_id" : 123,
   "hero_images" : {
     "hero_image_link_thumb_banner" : "aeiou",

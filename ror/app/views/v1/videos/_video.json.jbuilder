@@ -3,7 +3,7 @@
 if @show_invisible || @show_deleted
   json.extract! video, :id
 else
-  json.extract! video, :id, :created_at, :updated_at, :title, :description, :subtitle, :mature_content, :category_id, :visible, :featured
+  json.extract! video, :id, :created_at, :updated_at, :title, :subtitle, :description_title, :description, :mature_content, :category_id, :visible, :featured
 
   if video.hero_image.url
     json.set! :hero_images do

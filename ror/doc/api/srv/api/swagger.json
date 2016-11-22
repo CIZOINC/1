@@ -40,7 +40,7 @@
     
     "get": {
       "summary": "",
-      "description":"Log in with facebook",
+      "description":"Exchange a Facebook oauth token for a Cizo oauth token",
       "x-swagger-router-controller": "Authorization",
       "tags": ["Authorization"],
       "operationId": "oauthFacebookGet",
@@ -48,7 +48,7 @@
         {
   "name" : "access_token",
   "in" : "query",
-  "description" : "Must give access to user's email and birthday. Can be generated <a href = 'here'>https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Did%2Cname%2Cbirthday%2Cemail&version=v2.5<a>",
+  "description" : "Facebook token must give access to user's email and birthday. Can be generated <a href = 'here'>https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Did%2Cname%2Cbirthday%2Cemail&version=v2.5<a>",
   "required" : true,
   "type" : "string"
 }
@@ -2007,11 +2007,11 @@
     },
     "subtitle" : {
       "type" : "string",
-      "description" : "Subtitle of video"
+      "description" : "Subtitle of video. Max length of 255"
     },
     "description_title" : {
       "type" : "string",
-      "description" : "Title of video description"
+      "description" : "Title of video description. Max length of 255"
     },
     "description" : {
       "type" : "string",
@@ -2370,7 +2370,7 @@
     },
     "subtitle" : {
       "type" : "string",
-      "description" : "Subtitle of video"
+      "description" : "Subtitle of video. Max length of 255"
     },
     "category_id" : {
       "type" : "integer",
@@ -2379,7 +2379,7 @@
     },
     "description_title" : {
       "type" : "string",
-      "description" : "Title of video description"
+      "description" : "Title of video description. Max length of 255"
     },
     "description" : {
       "type" : "string",
@@ -2418,7 +2418,7 @@
     },
     "subtitle" : {
       "type" : "string",
-      "description" : "Subtitle of video"
+      "description" : "Subtitle of video. Max length of 255"
     },
     "created_at" : {
       "type" : "string",
@@ -2441,7 +2441,7 @@
     },
     "description_title" : {
       "type" : "string",
-      "description" : "Title of video description"
+      "description" : "Title of video description. Max length of 255"
     }
   }
 },"body_11": {

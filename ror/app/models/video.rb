@@ -22,10 +22,14 @@ class Video < ActiveRecord::Base
   has_many :liked_videos, dependent: :destroy
   has_many :skipped_videos, dependent: :destroy
   has_many :seen_videos, dependent: :destroy
+
   validates :hero_image_upload_status,
             inclusion: {in: %w(pending processing error completed idle)},
             allow_nil: true
+  validates_length_of :subtitle, maximum: 255
+  validates_length_of :description_title, maximum: 255
   validates_with VideoCustomValidator
+
   scope :desc_order, ->(){ order(created_at: :desc)}
   scope :order_by_featured, ->(){order(featured_order: :asc)}
   scope :trending, ->(){ order(view_count: :desc)}

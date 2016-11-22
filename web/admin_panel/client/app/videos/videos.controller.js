@@ -105,6 +105,7 @@
                     let videoUpdateBody = {
                             category_id: videoObject.category_id,
                             title: videoObject.title,
+                            subtitle: videoObject.subtitle,
                             description: videoObject.description,
                             description_title: videoObject.description_title,
                             mature_content: videoObject.mature_content,
@@ -148,6 +149,7 @@
             function openModal(video, $scope, $uibModal) {
                 let emptyVideo = {
                     title: 'Add title',
+                    subtitle: '',
                     description_title: '',
                     description: 'Add a video description',
                     mature_content: false,
@@ -161,6 +163,7 @@
                         video.description === emptyVideo.description &&
                         video.description_title === emptyVideo.description_title &&
                         video.title === emptyVideo.title &&
+                        video.subtitle === emptyVideo.subtitle &&
                         video.tag_list === emptyVideo.tag_list;
                 }
 
@@ -374,6 +377,28 @@
                             url: configuration.url + `/videos/${videoID}`,
                             data: {
                                 title: videoTitle
+                            },
+                            headers: {
+                                authorization: `Bearer ${$window.sessionStorage.token}`
+                            }
+                        };
+
+                        $http(options).then(function successCB(response) {
+                            callback(null, response.data);
+                        }, function errorCB(error) {
+                            callback(error);
+                        });
+                    } else {
+                        throw new Error('No Admin Token');
+                    }
+                },
+                editSubTitle: function (videoID, subtitle, callback) {
+                    if ($window.sessionStorage.token) {
+                        let options = {
+                            method: 'PUT',
+                            url: configuration.url + `/videos/${videoID}`,
+                            data: {
+                                subtitle: subtitle
                             },
                             headers: {
                                 authorization: `Bearer ${$window.sessionStorage.token}`
@@ -645,6 +670,20 @@
                 } else {
                     return 'Invalid title, must contain at least one character.';
                 }
+            };
+
+            $scope.modifySubTitle = function (video, subtitle) {
+                modifyVideoProperty.editSubTitle(video.id, subtitle, function (err, res) {
+                    if (err) {
+                        videoNotifier('danger', 'Error', 'Unable to modify the video\'s title due to a server error.', function (clicked) {
+                            console.error(clicked);
+                        });
+                        return 'Server error';
+                    } else {
+                        console.log(res);
+                        return true;
+                    }
+                });
             };
 
             $scope.modifyCategory = function (video, category) {

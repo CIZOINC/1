@@ -72,7 +72,8 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         },
 
         linkToLogin: linkToLogin,
-        linkToHome: linkToHome
+        linkToHome: linkToHome,
+        closeMatureScreen: closeMatureScreen
 
     });
 
@@ -84,6 +85,10 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
     function linkToHome() {
         $scope.storage.showMatureScreen = false;
         $state.go('home', {}, {reload: true});
+    }
+
+    function closeMatureScreen() {
+        $scope.storage.showMatureScreen = false;
     }
 
     routerHelper.configureStates(routesList);

@@ -9,7 +9,8 @@ class VideoCustomValidator < CustomValidator
     record.errors[:codes] << '400.8'  if trying_to_make_featured_video_invisible
     record.errors[:codes] << "400.9"  if trying_to_make_video_without_hero_image_visible
     record.errors[:codes] << "400.10" if trying_to_make_video_with_incompleted_streams_visible
-
+    record.errors[:codes] << "400.13" unless record.errors[:subtitle].blank?
+    record.errors[:codes] << "400.14" unless record.errors[:description_title].blank?
   end
 
   protected

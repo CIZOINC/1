@@ -106,6 +106,7 @@
                             category_id: videoObject.category_id,
                             title: videoObject.title,
                             description: videoObject.description,
+                            description_title: videoObject.description_title,
                             mature_content: videoObject.mature_content,
                             tag_list: videoObject.tag_list
                         },
@@ -147,12 +148,21 @@
             function openModal(video, $scope, $uibModal) {
                 let emptyVideo = {
                     title: 'Add title',
+                    description_title: '',
                     description: 'Add a video description',
                     mature_content: false,
                     visible: false,
                     featured: false,
                     tag_list: 'Add Tags'
                 };
+
+                function isEmptyVideo(video) {
+                    return video.category_id === emptyVideo.category_id &&
+                        video.description === emptyVideo.description &&
+                        video.description_title === emptyVideo.description_title &&
+                        video.title === emptyVideo.title &&
+                        video.tag_list === emptyVideo.tag_list;
+                }
 
                 if ($scope.videoCategories && $scope.videoCategories[0] && $scope.videoCategories[0].id) {
                     emptyVideo.category_id = $scope.videoCategories[0].id;
@@ -218,13 +228,13 @@
                             });
 
                             modalInstance.result.then(function (resultVideo) {
-                                if (resultVideo.category_id === emptyVideo.category_id && resultVideo.description === emptyVideo.description && resultVideo.title === emptyVideo.title && resultVideo.tag_list === emptyVideo.tag_list) {
+                                if (isEmptyVideo(resultVideo)) {
                                     deleteVideoCB(resultVideo);
                                 } else {
                                     updateVideoCB(resultVideo);
                                 }
                             }, function (result) {
-                                if (($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list) || result === 'delete') {
+                                if (isEmptyVideo($scope.video) || result === 'delete') {
                                     deleteVideoCB($scope.video);
                                 }
                             });
@@ -246,13 +256,13 @@
                     });
 
                     modalInstance.result.then(function (resultVideo) {
-                        if (resultVideo.category_id === emptyVideo.category_id && resultVideo.description === emptyVideo.description && resultVideo.title === emptyVideo.title && resultVideo.tag_list === emptyVideo.tag_list) {
+                        if (isEmptyVideo(resultVideo)) {
                             deleteVideoCB(resultVideo);
                         } else {
                             updateVideoCB(resultVideo);
                         }
                     }, function (result) {
-                        if ($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list || result === 'delete') {
+                        if (isEmptyVideo($scope.video) || result === 'delete') {
                             deleteVideoCB($scope.video);
                         }
                     });

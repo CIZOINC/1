@@ -39,6 +39,8 @@ en:
     "10": Unable to make video visible if it's streams are not completed
     "11": Unable to log in. Please check your credentials
     "12": Unable to log in. Please check your refresh_token
+    "13" : Subtitle is too long
+    "14" : description_title is too long
 
   "403":
     "1": Key is required

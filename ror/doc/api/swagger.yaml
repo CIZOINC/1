@@ -103,7 +103,7 @@ paths:
             $ref: '#/definitions/Error'
   /oauth/facebook:
     get:
-      description: "Log in with facebook"
+      description: "Exchange a Facebook oauth token for a Cizo oauth token"
       tags:
         - Authorization
       parameters:
@@ -111,7 +111,7 @@ paths:
           type: string
           in: query
           required: true
-          description: "Must give access to user's email and birthday. Can be generated <a href = 'here'>https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Did%2Cname%2Cbirthday%2Cemail&version=v2.5<a>"
+          description: "Facebook token must give access to user's email and birthday. Can be generated <a href = 'here'>https://developers.facebook.com/tools/explorer?method=GET&path=me%3Ffields%3Did%2Cname%2Cbirthday%2Cemail&version=v2.5<a>"
       responses:
         '200':
           description: Returns access_token and refresh_token
@@ -271,14 +271,14 @@ paths:
                 description: Title of video.
               subtitle:
                 type: string
-                description: Subtitle of video
+                description: Subtitle of video. Max length of 255
               category_id:
                 type: integer
                 format: int32
                 description: 'Unique identifier of category'
               description_title:
                 type: string
-                description: Title of video description
+                description: Title of video description. Max length of 255
               description:
                 type: string
                 description: Description of video.
@@ -324,10 +324,10 @@ paths:
                 description: Title of video.
               subtitle:
                 type: string
-                description: Subtitle of video
+                description: Subtitle of video. Max length of 255
               description_title:
                 type: string
-                description: Title of video description
+                description: Title of video description. Max length of 255
               description:
                 type: string
                 description: Description of video.
@@ -1425,10 +1425,10 @@ definitions:
         description: Title of video.
       subtitle:
         type: string
-        description: Subtitle of video
+        description: Subtitle of video. Max length of 255
       description_title:
         type: string
-        description: Title of video description
+        description: Title of video description. Max length of 255
       description:
         type: string
         description: Description of video.

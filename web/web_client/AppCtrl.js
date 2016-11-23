@@ -17,7 +17,8 @@ angular
         'ngSanitize',
         'templates',
         'rzModule',
-        'angular-svg-round-progress'
+        'angular-svg-round-progress',
+        'ezfb'
     ])
     .controller('AppCtrl', AppCtrl)
     .filter('nl2br', function($sce){
@@ -36,7 +37,7 @@ angular
 
 
 /* @ngInject */
-function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, $timeout) {
+function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, $timeout, ezfb) {
 
     $rootScope.isInitLoad = true;
 
@@ -44,6 +45,7 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         title: 'CIZO',
         hostName: `https://staging.cizo.com`,
         sharingPath: 'https://staging.cizo.com/app',
+        // Dont forget to revert
         facebookAppId: '459923084193687',
         videosList: [],
         categoriesList: [],
@@ -75,6 +77,10 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         linkToHome: linkToHome,
         closeMatureScreen: closeMatureScreen
 
+    });
+
+    ezfb.init({
+        appId: $scope.facebookAppId
     });
 
     function linkToLogin() {
@@ -178,4 +184,4 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
 
 
 }
-AppCtrl.$inject = ['$rootScope', '$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', '$timeout'];
+AppCtrl.$inject = ['$rootScope', '$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', '$timeout', 'ezfb'];

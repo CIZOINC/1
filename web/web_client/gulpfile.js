@@ -26,7 +26,8 @@ var thirdPartyJS = [
     '../node_modules/moment/moment.js',
     '../node_modules/lodash/lodash.js',
     '../node_modules/angularjs-slider/dist/rzslider.js',
-    '../node_modules/angular-svg-round-progressbar/build/roundProgress.js'
+    '../node_modules/angular-svg-round-progressbar/build/roundProgress.js',
+    '../node_modules/angular-easyfb/build/angular-easyfb.js'
 ];
 var thirdPartyCSS = [
     '../node_modules/angular/angular-csp.css',
@@ -114,7 +115,8 @@ gulp.task('compile_js', function () {
 gulp.task('compile_appctrl_staging', function () {
     "use strict";
     return gulp.src(['AppCtrl.js'])
-        .pipe(replace("facebookAppId: '459923084193687'", "facebookAppId: '459923084193687'"))
+        // Replace FacebookAppId
+        .pipe(replace("459923084193687", "459923084193687"))
         .pipe(babel({
             presets: ['es2015']
         }))
@@ -124,7 +126,7 @@ gulp.task('compile_appctrl_staging', function () {
 gulp.task('compile_appctrl_production', function () {
     "use strict";
     return gulp.src(['AppCtrl.js'])
-        .pipe(replace("facebookAppId: '459923084193687'", "facebookAppId: '459778204208175'"))
+        .pipe(replace("459923084193687", "459778204208175"))
         .pipe(replace("hostName: `https://staging.cizo.com`", "hostName: `https://api.cizo.com`"))
         .pipe(replace("sharingPath: 'https://staging.cizo.com/app'", "sharingPath: 'https://www.cizo.com/'"))
         .pipe(babel({

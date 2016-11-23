@@ -4,7 +4,7 @@ angular
     .factory('userServ', userServ);
 
 /* @ngInject */
-function userServ($http, $q, $log, moment) {
+function userServ($http, $q, $log, moment, ezfb) {
     "use strict";
 
     return {
@@ -73,25 +73,17 @@ function userServ($http, $q, $log, moment) {
 
     function facebookAuth(hostName) {
         return $q(function (resolve, reject) {
-            let fbAuthWindow = window.open(hostName + `/users/auth/facebook`, "_blank", "height=600, width=550, status=yes, toolbar=no, menubar=no, location=no, addressbar=no");
-            let timer = setInterval(checkChild, 500);
-
-            function checkChild() {
-                if (fbAuthWindow.closed) {
-                    $log.log('facebook auth window was closed');
-                    clearInterval(timer);
+            ezfb.login(function (response) {
+                if (response.authResponse) {
+                    const token = response.authResponse.accessToken;
+                    resolve($http({
+                        method: 'GET',
+                        url: hostName + `/oauth/facebook?access_token=${token}`
+                    }).then(data => data.data));
+                } else {
                     reject();
                 }
-                let dataContainer = fbAuthWindow.document.querySelector('pre');
-                if (dataContainer) {
-                    clearInterval(timer);
-                    let tokenRaw = dataContainer.innerHTML;
-                    let token = JSON.parse(tokenRaw);
-                    fbAuthWindow.close();
-                    resolve(token);
-                }
-
-            }
+            }, {scope: 'user_birthday,email'});
         });
     }
 
@@ -378,4 +370,4 @@ function userServ($http, $q, $log, moment) {
 
 }
 
-userServ.$inject = ['$http', '$q', '$log', 'moment'];
+userServ.$inject = ['$http', '$q', '$log', 'moment', 'ezfb'];

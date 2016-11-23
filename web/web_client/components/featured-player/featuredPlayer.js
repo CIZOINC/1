@@ -275,7 +275,7 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 scope.intermissionCountdownValue++;
                 if (scope.intermissionCountdownValue > scope.intermissionCountdownMax) {
                     $interval.cancel(scope.intermissionStopTimer);
-                    scope.playNextVideo();
+                        scope.playNextVideo();
                 }
             }, 50);
         }

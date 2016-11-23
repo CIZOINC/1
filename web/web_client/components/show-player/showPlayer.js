@@ -8,6 +8,9 @@ angular
 function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, $filter, playerServ, userServ) {
     "use strict";
 
+    const BTN_PLAY_URL   = "images/iconVideoPlayIntermission.svg";
+    const BTN_REPLAY_URL = "images/iconVideoReplay.svg";
+
     return {
         restrict: 'E',
         templateUrl: 'components/show-player/showPlayer.html',
@@ -21,7 +24,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             storage: '='
         }
     };
-
 
     function linkFn(scope, element, attrs) {
         scope = angular.extend(scope, {
@@ -75,6 +77,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             togglePlayPause: togglePlayPause,
             imageHover: imageHover,
             imageBlur: imageBlur,
+            playButtonImage: BTN_PLAY_URL,
+            hasNextVideo: true,
 
             soundHover: soundHover,
             soundBlur: soundBlur,
@@ -260,6 +264,15 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             setDescriptionState(state);
         }
 
+        function playNextOrReplay() {
+            let nextVideo = getNextVideo();
+            if (nextVideo) {
+                scope.playNextVideo();
+            } else {
+                scope.replayVideo();
+            }
+        }
+
         function setIntermission() {
             scope.isIntermissionState = true;
             imageBlur();
@@ -268,13 +281,15 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             setPlayingEnvState(false);
 
+            let nextVideo = getNextVideo();
+            scope.playButtonImage = nextVideo ? BTN_PLAY_URL : BTN_REPLAY_URL;
+            scope.hasNextVideo = !!nextVideo;
+
             scope.intermissionStopTimer = $interval(() => {
                 scope.intermissionCountdownValue++;
                 if (scope.intermissionCountdownValue > scope.intermissionCountdownMax) {
                     $interval.cancel(scope.intermissionStopTimer);
-                    scope.playNextVideo();
-
-
+                    playNextOrReplay();
                 }
             }, 50);
 
@@ -307,7 +322,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                     scope.intermissionCountdownValue++;
                     if (scope.intermissionCountdownValue > scope.intermissionCountdownMax) {
                         $interval.cancel(scope.intermissionStopTimer);
-                        scope.playNextVideo();
+                        playNextOrReplay();
                     }
                 }, 50);
                 scope.isIntermissionPaused = false;
@@ -419,6 +434,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             scope.screen.currentTime = 0;
             scope.isIntermissionState = false;
+            scope.isIntermissionPaused = false;
             $timeout( () => {
                 scope.screen.play();
                 checkMatureContent();
@@ -594,7 +610,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             if (scope.isIntermissionState) {
                 scope.isIntermissionState = false;
                 pauseIntermissionToggle(undefined, true);
-                playNextVideo();
+                playNextOrReplay();
+
                 return;
             }
 

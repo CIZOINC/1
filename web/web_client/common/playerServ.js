@@ -120,7 +120,9 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
         let currentVideoId = video.id;
         let nextVideo;
 
-        let index = _.findIndex(videoList, (item) => {
+        const videosInCategory = _.filter(videoList, item => item.category_id === video.category_id);
+
+        let index = _.findIndex(videosInCategory, (item) => {
             return item.id === currentVideoId;
         });
         if (index + 1 < videoList.length) {

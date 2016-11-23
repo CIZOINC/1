@@ -4,7 +4,7 @@ angular
     .directive('featuredCarousel', featuredCarousel);
 
 /* @ngInject */
-function featuredCarousel( _) {
+function featuredCarousel( _, userServ) {
     "use strict";
 
     return {
@@ -15,7 +15,8 @@ function featuredCarousel( _) {
         scope: {
             featuredList: '=',
             selectedVideo: '=',
-            replay: '&onReplay'
+            replay: '&onReplay',
+            storage: '='
         }
     };
 
@@ -30,7 +31,19 @@ function featuredCarousel( _) {
             movePrev: movePrev
         });
 
-        function playFeatured(id) {
+        function isMatureVideo(video) {
+            const isMatureVideo = video.mature_content && !userServ.isUnexpiredToken(scope.storage.token);
+            if (isMatureVideo) {
+                scope.storage.showMatureScreen = true;
+            }
+            return isMatureVideo;
+        }
+
+        function playFeatured(video) {
+            if (isMatureVideo(video)) {
+                return;
+            }
+            const id = video.id;
             let selected = _.find(scope.featuredList, featured => featured.id === parseInt(id));
             selected.instantPlay = true;
             scope.selectedVideo = selected;
@@ -54,4 +67,4 @@ function featuredCarousel( _) {
         }
     }
 };
-featuredCarousel.$inject = ['lodash'];
+featuredCarousel.$inject = ['lodash', 'userServ'];

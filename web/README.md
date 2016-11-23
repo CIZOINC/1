@@ -2,12 +2,25 @@
 
 ### Building
 
+#### Web App
+
 To prepare the web_client for deployment, gulp is used to build and copy the files into the ror/public/web_client directory.
 
 ```
 cd web_client
 gulp build-all
 ```
+
+To serve with livereload option use
+
+```
+cd web_client
+gulp serve
+```
+
+**NOTE** There is a known bug with the above build commands where the first run after changes have been made results in a build that does not have the new changes. This should be fixed but, in the mean time, running the build-all commands twice should resolve the issue. 
+
+#### Admin Panel
 
 To prepare the admin_panel for deployment, grunt is used to build and copy the files into the ror/public/admin_panel directory.
 

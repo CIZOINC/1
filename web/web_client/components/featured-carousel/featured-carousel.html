@@ -4,7 +4,7 @@
         <div class="featured-carousel_content_wrapper" ng-style="{'margin-left': itemsOffset}">
             <div class="featured-carousel_content_item"
                  ng-repeat="featured in featuredList"
-                 ng-click="playFeatured(featured.id)"
+                 ng-click="playFeatured(featured)"
                  ng-attr-id="{{'featured-carousel-video-' + featured.id}}"
             >
                 <div class="featured-carousel_content_item_image" style="background-image: url('{{::featured.hero_images.hero_image_link_thumb_banner}}')"></div>

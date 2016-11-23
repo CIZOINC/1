@@ -74,6 +74,17 @@
                 <div class="col-lg-12">
                     <div class="panel panel-dark">
                         <div class="panel-heading">
+                            <span class="fa fa-quote-right"></span> Editorial title</div>
+                        <div class="panel-body">
+                            <span id="videoDescriptionTitle" editable-text="video.description_title">{{video.description_title || 'Add title'}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-dark">
+                        <div class="panel-heading">
                             <span class="fa fa-quote-right"></span> Video Description</div>
                         <div class="panel-body">
                             <span editable-textarea="video.description" e-rows="3" e-cols="35">{{video.description}}</span>

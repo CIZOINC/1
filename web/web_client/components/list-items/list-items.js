@@ -90,7 +90,7 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
                         iconName: 'icon-favorites',
                         title: 'Favorites',
                         noItemsTitle: {
-                            value: 'TO SEE YOUR FAVORITES, LOG IN OR SIGN UP.',
+                            value: 'TO SEE YOUR FAVORITES, LOGIN OR SIGN UP.',
                             authValue: 'YOU HAVEN\'T LIKED ANY VIDEOS... YET'
                         },
                         noItemsDescription: {

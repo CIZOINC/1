@@ -105,7 +105,9 @@
                     let videoUpdateBody = {
                             category_id: videoObject.category_id,
                             title: videoObject.title,
+                            subtitle: videoObject.subtitle,
                             description: videoObject.description,
+                            description_title: videoObject.description_title,
                             mature_content: videoObject.mature_content,
                             tag_list: videoObject.tag_list
                         },
@@ -147,12 +149,23 @@
             function openModal(video, $scope, $uibModal) {
                 let emptyVideo = {
                     title: 'Add title',
+                    subtitle: '',
+                    description_title: '',
                     description: 'Add a video description',
                     mature_content: false,
                     visible: false,
                     featured: false,
                     tag_list: 'Add Tags'
                 };
+
+                function isEmptyVideo(video) {
+                    return video.category_id === emptyVideo.category_id &&
+                        video.description === emptyVideo.description &&
+                        video.description_title === emptyVideo.description_title &&
+                        video.title === emptyVideo.title &&
+                        video.subtitle === emptyVideo.subtitle &&
+                        video.tag_list === emptyVideo.tag_list;
+                }
 
                 if ($scope.videoCategories && $scope.videoCategories[0] && $scope.videoCategories[0].id) {
                     emptyVideo.category_id = $scope.videoCategories[0].id;
@@ -218,13 +231,13 @@
                             });
 
                             modalInstance.result.then(function (resultVideo) {
-                                if (resultVideo.category_id === emptyVideo.category_id && resultVideo.description === emptyVideo.description && resultVideo.title === emptyVideo.title && resultVideo.tag_list === emptyVideo.tag_list) {
+                                if (isEmptyVideo(resultVideo)) {
                                     deleteVideoCB(resultVideo);
                                 } else {
                                     updateVideoCB(resultVideo);
                                 }
                             }, function (result) {
-                                if (($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list) || result === 'delete') {
+                                if (isEmptyVideo($scope.video) || result === 'delete') {
                                     deleteVideoCB($scope.video);
                                 }
                             });
@@ -246,13 +259,13 @@
                     });
 
                     modalInstance.result.then(function (resultVideo) {
-                        if (resultVideo.category_id === emptyVideo.category_id && resultVideo.description === emptyVideo.description && resultVideo.title === emptyVideo.title && resultVideo.tag_list === emptyVideo.tag_list) {
+                        if (isEmptyVideo(resultVideo)) {
                             deleteVideoCB(resultVideo);
                         } else {
                             updateVideoCB(resultVideo);
                         }
                     }, function (result) {
-                        if ($scope.video.category_id === emptyVideo.category_id && $scope.video.description === emptyVideo.description && $scope.video.title === emptyVideo.title && $scope.video.tag_list === emptyVideo.tag_list || result === 'delete') {
+                        if (isEmptyVideo($scope.video) || result === 'delete') {
                             deleteVideoCB($scope.video);
                         }
                     });
@@ -364,6 +377,28 @@
                             url: configuration.url + `/videos/${videoID}`,
                             data: {
                                 title: videoTitle
+                            },
+                            headers: {
+                                authorization: `Bearer ${$window.sessionStorage.token}`
+                            }
+                        };
+
+                        $http(options).then(function successCB(response) {
+                            callback(null, response.data);
+                        }, function errorCB(error) {
+                            callback(error);
+                        });
+                    } else {
+                        throw new Error('No Admin Token');
+                    }
+                },
+                editSubTitle: function (videoID, subtitle, callback) {
+                    if ($window.sessionStorage.token) {
+                        let options = {
+                            method: 'PUT',
+                            url: configuration.url + `/videos/${videoID}`,
+                            data: {
+                                subtitle: subtitle
                             },
                             headers: {
                                 authorization: `Bearer ${$window.sessionStorage.token}`
@@ -635,6 +670,20 @@
                 } else {
                     return 'Invalid title, must contain at least one character.';
                 }
+            };
+
+            $scope.modifySubTitle = function (video, subtitle) {
+                modifyVideoProperty.editSubTitle(video.id, subtitle, function (err, res) {
+                    if (err) {
+                        videoNotifier('danger', 'Error', 'Unable to modify the video\'s title due to a server error.', function (clicked) {
+                            console.error(clicked);
+                        });
+                        return 'Server error';
+                    } else {
+                        console.log(res);
+                        return true;
+                    }
+                });
             };
 
             $scope.modifyCategory = function (video, category) {

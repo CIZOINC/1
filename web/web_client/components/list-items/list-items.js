@@ -4,7 +4,7 @@ angular
     .directive('listItems', listItems);
 
 /* @ngInject */
-function listItems($state, $rootScope, _, playerServ, $timeout) {
+function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
     "use strict";
 
     return {
@@ -104,8 +104,19 @@ function listItems($state, $rootScope, _, playerServ, $timeout) {
 
         }
 
+        function isMatureVideo(video) {
+            const isMatureVideo = video.mature_content && !userServ.isUnexpiredToken(scope.storage.token);
+            if (isMatureVideo) {
+                scope.storage.showMatureScreen = true;
+            }
+            return isMatureVideo;
+        }
 
-        function moveToPlayPage(id) {
+        function moveToPlayPage(video) {
+            if (isMatureVideo(video)) {
+                return;
+            }
+            const id = video.id;
             let obj = {videoId: id};
             $rootScope.$emit('replayVideo', obj);
             $rootScope.$broadcast('replayVideo', obj);
@@ -117,4 +128,4 @@ function listItems($state, $rootScope, _, playerServ, $timeout) {
         }
     }
 };
-listItems.$inject = ['$state', '$rootScope', 'lodash', 'playerServ', '$timeout'];
+listItems.$inject = ['$state', '$rootScope', 'lodash', 'playerServ', 'userServ', '$timeout'];

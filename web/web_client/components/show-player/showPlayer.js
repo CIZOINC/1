@@ -8,6 +8,9 @@ angular
 function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, $filter, playerServ, userServ) {
     "use strict";
 
+    const BTN_PLAY_URL   = "images/iconVideoPlayIntermission.svg";
+    const BTN_REPLAY_URL = "images/iconVideoReplay.svg";
+
     return {
         restrict: 'E',
         templateUrl: 'components/show-player/showPlayer.html',
@@ -21,7 +24,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             storage: '='
         }
     };
-
 
     function linkFn(scope, element, attrs) {
         scope = angular.extend(scope, {
@@ -75,6 +77,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             togglePlayPause: togglePlayPause,
             imageHover: imageHover,
             imageBlur: imageBlur,
+            playButtonImage: BTN_PLAY_URL,
+            hasNextVideo: true,
 
             soundHover: soundHover,
             soundBlur: soundBlur,
@@ -143,47 +147,52 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.videoDescription = $filter('nl2br')(scope.video.description);
                 scope.videoDescription = $filter('parseLinks')(scope.videoDescription);
             }
-            if (scope.video && scope.video.mature_content && !userServ.isUnexpiredToken(scope.storage.token)) {
+            if (scope.video && scope.video.streams) {
+                scope.sources = scope.video.streams.map((source) => {
+                    return {src: $sce.trustAsResourceUrl(source.link), type: `video/${source.stream_type}`}
+                });
+                scope.iconTitle = scope.video && scope.video.category_id ? categoryIcon(scope.video.category_id) : '';
+                scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
+                scope.nextVideo = getNextVideo();
+                scope.isIntermissionPaused = false;
+
+                setFavoritesState(scope.video.favorites);
+
+                $timeout( () => {
+                    if (!scope.showPlayer.classList.contains('hidden-layer') && scope.video.instantPlay) {
+                        togglePlayPause();
+                        scope.video.instantPlay = false;
+                    }
+
+                    // update playing status for carousel
+                    _.each(angular.element(element[0].querySelectorAll(`.featured-carousel_content_item`)), (item) => {
+                        item.classList.remove('featured-carousel_content_item--playing');
+                        angular.element(item.querySelector(`.featured-carousel_content_item_title`))[0]
+                            .classList.remove('featured-carousel_content_item_title--playing');
+                    });
+                    let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
+                    if (featuredItem) {
+                        scope.carouselItem = featuredItem;
+                        markAsSelected();
+                    }
+                    scope.soundSliderModel.value = scope.screen.volume * 10;
+                });
+
+                checkMatureContent();
+            }
+        });
+
+        function checkMatureContent() {
+            if (scope.video.mature_content && !userServ.isUnexpiredToken(scope.storage.token)) {
                 scope.storage.showMatureScreen = true;
                 scope.screen.pause();
                 if (scope.intermissionStopTimer) {
                     $interval.cancel(scope.intermissionStopTimer);
                 }
-            } else {
-                if (scope.video && scope.video.streams) {
-                    scope.sources = scope.video.streams.map((source) => {
-                        return {src: $sce.trustAsResourceUrl(source.link), type: `video/${source.stream_type}`}
-                    });
-                    scope.iconTitle = scope.video && scope.video.category_id ? categoryIcon(scope.video.category_id) : '';
-                    scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
-                    scope.nextVideo = getNextVideo();
-                    scope.isIntermissionPaused = false;
-
-                    setFavoritesState(scope.video.favorites);
-
-                    $timeout( () => {
-                        if (!scope.showPlayer.classList.contains('hidden-layer') && scope.video.instantPlay) {
-                            togglePlayPause();
-                            scope.video.instantPlay = false;
-                        }
-
-                        // update playing status for carousel
-                        _.each(angular.element(element[0].querySelectorAll(`.featured-carousel_content_item`)), (item) => {
-                            item.classList.remove('featured-carousel_content_item--playing');
-                            angular.element(item.querySelector(`.featured-carousel_content_item_title`))[0]
-                                .classList.remove('featured-carousel_content_item_title--playing');
-                        });
-                        let featuredItem = angular.element(element[0].querySelector(`#featured-carousel-video-${scope.video.id}`))[0];
-                        if (featuredItem) {
-                            scope.carouselItem = featuredItem;
-                            markAsSelected();
-                        }
-                        scope.soundSliderModel.value = scope.screen.volume * 10;
-                    });
-                }
+                return true;
             }
-
-        });
+            return false;
+        }
 
         function markAsSelected() {
             scope.carouselItem.classList.add('featured-carousel_content_item--playing');
@@ -220,6 +229,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                             scope.sliderModel.value = scope.sliderModel.start;
                             scope.sliderModel.start = 0;
                         }
+                        if (checkMatureContent()) return;
                         scope.screen.currentTime = scope.sliderModel.value;
                     }
                 }
@@ -254,6 +264,15 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             setDescriptionState(state);
         }
 
+        function playNextOrReplay() {
+            let nextVideo = getNextVideo();
+            if (nextVideo) {
+                scope.playNextVideo();
+            } else {
+                scope.replayVideo();
+            }
+        }
+
         function setIntermission() {
             scope.isIntermissionState = true;
             imageBlur();
@@ -262,13 +281,15 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             setPlayingEnvState(false);
 
+            let nextVideo = getNextVideo();
+            scope.playButtonImage = nextVideo ? BTN_PLAY_URL : BTN_REPLAY_URL;
+            scope.hasNextVideo = !!nextVideo;
+
             scope.intermissionStopTimer = $interval(() => {
                 scope.intermissionCountdownValue++;
                 if (scope.intermissionCountdownValue > scope.intermissionCountdownMax) {
                     $interval.cancel(scope.intermissionStopTimer);
-                    scope.playNextVideo();
-
-
+                    playNextOrReplay();
                 }
             }, 50);
 
@@ -301,7 +322,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                     scope.intermissionCountdownValue++;
                     if (scope.intermissionCountdownValue > scope.intermissionCountdownMax) {
                         $interval.cancel(scope.intermissionStopTimer);
-                        scope.playNextVideo();
+                        playNextOrReplay();
                     }
                 }, 50);
                 scope.isIntermissionPaused = false;
@@ -349,6 +370,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 setIntermissionState(false);
                 $timeout( () => {
                     scope.screen.play();
+                    checkMatureContent();
                 }, 500);
             } else {
                 scope.screen.pause();
@@ -375,6 +397,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 setIntermissionState(false);
                 $timeout( () => {
                     scope.screen.play();
+                    checkMatureContent();
                 }, 500);
             }
         }
@@ -411,8 +434,10 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             scope.screen.currentTime = 0;
             scope.isIntermissionState = false;
+            scope.isIntermissionPaused = false;
             $timeout( () => {
                 scope.screen.play();
+                checkMatureContent();
             }, 500);
         }
 
@@ -585,7 +610,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             if (scope.isIntermissionState) {
                 scope.isIntermissionState = false;
                 pauseIntermissionToggle(undefined, true);
-                playNextVideo();
+                playNextOrReplay();
+
                 return;
             }
 
@@ -603,6 +629,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 if (scope.$root.isInitLoad) {
                     scope.$root.isInitLoad = false;
                 }
+                checkMatureContent();
             } else {
                 scope.screen.pause();
                 $log.info('set to pause');

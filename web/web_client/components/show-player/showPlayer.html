@@ -12,7 +12,7 @@
     <div class="col-xs-12 no-padding hero-image-layer show-player_hero-image-layer-next hidden-layer" style="background-image: url({{nextVideo.hero_images.hero_image_link}})">
     </div>
 
-    <featured-carousel featured-list="featuredList" selected-video="featuredItem" on-replay="replayVideo()"></featured-carousel>
+    <featured-carousel featured-list="featuredList" selected-video="featuredItem" on-replay="replayVideo()" storage="storage"></featured-carousel>
 </div>
 
 <!-- description layer-->
@@ -109,7 +109,13 @@
                             <img src="images/iconVideoPlay.svg" class="featured-player_buttons-layer_center-elements_play-button--onhoverout">
                             <img src="images/iconVidPlayHover.svg" class="featured-player_buttons-layer_center-elements_play-button--onhover">
                         </div>
-                        <img src="images/iconVideoPlayIntermission.svg" ng-click="togglePlayPause($event)" class="show-player_buttons-layer_center-elements_play-button" ng-show="isInIntermission()">
+                        <img
+                            ng-src="{{ playButtonImage }}"
+                            ng-click="togglePlayPause($event)"
+                            class="show-player_buttons-layer_center-elements_play-button"
+                            ng-class="{'show-player_buttons-layer_center-elements_play-button--replay': !hasNextVideo}"
+                            ng-show="isInIntermission()"
+                        >
                         <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="show-player_buttons-layer_center-elements_pause-button hidden-layer">
                     </div>
 

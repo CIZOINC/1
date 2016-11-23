@@ -14,6 +14,8 @@ var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var htmlmin = require('gulp-html-minifier');
 var runSequence = require('run-sequence');
+var livereload = require('gulp-livereload');
+var connect = require('gulp-connect');
 
 var thirdPartyJS = [
     '../node_modules/angular/angular.js',
@@ -24,7 +26,8 @@ var thirdPartyJS = [
     '../node_modules/moment/moment.js',
     '../node_modules/lodash/lodash.js',
     '../node_modules/angularjs-slider/dist/rzslider.js',
-    '../node_modules/angular-svg-round-progressbar/build/roundProgress.js'
+    '../node_modules/angular-svg-round-progressbar/build/roundProgress.js',
+    '../node_modules/angular-easyfb/build/angular-easyfb.js'
 ];
 var thirdPartyCSS = [
     '../node_modules/angular/angular-csp.css',
@@ -67,6 +70,22 @@ gulp.task('collect_css', function () {
         .pipe(gulp.dest('./temp'));
 });
 
+gulp.task('compile_css', function () {
+    "use strict";
+    return gulp.src([
+        '../node_modules/angular/angular-csp.css',
+        '../node_modules/bootstrap/dist/css/bootstrap.css',
+        './**/*.less',
+        '../node_modules/angularjs-slider/src/rzslider.less'
+    ])
+        .pipe(less())
+        .pipe(concat('all.min.css'))
+        .pipe(cssmin())
+        .pipe(gulp.dest('./temp/final'))
+        .pipe(connect.reload());
+});
+
+
 gulp.task('collect_html', function () {
     "use strict";
     gulp.src([
@@ -96,7 +115,8 @@ gulp.task('compile_js', function () {
 gulp.task('compile_appctrl_staging', function () {
     "use strict";
     return gulp.src(['AppCtrl.js'])
-        .pipe(replace("facebookAppId: '459923084193687'", "facebookAppId: '459923084193687'"))
+        // Replace FacebookAppId
+        .pipe(replace("459923084193687", "459923084193687"))
         .pipe(babel({
             presets: ['es2015']
         }))
@@ -106,7 +126,7 @@ gulp.task('compile_appctrl_staging', function () {
 gulp.task('compile_appctrl_production', function () {
     "use strict";
     return gulp.src(['AppCtrl.js'])
-        .pipe(replace("facebookAppId: '459923084193687'", "facebookAppId: '459778204208175'"))
+        .pipe(replace("459923084193687", "459778204208175"))
         .pipe(replace("hostName: `https://staging.cizo.com`", "hostName: `https://api.cizo.com`"))
         .pipe(replace("sharingPath: 'https://staging.cizo.com/app'", "sharingPath: 'https://www.cizo.com/'"))
         .pipe(babel({
@@ -122,7 +142,8 @@ gulp.task('minify_third_party_js', function () {
         .pipe(concat('3d-party.min.js', {newLine: ';'}))
         .pipe(uglify({mangle: true}))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./temp/final'));
+        .pipe(gulp.dest('./temp/final'))
+        .pipe(connect.reload());
 });
 
 gulp.task('minify_ng_js', function () {
@@ -136,7 +157,8 @@ gulp.task('minify_ng_js', function () {
         .pipe(ngAnnotate())
         .pipe(uglify({mangle: true}))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./temp/final'));
+        .pipe(gulp.dest('./temp/final'))
+        .pipe(connect.reload());
 });
 
 gulp.task('minify_css', function () {
@@ -148,7 +170,8 @@ gulp.task('minify_css', function () {
         ])
         .pipe(concat('all.min.css'))
         .pipe(cssmin())
-        .pipe(gulp.dest('./temp/final'));
+        .pipe(gulp.dest('./temp/final'))
+        .pipe(connect.reload());
 });
 
 gulp.task('copy_bootstrap_fonts', function () {
@@ -261,7 +284,7 @@ gulp.task('build-staging', function (cb) {
     "use strict";
     runSequence('clean_temp',
         [
-            'collect_css',
+            'compile_css',
             'collect_html',
             'compile_js',
             'compile_appctrl_staging'
@@ -269,7 +292,6 @@ gulp.task('build-staging', function (cb) {
         [
             'minify_ng_js',
             'minify_third_party_js',
-            'minify_css',
             'copy_dependencies',
             'copy_icon-fonts',
             'copy_bootstrap_fonts',
@@ -282,7 +304,7 @@ gulp.task('build-production', function (cb) {
     "use strict";
     runSequence('clean_temp',
         [
-            'collect_css',
+            'compile_css',
             'collect_html',
             'compile_js',
             'compile_appctrl_production'
@@ -290,7 +312,6 @@ gulp.task('build-production', function (cb) {
         [
             'minify_ng_js',
             'minify_third_party_js',
-            'minify_css',
             'copy_dependencies',
             'copy_icon-fonts',
             'copy_bootstrap_fonts',
@@ -303,6 +324,20 @@ gulp.task('build-all', function (cb) {
     runSequence('build-staging', 'build-production', cb)
 });
 
-gulp.task('watch', function () {
-    gulp.watch('./**/*.html', ['Index_files_gathering']);
+gulp.task('watch', ['serve_final'], function () {
+    gulp.watch('**/*.html', ['Index_files_gathering', 'collect_html']);
+    gulp.watch('**/*.less', ['compile_css']);
+    gulp.watch(['!gulpfile.js', './components/**/*.js', './common/**/*.js', './views/**/*.js'],
+        ['compile_js', 'minify_ng_js', 'minify_third_party_js', 'compile_appctrl_staging']);
+});
+
+gulp.task('serve_final', function() {
+    connect.server({
+        root: 'temp/final',
+        livereload: true
+    });
+});
+
+gulp.task('serve', function (cb) {
+    runSequence('build-staging', 'watch', cb);
 });

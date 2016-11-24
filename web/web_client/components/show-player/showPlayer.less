@@ -11,15 +11,13 @@
   align-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   transition: height 0.5s ease-out;
   margin-bottom: 30px;
   background-color: black;
-  position: absolute;
-  left: 0;
-  top: 0;
   overflow: hidden;
   min-height: 740px;
+  position: relative;
 
   &__filler {
     position: absolute;
@@ -32,7 +30,7 @@
   }
 
   &--playing {
-    height: calc(~"100% + 210px");
+    height: calc(~"100vh + 210px");
     transition: height 0.5s ease-out;
     .show-player__filler {
       display: none;

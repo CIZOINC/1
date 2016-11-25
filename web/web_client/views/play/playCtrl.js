@@ -30,7 +30,16 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
     }
 
 
-
+    function categorySortPredicate(a, b) {
+        if (a.id === $scope.videoItem.category_id) {
+            return -1;
+        } else
+        if (b.id === $scope.videoItem.category_id) {
+            return 1;
+        } else {
+            return $scope.categoriesList.indexOf(a) - $scope.categoriesList.indexOf(b);
+        }
+    }
 
     function viewSetup() {
         $scope = angular.extend($scope, {
@@ -38,6 +47,8 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
             videoItem: undefined,
             videoCategoryId: undefined,
             categoriesList: $rootScope.categoriesList,
+            sortedCategoriesList: [],
+            category: undefined,
             videosFullList: undefined
         });
 
@@ -50,20 +61,21 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
             $scope.featuredList = $rootScope.featuredList;
         }
 
-
         if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
             $scope.videoCategoryId = Number($stateParams.categoryId);
-            let filteredVideos = _.filter($scope.videosList, videos => videos.category_id === Number($stateParams.categoryId));
-            $scope.videosList = filteredVideos;
-        } else {
-            $scope.videosList = $scope.videosList;
+            $scope.category = _.filter($rootScope.categoriesList, item => item.id === $scope.videoCategoryId);
         }
 
         if (Number($stateParams.videoId)) {
             let video = _.find($scope.videosList, video => video.id === Number($stateParams.videoId));
             video.instantPlay = true;
             $scope.videoItem = video;
+        }
 
+        if ($scope.videoCategoryId) {
+            $scope.sortedCategoriesList = $scope.categoriesList.slice().sort(categorySortPredicate);
+        } else {
+            $scope.sortedCategoriesList = $scope.categoriesList;
         }
     }
 

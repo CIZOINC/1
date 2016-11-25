@@ -1,0 +1,258 @@
+.category-carousel {
+
+  &__title {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    color: #2b3d53;
+    margin-left: 20px;
+  }
+  &__title-icon {
+    font-size: 45px;
+    &.icon-categorytech {
+      font-size: 26px;
+    }
+  }
+
+  &__title-name {
+    font-size: 35px;
+    font-family: main-cizo;
+  }
+
+  &__carousel {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    position: relative;
+    width: 100%;
+
+    padding: 30px 0;
+  }
+
+  .category-carousel-button-mix {
+    background-color: transparent;
+    color: white;
+    font-size: 40px;
+    width: 50px;
+    cursor: pointer;
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__left {
+    .category-carousel-button-mix;
+    margin-left: -40px;
+  }
+
+  &__content {
+    display: flex;
+    width: 1232px;
+    overflow-x: hidden;
+  }
+
+  &__content-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-content: center;
+    align-items: center;
+    transition: margin-left .3s ease-out 0.1s;
+  }
+
+  &__right {
+    .category-carousel-button-mix;
+    margin-left: -20px;
+  }
+}
+
+.category-carousel-item {
+  box-sizing: border-box;
+  margin: 0 15px;
+  background-size:  cover;
+  border: solid 1px #1c1f24;
+
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: flex-end;
+  font-family: main-cizo;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: white;
+
+  flex: 0 0 auto;
+  box-sizing: content-box;
+  width: 276px;
+  height: 212px;
+
+  &--playing {
+    border: solid 1px #00ffff;
+  }
+
+  &:hover {
+    border: solid 1px #00ffff;
+  }
+
+  &__image {
+    width:  276px;
+    height: 155px;
+    overflow: hidden;
+    background-size:  cover;
+
+    &--intermission {
+      -webkit-filter: grayscale(1) brightness(.2);
+    }
+
+  }
+
+  &__watched-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width:  276px;
+    height: 155px;
+    overflow: hidden;
+
+    background-color: rgba(38, 47, 57, 0.7);
+    text-align: center;
+  }
+
+  &__watched-overlay-icon {
+    margin: 26px auto 6px auto;
+  }
+
+  &__watched-overlay-text {
+    font-size: 11px;
+  }
+
+  &__overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+
+  }
+  &__overlay-button {
+    color: white;
+    font-size: 36px;
+    text-shadow: 3px 5px 0 rgba(0,0,0,.6);
+    margin-top: -15px;
+    opacity: 0;
+    transition: opacity 0.3s linear;
+    .category-carousel-item:hover & {
+      opacity: 1;
+    }
+    .category-carousel-item--watched:hover & {
+      opacity: 0;
+    }
+  }
+
+  &__label {
+    margin: 10px 0 0 -5px;
+    position: absolute;
+    top: 0;
+    padding: 5px 10px;
+    background-color: #00ffff;
+    width: 30%;
+    font-size: 12px;
+    font-weight: 900;
+    z-index: 10;
+    color: black;
+    &:after {
+      content: "";
+      border-left: .5em solid #00ffff; /* This width determines the arrows length */
+      border-top: 10pt solid transparent; /* This width has to be 50% of 'line-height + padding-top + padding-bottom' */
+      border-bottom: 10pt solid transparent; /* Same for this width */
+      width: 0;
+      height: 0;
+      position: absolute;
+      right: -.5em; /* This has to be the same value as 'border-left's width */
+      top: 0;
+    }
+
+    &:before {
+      content: "";
+      border-right: 5px solid #1c9eb2;
+      border-top: 5px solid transparent;
+      width: 0;
+      height: 0;
+      position: absolute;
+      left: 0;
+      top: -5px;
+    }
+  }
+
+  &__description {
+    background: #262f39;
+    height: 57px;
+  }
+
+  &__title {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    text-align: center;
+    font-family: 'main-cizo';
+    font-size: 16px;
+    font-weight: normal;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    z-index: 10;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &--playing {
+      color: #00ffff;
+      font-family: bold-cizo;
+    }
+  }
+
+  &__subtitle {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-family: 'main-cizo';
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  &__intermission {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    align-content: center;
+    flex-direction: row;
+    top: 0;
+  }
+
+  &__intermission-button {
+    color: white;
+    font-size: 55px;
+    margin-top: 20px;
+    text-shadow: 3px 5px 0 rgba(0, 0, 0, .6);
+  }
+}

@@ -1,0 +1,42 @@
+<div class="category-carousel">
+    <div class="category-carousel__header">
+        <div class="category-carousel__title">
+            <span class="icon-category{{::getIconName(category)}} category-carousel__title-icon"></span>
+            <span class="category-carousel__title-name">{{::category.title}}</span>
+        </div>
+    </div>
+    <div class="category-carousel__carousel">
+        <button class="category-carousel__left icon-back"  ng-click="movePrev()"></button>
+        <div class="category-carousel__content">
+            <div class="category-carousel__content-wrapper" ng-style="{'margin-left': itemsOffset}">
+                <div class="category-carousel-item"
+                     ng-class="{'category-carousel-item--watched': video.isWatched, 'category-carousel-item--playing': video === selectedVideo}"
+                     ng-repeat="video in videosForCategory"
+                     ng-click="selectVideo(category, video)"
+                     ng-attr-id="{{'category-carousel-video-' + video.id}}"
+                >
+
+                    <div class="category-carousel-item__image" style="background-image: url('{{::video.hero_images.hero_image_link_thumb_banner}}')"></div>
+                    <div class="category-carousel-item__watched-overlay ng-hide" ng-show="::video.isWatched">
+                        <div class="category-carousel-item__watched-overlay-icon">
+                            <span class="icon-replay category-carousel-item__intermission-button" ng-click="replayVideo(category, video)"></span>
+                        </div>
+                        <div class="category-carousel-item__watched-overlay-text">
+                            WATCHED
+                        </div>
+                    </div>
+
+                    <div class="category-carousel-item__overlay">
+                        <span class="category-carousel-item__overlay-button icon-play"></span>
+                    </div>
+                    <div class="category-carousel-item__description">
+                        <div class="category-carousel-item__title">{{::video.title}}</div>
+                        <div class="category-carousel-item__subtitle">{{::video.subtitle}}</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="category-carousel__right icon-forward" ng-click="moveNext()"></button>
+    </div>
+</div>

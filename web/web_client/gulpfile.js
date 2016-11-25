@@ -162,6 +162,16 @@ gulp.task('minify_ng_js', function () {
         .pipe(connect.reload());
 });
 
+gulp.task('minify_all_js', ['compile_js', 'compile_appctrl_staging'], function (cb) {
+    "use strict";
+    runSequence(
+        [
+            'minify_ng_js',
+            'minify_third_party_js',
+        ],
+        cb);
+});
+
 gulp.task('minify_css', function () {
     "use strict";
     return gulp.src([
@@ -266,6 +276,8 @@ gulp.task('default', function () {
         [
             'collect_css',
             'collect_html',
+        ],
+        [
             'compile_js'
         ],
         [
@@ -281,12 +293,16 @@ gulp.task('default', function () {
 });
 
 
+
+
 gulp.task('build-staging', function (cb) {
     "use strict";
     runSequence('clean_temp',
         [
             'compile_css',
-            'collect_html',
+            'collect_html'
+        ],
+        [
             'compile_js',
             'compile_appctrl_staging'
         ],
@@ -306,7 +322,9 @@ gulp.task('build-production', function (cb) {
     runSequence('clean_temp',
         [
             'compile_css',
-            'collect_html',
+            'collect_html'
+        ],
+        [
             'compile_js',
             'compile_appctrl_production'
         ],
@@ -326,10 +344,10 @@ gulp.task('build-all', function (cb) {
 });
 
 gulp.task('watch', ['serve_final'], function () {
-    gulp.watch('**/*.html', ['Index_files_gathering', 'collect_html']);
+    gulp.watch('**/*.html', ['collect_html']);
     gulp.watch('**/*.less', ['compile_css']);
     gulp.watch(['!gulpfile.js', './components/**/*.js', './common/**/*.js', './views/**/*.js'],
-        ['compile_js', 'minify_ng_js', 'minify_third_party_js', 'compile_appctrl_staging']);
+        ['minify_all_js']);
 });
 
 gulp.task('serve_final', function() {

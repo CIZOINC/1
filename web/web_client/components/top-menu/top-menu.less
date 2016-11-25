@@ -12,7 +12,9 @@
   padding: 5px;
   z-index: 2147485680;
 
-  background: linear-gradient(to bottom, black, transparent 80%);
+  background-image: linear-gradient(to top, #1d1d1d, rgba(29, 29, 29, 0)), linear-gradient(#1d1d1d, #1d1d1d);
+  opacity: 0.8;
+  height: 100px;
 
   &_navigation {
     display: flex;
@@ -64,11 +66,17 @@
     &_item {
       font-size: 18px;
       font-family: main-cizo;
+      color: rgba(255, 255, 255, 0.5);
+      transition: 0.3s ease;
       padding: 5px 15px;
       cursor: pointer;
       &_empty {
         pointer-events: none;
         opacity: .5;
+      }
+
+      &:hover {
+        color: #fff;
       }
     }
   }
@@ -171,13 +179,18 @@
   }
 
   &_login {
-    width: 220px;
-    border: 1px solid white;
+    border: none;
     font-family: main-cizo;
     font-size: 18px;
+    margin: 0 31px;
 
-    color: white;
+    color: rgba(255, 255, 255, 0.5);
+    transition: 0.3s ease;
     background-color: transparent;
+
+    &:hover {
+      color: #fff;
+    }
 
     &_icon {
       padding: 5px;

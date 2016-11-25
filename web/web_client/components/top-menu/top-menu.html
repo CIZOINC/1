@@ -1,47 +1,46 @@
 <div class="top-menu">
-
-    <div class="top-menu_navigation">
-        <div class="top-menu_main">
-            <span class="icon-menu top-menu_icon" ng-click="toggleSideMenu()"></span>
-            <img class="top-menu_logo" src="images/logo.svg" ng-click="moveToHome()">
-        </div>
-
-        <div class="top-menu_categories">
-            <div class="top-menu_categories_item"
-                 ng-repeat="category in categoryList"
-                 ng-class="{ 'top-menu_categories_item_empty' : category.empty }"
-                 ng-click="categoryClick($event, category)">
-                {{category.title}}
-            </div>
-        </div>
-    </div>
-
-    <div class="top-menu_advanced" ng-show="onShowAdvanced()" >
-        <div class="top-menu_search" ng-class="{'top-menu_search--opened': searchResult && searchResult.length}">
-            <div class="top-menu_search_string">
-                <button class="top-menu_search_button">
-                    <img src="images/iconSearch.svg" alt="">
-                </button>
-                <input class="top-menu_search_input" placeholder="Search" ng-model="searchText" ng-keyup="search()">
+    <div class="top-menu_container">
+        <div class="top-menu_navigation">
+            <div class="top-menu_main">
+                <span class="icon-menu top-menu_icon" ng-click="toggleSideMenu()"></span>
+                <img class="top-menu_logo" src="images/logo.svg" ng-click="moveToHome()">
             </div>
 
-            <div class="top-menu_search_results" ng-if="searchResult && searchResult.length">
-                <div class="top-menu_search_results_item" ng-repeat="searchItem in searchResult" ng-click="playFoundVideo(searchItem.id)">
-                    <span class="icon-category{{::searchItem.iconName}} top-menu_search_results_item_icon"></span>
-                    <span>{{searchItem.title}}</span>
+            <div class="top-menu_categories">
+                <div class="top-menu_categories_item"
+                     ng-repeat="category in categoryList"
+                     ng-class="{ 'top-menu_categories_item_empty' : category.empty }"
+                     ng-click="categoryClick($event, category)">
+                    {{category.title}}
                 </div>
             </div>
         </div>
-        <button class="top-menu_login" ui-sref="register" ng-hide="storage.userAuthorized">
-            Sign Up
-        </button>
-        <button class="top-menu_login" ui-sref="login" ng-hide="storage.userAuthorized">
-            Login
-        </button>
-        <button class="top-menu_login" ng-click="logout()" ng-show="storage.userAuthorized">
-            Logout
-        </button>
+
+        <div class="top-menu_advanced" ng-show="onShowAdvanced()" >
+            <div class="top-menu_search" ng-class="{'top-menu_search--opened': searchResult && searchResult.length}">
+                <div class="top-menu_search_string">
+                    <button class="top-menu_search_button">
+                        <img src="images/iconSearch.svg" alt="">
+                    </button>
+                    <input class="top-menu_search_input" placeholder="Search" ng-model="searchText" ng-keyup="search()">
+                </div>
+
+                <div class="top-menu_search_results" ng-if="searchResult && searchResult.length">
+                    <div class="top-menu_search_results_item" ng-repeat="searchItem in searchResult" ng-click="playFoundVideo(searchItem.id)">
+                        <span class="icon-category{{::searchItem.iconName}} top-menu_search_results_item_icon"></span>
+                        <span>{{searchItem.title}}</span>
+                    </div>
+                </div>
+            </div>
+            <button class="top-menu_login" ui-sref="register" ng-hide="storage.userAuthorized">
+                Sign Up
+            </button>
+            <button class="top-menu_login" ui-sref="login" ng-hide="storage.userAuthorized">
+                Login
+            </button>
+            <button class="top-menu_login" ng-click="logout()" ng-show="storage.userAuthorized">
+                Logout
+            </button>
+        </div>
     </div>
-
-
 </div>

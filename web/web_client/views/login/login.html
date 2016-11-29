@@ -3,7 +3,7 @@
     <div class="login-form">
         <button class="login-form_facebook-login" ng-click="facebookLogin()">
             <span class="icon-facebook"></span>
-            Log in with Facebook
+            Login with Facebook
         </button>
 
         <div class="login-form_title_wrapper">
@@ -16,7 +16,7 @@
         <input ng-model="login.email" class="login-form_input" placeholder="Email Address" type="email" ng-keyup="changeFocusOnEnter($event)">
         <input ng-model="login.password" class="login-form_input login-form_input--pass" placeholder="Password" type="password" ng-keyup="loginOnEnter($event)">
 
-        <button class="login-form_login" ng-click="processLogin()">Log In</button>
+        <button class="login-form_login" ng-click="processLogin()">Login</button>
 
         <div class="login-form_forgot-password"  ng-click="resetPasswordClick()">Forgot email or password?</div>
     </div>

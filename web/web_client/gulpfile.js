@@ -16,6 +16,7 @@ var htmlmin = require('gulp-html-minifier');
 var runSequence = require('run-sequence');
 var livereload = require('gulp-livereload');
 var connect = require('gulp-connect');
+var gutil = require('gulp-util');
 
 var thirdPartyJS = [
     '../node_modules/angular/angular.js',
@@ -66,7 +67,7 @@ gulp.task('collect_css', function () {
         './**/*.less',
         '../node_modules/angularjs-slider/src/rzslider.less'
     ])
-        .pipe(less())
+        .pipe(less().on('error', gutil.log))
         .pipe(gulp.dest('./temp'));
 });
 
@@ -78,9 +79,9 @@ gulp.task('compile_css', function () {
         './**/*.less',
         '../node_modules/angularjs-slider/src/rzslider.less'
     ])
-        .pipe(less())
+        .pipe(less().on('error', gutil.log))
         .pipe(concat('all.min.css'))
-        .pipe(cssmin())
+        .pipe(cssmin().on('error', gutil.log))
         .pipe(gulp.dest('./temp/final'))
         .pipe(connect.reload());
 });
@@ -92,7 +93,7 @@ gulp.task('collect_html', function () {
             '!index.html',
             './**/*.html'
         ])
-        .pipe(templateCache())
+        .pipe(templateCache().on('error', gutil.log))
         .pipe(gulp.dest('common'));
 });
 
@@ -108,7 +109,7 @@ gulp.task('compile_js', function () {
         ])
         .pipe(babel({
             presets: ['es2015']
-        }))
+        }).on('error', gutil.log))
         .pipe(gulp.dest('./temp'));
 });
 
@@ -154,11 +155,21 @@ gulp.task('minify_ng_js', function () {
         ])
         .pipe(sourcemaps.init())
         .pipe(concat('ng.min.js'))
-        .pipe(ngAnnotate())
-        .pipe(uglify({mangle: true}))
+        .pipe(ngAnnotate().on('error', gutil.log))
+        .pipe(uglify({mangle: true}).on('error', gutil.log))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./temp/final'))
         .pipe(connect.reload());
+});
+
+gulp.task('minify_all_js', ['compile_js', 'compile_appctrl_staging'], function (cb) {
+    "use strict";
+    runSequence(
+        [
+            'minify_ng_js',
+            'minify_third_party_js',
+        ],
+        cb);
 });
 
 gulp.task('minify_css', function () {
@@ -169,7 +180,7 @@ gulp.task('minify_css', function () {
             './temp/**/*.css'
         ])
         .pipe(concat('all.min.css'))
-        .pipe(cssmin())
+        .pipe(cssmin().on('error', gutil.log))
         .pipe(gulp.dest('./temp/final'))
         .pipe(connect.reload());
 });
@@ -265,6 +276,8 @@ gulp.task('default', function () {
         [
             'collect_css',
             'collect_html',
+        ],
+        [
             'compile_js'
         ],
         [
@@ -280,12 +293,16 @@ gulp.task('default', function () {
 });
 
 
+
+
 gulp.task('build-staging', function (cb) {
     "use strict";
     runSequence('clean_temp',
         [
             'compile_css',
-            'collect_html',
+            'collect_html'
+        ],
+        [
             'compile_js',
             'compile_appctrl_staging'
         ],
@@ -305,7 +322,9 @@ gulp.task('build-production', function (cb) {
     runSequence('clean_temp',
         [
             'compile_css',
-            'collect_html',
+            'collect_html'
+        ],
+        [
             'compile_js',
             'compile_appctrl_production'
         ],
@@ -325,10 +344,10 @@ gulp.task('build-all', function (cb) {
 });
 
 gulp.task('watch', ['serve_final'], function () {
-    gulp.watch('**/*.html', ['Index_files_gathering', 'collect_html']);
+    gulp.watch('**/*.html', ['collect_html']);
     gulp.watch('**/*.less', ['compile_css']);
     gulp.watch(['!gulpfile.js', './components/**/*.js', './common/**/*.js', './views/**/*.js'],
-        ['compile_js', 'minify_ng_js', 'minify_third_party_js', 'compile_appctrl_staging']);
+        ['minify_all_js']);
 });
 
 gulp.task('serve_final', function() {

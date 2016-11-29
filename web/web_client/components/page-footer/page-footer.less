@@ -1,0 +1,49 @@
+.page-footer {
+  height: 77px;
+  line-height: 77px;
+
+  font-family: 'main-cizo';
+  font-size: 12px;
+
+  color: rgba(255, 255, 255, 0.3);
+  background-color: #181a1e;
+  width: 100%;
+
+  position: relative;
+
+  &__badges {
+    float: left;
+    padding-left: 52px;
+  }
+
+  &__links {
+    float: right;
+    padding-right: 52px;
+  }
+
+  &__link {
+    text-decoration: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.3);
+    transition: 0.3s ease;
+    margin-right: 34px;
+    &:focus, &:active, &:hover {
+      outline: none;
+      border: none;
+    }
+    &:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+
+  &__text {
+    color: rgba(255, 255, 255, 0.3);
+    margin-right: 34px;
+  }
+
+  &__icon {
+    width: 96px;
+  }
+
+}

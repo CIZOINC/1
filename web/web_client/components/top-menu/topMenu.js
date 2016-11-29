@@ -28,7 +28,6 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             searchResult: [],
 
             moveToHome: moveToHome,
-            moveToLogin: moveToLogin,
             categoryClick: categoryClick,
             search: search,
             playFoundVideo: playFoundVideo,
@@ -47,11 +46,6 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
         function moveToHome() {
             $state.go('home');
         }
-
-        function moveToLogin() {
-            $state.go('login');
-        }
-
 
         /**
          * app plays first video on the video list

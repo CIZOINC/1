@@ -17,7 +17,12 @@
     ></show-player>
 
     <div class="play_video-items">
-        <play-items category-id="{{videoCategoryId}}" videos="videosList" categories="categoriesList" storage="storage"></play-items>
-    </div>
+        <category-carousel category="category"
+                           videos="videosList"
+                           storage="storage"
+                           selected-video="videoItem"
+                           ng-repeat="category in sortedCategoriesList"></category-carousel>
 
+    </div>
+    <page-footer></page-footer>
 </div>

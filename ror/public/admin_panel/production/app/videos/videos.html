@@ -40,6 +40,11 @@
                         </th>
                         <th>
                             <div class="th">
+                                Subtitle
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th">
                                 Description
                             </div>
                         </th>
@@ -72,6 +77,9 @@
                         </td>
                         <td>
                             <span editable-text="video.title" e-cols="50" onbeforesave="modifyTitle(video, $data)">{{video.title}}</span>
+                        </td>
+                        <td>
+                            <span editable-text="video.subtitle" e-cols="50" onbeforesave="modifySubTitle(video, $data)">{{video.subtitle || 'Add subtitle'}}</span>
                         </td>
                         <td>
                             <span editable-textarea="video.description" e-rows="3" e-cols="80" onbeforesave="modifyDescription(video, $data)">{{video.description}}</span>

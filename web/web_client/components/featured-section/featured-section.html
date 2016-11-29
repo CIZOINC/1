@@ -1,0 +1,37 @@
+<div class="featured-section" video-id="{{video.id}}">
+    <div class="featured-section__filler"></div>
+    <top-menu categories="categoriesList" host-name="{{hostName}}" storage="storage" show-advanced="true"></top-menu>
+
+    <img class="featured-section__hero-image" ng-src="{{video.hero_images.hero_image_link}}">
+    <div class="featured-section__controls">
+        <div class="featured-section__scroll-button icon-back" ng-click="scroll(-1)"></div>
+        <div class="featured-section__play-button" ng-click="playVideo(video)">
+            <img src="images/iconVideoPlay.svg" class="featured-section__play-button-image">
+        </div>
+        <div class="featured-section__scroll-button icon-forward" ng-click="scroll(1)"></div>
+    </div>
+    <div class="featured-section__description">
+        <div class="featured-section__category-icon">
+            <span class="icon-category{{::getIconName(category)}} featured-section__title-icon"></span>
+        </div>
+        <div class="featured-section__category-description">
+            <div class="featured-section__title">
+                {{video.title}}
+            </div>
+            <div class="featured-section__subtitle">
+                {{video.subtitle}}
+            </div>
+        </div>
+    </div>
+    <div class="featured-section__dots">
+        <div class="featured-section__dot" ng-class="{'featured-section__dot--active': featuredVideo === video}" ng-repeat="featuredVideo in featuredListCut" ng-click="selectVideo(featuredVideo)"><div class="featured-section__dot-inner"></div></div>
+    </div>
+    <div class="featured-section__preloaders">
+        <!-- having link in body is allowed by he current version of WHATWG’s HTML (2016-07-28),
+            and the current draft of W3C’s HTML 5.2 (2016-07-04),
+            see link: https://html.spec.whatwg.org/multipage/semantics.html#body-ok
+        -->
+        <link rel="prefetch" ng-href="{{video.hero_images.hero_image_link}}" ng-repeat="video in featuredListCut">
+    </div>
+</div>
+

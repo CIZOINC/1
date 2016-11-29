@@ -76,7 +76,18 @@
                         <div class="panel-heading">
                             <span class="fa fa-quote-right"></span> Editorial title</div>
                         <div class="panel-body">
-                            <span id="videoDescriptionTitle" editable-text="video.description_title">{{video.description_title || 'Add title'}}</span>
+                            <span editable-text="video.description_title">{{video.description_title || 'Add description title'}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-dark">
+                        <div class="panel-heading">
+                            <span class="fa fa-quote-right"></span> Subtitle</div>
+                        <div class="panel-body">
+                            <span editable-text="video.subtitle">{{video.subtitle || 'Add subtitle'}}</span>
                         </div>
                     </div>
                 </div>

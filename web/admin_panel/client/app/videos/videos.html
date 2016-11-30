@@ -79,7 +79,7 @@
                             <span editable-text="video.title" e-cols="50" onbeforesave="modifyTitle(video, $data)">{{video.title}}</span>
                         </td>
                         <td>
-                            <span editable-text="video.subtitle" e-cols="50" onbeforesave="modifySubTitle(video, $data)">{{video.subtitle || 'Add subtitle'}}</span>
+                            <span editable-text="video.subtitle" e-cols="50" e-maxlength="50" onbeforesave="modifySubTitle(video, $data)">{{video.subtitle || 'Add subtitle'}}</span>
                         </td>
                         <td>
                             <span editable-textarea="video.description" e-rows="3" e-cols="80" onbeforesave="modifyDescription(video, $data)">{{video.description}}</span>

@@ -5,11 +5,13 @@ angular
 
 
 /* @ngInject */
-function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, $filter, playerServ, userServ) {
+function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, $filter, $state, playerServ, userServ) {
     "use strict";
 
     const BTN_PLAY_URL   = "images/iconVideoPlayIntermission.svg";
     const BTN_REPLAY_URL = "images/iconVideoReplay.svg";
+    // Inactivity period before hide the cursor
+    const INACTIVITY_MS = 2000;
 
     return {
         restrict: 'E',
@@ -32,21 +34,19 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             isIntermissionPaused: false,
             intermissionCountdownValue: 0,
             intermissionCountdownMax: 100,
+            inactive: false,
+            lastActiveTime: new Date(),
             screenList: angular.element(element[0].querySelector('div.video-layer video')),
             screen: angular.element(element[0].querySelector('div.video-layer video'))[0],
             sliderModel: new SliderModel(),
             soundSliderModel: new SoundSliderModel(),
 
             showPlayer: angular.element(document.querySelector(`show-player`))[0],
-            showPlayerInside: angular.element(document.querySelector(`.show-player`))[0],
+            showPlayerInside: angular.element(document.querySelector(`.show-player__player`))[0],
 
-            titlesOverlayLayer: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_titles`))[0],
             controlsOverlayLayer: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_controls`))[0],
             topElementsLayer: angular.element(element[0].querySelector(`.show-player_buttons-layer_top-elements`))[0],
             topElementsClose: angular.element(element[0].querySelector(`.show-player_buttons-layer_top-elements_close-button`))[0],
-            topElementsRightSide: angular.element(element[0].querySelector(`.show-player_buttons-layer_top-elements_rightside`))[0],
-            currentTitle: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_titles_current_title`))[0],
-            currentBlock: angular.element(element[0].querySelector(`.show-player_buttons-layer_bottom-elements_titles_current`))[0],
 
             buttonLayer: angular.element(element[0].querySelectorAll(`.show-player_buttons-layer`))[0],
             videoLayer: angular.element(element[0].querySelector(`div.video-layer`))[0],
@@ -56,7 +56,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             playButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_play-button`))[0],
             pauseButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_pause-button`))[0],
             centerControlGroup: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_group`))[0],
-            favoritesButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_top-elements_rightside_buttons_favorites`))[0],
+            favoritesButton: angular.element(element[0].querySelector(`.show-player__favorite-button`))[0],
 
             // intermission elements
             prevButton: angular.element(element[0].querySelector(`.show-player_buttons-layer_center-elements_prev`))[0],
@@ -77,8 +77,10 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             togglePlayPause: togglePlayPause,
             imageHover: imageHover,
             imageBlur: imageBlur,
+            onMouseMove: onMouseMove,
             playButtonImage: BTN_PLAY_URL,
             hasNextVideo: true,
+            tags: [],
 
             soundHover: soundHover,
             soundBlur: soundBlur,
@@ -100,6 +102,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             toggleFavorites: toggleFavorites,
             setWatched: setWatched,
             toggleMute: toggleMute,
+            getTags: getTags,
+            shareVideoItem: shareVideoItem,
 
             showControlsOnMove: showControlsOnMove
         });
@@ -114,8 +118,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
 
         scope.screenList.bind('timeupdate', () => {
-            scope.timePassed = moment().startOf('year').add(scope.screen.currentTime, 's').format('mm:ss');
-            scope.duration = moment().startOf('year').add(scope.screen.duration, 's').format('mm:ss');
+            scope.timePassed = moment().startOf('year').add(scope.screen.currentTime, 's').format('m:ss');
+            scope.duration = moment().startOf('year').add(scope.screen.duration, 's').format('m:ss');
 
             scope.sliderModel.value = scope.screen.currentTime;
             scope.sliderModel.options.ceil = scope.screen.duration;
@@ -155,6 +159,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
                 scope.nextVideo = getNextVideo();
                 scope.isIntermissionPaused = false;
+                scope.tags = getTags(scope.video);
 
                 setFavoritesState(scope.video.favorites);
 
@@ -194,6 +199,36 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             return false;
         }
 
+        function getTags(video) {
+            if (!video) return [];
+            const tags = (video.tag_list || "").split(',');
+            return _.map(tags, item => item.trim());
+        }
+
+        function shareVideoItem(type) {
+            const fullPath = `${scope.sharingPath}#/videos/${scope.video.id}/${scope.video.category_id}`;
+            const emailContent = (scope.video.description_title || scope.video.title) + "\n" + fullPath;
+            const socialMap = {
+                'facebook': 'https://www.facebook.com/dialog/share?' +
+                    `app_id=${scope.facebookAppId}&display=popup` +
+                    `&href=${encodeURIComponent(fullPath)}` +
+                    `&redirect_uri=${encodeURIComponent(fullPath)}`,
+                'google': 'https://plus.google.com/share?url=',
+                'twitter': 'https://twitter.com/home?status=',
+                'reddit': 'https://www.reddit.com/submit?url=',
+                'email': `mailto:%20?subject=${encodeURIComponent(scope.video.description_title || scope.video.title)}&body=${encodeURIComponent(emailContent)}`
+            };
+
+            if (type === 'facebook' || type === 'email') {
+                console.log(socialMap[type]);
+                window.location.href = socialMap[type];
+            } else {
+                const path = `${encodeURIComponent(fullPath)}`;
+                window.location = socialMap[type] + path;
+            }
+
+        }
+
         function markAsSelected() {
             scope.carouselItem.classList.add('featured-carousel_content_item--playing');
             scope.carouselItemTitle = angular.element(scope.carouselItem.querySelector(`.featured-carousel_content_item_title`))[0];
@@ -210,6 +245,19 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             if (obj.videoId == scope.video.id) {
                 replayVideo();
             }
+        });
+
+
+        function keyPressed(event) {
+            // Space pressed
+            if (event.charCode === 32 && !(event.target && event.target.nodeName === 'INPUT')) {
+                togglePlayPause();
+                event.preventDefault();
+            }
+        }
+        window.document.addEventListener('keypress', keyPressed, false);
+        scope.$on('$destroy', function(){
+            window.document.removeEventListener('keypress', keyPressed, false);
         });
 
 
@@ -296,13 +344,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             //
 
             scope.isPlaying = false;
-            scope.featuredPlayerInside.classList.remove('featured-player--playing');
+            scope.showPlayerInside.classList.remove('featured-player--playing');
             scope.imageLayer.classList.remove('featured-player_hero-image-layer--playing');
             scope.bottomElements.classList.add('hidden-layer');
-
-            document.querySelector('.home_video-items').classList.remove('home_video-items--playing');
-
-
         }
 
         function pauseIntermissionToggle(event,isForced) {
@@ -369,8 +413,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.isIntermissionState = false;
                 setIntermissionState(false);
                 $timeout( () => {
-                    scope.screen.play();
-                    checkMatureContent();
+                    $state.go('play', {videoId: nextVideo.id, categoryId: nextVideo.category_id});
                 }, 500);
             } else {
                 scope.screen.pause();
@@ -396,8 +439,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.isIntermissionState = false;
                 setIntermissionState(false);
                 $timeout( () => {
-                    scope.screen.play();
-                    checkMatureContent();
+                    $state.go('play', {videoId: prevVideo.id, categoryId: prevVideo.category_id});
                 }, 500);
             }
         }
@@ -457,7 +499,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             if (!scope.video.favorites) {
                 let itemIndex = _.indexOf(scope.storage.favoritesItems, scope.video.id);
-                scope.storage.favoritesItems.splice(itemIndex, 1);
+                if (itemIndex>=0) {
+                    scope.storage.favoritesItems.splice(itemIndex, 1);
+                }
                 userServ.deleteLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
             } else {
                 scope.storage.favoritesItems.push(scope.video.id);
@@ -493,13 +537,11 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 }
 
                 toggleControlsVisibility(false);
-                scope.topElementsRightSide.classList.remove('hidden-layer');
                 scope.buttonLayer.classList.add('player_buttons-layer--hover');
 
 
                 scope.waitingTimer = $timeout(() => {
                     toggleControlsVisibility(true);
-                    scope.topElementsRightSide.classList.add('hidden-layer');
                     scope.buttonLayer.classList.remove('player_buttons-layer--hover');
                 }, waitTime);
             }
@@ -530,7 +572,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         function imageHover() {
             if (scope.isPlaying && !scope.isIntermissionState) {
                 toggleControlsVisibility(false);
-                scope.topElementsRightSide.classList.remove('hidden-layer');
                 if (playerServ.getElementFullscreenState() && scope.isIntermissionState) {
                     scope.buttonLayer.classList.remove('show-player_buttons-layer--hover');
                 } else {
@@ -541,7 +582,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
         function imageBlur() {
             toggleControlsVisibility(true);
-            scope.topElementsRightSide.classList.add('hidden-layer');
             scope.buttonLayer.classList.remove('show-player_buttons-layer--hover');
         }
 
@@ -642,25 +682,17 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
 
         function setPlayPauseState(isPaused) {
-            scope.pauseButton.classList[_classAdd(!isPaused)]('hidden-layer');
             scope.playButton.classList[_classAdd(isPaused)]('hidden-layer');
         }
 
         function setVideoPlayState(isWatched) {
             element[0].classList[_classAdd(isWatched)]('show-player--play-state');
-            scope.currentTitle.classList[_classAdd(isWatched)]('show-player_buttons-layer_bottom-elements_titles_current_title--play-state');
-            scope.currentBlock.classList[_classAdd(isWatched)]('show-player_buttons-layer_bottom-elements_titles_current--play-state');
-            scope.titlesOverlayLayer.classList[_classAdd(!isWatched)]('show-player_buttons-layer_bottom-elements_titles--hero-image');
-            scope.titlesOverlayLayer.classList[_classAdd(!isWatched)]('hidden-layer');
             scope.controlsOverlayLayer.classList[_classAdd(!isWatched)]('hidden-layer');
         }
 
         function setShowHideControlsState(isShowed) {
-            scope.titlesOverlayLayer.classList[_classAdd(!isShowed)]('hidden-layer');
             scope.controlsOverlayLayer.classList[_classAdd(!isShowed)]('hidden-layer');
             scope.playButton.classList[_classAdd(!isShowed)]('hidden-layer');
-            scope.pauseButton.classList[_classAdd(!isShowed)]('hidden-layer');
-            scope.topElementsRightSide.classList[_classAdd(!isShowed)]('hidden-layer');
             scope.buttonLayer.classList[_classAdd(isShowed)]('show-player_buttons-layer--show-buttons');
 
         }
@@ -707,7 +739,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             scope.intermissionTitle.classList[_classAdd(!isIntermission)]('hidden-layer');
             scope.intermissionPause.classList[_classAdd(!isIntermission)]('hidden-layer');
             scope.playButton.classList[_classAdd(isIntermission)]('show-player_buttons-layer_center-elements_play-button--intermission');
-            scope.titlesOverlayLayer.classList[_classAdd(isIntermission)]('hidden-layer');
             scope.controlsOverlayLayer.classList[_classAdd(isIntermission)]('hidden-layer');
             scope.imageNextLayer.classList[_classAdd(!isIntermission)]('hidden-layer');
             scope.videoLayer.classList[_classAdd(isIntermission)]('hidden-layer');
@@ -724,7 +755,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
         function setDescriptionState(isDescription) {
             scope.descriptionLayer.classList[_classAdd(!isDescription)]('hidden-layer');
-            scope.titlesOverlayLayer.classList[_classAdd(isDescription)]('hidden-layer');
             if (playerServ.getElementFullscreenState()) {
                 scope.buttonLayer.classList[_classAdd(!isDescription)]('show-player_buttons-layer--fullscreen');
             } else {
@@ -734,7 +764,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             scope.controlsOverlayLayer.classList[_classAdd(isDescription)]('hidden-layer');
 
-            scope.topElementsRightSide.classList[_classAdd(isDescription)]('hidden-layer');
             if (!isDescription) {
                 if (scope.screen.paused ) {
                     setPlayPauseState(false);
@@ -743,13 +772,10 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 }
             } else {
                 scope.playButton.classList[_classAdd(isDescription)]('hidden-layer');
-                scope.pauseButton.classList[_classAdd(isDescription)]('hidden-layer');
             }
         }
 
         function setPlayingEnvState(isPlaying) {
-
-
             //update play elements
             _.each(angular.element(document.querySelectorAll(`.play-items_videos_item_title`)), (item) => {
                 item.classList.remove('play-items_videos_item_title--playing');
@@ -767,9 +793,21 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             scope.showPlayerInside.classList[_classAdd(isPlaying)]('show-player--playing');
             scope.imageLayer.classList[_classAdd(isPlaying)]('show-player_hero-image-layer--playing');
             scope.bottomElements.classList[_classAdd(!isPlaying)]('hidden-layer');
-
-            document.querySelector('.play_video-items').classList[_classAdd(isPlaying)]('play_video-items--playing');
         }
+
+        function onMouseMove() {
+            scope.lastActiveTime = new Date();
+        }
+
+        function checkForInactivity() {
+            const elapsedTimeFromLastActivity = (new Date()).getTime() - scope.lastActiveTime.getTime();
+            scope.inactive = elapsedTimeFromLastActivity > INACTIVITY_MS;
+        }
+
+        const inactivityCheckPromise = $interval(checkForInactivity, 300);
+        scope.$on('$destroy', function(){
+            $interval.cancel(inactivityCheckPromise);
+        });
     }
 }
-showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', '$filter', 'playerServ', 'userServ'];
+showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', '$filter', '$state', 'playerServ', 'userServ'];

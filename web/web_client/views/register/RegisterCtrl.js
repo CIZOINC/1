@@ -4,7 +4,7 @@ angular
     .controller('RegisterCtrl', RegisterCtrl);
 
 /* @ngInject */
-function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ, _) {
+function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ, _, storageServ) {
     "use strict";
 
     let months = [
@@ -145,4 +145,4 @@ function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ, _) {
 
 }
 
-RegisterCtrl.$inject = ['$scope', '$log', '$state', 'userServ', 'moment', 'playerServ', 'lodash'];
+RegisterCtrl.$inject = ['$scope', '$log', '$state', 'userServ', 'moment', 'playerServ', 'lodash', 'storageServ'];

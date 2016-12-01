@@ -3,21 +3,147 @@
 @color-mid: #356781;
 @color-dark: #2c3d51;
 @color-darker: #1b1c1e;
+@color-teal: #3cffee;
 
 .show-player {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-  transition: height 0.5s ease-out;
-  margin-bottom: 30px;
-  background-color: black;
-  overflow: hidden;
-  min-height: 740px;
-  position: relative;
+  &__container {
+    display: flex;
+    flex-direction: row;
+    max-height: 100vh;
+  }
+
+  &__details {
+    flex: 0 0 auto;
+    width: 452px;
+    padding: 23px;
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    background: #17191c;
+    color: #fff;
+    font-family: main-cizo;
+  }
+
+  &__header {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__category {
+    flex: 0 0 auto;
+    font-size: 36px;
+  }
+
+  &__titles {
+    flex: 1 1 auto;
+    padding-left: 17px;
+  }
+
+  &__title {
+    font-size: 20px;
+  }
+
+  &__subtitle {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &__editorial-title {
+    padding-top: 33px;
+    font-size: 16px;
+    max-height: 2em;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+  }
+
+  &__toolbar {
+    flex: 0 0 auto;
+    text-transform: uppercase;
+    padding-top: 25px;
+    user-select: none;
+
+    .icon-watches {
+      font-size: 27px;
+      vertical-align: middle;
+    }
+    .icon-favorites,
+    .icon-favorites-filled
+    {
+      font-size: 27px;
+      cursor: pointer;
+      margin-right: 20px;
+    }
+    .icon-favorites__onhover {
+      vertical-align: middle;
+      transform: translate(4px, 4px);
+    }
+  }
+
+  &__toolbar-icon {
+    text-align: center;
+    font-size: 27px;
+    float: right;
+    width: 40px;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  &__description {
+    flex: 1 1 1px;
+    padding-bottom: 30px;
+    position: relative;
+    margin-top: 30px;
+    a {
+      color: @color-teal;
+    }
+  }
+  &__description-fade{
+    flex: 0 0 auto;
+    height: 0;
+    position: relative;
+  }
+  &__description-fade-inner {
+    position: absolute;
+    bottom: 0;
+    height: 30px;
+    width: 100%;
+    background: linear-gradient(to top, rgba(23, 25, 28, 1), rgba(23, 25, 28, 0));
+    z-index: 1;
+  }
+  &__tags {
+    flex: 0 0 auto;
+    font-size: 11px;
+    color: @color-teal;
+    margin-top: 5px;
+  }
+
+  &__tag {
+    display: inline-block;
+    padding: 8px;
+    border: 1px solid @color-teal;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+  &__player {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: height 0.5s ease-out;
+    margin-bottom: 30px;
+    overflow: hidden;
+    position: relative;
+
+    &--inactive {
+      cursor: none;
+    }
+  }
 
   &__filler {
     position: absolute;
@@ -30,7 +156,6 @@
   }
 
   &--playing {
-    height: calc(~"100vh + 210px");
     transition: height 0.5s ease-out;
     .show-player__filler {
       display: none;
@@ -40,13 +165,11 @@
 
   @video-layer-height: 69%;
   &_video-layer {
-    left: 0;
-    top: 60px;
     width: 100%;
-    height: @video-layer-height;
-    position: absolute;
-    z-index: 500;
-    background-color: black;
+    background-color: #000;
+    flex: 1 1 auto;
+    position: relative;
+    margin-top: 60px;
 
     &_video {
       width: 100%;
@@ -67,7 +190,6 @@
     transition: top .6s ease-out;
     &--playing {
       top: 70px;
-      height: calc(~"100% + 200px");
       display: none;
     }
   }
@@ -244,6 +366,10 @@
       }
     }
 
+    &--inactive {
+      cursor: none;
+    }
+
     &_top-elements {
       display: flex;
       align-items: stretch;
@@ -287,6 +413,7 @@
       align-content: stretch;
       justify-content: center;
       height: 60%;
+      margin-top: 10%;
 
       &_group {
         display: flex;
@@ -316,7 +443,12 @@
           &_caption {
             color: white;
             font-size: 35px;
-            text-transform: uppercase;
+            text-transform: none;
+          }
+
+          &_subtitle {
+            font-size: 22px;
+            color: rgba(255, 255, 255, 0.5);
           }
         }
 
@@ -372,6 +504,8 @@
         margin-left: 15px;
         user-select: none;
         cursor: pointer;
+        transition: all 0.3s ease;
+        color: @color-teal;
         img {
           width: 100%;
           height: 100%;
@@ -393,6 +527,7 @@
       }
 
       &_pause-button {
+        transition: all 0.3s ease;
         display: flex;
         width: 96px;
         height: 96px;
@@ -401,6 +536,7 @@
         align-content: flex-start;
         user-select: none;
         cursor: pointer;
+        color: @color-teal;
 
         img {
           width: 60%;
@@ -462,6 +598,11 @@
       justify-content: flex-end;
       height: 30%;
       flex-direction: column;
+
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+
       &_titles {
         display: flex;
         align-items: flex-end;
@@ -571,16 +712,32 @@
         padding: 5px 10px;
 
 
+        &_play {
+          color: @color-teal;
+          font-size: 30px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        &_pause {
+          color: @color-teal;
+          font-size: 30px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
         &_expand {
-          color: white;
+          color: @color-teal;
           font-size: 35px;
           cursor: pointer;
+          transition: all 0.3s ease;
         }
 
         &_volume {
-          color: white;
+          color: @color-teal;
           font-size: 35px;
           cursor: pointer;
+          transition: all 0.3s ease;
         }
 
         &_volume-wrapper {
@@ -609,12 +766,14 @@
 
         &_time-position {
           font-family: 'main-cizo';
-          margin: 15px 15px 7px 10px;
+          margin: 0 10px 12px 15px;
+          color: @color-teal;
         }
 
         &_duration {
           font-family: 'main-cizo';
-          margin: 15px 10px 7px 15px;
+          margin: 0 10px 12px 15px;
+          color: rgba(255, 255, 255, 0.4);
         }
       }
     }
@@ -655,7 +814,7 @@ show-player {
 
   //slider pointer override
   rzslider .rz-pointer {
-    background-color: white !important;
+    background-color: @color-teal !important;
     top: -6px !important;
     width: 16px !important;
     height: 16px !important;
@@ -675,12 +834,14 @@ show-player {
   }
   //slider viewed bar
   rzslider .rz-bar.rz-selection {
-    background: white !important;
+    background: @color-teal !important;
     opacity: 1 !important;
   }
   //slider focused point
   rzslider .rz-pointer:after {
     display: none !important;
   }
+  // slider circle
+
 }
 

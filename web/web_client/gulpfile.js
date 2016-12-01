@@ -28,12 +28,15 @@ var thirdPartyJS = [
     '../node_modules/lodash/lodash.js',
     '../node_modules/angularjs-slider/dist/rzslider.js',
     '../node_modules/angular-svg-round-progressbar/build/roundProgress.js',
-    '../node_modules/angular-easyfb/build/angular-easyfb.js'
+    '../node_modules/angular-easyfb/build/angular-easyfb.js',
+    '../node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.min.js',
+    '../node_modules/angular-perfect-scrollbar-2/dist/index.js',
 ];
 var thirdPartyCSS = [
     '../node_modules/angular/angular-csp.css',
     '../node_modules/bootstrap/dist/css/bootstrap.css',
-    '../node_modules/angularjs-slider/dist/rzslider.css'
+    '../node_modules/angularjs-slider/dist/rzslider.css',
+    '../node_modules/perfect-scrollbar/dist/css/perfect-scrollbar.css',
 ];
 
 

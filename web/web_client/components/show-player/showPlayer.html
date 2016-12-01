@@ -1,184 +1,195 @@
+<div class="show-player__container">
+    <div class="show-player__player"
+         video-id="{{video.id}}"
+         ng-class="{'show-player__player--inactive': inactive}"
+         ng-mousemove="onMouseMove()"
+    >
+        <div class="show-player__filler"></div>
 
-
-<div class="show-player" video-id="{{video.id}}">
-    <div class="show-player__filler"></div>
-
-    <!-- video layer -->
-    <div class="video-layer show-player_video-layer">
-        <video class="show-player_video-layer_video" video-src="sources" preload='none'></video>
-    </div>
-
-    <!-- next hero image layer -->
-    <div class="col-xs-12 no-padding hero-image-layer show-player_hero-image-layer-next hidden-layer" style="background-image: url({{nextVideo.hero_images.hero_image_link}})">
-    </div>
-
-    <featured-carousel featured-list="featuredList" selected-video="featuredItem" on-replay="replayVideo()" storage="storage"></featured-carousel>
-</div>
-
-<!-- description layer-->
-<div class="col-xs-12 no-padding show-player_description-layer hidden-layer">
-    <div class="show-player_description-layer_container">
-        <div class="show-player_description-layer_container_close-container">
-            <div class="show-player_description-layer_container_close-container_button icon-close" ng-click="toggleDescription($event, false)"></div>
+        <!-- video layer -->
+        <div class="video-layer show-player_video-layer">
+            <video class="show-player_video-layer_video" video-src="sources" preload='none'></video>
         </div>
 
-        <div class="show-player_description-layer_container_titles">
-            <div class="show-player_description-layer_container_titles_category icon-category{{iconTitle}}"></div>
+        <!-- next hero image layer -->
+        <div class="col-xs-12 no-padding hero-image-layer show-player_hero-image-layer-next hidden-layer" style="background-image: url({{nextVideo.hero_images.hero_image_link}})">
+        </div>
 
-            <div class="show-player_description-layer_container_titles_labels">
+        <!-- description layer-->
+        <div class="col-xs-12 no-padding show-player_description-layer hidden-layer">
+            <div class="show-player_description-layer_container">
+                <div class="show-player_description-layer_container_close-container">
+                    <div class="show-player_description-layer_container_close-container_button icon-close" ng-click="toggleDescription($event, false)"></div>
+                </div>
+
+                <div class="show-player_description-layer_container_titles">
+                    <div class="show-player_description-layer_container_titles_category icon-category{{iconTitle}}"></div>
+
+                    <div class="show-player_description-layer_container_titles_labels">
                         <span class="show-player_description-layer_container_titles_labels_created">
                             {{createdDate}}
                         </span>
                         <span class="show-player_description-layer_container_titles_labels_title">
                             {{video.title}}
                         </span>
+                    </div>
+                </div>
+                <div class="show-player_description-layer_container_text" ng-bind-html="videoDescription">
+                </div>
             </div>
         </div>
-        <div class="show-player_description-layer_container_text" ng-bind-html="videoDescription">
+
+
+
+        <!-- buttons layer-->
+        <div class="show-player_buttons-layer"
+             ng-mouseenter="imageHover()"
+             ng-mouseleave="imageBlur()"
+             ng-click="togglePlayPause()"
+             ng-dblclick="toggleFullScreen()"
+             ng-mousemove="showControlsOnMove()"
+             ng-class="{'show-player_buttons-layer--inactive': inactive}"
+        >
+            <!-- center elements-->
+            <div class="show-player_buttons-layer_center-elements stop-selection">
+
+                <div class="show-player_buttons-layer_center-elements_group">
+                    <div class="show-player_buttons-layer_center-elements_group_title hidden-layer" ng-show="getNextVideo()">
+                        Up next
+                        <div class="show-player_buttons-layer_center-elements_group_title_caption">
+                            {{nextVideo.title}}
+                            <span class="show-player_buttons-layer_center-elements_group_title_subtitle">{{nextVideo.subtitle}}</span>
+                        </div>
+                    </div>
+                    <div class="show-player_buttons-layer_center-elements_group_controls">
+                        <div class="show-player_buttons-layer_center-elements_prev-next-wrapper">
+                            <span class="icon-back show-player_buttons-layer_center-elements_prev hidden-layer" ng-click="playPreviousVideo($event)"  ng-show="getPreviousVideo()"></span>
+                        </div>
+
+                        <div class="show-player_buttons-layer_center-elements_group_controls_wrapper">
+                            <div  class="show-player_buttons-layer_center-elements_group_controls_progress hidden-layer"
+                                  round-progress
+                                  max="intermissionCountdownMax"
+                                  current="intermissionCountdownValue"
+                                  color="url(#progress-gradient)"
+                                  bgcolor="rgba(255, 255, 255, 0.4)"
+                                  stroke="20"
+                                  semi="false"
+                                  round="100"
+                                  rounded="false"
+                                  clockwise="true"
+                                  responsive="false"
+                                  duration="800"
+                                  animation="easeInOutQuart"
+                                  animation-delay="0">
+                                <svg>
+                                    <linearGradient id="progress-gradient" x1="0" x2="0" y1="0" y2="1">
+                                        <stop offset="5%"  stop-color="#24abbc"></stop>
+                                        <stop offset="95%" stop-color="#3bfcec"></stop>
+                                    </linearGradient>
+                                </svg>
+                            </div>
+                            <div class="show-player_buttons-layer_center-elements_group_controls_wrapper-play-pause">
+                                <div class="show-player_buttons-layer_center-elements_play-button hidden-layer" ng-click="togglePlayPause($event)"
+                                     ng-hide="isInIntermission()">
+                                    <img src="images/iconVideoPlay.svg" class="featured-player_buttons-layer_center-elements_play-button--onhoverout">
+                                    <img src="images/iconVidPlayHover.svg" class="featured-player_buttons-layer_center-elements_play-button--onhover">
+                                </div>
+                                <img
+                                        ng-src="{{ playButtonImage }}"
+                                        ng-click="togglePlayPause($event)"
+                                        class="show-player_buttons-layer_center-elements_play-button"
+                                        ng-class="{'show-player_buttons-layer_center-elements_play-button--replay': !hasNextVideo}"
+                                        ng-show="isInIntermission()"
+                                >
+                                <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="show-player_buttons-layer_center-elements_pause-button hidden-layer">
+                            </div>
+
+                        </div>
+                        <div class="show-player_buttons-layer_center-elements_prev-next-wrapper">
+                            <span class="icon-forward show-player_buttons-layer_center-elements_next hidden-layer" ng-click="playNextVideo($event)" ng-show="getNextVideo()"></span>
+                        </div>
+
+                    </div>
+                    <div class="show-player_buttons-layer_center-elements_group_bottom hidden-layer">
+                        <span class="show-player_buttons-layer_center-elements_pause-intermission" ng-click="pauseIntermissionToggle($event)">{{isIntermissionPaused ? 'Continue' : 'Pause'}}</span>
+                    </div>
+                </div>
+
+            </div>
+            <!-- bottom elements-->
+            <div class="show-player_buttons-layer_bottom-elements hidden-layer">
+                <div class="show-player_buttons-layer_bottom-elements_controls">
+                    <div class="show-player_buttons-layer_bottom-elements_controls_play icon-play ng-hide" ng-click="togglePlayPause($event)" ng-show="screen.paused"></div>
+                    <div class="show-player_buttons-layer_bottom-elements_controls_pause icon-pause ng-hide" ng-click="togglePlayPause($event)" ng-show="!screen.paused"></div>
+
+                    <div class="show-player_buttons-layer_bottom-elements_controls_time-position">{{timePassed}}</div>
+
+                    <div class="show-player_buttons-layer_bottom-elements_controls_slider">
+                        <rzslider ng-click="$event.stopPropagation()"
+                                  rz-slider-high="sliderModel.value"
+                                  rz-slider-model="sliderModel.start"
+                                  rz-slider-options="sliderModel.options"
+                        >
+                        </rzslider>
+                    </div>
+
+                    <div class="show-player_buttons-layer_bottom-elements_controls_duration">{{duration}}</div>
+
+                    <div class="show-player_buttons-layer_bottom-elements_controls_volume-wrapper" ng-mouseenter="soundHover()"
+                         ng-mouseleave="soundBlur()">
+                        <rzslider ng-click="$event.stopPropagation()"
+                                  rz-slider-high="soundSliderModel.value"
+                                  rz-slider-model="soundSliderModel.start"
+                                  rz-slider-options="soundSliderModel.options"
+                                  class="show-player_buttons-layer_bottom-elements_controls_volume-slider hidden-layer"
+                        >
+                        </rzslider>
+                        <div class="icon-volume show-player_buttons-layer_bottom-elements_controls_volume" ng-click="toggleMute($event)"></div>
+                    </div>
+
+                    <span class="icon-expand show-player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen($event)"></span>
+                    <span class="icon-collapse show-player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen($event)"></span>
+                </div>
+            </div>
         </div>
+
+        <!-- hero image layer -->
+        <img class="show-player_hero-image-layer image-layer" ng-src="{{video.hero_images.hero_image_link}}">
     </div>
-</div>
-
-
-
-<!-- buttons layer-->
-<div class="show-player_buttons-layer"
-     ng-mouseenter="imageHover()"
-     ng-mouseleave="imageBlur()"
-     ng-click="togglePlayPause()"
-     ng-dblclick="toggleFullScreen()"
-     ng-mousemove="showControlsOnMove()"
->
-    <!-- top buttons-->
-    <div class="show-player_buttons-layer_top-elements">
-        <div>
-
+    <div class="show-player__details" ng-show="video">
+        <div class="show-player__header">
+            <div class="show-player__category icon-category{{iconTitle}}"></div>
+            <div class="show-player__titles">
+                <span class="show-player__title">{{video.title}}</span>
+                <span class="show-player__subtitle">{{video.subtitle}}</span>
+            </div>
         </div>
-
-
-        <div class="show-player_buttons-layer_top-elements_rightside">
-            <span class="icon-favorites show-player_buttons-layer_top-elements_rightside_buttons show-player_buttons-layer_top-elements_rightside_buttons_favorites"
-                    ng-click="toggleFavorites($event)">
+        <div class="show-player__editorial-title" ng-show="video.description_title">
+            {{video.description_title}}
+        </div>
+        <div class="show-player__toolbar">
+            <span class="icon-watches"></span> {{createdDate}}
+            <span class="icon-reddit show-player__toolbar-icon" ng-click="shareVideoItem('reddit')"></span>
+            <span class="icon-email show-player__toolbar-icon" ng-click="shareVideoItem('email')"></span>
+            <span class="icon-twitter show-player__toolbar-icon" ng-click="shareVideoItem('twitter')"></span>
+            <span class="icon-facebook show-player__toolbar-icon" ng-click="shareVideoItem('facebook')"></span>
+            <span class="icon-favorites show-player__favorite-button show-player__toolbar-icon"
+                  ng-click="toggleFavorites($event)">
                     <i class="icon-favorites__onhover">
                         <img src="images/iconFavoritesFilled.svg" alt="">
                     </i>
             </span>
-            <span class="icon-info show-player_buttons-layer_top-elements_rightside_buttons" ng-click="toggleDescription($event, true)"></span>
-            <span class="icon-share show-player_buttons-layer_top-elements_rightside_buttons" ng-click="shareVideo($event)"></span>
         </div>
-    </div>
-    <!-- center elements-->
-    <div class="show-player_buttons-layer_center-elements stop-selection">
-
-        <div class="show-player_buttons-layer_center-elements_group">
-            <div class="show-player_buttons-layer_center-elements_group_title hidden-layer" ng-show="getNextVideo()">
-                Up next
-                <div class="show-player_buttons-layer_center-elements_group_title_caption">{{nextVideo.title}}</div>
-            </div>
-            <div class="show-player_buttons-layer_center-elements_group_controls">
-                <div class="show-player_buttons-layer_center-elements_prev-next-wrapper">
-                    <span class="icon-back show-player_buttons-layer_center-elements_prev hidden-layer" ng-click="playPreviousVideo($event)"  ng-show="getPreviousVideo()"></span>
-                </div>
-
-                <div class="show-player_buttons-layer_center-elements_group_controls_wrapper">
-                    <div  class="show-player_buttons-layer_center-elements_group_controls_progress hidden-layer"
-                          round-progress
-                          max="intermissionCountdownMax"
-                          current="intermissionCountdownValue"
-                          color="url(#progress-gradient)"
-                          bgcolor="rgba(255, 255, 255, 0.4)"
-                          stroke="20"
-                          semi="false"
-                          round="100"
-                          rounded="false"
-                          clockwise="true"
-                          responsive="false"
-                          duration="800"
-                          animation="easeInOutQuart"
-                          animation-delay="0">
-                        <svg>
-                            <linearGradient id="progress-gradient" x1="0" x2="0" y1="0" y2="1">
-                                <stop offset="5%"  stop-color="#24abbc"></stop>
-                                <stop offset="95%" stop-color="#3bfcec"></stop>
-                            </linearGradient>
-                        </svg>
-                    </div>
-                    <div class="show-player_buttons-layer_center-elements_group_controls_wrapper-play-pause">
-                        <div class="show-player_buttons-layer_center-elements_play-button" ng-click="togglePlayPause($event)"
-                             ng-hide="isInIntermission()">
-                            <img src="images/iconVideoPlay.svg" class="featured-player_buttons-layer_center-elements_play-button--onhoverout">
-                            <img src="images/iconVidPlayHover.svg" class="featured-player_buttons-layer_center-elements_play-button--onhover">
-                        </div>
-                        <img
-                            ng-src="{{ playButtonImage }}"
-                            ng-click="togglePlayPause($event)"
-                            class="show-player_buttons-layer_center-elements_play-button"
-                            ng-class="{'show-player_buttons-layer_center-elements_play-button--replay': !hasNextVideo}"
-                            ng-show="isInIntermission()"
-                        >
-                        <img src="images/iconVideoPause.svg" ng-click="togglePlayPause($event)" class="show-player_buttons-layer_center-elements_pause-button hidden-layer">
-                    </div>
-
-                </div>
-                <div class="show-player_buttons-layer_center-elements_prev-next-wrapper">
-                    <span class="icon-forward show-player_buttons-layer_center-elements_next hidden-layer" ng-click="playNextVideo($event)" ng-show="getNextVideo()"></span>
-                </div>
-
-            </div>
-            <div class="show-player_buttons-layer_center-elements_group_bottom hidden-layer">
-                <span class="show-player_buttons-layer_center-elements_pause-intermission" ng-click="pauseIntermissionToggle($event)">{{isIntermissionPaused ? 'Continue' : 'Pause'}}</span>
-            </div>
+        <perfect-scrollbar class="show-player__description">
+            <div ng-bind-html="videoDescription"></div>
+        </perfect-scrollbar>
+        <div class="show-player__description-fade">
+            <div class="show-player__description-fade-inner"></div>
         </div>
-
-    </div>
-    <!-- bottom elements-->
-    <div class="show-player_buttons-layer_bottom-elements hidden-layer">
-        <div class="show-player_buttons-layer_bottom-elements_titles show-player_buttons-layer_bottom-elements_titles--hero-image">
-            <div class="show-player_buttons-layer_bottom-elements_titles_current">
-                <div ng-class="iconTitle"></div>
-
-                <div class="show-player_buttons-layer_bottom-elements_titles_current_title">
-                            <span class="show-player_buttons-layer_bottom-elements_titles_current_title_created">
-                                {{createdDate}}
-                            </span>
-                            <span class="show-player_buttons-layer_bottom-elements_titles_current_title">
-                                {{video.title}}
-                            </span>
-                </div>
-            </div>
-        </div>
-        <div class="show-player_buttons-layer_bottom-elements_controls">
-
-            <div class="show-player_buttons-layer_bottom-elements_controls_time-position">{{timePassed}}</div>
-
-            <div class="show-player_buttons-layer_bottom-elements_controls_slider">
-                <rzslider ng-click="$event.stopPropagation()"
-                          rz-slider-high="sliderModel.value"
-                          rz-slider-model="sliderModel.start"
-                          rz-slider-options="sliderModel.options"
-                >
-                </rzslider>
-            </div>
-
-            <div class="show-player_buttons-layer_bottom-elements_controls_duration">{{duration}}</div>
-
-            <div class="show-player_buttons-layer_bottom-elements_controls_volume-wrapper" ng-mouseenter="soundHover()"
-                 ng-mouseleave="soundBlur()">
-                <rzslider ng-click="$event.stopPropagation()"
-                          rz-slider-high="soundSliderModel.value"
-                          rz-slider-model="soundSliderModel.start"
-                          rz-slider-options="soundSliderModel.options"
-                          class="show-player_buttons-layer_bottom-elements_controls_volume-slider hidden-layer"
-                >
-                </rzslider>
-                <div class="icon-volume show-player_buttons-layer_bottom-elements_controls_volume" ng-click="toggleMute($event)"></div>
-            </div>
-
-            <span class="icon-expand show-player_buttons-layer_bottom-elements_controls_expand" ng-click="toggleFullScreen($event)"></span>
-            <span class="icon-collapse show-player_buttons-layer_bottom-elements_controls_collapse hidden-layer" ng-click="toggleFullScreen($event)"></span>
+        <div class="show-player__tags" ng-show="video.tag_list">
+            <span class="show-player__tag" ng-repeat="tag in tags">{{ tag }}</span>
         </div>
     </div>
 </div>
 
-<!-- hero image layer -->
-<img class="show-player_hero-image-layer image-layer" ng-src="{{video.hero_images.hero_image_link}}">

@@ -26,11 +26,13 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
             iconName:  playerServ.getIconName(scope.categoryId),
             message: undefined,
             isListShown: false,
+            isListLoaded: false,
             moveToPlayPage: moveToPlayPage,
             moveToHomePage: moveToHomePage
         });
 
         scope.$watch('videos', (videos) => {
+            scope.isListLoaded = true;
             scope.videosList = videos;
             scope.isListShown = videos.length;
         });
@@ -116,8 +118,7 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
             if (isMatureVideo(video)) {
                 return;
             }
-            const id = video.id;
-            let obj = {videoId: id};
+            let obj = {videoId: video.id, categoryId: video.category_id};
             $rootScope.$emit('replayVideo', obj);
             $rootScope.$broadcast('replayVideo', obj);
             $state.go('play', obj);

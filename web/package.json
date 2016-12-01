@@ -8,7 +8,8 @@
     "test": "test"
   },
   "dependencies": {
-    "angular-easyfb": "^1.5.1"
+    "angular-easyfb": "^1.5.1",
+    "angular-perfect-scrollbar-2": "^1.2.4"
   },
   "devDependencies": {
     "angular": "^1.4.8",

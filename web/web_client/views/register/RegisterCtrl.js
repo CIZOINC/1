@@ -49,7 +49,7 @@ function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ, _, sto
     function registerUser() {
         let birthday = moment({
             year: $scope.register.year,
-            month: $scope.register.month.key + 1,
+            month: $scope.register.month.key,
             day: $scope.register.day
         });
 

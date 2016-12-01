@@ -5,10 +5,10 @@ angular
 
 
 /* @ngInject */
-function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, $filter, $state, playerServ, userServ) {
+function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, $filter, $state, playerServ, userServ, storageServ) {
     "use strict";
 
-    const BTN_PLAY_URL   = "images/iconVideoPlayIntermission.svg";
+    const BTN_PLAY_URL = "images/iconVideoPlayIntermission.svg";
     const BTN_REPLAY_URL = "images/iconVideoReplay.svg";
     // Inactivity period before hide the cursor
     const INACTIVITY_MS = 2000;
@@ -156,14 +156,14 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                     return {src: $sce.trustAsResourceUrl(source.link), type: `video/${source.stream_type}`}
                 });
                 scope.iconTitle = scope.video && scope.video.category_id ? categoryIcon(scope.video.category_id) : '';
-                scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at): undefined;
+                scope.createdDate = scope.video && scope.video.created_at ? createdTimeHumanized(scope.video.created_at) : undefined;
                 scope.nextVideo = getNextVideo();
                 scope.isIntermissionPaused = false;
                 scope.tags = getTags(scope.video);
 
                 setFavoritesState(scope.video.favorites);
 
-                $timeout( () => {
+                $timeout(() => {
                     if (!scope.showPlayer.classList.contains('hidden-layer') && scope.video.instantPlay) {
                         togglePlayPause();
                         scope.video.instantPlay = false;
@@ -210,9 +210,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             const emailContent = (scope.video.description_title || scope.video.title) + "\n" + fullPath;
             const socialMap = {
                 'facebook': 'https://www.facebook.com/dialog/share?' +
-                    `app_id=${scope.facebookAppId}&display=popup` +
-                    `&href=${encodeURIComponent(fullPath)}` +
-                    `&redirect_uri=${encodeURIComponent(fullPath)}`,
+                `app_id=${scope.facebookAppId}&display=popup` +
+                `&href=${encodeURIComponent(fullPath)}` +
+                `&redirect_uri=${encodeURIComponent(fullPath)}`,
                 'google': 'https://plus.google.com/share?url=',
                 'twitter': 'https://twitter.com/home?status=',
                 'reddit': 'https://www.reddit.com/submit?url=',
@@ -220,7 +220,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             };
 
             if (type === 'facebook' || type === 'email') {
-                console.log(socialMap[type]);
                 window.location.href = socialMap[type];
             } else {
                 const path = `${encodeURIComponent(fullPath)}`;
@@ -255,8 +254,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 event.preventDefault();
             }
         }
+
         window.document.addEventListener('keypress', keyPressed, false);
-        scope.$on('$destroy', function(){
+        scope.$on('$destroy', function () {
             window.document.removeEventListener('keypress', keyPressed, false);
         });
 
@@ -272,7 +272,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                     ceil: 500,
                     hideLimitLabels: true,
                     onChange: function () {
-                        console.log('change to ' + scope.sliderModel.value);
                         if (scope.sliderModel.start > 0) {
                             scope.sliderModel.value = scope.sliderModel.start;
                             scope.sliderModel.start = 0;
@@ -294,7 +293,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                     hideLimitLabels: true,
                     vertical: true,
                     onChange: function () {
-                        console.log('change to ' + scope.soundSliderModel.value);
                         if (scope.soundSliderModel.start > 0) {
                             scope.soundSliderModel.value = scope.soundSliderModel.start;
                             scope.soundSliderModel.start = 0;
@@ -349,7 +347,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             scope.bottomElements.classList.add('hidden-layer');
         }
 
-        function pauseIntermissionToggle(event,isForced) {
+        function pauseIntermissionToggle(event, isForced) {
             if (event) {
                 event.stopPropagation();
             }
@@ -412,7 +410,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.video = nextVideo;
                 scope.isIntermissionState = false;
                 setIntermissionState(false);
-                $timeout( () => {
+                $timeout(() => {
                     $state.go('play', {videoId: nextVideo.id, categoryId: nextVideo.category_id});
                 }, 500);
             } else {
@@ -438,7 +436,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.video = prevVideo;
                 scope.isIntermissionState = false;
                 setIntermissionState(false);
-                $timeout( () => {
+                $timeout(() => {
                     $state.go('play', {videoId: prevVideo.id, categoryId: prevVideo.category_id});
                 }, 500);
             }
@@ -477,7 +475,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             scope.screen.currentTime = 0;
             scope.isIntermissionState = false;
             scope.isIntermissionPaused = false;
-            $timeout( () => {
+            $timeout(() => {
                 scope.screen.play();
                 checkMatureContent();
             }, 500);
@@ -490,23 +488,34 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             playerServ.shareVideo(scope.video.id);
         }
 
+        function updateFavoritesState(isFav) {
+            let persistPromise;
+            if (!isFav) {
+                let itemIndex = _.indexOf(scope.storage.favoritesItems, scope.video.id);
+                if (itemIndex >= 0) {
+                    scope.storage.favoritesItems.splice(itemIndex, 1);
+                }
+                persistPromise = userServ.deleteLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
+            } else {
+                scope.storage.favoritesItems.push(scope.video.id);
+                persistPromise = userServ.setLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
+            }
+            return persistPromise.then(function (value) {
+                storageServ.setItem(scope.storage.storageFavoritesKey, scope.storage.favoritesItems);
+                return value;
+            });
+        }
+
         function toggleFavorites(event) {
             if (event) {
                 event.stopPropagation();
             }
-            scope.video.favorites = !scope.video.favorites;
-            setFavoritesState(scope.video.favorites);
-
-            if (!scope.video.favorites) {
-                let itemIndex = _.indexOf(scope.storage.favoritesItems, scope.video.id);
-                if (itemIndex>=0) {
-                    scope.storage.favoritesItems.splice(itemIndex, 1);
-                }
-                userServ.deleteLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
-            } else {
-                scope.storage.favoritesItems.push(scope.video.id);
-                userServ.setLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
-            }
+            const newState = !scope.video.favorites;
+            setFavoritesState(newState);
+            updateFavoritesState(newState)
+                .then(function(){
+                    scope.video.favorites = newState;
+                });
         }
 
         function setWatched() {
@@ -528,7 +537,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             playerServ.setVideoWatched(scope.storage, scope.hostName, scope.video.id);
         }
 
-        function  showControlsOnMove() {
+        function showControlsOnMove() {
             const waitTime = 1500; //ms for hiding controls
 
             if (scope.isPlaying && !scope.isIntermissionState) {
@@ -548,7 +557,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
 
         function categoryIcon(id) {
-            let foundCategory = _.find(scope.$root.categoriesList, (category)=> category.id == id );
+            let foundCategory = _.find(scope.$root.categoriesList, (category) => category.id == id);
             if (!foundCategory) {
                 return false;
             } else {
@@ -565,7 +574,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
         function createdTimeHumanized(date) {
             var start = moment(date);
-            var end   = moment();
+            var end = moment();
             return end.to(start);
         }
 
@@ -765,7 +774,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             scope.controlsOverlayLayer.classList[_classAdd(isDescription)]('hidden-layer');
 
             if (!isDescription) {
-                if (scope.screen.paused ) {
+                if (scope.screen.paused) {
                     setPlayPauseState(false);
                 } else {
                     setPlayPauseState(true);
@@ -805,9 +814,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
 
         const inactivityCheckPromise = $interval(checkForInactivity, 300);
-        scope.$on('$destroy', function(){
+        scope.$on('$destroy', function () {
             $interval.cancel(inactivityCheckPromise);
         });
     }
 }
-showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', '$filter', '$state', 'playerServ', 'userServ'];
+showPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', '$filter', '$state', 'playerServ', 'userServ', 'storageServ'];

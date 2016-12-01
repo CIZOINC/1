@@ -6,25 +6,39 @@
 
     <div class="list-items_videos">
         <div class="list-items_videos_wrapper">
-            <div class="list-items_videos_item"
+            <div class="category-carousel-item category-carousel-item--in-long-list"
+                 ng-class="{'category-carousel-item--watched': video.isWatched, 'category-carousel-item--playing': video === selectedVideo}"
                  ng-repeat="video in videosList"
-                 style="background-image: url('{{video.hero_images.hero_image_link_thumb_banner}}')"
                  ng-click="moveToPlayPage(video)"
-                 ng-attr-id="play-video-item-{{video.id}}"
+                 ng-attr-id="{{'category-carousel-video-' + video.id}}"
             >
-                <div class="list-items_videos_item_overlay">
-                    <span class="list-items_videos_item_overlay_button icon-play"></span>
+
+                <div class="category-carousel-item__image" style="background-image: url('{{::video.hero_images.hero_image_link_thumb_banner}}')"></div>
+                <div class="category-carousel-item__watched-overlay ng-hide" ng-show="::video.isWatched">
+                    <div class="category-carousel-item__watched-overlay-icon">
+                        <span class="icon-replay category-carousel-item__intermission-button" ng-click="moveToPlayPage(video)"></span>
+                    </div>
+                    <div class="category-carousel-item__watched-overlay-text">
+                        WATCHED
+                    </div>
                 </div>
-                <div class="list-items_videos_item_title">
-                    <span class="list-items_videos_item_title_caption">{{::video.title}}</span>
+
+                <div class="category-carousel-item__overlay">
+                    <span class="category-carousel-item__overlay-button icon-play"></span>
+                </div>
+                <div class="category-carousel-item__description">
+                    <div class="category-carousel-item__title">{{::video.title}}</div>
+                    <div class="category-carousel-item__subtitle">{{::video.subtitle}}</div>
+
                 </div>
             </div>
+
         </div>
 
     </div>
 
 </div>
-<div class="list-items_no-items-wrapper" ng-hide="isListShown">
+<div class="list-items_no-items-wrapper ng-hide" ng-hide="isListShown || !isListLoaded || !message.noItemsTitle">
     <div class="list-items_no-items">
         <span class="list-items_no-items_icon {{::message.iconName}}"></span>
         <div class="list-items_no-items_title">{{::message.noItemsTitle}}</div>

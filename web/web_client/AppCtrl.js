@@ -18,7 +18,8 @@ angular
         'templates',
         'rzModule',
         'angular-svg-round-progress',
-        'ezfb'
+        'ezfb',
+        'angular-perfect-scrollbar-2',
     ])
     .controller('AppCtrl', AppCtrl)
     .filter('nl2br', function($sce){

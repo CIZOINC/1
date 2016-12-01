@@ -1,5 +1,4 @@
 .category-carousel {
-
   &__title {
     display: flex;
     flex-direction: row;
@@ -7,17 +6,18 @@
     align-items: center;
     align-content: center;
     color: #2b3d53;
+    height: 64px;
     margin-left: 20px;
   }
   &__title-icon {
-    font-size: 45px;
+    font-size: 40px;
     &.icon-categorytech {
-      font-size: 26px;
+      font-size: 24px;
     }
   }
 
   &__title-name {
-    font-size: 35px;
+    font-size: 30px;
     font-family: main-cizo;
   }
 
@@ -29,7 +29,7 @@
     position: relative;
     width: 100%;
 
-    padding: 30px 0;
+    padding: 15px 0 39px;
   }
 
   .category-carousel-button-mix {
@@ -93,6 +93,10 @@
 
   &--playing {
     border: solid 1px #00ffff;
+  }
+
+  &--in-long-list {
+    margin-bottom: 30px;
   }
 
   &:hover {

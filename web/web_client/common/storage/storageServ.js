@@ -22,6 +22,9 @@ function storageServ($window) {
     function setItem(key, value) {
         let parsedValue = value ? JSON.stringify(value) : undefined;
         $window.localStorage.setItem(key, parsedValue);
+        if ($window.localStorage.getItem(key) !== parsedValue) {
+            console.warn('Failed to save value to localstorage');
+        }
     }
 
     function deleteItem(key) {

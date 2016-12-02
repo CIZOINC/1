@@ -23,11 +23,15 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             videosList: '=',
             featuredList: '=',
             hostName: '@',
+            sharingPath: '@',
+            facebookAppId: '@',
             storage: '='
         }
     };
 
     function linkFn(scope, element, attrs) {
+        console.log(scope);
+
         scope = angular.extend(scope, {
             isPlaying: false,
             isIntermissionState: false,

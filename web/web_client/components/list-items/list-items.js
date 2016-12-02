@@ -15,7 +15,8 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
         scope: {
             videos: '=',
             storage: '=',
-            listType: '@'
+            listType: '@',
+            tagName: '@'
         }
     };
 
@@ -46,6 +47,10 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
             }
         });
 
+        if (scope.tagName) {
+            scope.listType = 'listTag';
+        }
+
         function getMessage(name) {
             function returner(originObj) {
                 let newObj = {};
@@ -65,6 +70,13 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
                 return newObj;
             }
             switch (name) {
+                case 'listTag':
+                    return {
+                        iconName: '',
+                        title: `Filtered by ${scope.tagName}`,
+                        noItemsTitle: 'There are no videos with this tag. Stay tuned.'
+                    };
+                    break;
                 case 'seen':
                     return {
                         iconName: 'icon-seen',

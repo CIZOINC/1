@@ -7,7 +7,12 @@ angular
 function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ, _) {
     "use strict";
 
-    if ($rootScope.featuredList && $rootScope.featuredList.length && $rootScope.videosList && $rootScope.videosList.length) {
+    $scope.tagName = $stateParams.tagName;
+
+    if ($rootScope.categoriesList && $rootScope.categoriesList.length &&
+        $rootScope.featuredList && $rootScope.featuredList.length &&
+        $rootScope.videosList && $rootScope.videosList.length
+    ) {
         viewSetup();
     } else {
         playerServ.getFeaturedList($scope)
@@ -29,8 +34,31 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ
             .then(viewSetup);
     }
 
+    function filterVideosByFeatures() {
+        const storagesMap = {
+            'seen': 'seenItems',
+            'favorite': 'favoritesItems',
+            'unseen': 'unseenItems',
+            'skipped': 'skippedItems'
+        };
+        const storage = $scope.storage[storagesMap[$stateParams.listType]];
+        $scope.listItem = $stateParams.listType;
+        $scope.videosList = _.filter($scope.videosFullList, (video) => {
+            return _.some(storage, storageItem => storageItem === video.id);
+        });
+    }
+
+    function filterVideosByTagName(tagName) {
+        $scope.listItem = 'listTag';
+        $scope.videosList = _.filter($scope.videosFullList, (video) => {
+            const tags = (video.tag_list || '').split(',').map(item => item.trim());
+            return _.some(tags, tag => tag === tagName);
+        });
+    }
+
     function viewSetup() {
         $scope = angular.extend($scope, {
+            categoriesList: $rootScope.categoriesList,
             listName: undefined,
             videosFullList: undefined,
             listItem: undefined,
@@ -52,21 +80,14 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ
         }
 
         if ($stateParams.listType && _.some($scope.listType, state => state === $stateParams.listType)) {
-
-            let storagesMap = {
-                'seen': 'seenItems',
-                'favorite': 'favoritesItems',
-                'unseen': 'unseenItems',
-                'skipped': 'skippedItems'
-            };
-            let storage = $scope.storage[storagesMap[$stateParams.listType]];
-            $scope.listItem = $stateParams.listType;
-            $scope.videosList = _.filter($scope.videosFullList, (video) => {
-                return _.some(storage, storageItem => storageItem === video.id);
-            });
+            filterVideosByFeatures();
+        } else if ($stateParams.tagName) {
+            filterVideosByTagName($stateParams.tagName);
         } else {
+            console.error('Unknown list type ', $stateParams, scope);
             $state.go('home');
         }
+
     }
 }
 

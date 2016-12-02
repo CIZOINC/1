@@ -65,6 +65,15 @@ angular
             }
         },
         {
+            state: 'listTag',
+            config: {
+                url: '/tag/:tagName',
+                templateUrl: 'views/list/list.html',
+                controller: 'ListCtrl',
+                controllerAs: 'list'
+            }
+        },
+        {
             state: 'share',
             config: {
                 url: '/share/:videoId',

@@ -220,7 +220,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 'google': 'https://plus.google.com/share?url=',
                 'twitter': 'https://twitter.com/home?status=',
                 'reddit': 'https://www.reddit.com/submit?url=',
-                'email': `mailto:%20?subject=${encodeURIComponent(scope.video.description_title || scope.video.title)}&body=${encodeURIComponent(emailContent)}`
+                'email': `mailto:%20?subject=${encodeURIComponent(scope.video.title)}&body=${encodeURIComponent(emailContent)}`
             };
 
             if (type === 'facebook' || type === 'email') {

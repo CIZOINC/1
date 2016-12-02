@@ -23,11 +23,15 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             videosList: '=',
             featuredList: '=',
             hostName: '@',
+            sharingPath: '@',
+            facebookAppId: '@',
             storage: '='
         }
     };
 
     function linkFn(scope, element, attrs) {
+        console.log(scope);
+
         scope = angular.extend(scope, {
             isPlaying: false,
             isIntermissionState: false,
@@ -216,7 +220,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 'google': 'https://plus.google.com/share?url=',
                 'twitter': 'https://twitter.com/home?status=',
                 'reddit': 'https://www.reddit.com/submit?url=',
-                'email': `mailto:%20?subject=${encodeURIComponent(scope.video.description_title || scope.video.title)}&body=${encodeURIComponent(emailContent)}`
+                'email': `mailto:%20?subject=${encodeURIComponent(scope.video.title)}&body=${encodeURIComponent(emailContent)}`
             };
 
             if (type === 'facebook' || type === 'email') {
@@ -384,12 +388,13 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
             let currentVideoId = scope.video.id;
             let nextVideo;
+            const videosInCategory = _.filter(scope.videosList, item => item.category_id === scope.video.category_id);
 
-            let index = _.findIndex(scope.videosList, (item) => {
+            let index = _.findIndex(videosInCategory, (item) => {
                 return item.id === currentVideoId;
             });
-            if (index + 1 < scope.videosList.length) {
-                nextVideo = scope.videosList[index + 1];
+            if (index + 1 < videosInCategory.length) {
+                nextVideo = videosInCategory[index + 1];
             }
 
             return nextVideo;
@@ -691,7 +696,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
 
         function setPlayPauseState(isPaused) {
-            scope.playButton.classList[_classAdd(isPaused)]('hidden-layer');
+            // scope.playButton.classList[_classAdd(isPaused)]('hidden-layer');
         }
 
         function setVideoPlayState(isWatched) {
@@ -701,7 +706,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
         function setShowHideControlsState(isShowed) {
             scope.controlsOverlayLayer.classList[_classAdd(!isShowed)]('hidden-layer');
-            scope.playButton.classList[_classAdd(!isShowed)]('hidden-layer');
+            // scope.playButton.classList[_classAdd(!isShowed)]('hidden-layer');
             scope.buttonLayer.classList[_classAdd(isShowed)]('show-player_buttons-layer--show-buttons');
 
         }
@@ -780,7 +785,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                     setPlayPauseState(true);
                 }
             } else {
-                scope.playButton.classList[_classAdd(isDescription)]('hidden-layer');
+                // scope.playButton.classList[_classAdd(isDescription)]('hidden-layer');
             }
         }
 

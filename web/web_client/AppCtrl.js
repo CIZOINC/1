@@ -136,7 +136,7 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
     if ($scope.storage.favoritesItems == null) {
         $scope.storage.favoritesItems = [];
     }
-    $scope.storage.skippedItems = storageServ.getItem($scope.storage.storageFavoritesKey);
+    $scope.storage.skippedItems = storageServ.getItem($scope.storage.storageSkippedKey);
     if ($scope.storage.skippedItems == null) {
         $scope.storage.skippedItems = [];
     }
@@ -174,10 +174,10 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
 
         userServ.getSkipped($scope.hostName, $scope.storage.token.access_token)
             .then((skipped) => {
-                let unseenArray = _.map(skipped, skippedItem => skippedItem.id);
+                let skippedArray = _.map(skipped, skippedItem => skippedItem.id);
                 let storedArray = storageServ.getItem($scope.storage.storageSkippedKey);
 
-                let newArray = _.union(unseenArray, storedArray);
+                let newArray = _.union(skippedArray, storedArray);
                 storageServ.setItem($scope.storage.storageSkippedKey, newArray);
                 $scope.storage.skippedItems = newArray;
             });

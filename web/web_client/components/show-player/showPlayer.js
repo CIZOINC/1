@@ -696,7 +696,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
 
         function setPlayPauseState(isPaused) {
-            scope.playButton.classList[_classAdd(isPaused)]('hidden-layer');
+            // scope.playButton.classList[_classAdd(isPaused)]('hidden-layer');
         }
 
         function setVideoPlayState(isWatched) {
@@ -706,7 +706,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
 
         function setShowHideControlsState(isShowed) {
             scope.controlsOverlayLayer.classList[_classAdd(!isShowed)]('hidden-layer');
-            scope.playButton.classList[_classAdd(!isShowed)]('hidden-layer');
+            // scope.playButton.classList[_classAdd(!isShowed)]('hidden-layer');
             scope.buttonLayer.classList[_classAdd(isShowed)]('show-player_buttons-layer--show-buttons');
 
         }
@@ -785,7 +785,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                     setPlayPauseState(true);
                 }
             } else {
-                scope.playButton.classList[_classAdd(isDescription)]('hidden-layer');
+                // scope.playButton.classList[_classAdd(isDescription)]('hidden-layer');
             }
         }
 

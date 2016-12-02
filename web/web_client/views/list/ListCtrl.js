@@ -9,7 +9,10 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ
 
     $scope.tagName = $stateParams.tagName;
 
-    if ($rootScope.featuredList && $rootScope.featuredList.length && $rootScope.videosList && $rootScope.videosList.length) {
+    if ($rootScope.categoriesList && $rootScope.categoriesList.length &&
+        $rootScope.featuredList && $rootScope.featuredList.length &&
+        $rootScope.videosList && $rootScope.videosList.length
+    ) {
         viewSetup();
     } else {
         playerServ.getFeaturedList($scope)
@@ -55,6 +58,7 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ
 
     function viewSetup() {
         $scope = angular.extend($scope, {
+            categoriesList: $rootScope.categoriesList,
             listName: undefined,
             videosFullList: undefined,
             listItem: undefined,

@@ -32,12 +32,17 @@
 
   &__category {
     flex: 0 0 auto;
-    font-size: 36px;
+    font-size: 66px;
+    transform: translate(-8px,-8px);
+    line-height: 1;
+    &.icon-categorytech {
+      font-size: 50px;
+      transform: translate(0, 0);
+    }
   }
 
   &__titles {
     flex: 1 1 auto;
-    padding-left: 17px;
   }
 
   &__title {
@@ -50,9 +55,8 @@
   }
 
   &__editorial-title {
-    padding-top: 33px;
+    padding-top: 20px;
     font-size: 16px;
-    max-height: 2em;
     overflow: hidden;
     -ms-text-overflow: ellipsis;
     text-overflow: ellipsis;
@@ -737,7 +741,8 @@
 
         &_expand {
           color: @color-teal;
-          font-size: 35px;
+          font-size: 23px;
+          line-height: 50px;
           cursor: pointer;
           transition: all 0.3s ease;
         }
@@ -763,7 +768,8 @@
 
         &_collapse {
           color: white;
-          font-size: 35px;
+          font-size: 23px;
+          line-height: 50px;
           cursor: pointer;
         }
 

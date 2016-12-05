@@ -17,6 +17,10 @@ class HeroImageUploader < CarrierWave::Uploader::Base
     end
   end
 
+  def filename
+    "#{SecureRandom.uuid}.#{file.extension}" if original_filename.present?
+  end
+
   version :large_banner do
     process resize_to_fit: [1000, 500] # Use 1000 to maintain aspect ratio. The height will be the constraining factor
   end

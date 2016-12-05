@@ -14,7 +14,10 @@ class V1::StreamsController < V1::ApiController
 
   def show
     request.headers['Authorization'].clear if request.headers['Authorization']
+    
     prefix = host + bucket_name + env + "/stream/#{@video.id}/#{@stream.stream_type}/"
+    prefix = prefix + "#{@stream.prefix}/" unless @stream.prefix.blank? # for backwards compatibility
+
     @location =   params[:stream_type] == 'mp4' ? (prefix + 'video.mp4') : (prefix + 'index.m3u8')
     redirect_to @location, status: 302
   end
@@ -32,6 +35,10 @@ class V1::StreamsController < V1::ApiController
     return if check_if_object_exists(obj)
     @bucket.objects(prefix: stream_folder).batch_delete!
 
+    # output_prefix - Used for cache busting. If a stream is reuploaded, it will have a unique path
+    # Transcoded output is stored at [ENVIRONMENT (staging or production)]/stream/#{@video.id}/#{format}/#{prefix}/
+    output_prefix = SecureRandom.uuid
+
     #HLS
     hls_stream = @video.streams.find_by(stream_type: "hls")
     define_hls_presets
@@ -45,16 +52,16 @@ class V1::StreamsController < V1::ApiController
     job = transcoder_client.create_job(
       pipeline_id: pipeline_id,
       input: input,
-      output_key_prefix: output_key_prefix_hls,
+      output_key_prefix: output_key_prefix_hls(output_prefix),
       outputs: outputs_hls,
       playlists: [ playlist ])[:job]
 
-    hls_stream.update_columns(link: prefix + link(hls_stream), job_id: job.id, transcode_status: 'submitted') if hls_stream
+    hls_stream.update_columns(link: prefix + link(hls_stream), prefix: output_prefix, job_id: job.id, transcode_status: 'submitted') if hls_stream
 
     #MP4
     mp4_stream = @video.streams.find_by(stream_type: "mp4")
     web = {
-     key: output_key_prefix_mp4 + "video.mp4",
+     key: output_key_prefix_mp4(output_prefix) + "video.mp4",
      preset_id: web_preset_id
     }
 
@@ -63,7 +70,7 @@ class V1::StreamsController < V1::ApiController
      input: input,
      outputs: [web])[:job]
 
-    mp4_stream.update_columns(link: prefix + link(mp4_stream), job_id: job.id, transcode_status: 'submitted') if mp4_stream
+    mp4_stream.update_columns(link: prefix + link(mp4_stream), prefix: output_prefix, job_id: job.id, transcode_status: 'submitted') if mp4_stream
     nothing 202
   end
 
@@ -160,7 +167,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def host
-    'https://s3.amazonaws.com/'
+    'https://cdn.cizo.com/'
   end
 
   def env
@@ -205,8 +212,8 @@ class V1::StreamsController < V1::ApiController
   end
 
   %w(hls mp4).each do |format|
-    define_method("output_key_prefix_#{format}") do
-      Rails.env.production? ? "production/stream/#{@video.id}/#{format}/" : "staging/stream/#{@video.id}/#{format}/"
+    define_method("output_key_prefix_#{format}") do |prefix|
+      Rails.env.production? ? "production/stream/#{@video.id}/#{format}/#{prefix}/" : "staging/stream/#{@video.id}/#{format}/#{prefix}/"
     end
   end
 

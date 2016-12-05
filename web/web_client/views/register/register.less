@@ -13,7 +13,23 @@ form {
   width: 100%;
   height: 100%;
 }
-@elem-width: 600px;
+@elem-width: 333px;
+
+.register-form-wrapper {
+  justify-content: center;
+}
+
+.register-form_input_mix {
+  border-radius: 9px;
+  font-size: 16px;
+  padding: 10px;
+  outline: none;
+  border: 1px solid transparent;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .register-form {
   display: flex;
   flex-direction: column;
@@ -21,26 +37,46 @@ form {
   align-content: center;
   align-items: center;
 
-
-
   color: white;
   font-family: main-cizo;
+
   &_facebook-login {
-    background-color: #3b5999;
-    font-size: 30px;
-    text-transform: uppercase;
-    padding: 15px;
-    margin: 60px 0;
+    font-family: Arial;
+    font-weight: bold;
+    border-radius: 15px;
+    background-color: #3b5998;
+    font-size: 16px;
+    padding: 9px;
+    margin-bottom: 46px;
     outline: none;
     border: none;
     width: @elem-width;
   }
 
+  &_facebook_login-icon {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    position: relative;
+    margin-right: 14px;
+    svg {
+      width: 100%;
+    }
+  }
+
+  &_facebook_login-text {
+    line-height: 30px;
+    display: inline-block;
+  }
+
   &_title {
-    font-size: 28px;
+    font-family: main-cizo;
+    font-size: 16px;
+    text-transform: uppercase;
 
     &_decoration {
-      width: 50px;
+      width: 70px;
       height: 1px;
       border-bottom: solid 1px white;
     }
@@ -52,22 +88,21 @@ form {
       justify-content: space-between;
       align-items: center;
       align-content: center;
-      margin-bottom: 25px;
+      margin-bottom: 43px;
     }
   }
 
   &_input {
     width: @elem-width;
-    color: white;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: solid 1px white;
-    border-radius: 7px;
-    margin: 10px 0;
-    font-size: 28px;
-    padding-left: 5px;
+    .register-form_input_mix;
 
     &::-webkit-input-placeholder {
-      color: @color-lite;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:focus {
+      border: solid 1px #3cffee;
+      color: white;
     }
 
     &_date-wrapper {
@@ -81,52 +116,44 @@ form {
 
     &_date {
       width: @elem-width / 4;
-      color: white;
-      background-color: rgba(255, 255, 255, 0.2);
-      border: solid 1px white;
-      border-radius: 7px;
-      margin: 10px 0;
-      font-size: 28px;
-      padding-left: 5px;
+      .register-form_input_mix;
 
       &::-webkit-input-placeholder {
-        color: @color-lite;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      &:focus {
+        border: solid 1px #3cffee;
+        color: white;
       }
 
+      &--day {
+        width: 56px;
+      }
       &--month {
-        width: @elem-width / 3;
-        color: white;
-        background-color: rgba(255, 255, 255, 0.2);
-        border: solid 1px white;
-        border-radius: 7px;
-        margin: 10px 0;
-        font-size: 28px;
-        padding: 3px 5px;
-
-        &::-webkit-input-placeholder {
-          color: @color-lite;
-        }
+        width: 166px;
+      }
+      &--year {
+        width: 76px;
       }
     }
   }
 
   &_description {
     margin: 20px 0;
-    font-size: 18px;
+    font-size: 13px;
     color: white;
     text-align: center;
   }
 
   &_sign-up {
     width: @elem-width;
-    background-color: transparent;
-    font-size: 30px;
+    background-color: #24aabc;
+    font-size: 18px;
     text-transform: uppercase;
     padding: 15px;
     text-align: center;
-    margin-bottom: 50px;
-    margin-top: 30px;
-    border: solid 1px white;
+    margin: 11px 0 30px 0;
+    border: none;
   }
 
   &_forgot-password {
@@ -145,7 +172,7 @@ form {
     right: 0;
     margin: 10px;
 
-    font-size: 30px;
+    font-size: 20px;
     color: white;
   }
 
@@ -154,25 +181,26 @@ form {
   }
 
   &_terms {
-    color: white;
+    color: #3cffee;
     font-family: bold-cizo;
+    font-size: 13px;
     padding-left: 5px;
     cursor: pointer;
+  }
+
+  &_have-account {
+    font-family: main-cizo;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+    &_login {
+      color: #3cffee;
+      font-family: bold-cizo;
+      padding-left: 10px;
+      cursor: pointer;
+    }
   }
 }
 
-.have-account {
-  font-family: main-cizo;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: white;
-  margin-bottom: 50px;
-  &_login {
-    color: white;
-    font-family: bold-cizo;
-    padding-left: 5px;
-    cursor: pointer;
-  }
-}

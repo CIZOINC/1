@@ -19,7 +19,9 @@
                             videos="videosList"
                             storage="storage"
                             selected-video="featuredItem"
-                            ng-repeat="category in categoriesList" ng-hide="category.empty"></category-carousel>
+                            category-only="false"
+                            ng-repeat="category in categoriesList" ng-hide="category.empty"
+            ></category-carousel>
         </div>
     </div>
 

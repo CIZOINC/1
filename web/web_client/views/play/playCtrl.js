@@ -48,7 +48,8 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
             videoCategoryId: undefined,
             categoriesList: $rootScope.categoriesList,
             sortedCategoriesList: [],
-            category: undefined,
+            selectedCategory: undefined,
+            videoCategory: undefined,
             videosFullList: undefined
         });
 
@@ -61,15 +62,16 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
             $scope.featuredList = $rootScope.featuredList;
         }
 
-        if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
-            $scope.videoCategoryId = Number($stateParams.categoryId);
-            $scope.category = _.filter($rootScope.categoriesList, item => item.id === $scope.videoCategoryId);
-        }
-
         if (Number($stateParams.videoId)) {
             let video = _.find($scope.videosList, video => video.id === Number($stateParams.videoId));
+            $scope.videoCategory = _.filter($rootScope.categoriesList, item => item.id === video.category_id)[0];
+            $scope.videoCategoryId = video.category_id;
             video.instantPlay = true;
             $scope.videoItem = video;
+        }
+
+        if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
+            $scope.selectedCategory = _.filter($rootScope.categoriesList, item => item.id === $scope.videoCategoryId)[0];
         }
 
         if ($scope.videoCategoryId) {

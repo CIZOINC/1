@@ -15,16 +15,27 @@
                  host-name="{{hostName}}"
                  sharing-path="{{sharingPath}}"
                  facebook-app-id="{{facebookAppId}}"
+                 category-id="{{ selectedCategory.id || '' }}"
                  storage="storage"
     ></show-player>
 
-    <div class="play_video-items">
+    <div class="play_video-items" ng-if="!selectedCategory">
         <category-carousel category="category"
                            videos="videosList"
                            storage="storage"
+                           category-only="false"
                            selected-video="videoItem"
-                           ng-repeat="category in sortedCategoriesList"></category-carousel>
-
+                           ng-repeat="category in sortedCategoriesList"
+        ></category-carousel>
     </div>
+    <div class="list_video-items" ng-if="selectedCategory">
+        <list-items storage="storage"
+                    videos="videosList"
+                    selected-video="videoItem"
+                    list-type="category"
+                    category-name="{{selectedCategory.title}}"
+        ></list-items>
+    </div>
+
     <page-footer></page-footer>
 </div>

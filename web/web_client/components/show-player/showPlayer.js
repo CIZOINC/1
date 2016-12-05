@@ -454,11 +454,13 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             let currentVideoId = scope.video.id;
             let prevVideo;
 
-            let index = _.findIndex(scope.videosList, (item) => {
+            const videosInCategory = _.filter(scope.videosList, item => item.category_id === scope.video.category_id);
+
+            let index = _.findIndex(videosInCategory, (item) => {
                 return item.id === currentVideoId;
             });
             if (index > 0) {
-                prevVideo = scope.videosList[index - 1];
+                prevVideo = videosInCategory[index - 1];
             }
             return prevVideo;
         }

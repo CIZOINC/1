@@ -10,5 +10,6 @@ CarrierWave.configure do |config|
 
   config.fog_credentials = fog_credentials
   config.fog_directory  = 'cizo-assets'                          # required
+  config.asset_host = 'https://cdn.cizo.com'
 
 end

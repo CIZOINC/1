@@ -218,7 +218,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                     ceil: 500,
                     hideLimitLabels: true,
                     onChange: function () {
-                        console.log('change to ' + scope.sliderModel.value);
                         if (scope.sliderModel.start > 0) {
                             scope.sliderModel.value = scope.sliderModel.start;
                             scope.sliderModel.start = 0;
@@ -240,7 +239,6 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                     hideLimitLabels: true,
                     vertical: true,
                     onChange: function () {
-                        console.log('change to ' + scope.soundSliderModel.value);
                         if (scope.soundSliderModel.start > 0) {
                             scope.soundSliderModel.value = scope.soundSliderModel.start;
                             scope.soundSliderModel.start = 0;

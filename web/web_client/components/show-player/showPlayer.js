@@ -25,12 +25,12 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             hostName: '@',
             sharingPath: '@',
             facebookAppId: '@',
+            categoryId: '@',
             storage: '='
         }
     };
 
     function linkFn(scope, element, attrs) {
-        console.log(scope);
 
         scope = angular.extend(scope, {
             isPlaying: false,
@@ -416,7 +416,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.isIntermissionState = false;
                 setIntermissionState(false);
                 $timeout(() => {
-                    $state.go('play', {videoId: nextVideo.id, categoryId: nextVideo.category_id});
+                    $state.go('play', {videoId: nextVideo.id, categoryId: scope.categoryId});
                 }, 500);
             } else {
                 scope.screen.pause();
@@ -442,7 +442,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.isIntermissionState = false;
                 setIntermissionState(false);
                 $timeout(() => {
-                    $state.go('play', {videoId: prevVideo.id, categoryId: prevVideo.category_id});
+                    $state.go('play', {videoId: prevVideo.id, categoryId: scope.categoryId});
                 }, 500);
             }
         }

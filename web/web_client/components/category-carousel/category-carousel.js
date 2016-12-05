@@ -19,7 +19,8 @@
                 videos: '=',
                 selectedVideo: '=',
                 category: '=',
-                storage: '='
+                storage: '=',
+                categoryOnly: '@'
             }
         };
 
@@ -88,7 +89,11 @@
                 if (isMatureVideo(video)) {
                     showMatureVideoScreen();
                 } else {
-                    $state.go('play', {videoId: video.id, categoryId: category.id});
+                    if (scope.categoryOnly === 'true') {
+                        $state.go('play', {videoId: video.id, categoryId: category.id});
+                    } else {
+                        $state.go('play', {videoId: video.id});
+                    }
                 }
             }
 

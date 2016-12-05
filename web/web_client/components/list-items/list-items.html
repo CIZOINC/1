@@ -1,6 +1,6 @@
 <div class="list-items" id="category-videos-{{categoryId}}" ng-show="isListShown">
     <div class="list-items_title">
-        <span class="{{::message.iconName}} list-items_title_icon"></span>
+        <span class="{{::message.iconName}} list-items_title_icon" ng-if="::message.iconName"></span>
         <span class="list-items_title_name">{{::message.title}}</span>
     </div>
 

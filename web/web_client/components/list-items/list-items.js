@@ -14,9 +14,11 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
         transclude: false,
         scope: {
             videos: '=',
+            selectedVideo: '=',
             storage: '=',
             listType: '@',
-            tagName: '@'
+            tagName: '@',
+            categoryName: '@'
         }
     };
 
@@ -24,7 +26,7 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
         scope = angular.extend(scope, {
             videosList: [],
             title: '',
-            iconName:  playerServ.getIconName(scope.categoryId),
+            iconName: playerServ.getIconName(scope.categoryId),
             message: undefined,
             isListShown: false,
             isListLoaded: false,
@@ -51,6 +53,10 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
             scope.listType = 'listTag';
         }
 
+        if (scope.categoryName) {
+            scope.listType = 'category';
+        }
+
         function getMessage(name) {
             function returner(originObj) {
                 let newObj = {};
@@ -69,7 +75,24 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
                 });
                 return newObj;
             }
+
             switch (name) {
+                // all categories
+                case 'all':
+                    return {
+                        iconName: '',
+                        title: 'All',
+                        noItemsTitle: 'There are no videos at all. Stay tuned.'
+                    };
+                    break;
+                // all categories
+                case 'category':
+                    return {
+                        iconName: '',
+                        title: scope.categoryName,
+                        noItemsTitle: 'There are no videos in this category. Stay tuned.'
+                    };
+                    break;
                 case 'listTag':
                     return {
                         iconName: '',
@@ -82,15 +105,15 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
                         iconName: 'icon-seen',
                         title: 'Seen',
                         noItemsTitle: 'You haven\'t WATCHED ANY VIDEOS, THAT MAKES US SAD. DON\'T MAKE US SAD.'
-                     };
-                break;
+                    };
+                    break;
                 case 'unseen':
                     return {
                         iconName: 'icon-unseen',
                         title: 'Unseen',
                         noItemsTitle: 'BRACE YOURSELF, NEW VIDEOS ARE COMING...'
                     };
-                break;
+                    break;
                 case 'skipped':
                     return {
                         iconName: 'icon-skipped',
@@ -98,7 +121,7 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
                         noItemsTitle: 'YOU HAVEN\'T SKIPPED ANY VIDEOS. YOU\'RE A TRUE PATRIOT.',
                         noItemsDescription: ''
                     };
-                break;
+                    break;
                 case 'favorite':
                     let msgObj = {
                         iconName: 'icon-favorites',
@@ -113,7 +136,7 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
                         }
                     };
                     return returner(msgObj);
-                break;
+                    break;
             }
 
         }
@@ -130,7 +153,10 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
             if (isMatureVideo(video)) {
                 return;
             }
-            let obj = {videoId: video.id, categoryId: video.category_id};
+            let obj = {videoId: video.id};
+            if (scope.listType === 'category') {
+                obj.categoryId = video.category_id;
+            }
             $rootScope.$emit('replayVideo', obj);
             $rootScope.$broadcast('replayVideo', obj);
             $state.go('play', obj);
@@ -140,5 +166,6 @@ function listItems($state, $rootScope, _, playerServ, userServ, $timeout) {
             $state.go('home');
         }
     }
-};
+}
+
 listItems.$inject = ['$state', '$rootScope', 'lodash', 'playerServ', 'userServ', '$timeout'];

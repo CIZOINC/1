@@ -1,3 +1,4 @@
+const fs = require('fs');
 var gulp = require('gulp');
 var inject = require('gulp-inject');
 var angularFilesort = require('gulp-angular-filesort');
@@ -60,6 +61,9 @@ gulp.task('Index_files_gathering', function () {
             '!./temp/**/*.*',
             './**/*.html'
         ])
+        .pipe(replace(/\[\[(.*?)\]\]/, function(wholeString, filename){
+            return fs.readFileSync(filename);
+        }))
         .pipe(templateCache())
         .pipe(gulp.dest('common'));
 });
@@ -96,6 +100,9 @@ gulp.task('collect_html', function () {
             '!index.html',
             './**/*.html'
         ])
+        .pipe(replace(/\[\[(.*?)\]\]/, function(wholeString, filename){
+            return fs.readFileSync(filename);
+        }))
         .pipe(templateCache().on('error', gutil.log))
         .pipe(gulp.dest('common'));
 });
@@ -212,7 +219,7 @@ gulp.task('copy_dependencies', function () {
 
 gulp.task('copy_index_template', function () {
     "use strict";
-    var postfix = Math.round(Math.random() * 100000000) ;
+    const postfix = Math.round(Math.random() * 100000000) ;
 
     return gulp.src(['./index_template.html'])
         .pipe(rename('index.html'))
@@ -224,7 +231,7 @@ gulp.task('copy_index_template', function () {
 
 gulp.task('copy_index_template_staging', function () {
     "use strict";
-    var postfix = Math.round(Math.random() * 100000000) ;
+    const postfix = Math.round(Math.random() * 100000000) ;
 
     return gulp.src(['./index_template.html'])
         .pipe(rename('index.html'))
@@ -237,7 +244,7 @@ gulp.task('copy_index_template_staging', function () {
 
 gulp.task('copy_index_template_production', function () {
     "use strict";
-    var postfix = Math.round(Math.random() * 100000000) ;
+    const postfix = Math.round(Math.random() * 100000000) ;
 
     return gulp.src(['./index_template.html'])
         .pipe(rename('index.html'))

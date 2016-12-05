@@ -15,7 +15,7 @@ class V1::StreamsController < V1::ApiController
   def show
     request.headers['Authorization'].clear if request.headers['Authorization']
     
-    prefix = host + bucket_name + env + "/stream/#{@video.id}/#{@stream.stream_type}/"
+    prefix = host + env + "/stream/#{@video.id}/#{@stream.stream_type}/"
     prefix = prefix + "#{@stream.prefix}/" unless @stream.prefix.blank? # for backwards compatibility
 
     @location =   params[:stream_type] == 'mp4' ? (prefix + 'video.mp4') : (prefix + 'index.m3u8')

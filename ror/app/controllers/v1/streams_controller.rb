@@ -171,7 +171,7 @@ class V1::StreamsController < V1::ApiController
   end
 
   def env
-    Rails.env.production? ? '/production' : '/staging'
+    Rails.env.production? ? 'production' : 'staging'
   end
 
   def prefix

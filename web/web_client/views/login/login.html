@@ -1,9 +1,13 @@
-<form>
+<form class="login-form-wrapper">
 
     <div class="login-form">
         <button class="login-form_facebook-login" ng-click="facebookLogin()">
-            <span class="icon-facebook"></span>
-            Login with Facebook
+            <span class="login-form_facebook_login-icon">
+                [[images/facebook.svg]]
+            </span>
+            <span class="login-form_facebook_login-text">
+                Login with Facebook
+            </span>
         </button>
 
         <div class="login-form_title_wrapper">
@@ -18,11 +22,11 @@
 
         <button class="login-form_login" ng-click="processLogin()">Login</button>
 
-        <div class="login-form_forgot-password"  ng-click="resetPasswordClick()">Forgot email or password?</div>
+        <div class="login-form_forgot-password"  ng-click="resetPasswordClick()">Forgot Password?</div>
     </div>
 
-    <div class="want-account">
-        Want an account? <span class="want-account_login" ng-click="registerClick()">Sign Up</span>
+    <div class="login-form_want-account">
+        Want an account? <span class="login-form_want-account_login" ng-click="registerClick()">Sign Up</span>
     </div>
 
     <div class="icon-close login-form_close" ng-click="closeView()"></div>

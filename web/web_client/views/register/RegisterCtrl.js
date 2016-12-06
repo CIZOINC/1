@@ -4,7 +4,7 @@ angular
     .controller('RegisterCtrl', RegisterCtrl);
 
 /* @ngInject */
-function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ, _, storageServ) {
+function RegisterCtrl($scope, $rootScope, $log, $state, userServ, moment, playerServ, _, storageServ) {
     "use strict";
 
     let months = [
@@ -140,9 +140,9 @@ function RegisterCtrl($scope, $log, $state, userServ, moment, playerServ, _, sto
     }
 
     function closeView() {
-        $state.go('home');
+        $state.go($rootScope.wentFrom, $rootScope.wentFromParams);
     }
 
 }
 
-RegisterCtrl.$inject = ['$scope', '$log', '$state', 'userServ', 'moment', 'playerServ', 'lodash', 'storageServ'];
+RegisterCtrl.$inject = ['$scope', '$rootScope', '$log', '$state', 'userServ', 'moment', 'playerServ', 'lodash', 'storageServ'];

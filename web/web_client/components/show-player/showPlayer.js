@@ -137,6 +137,9 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         });
 
         scope.screenList.bind('ended', () => {
+            if (!scope.video.isWatched) {
+                setWatched();
+            }
             if (playerServ.getElementFullscreenState()) {
                 toggleFullScreen()
                     .then(() => {
@@ -197,6 +200,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.screen.pause();
                 if (scope.intermissionStopTimer) {
                     $interval.cancel(scope.intermissionStopTimer);
+                    scope.intermissionStopTimer = null;
                 }
                 return true;
             }
@@ -210,7 +214,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
 
         function shareVideoItem(type) {
-            const fullPath = `${scope.sharingPath}#/videos/${scope.video.id}/${scope.video.category_id}`;
+            const fullPath = `${scope.sharingPath}#/videos/${scope.video.id}`;
             const emailContent = (scope.video.description_title || scope.video.title) + "\n" + fullPath;
             const socialMap = {
                 'facebook': 'https://www.facebook.com/dialog/share?' +
@@ -339,6 +343,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.intermissionCountdownValue++;
                 if (scope.intermissionCountdownValue > scope.intermissionCountdownMax) {
                     $interval.cancel(scope.intermissionStopTimer);
+                    scope.intermissionStopTimer = null;
                     playNextOrReplay();
                 }
             }, 50);
@@ -360,6 +365,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 scope.isIntermissionPaused = false;
                 if (scope.intermissionStopTimer) {
                     $interval.cancel(scope.intermissionStopTimer);
+                    scope.intermissionStopTimer = null;
                 }
             }
 
@@ -368,6 +374,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                     scope.intermissionCountdownValue++;
                     if (scope.intermissionCountdownValue > scope.intermissionCountdownMax) {
                         $interval.cancel(scope.intermissionStopTimer);
+                        scope.intermissionStopTimer = null;
                         playNextOrReplay();
                     }
                 }, 50);
@@ -375,6 +382,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             } else {
                 if (scope.intermissionStopTimer) {
                     $interval.cancel(scope.intermissionStopTimer);
+                    scope.intermissionStopTimer = null;
                 }
                 scope.isIntermissionPaused = true;
             }
@@ -471,6 +479,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             }
             if (scope.intermissionStopTimer) {
                 $interval.cancel(scope.intermissionStopTimer);
+                scope.intermissionStopTimer = null;
             }
             setIntermissionState(false);
 
@@ -823,6 +832,8 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         const inactivityCheckPromise = $interval(checkForInactivity, 300);
         scope.$on('$destroy', function () {
             $interval.cancel(inactivityCheckPromise);
+
+            $interval.cancel(scope.intermissionStopTimer);
         });
     }
 }

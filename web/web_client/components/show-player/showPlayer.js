@@ -214,7 +214,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
         }
 
         function shareVideoItem(type) {
-            const fullPath = `${scope.sharingPath}#/videos/${scope.video.id}/${scope.video.category_id}`;
+            const fullPath = `${scope.sharingPath}#/videos/${scope.video.id}`;
             const emailContent = (scope.video.description_title || scope.video.title) + "\n" + fullPath;
             const socialMap = {
                 'facebook': 'https://www.facebook.com/dialog/share?' +

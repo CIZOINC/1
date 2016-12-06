@@ -539,6 +539,10 @@ paths:
           description: "Forbidden. This is returned if the user is unauthenticated and mature_content is true or mature_content is true and the user is less than 18 years old."
           schema:
             $ref: '#/definitions/Error'
+        '404':
+          description: "Stream not found"
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:

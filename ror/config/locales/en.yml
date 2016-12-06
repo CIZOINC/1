@@ -55,6 +55,7 @@ en:
 
   "404":
     "1": Video has been deleted
+    "2": Stream not found
 
   "409":
     "1": Title has already been taken

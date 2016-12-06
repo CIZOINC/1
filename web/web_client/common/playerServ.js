@@ -220,6 +220,12 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
     }
 
     function setVideoWatched(storage, hostName, videoId) {
+        const unseenItemIndex = storage.unseenItems.indexOf(videoId);
+        if (unseenItemIndex>=0) {
+            storage.unseenItems.splice(unseenItemIndex, 1);
+            storageServ.setItem(storage.storageUnseenKey, storage.unseenItems);
+        }
+
         storage.seenItems.push(videoId);
         storage.seenItems = _.uniq(storage.seenItems);
         storageServ.setItem(storage.storageSeenKey, storage.seenItems);

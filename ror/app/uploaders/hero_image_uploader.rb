@@ -17,9 +17,6 @@ class HeroImageUploader < CarrierWave::Uploader::Base
     end
   end
 
-  def filename
-    "#{SecureRandom.uuid}.#{file.extension}" if original_filename.present?
-  end
 
   version :large_banner do
     process resize_to_fit: [1000, 500] # Use 1000 to maintain aspect ratio. The height will be the constraining factor
@@ -40,4 +37,13 @@ class HeroImageUploader < CarrierWave::Uploader::Base
     end
   end
 
+  def filename
+    "#{secure_token}.#{file.extension}" if original_filename.present?
+  end
+
+  protected
+  def secure_token
+    var = :"@#{mounted_as}_secure_token"
+    model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
+  end
 end

@@ -1510,6 +1510,13 @@
   }
 }
         ,
+        "404": {
+  "description" : "Stream not found",
+  "schema" : {
+    "$ref" : "#/definitions/Error"
+  }
+}
+        ,
         "default": {
   "description" : "Unexpected error",
   "schema" : {

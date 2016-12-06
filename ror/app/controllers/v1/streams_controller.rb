@@ -13,6 +13,14 @@ class V1::StreamsController < V1::ApiController
 
 
   def show
+    
+    # Only redirect if stream is completed (ready to be consumed). This prevents CDN from caching a 404 if the video
+    # is in the process of transcoding
+    if @stream.transcode_status != 'completed' 
+      render_errors ['404.2']
+      return
+    end
+
     request.headers['Authorization'].clear if request.headers['Authorization']
     
     prefix = host + env + "/stream/#{@video.id}/#{@stream.stream_type}/"

@@ -4,7 +4,7 @@ angular
     .controller('LoginCtrl', LoginCtrl);
 
 /* @ngInject */
-function LoginCtrl($scope, $state, userServ, storageServ, playerServ) {
+function LoginCtrl($scope, $rootScope, $state, userServ, storageServ, playerServ) {
     "use strict";
 
 
@@ -159,7 +159,7 @@ function LoginCtrl($scope, $state, userServ, storageServ, playerServ) {
     }
 
     function closeView() {
-        $state.go('home');
+        $state.go($rootScope.wentFrom, $rootScope.wentFromParams);
     }
 
     function changeFocusOnEnter(event) {
@@ -178,4 +178,4 @@ function LoginCtrl($scope, $state, userServ, storageServ, playerServ) {
     }
 }
 
-LoginCtrl.$inject = ['$scope', '$state', 'userServ', 'storageServ', 'playerServ'];
+LoginCtrl.$inject = ['$scope', '$rootScope', '$state', 'userServ', 'storageServ', 'playerServ'];

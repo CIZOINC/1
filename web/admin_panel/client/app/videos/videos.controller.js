@@ -919,7 +919,7 @@
                 }
             };
 
-            $scope.tags = $scope.video.tag_list.split(/,\s?/);
+            $scope.tags = ($scope.video.tag_list || '').split(/,\s?/);
 
             $scope.tagAdded = function (tags) {
                 let tag_list = '';

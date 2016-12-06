@@ -98,30 +98,44 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         $scope.storage.showMatureScreen = false;
     }
 
+    function loadUserToken() {
+        $scope.storage.token = storageServ.getItem($scope.storage.storageUserToken);
+
+        if ($scope.storage.token && userServ.isUnexpiredToken($scope.storage.token)) {
+
+            $timeout(() => {
+                "use strict";
+                userServ.updateToken($scope.hostName, $scope.storage.token)
+                    .then((response) => {
+                        storageServ.setItem($scope.storage.storageUserToken, response.data);
+                        $scope.storage.token = response.data;
+                    });
+            }, 30000);
+
+        }
+
+        if (!userServ.isUnexpiredToken($scope.storage.token)) {
+            storageServ.deleteItem($scope.storage.storageUserToken);
+            $scope.storage.userAuthorized = false;
+        } else {
+            $scope.storage.userAuthorized = true;
+        }
+    }
+
+    function setupBackLinksTracking() {
+        $rootScope.wentFrom = '';
+        $rootScope.wentFromParams = undefined;
+        $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
+            $rootScope.wentFrom = from;
+            $rootScope.wentFromParams = fromParams;
+        });
+    }
+
+    loadUserToken();
+
     routerHelper.configureStates(routesList);
 
-    $scope.storage.token = storageServ.getItem($scope.storage.storageUserToken);
-
-
-    if ($scope.storage.token && userServ.isUnexpiredToken($scope.storage.token)) {
-
-        $timeout(() => {
-            "use strict";
-            userServ.updateToken($scope.hostName, $scope.storage.token)
-                .then((response) => {
-                    storageServ.setItem($scope.storage.storageUserToken, response.data);
-                    $scope.storage.token = response.data;
-                });
-        }, 30000);
-
-    }
-
-    if (!userServ.isUnexpiredToken($scope.storage.token)) {
-        storageServ.deleteItem($scope.storage.storageUserToken);
-        $scope.storage.userAuthorized = false;
-    } else {
-        $scope.storage.userAuthorized = true;
-    }
+    setupBackLinksTracking();
 
     // upload storage
     $scope.storage.seenItems = storageServ.getItem($scope.storage.storageSeenKey);

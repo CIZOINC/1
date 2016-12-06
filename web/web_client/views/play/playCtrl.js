@@ -72,6 +72,7 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
 
         if ($stateParams.categoryId && $stateParams.categoryId !== '0') {
             $scope.selectedCategory = _.filter($rootScope.categoriesList, item => item.id === $scope.videoCategoryId)[0];
+            $scope.videosInCategory = _.filter($scope.videosList, item => item.category_id === $scope.videoCategoryId);
         }
 
         if ($scope.videoCategoryId) {

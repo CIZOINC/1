@@ -4,7 +4,7 @@ angular
     .controller('ResetCtrl', ResetCtrl);
 
 /* @ngInject */
-function ResetCtrl($scope, $state, userServ, playerServ) {
+function ResetCtrl($scope, $rootScope, $state, userServ, playerServ) {
     "use strict";
 
 
@@ -23,7 +23,7 @@ function ResetCtrl($scope, $state, userServ, playerServ) {
     });
 
     function closeView() {
-        $state.go('home');
+        $state.go($rootScope.wentFrom, $rootScope.wentFromParams);
     }
 
     function resetPassword() {
@@ -46,4 +46,4 @@ function ResetCtrl($scope, $state, userServ, playerServ) {
     }
 }
 
-ResetCtrl.$inject = ['$scope', '$state', 'userServ', 'playerServ'];
+ResetCtrl.$inject = ['$scope', '$rootScope', '$state', 'userServ', 'playerServ'];

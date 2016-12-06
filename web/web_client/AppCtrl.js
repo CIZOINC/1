@@ -126,6 +126,9 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         $rootScope.wentFrom = '';
         $rootScope.wentFromParams = undefined;
         $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
+            if (from.name === 'register' || from.name === 'login' || from.name === 'reset') {
+                return;
+            }
             $rootScope.wentFrom = from;
             $rootScope.wentFromParams = fromParams;
         });

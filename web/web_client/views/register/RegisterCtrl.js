@@ -128,7 +128,7 @@ function RegisterCtrl($scope, $rootScope, $log, $state, userServ, moment, player
                 /**/
 
 
-                $state.go('home');
+                $state.go($rootScope.wentFrom, $rootScope.wentFromParams);
             })
             .catch(() => {
                 playerServ.showMessage($scope, 'Error', 'Please try to register via Facebook later');

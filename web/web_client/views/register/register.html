@@ -18,15 +18,20 @@
         <input ng-model="register.email" class="register-form_input" placeholder="Email Address" type="email">
         <input ng-model="register.password" class="register-form_input" placeholder="Password" type="password">
         <div class="register-form_input_date-wrapper">
-            <select name="month" ng-model="register.month" class="register-form_input_date register-form_input_date--month"
-                    ng-options="month as month.name for month in months track by month.key"></select>
+            <select name="month"
+                    ng-model="register.month"
+                    class="register-form_input_date register-form_input_date--month"
+                    ng-options="month as month.name for month in months track by month.key"
+            >
+            </select>
+            <div class="register-form_arrow-down">&#711;</div>
             <input ng-model="register.day" class="register-form_input_date register-form_input_date--day" placeholder="Day">
             <input ng-model="register.year" class="register-form_input_date register-form_input_date--year" placeholder="Year">
         </div>
 
         <div class="register-form_description">
-            By clicking on Sign Up, you agree to<br>
-            <span ui-sref="terms" class="register-form_terms">CIZO's Terms of Use</span> and <span ui-sref="privacy" class="register-form_terms">Privacy Notice</span>
+            By clicking on Sign Up, you agree to <br>
+            CIZO's <span ui-sref="terms" class="register-form_terms">Terms of Use</span> and <span ui-sref="privacy" class="register-form_terms">Privacy Notice</span>
         </div>
 
         <button class="register-form_sign-up" ng-click="registerUser()">Sign up</button>

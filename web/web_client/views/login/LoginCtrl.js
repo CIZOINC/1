@@ -83,7 +83,7 @@ function LoginCtrl($scope, $rootScope, $state, userServ, storageServ, playerServ
             /**/
 
 
-            $state.go('home');
+            $state.go($rootScope.wentFrom, $rootScope.wentFromParams);
         })
         .catch((response) => {
             let errors = _.map(response.data.errors, (error) => {
@@ -143,7 +143,7 @@ function LoginCtrl($scope, $rootScope, $state, userServ, storageServ, playerServ
                 /**/
 
 
-                $state.go('home');
+                $state.go($rootScope.wentFrom, $rootScope.wentFromParams);
             })
             .catch(() => {
                 playerServ.showMessage($scope, 'Error', 'Please try to register via Facebook later');

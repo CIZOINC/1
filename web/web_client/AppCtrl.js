@@ -96,6 +96,8 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
 
     function closeMatureScreen() {
         $scope.storage.showMatureScreen = false;
+        $rootScope.loginTarget = undefined;
+        $rootScope.loginTargetParams = undefined;
     }
 
     function loadUserToken() {
@@ -129,8 +131,16 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
             if (from.name === 'register' || from.name === 'login' || from.name === 'reset') {
                 return;
             }
-            $rootScope.wentFrom = from;
-            $rootScope.wentFromParams = fromParams;
+            if (typeof $rootScope.loginTarget !== 'undefined') {
+                $rootScope.wentFrom = $rootScope.loginTarget;
+                $rootScope.wentFromParams = $rootScope.loginTargetParams;
+                $rootScope.loginTarget = undefined;
+                $rootScope.loginTargetParams = undefined;
+            } else {
+                $rootScope.wentFrom = from;
+                $rootScope.wentFromParams = fromParams;
+            }
+
         });
     }
 

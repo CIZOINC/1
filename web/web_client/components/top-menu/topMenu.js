@@ -4,7 +4,7 @@ angular
     .directive('topMenu', topMenu);
 
 /* @ngInject */
-function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _) {
+function topMenu($state, $rootScope, $anchorScroll, $http, $timeout, $q, $log, playerServ, _) {
     "use strict";
 
     return {
@@ -35,7 +35,6 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
             logout: logout,
             onShowAdvanced: () => scope.showAdvanced
         });
-
 
         scope.$watch('categories', (newCategories) => {
             if (newCategories) {
@@ -142,4 +141,4 @@ function topMenu($state, $anchorScroll, $http, $timeout, $q, $log, playerServ, _
 
 }
 
-topMenu.$inject = ['$state', '$anchorScroll', '$http', '$timeout', '$q', '$log', 'playerServ', 'lodash'];
+topMenu.$inject = ['$state', '$rootScope', '$anchorScroll', '$http', '$timeout', '$q', '$log', 'playerServ', 'lodash'];

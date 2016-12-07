@@ -5,7 +5,7 @@ angular
 
 
 /* @ngInject */
-function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, $filter, playerServ, RecursionHelper, userServ) {
+function featuredPlayer($log, $rootScope, moment, _, $sce, $timeout, $anchorScroll, $q, $interval, $filter, playerServ, RecursionHelper, userServ) {
     "use strict";
 
     return {
@@ -343,10 +343,10 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
             if (nextVideo && nextVideo.featured) {
                 scope.screen.pause();
 
-
                 scope.video = nextVideo;
                 scope.isIntermissionState = false;
                 setIntermissionState(false);
+
                 $timeout( () => {
                     scope.screen.play();
                     checkMatureContent();
@@ -378,6 +378,8 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
                 scope.isIntermissionState = false;
                 setIntermissionState(false);
                 $timeout( () => {
+                    $rootScope.loginTarget = 'play';
+                    $rootScope.loginTargetParams = {videoId: scope.video.id, categoryId: scope.video.category_id};
                     scope.screen.play();
                     checkMatureContent();
                 }, 500);
@@ -749,4 +751,4 @@ function featuredPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $int
         }
     }
 }
-featuredPlayer.$inject = ['$log', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', '$filter', 'playerServ', 'RecursionHelper', 'userServ'];
+featuredPlayer.$inject = ['$log', '$rootScope', 'moment', 'lodash', '$sce', '$timeout', '$anchorScroll', '$q', '$interval', '$filter', 'playerServ', 'RecursionHelper', 'userServ'];

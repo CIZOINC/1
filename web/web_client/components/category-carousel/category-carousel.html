@@ -6,7 +6,9 @@
         </div>
     </div>
     <div class="category-carousel__carousel">
-        <button class="category-carousel__left icon-back"  ng-click="movePrev()"></button>
+        <div class="category-carousel__arrow-button">
+            <div class="category-carousel__arrow-button-left icon-back" ng-click="movePrev()"></div>
+        </div>
         <div class="category-carousel__content">
             <div class="category-carousel__content-wrapper" ng-style="{'margin-left': itemsOffset}">
                 <div class="category-carousel-item"
@@ -37,6 +39,8 @@
                 </div>
             </div>
         </div>
-        <button class="category-carousel__right icon-forward" ng-click="moveNext()"></button>
+        <div class="category-carousel__arrow-button">
+            <div class="category-carousel__arrow-button-right icon-forward" ng-click="moveNext()"></div>
+        </div>
     </div>
 </div>

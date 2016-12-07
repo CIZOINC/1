@@ -5,7 +5,7 @@
         .directive('categoryCarousel', categoryCarousel);
 
     /* @ngInject */
-    function categoryCarousel(_, $state, userServ, playerServ) {
+    function categoryCarousel(_, $state, $rootScope, userServ, playerServ) {
         "use strict";
         const numberOfVisibleItems = 4;
         const contentWidth = 1232;
@@ -86,18 +86,22 @@
             }
 
             function selectVideo(category, video) {
+                let goParams;
+                if (scope.categoryOnly === 'true') {
+                    goParams = {videoId: video.id, categoryId: category.id};
+                } else {
+                    goParams = {videoId: video.id};
+                }
                 if (isMatureVideo(video)) {
+                    $rootScope.loginTarget = 'play';
+                    $rootScope.loginTargetParams = goParams;
                     showMatureVideoScreen();
                 } else {
-                    if (scope.categoryOnly === 'true') {
-                        $state.go('play', {videoId: video.id, categoryId: category.id});
-                    } else {
-                        $state.go('play', {videoId: video.id});
-                    }
+                    $state.go('play', goParams);
                 }
             }
 
         }
     }
-    categoryCarousel.$inject = ['lodash', '$state', 'userServ', 'playerServ'];
+    categoryCarousel.$inject = ['lodash', '$state', '$rootScope', 'userServ', 'playerServ'];
 })();

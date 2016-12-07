@@ -259,6 +259,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             // Space pressed
             if (event.charCode === 32 && !(event.target && event.target.nodeName === 'INPUT')) {
                 togglePlayPause();
+                toggleControlsVisibility(true);
                 event.preventDefault();
             }
         }
@@ -649,6 +650,7 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             if (scope.isIntermissionState) {
                 return;
             }
+            console.log(hideControls);
             let showControls = typeof hideControls !== 'undefined' ? !hideControls : scope.controlsOverlayLayer.classList.contains('hidden-layer');
 
             $timeout(function () {

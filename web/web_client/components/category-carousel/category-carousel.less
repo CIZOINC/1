@@ -33,20 +33,37 @@
   }
 
   .category-carousel-button-mix {
-    background-color: transparent;
+    flex: 0 0 auto;
     color: white;
-    font-size: 40px;
-    width: 50px;
+    opacity: 0.5;
+    transition: 0.3s opacity ease;
     cursor: pointer;
-    border: none;
+    &:hover {
+      opacity: 1;
+    }
     &:focus {
       outline: none;
     }
   }
 
-  &__left {
-    .category-carousel-button-mix;
+  &__arrow-button {
+    display: flex;
+    align-items: center;
+    font-size: 40px;
+    width: 50px;
+    border: none;
+    background-color: transparent;
     margin-left: -40px;
+  }
+
+  &__arrow-button-left {
+    .category-carousel-button-mix;
+    margin-left: 6px;
+  }
+
+  &__arrow-button-right {
+    .category-carousel-button-mix;
+    margin-left: 28px;
   }
 
   &__content {
@@ -65,10 +82,6 @@
     transition: margin-left .3s ease-out 0.1s;
   }
 
-  &__right {
-    .category-carousel-button-mix;
-    margin-left: -20px;
-  }
 }
 
 .category-carousel-item {
@@ -218,7 +231,7 @@
     white-space: nowrap;
     overflow: hidden;
     z-index: 10;
-    text-transform: uppercase;
+    text-transform: none;
     white-space: nowrap;
 
     &--playing {
@@ -236,7 +249,7 @@
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-transform: uppercase;
+    text-transform: none;
     white-space: nowrap;
   }
 

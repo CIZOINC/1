@@ -2,7 +2,11 @@
     <div class="featured-section__filler"></div>
     <top-menu categories="categoriesList" host-name="{{hostName}}" storage="storage" show-advanced="true"></top-menu>
 
-    <img class="featured-section__hero-image" ng-src="{{video.hero_images.hero_image_link}}">
+    <img class="featured-section__hero-image"
+         ng-src="{{featuredVideo.hero_images.hero_image_link}}"
+         ng-class="{'featured-section__hero-image--selected': featuredVideo === video}"
+         ng-repeat="featuredVideo in featuredListCut"
+    >
     <div class="featured-section__controls">
         <div class="featured-section__scroll-button icon-back" ng-click="scroll(-1)"></div>
         <div class="featured-section__play-button" ng-click="playVideo(video)">

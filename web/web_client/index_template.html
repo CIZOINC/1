@@ -8,9 +8,26 @@
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="stylesheet" href="all.min.css">
 </head>
-<body ng-controller="AppCtrl" ng-cloak>
+<body ng-controller="AppCtrl" ng-cloak ng-class="{'app--no-scroll': showLogin || showRegister}">
 
-<div ui-view></div>
+<div ui-view ng-class="{'app--blurred': showLogin || showRegister}"></div>
+<login-form
+        class="ng-hide"
+        ng-show="showLogin"
+        host-name="{{ hostName }}"
+        storage="storage"
+        on-login-close="showLogin = false"
+        on-register-open="showLogin = false;showRegister = true"
+        on-reset-password="resetPassword()"
+></login-form>
+<register-form
+        class="ng-hide"
+        ng-show="showRegister"
+        host-name="{{ hostName }}"
+        storage="storage"
+        on-register-close="showRegister = false"
+        on-login-open="showRegister = false;showLogin = true"
+></register-form>
 
 <div class="mature-overlay" ng-show="checkMature()">
     <div class="mature-overlay_window mature-window">

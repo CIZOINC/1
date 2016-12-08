@@ -4,12 +4,13 @@ angular
     .factory('userServ', userServ);
 
 /* @ngInject */
-function userServ($http, $q, $log, moment, ezfb) {
+function userServ($http, $q, $log, moment, ezfb, storageServ) {
     "use strict";
 
     return {
         registerUser: registerUser,
         login: login,
+        load: load,
         facebookAuth: facebookAuth,
         updateToken: updateToken,
         resetPassword: resetPassword,
@@ -69,6 +70,53 @@ function userServ($http, $q, $log, moment, ezfb) {
                 reject(response);
             }
         });
+    }
+
+    function load(hostName, storage, data) {
+        storageServ.setItem(storage.storageUserToken, data);
+        storage.token = data;
+        storage.userAuthorized = true;
+
+        /**/
+        getLiked(hostName, storage.token.access_token)
+            .then((favorites) => {
+                let favoritesArray = _.map(favorites, fav => fav.id);
+                let storedArray = storageServ.getItem(storage.storageFavoritesKey);
+
+                let newArray = _.union(favoritesArray, storedArray);
+                storageServ.setItem(storage.storageFavoritesKey, newArray);
+                storage.favoritesItems = newArray;
+            });
+
+        getVideoSeen(hostName, storage.token.access_token)
+            .then((seen) => {
+                let seenArray = _.map(seen, seenItem => seenItem.id);
+                let storedArray = storageServ.getItem(storage.storageSeenKey);
+
+                let newArray = _.union(seenArray, storedArray);
+                storageServ.setItem(storage.storageSeenKey, newArray);
+                storage.seenItems = newArray;
+            });
+
+        getUnseenList(hostName, storage.token.access_token)
+            .then((unseen) => {
+                let unseenArray = _.map(unseen, unseenItem => unseenItem.id);
+                let storedArray = storageServ.getItem(storage.storageUnseenKey);
+
+                let newArray = _.union(unseenArray, storedArray);
+                storageServ.setItem(storage.storageUnseenKey, newArray);
+                storage.unseenItems = newArray;
+            });
+
+        getSkipped(hostName, storage.token.access_token)
+            .then((skipped) => {
+                let unseenArray = _.map(skipped, skippedItem => skippedItem.id);
+                let storedArray = storageServ.getItem(storage.storageSkippedKey);
+
+                let newArray = _.union(unseenArray, storedArray);
+                storageServ.setItem(storage.storageSkippedKey, newArray);
+                storage.skippedItems = newArray;
+            });
     }
 
     function facebookAuth(hostName) {
@@ -370,4 +418,4 @@ function userServ($http, $q, $log, moment, ezfb) {
 
 }
 
-userServ.$inject = ['$http', '$q', '$log', 'moment', 'ezfb'];
+userServ.$inject = ['$http', '$q', '$log', 'moment', 'ezfb', 'storageServ'];

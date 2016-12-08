@@ -775,6 +775,17 @@
           transition: all 0.3s ease;
         }
 
+        &_collapse {
+          color: rgba(255, 255, 255, 0.5);
+          &:hover {
+            color: @color-teal;
+          }
+          font-size: 23px;
+          line-height: 50px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
         &_volume {
           color: rgba(255, 255, 255, 0.5);
           &:hover {
@@ -795,13 +806,6 @@
           & .rz-pointer {
             opacity: 0 !important;
           }
-        }
-
-        &_collapse {
-          color: white;
-          font-size: 23px;
-          line-height: 50px;
-          cursor: pointer;
         }
 
         &_slider {

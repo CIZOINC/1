@@ -512,10 +512,18 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
                 if (itemIndex >= 0) {
                     scope.storage.favoritesItems.splice(itemIndex, 1);
                 }
-                persistPromise = userServ.deleteLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
+                if (scope.storage.token) {
+                    persistPromise = userServ.deleteLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
+                } else {
+                    persistPromise = Promise.resolve();
+                }
             } else {
                 scope.storage.favoritesItems.push(scope.video.id);
-                persistPromise = userServ.setLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
+                if (scope.storage.token) {
+                    persistPromise = userServ.setLiked(scope.hostName, scope.storage.token.access_token, scope.video.id);
+                } else {
+                    persistPromise = Promise.resolve();
+                }
             }
             return persistPromise.then(function (value) {
                 storageServ.setItem(scope.storage.storageFavoritesKey, scope.storage.favoritesItems);
@@ -650,7 +658,6 @@ function showPlayer($log, moment, _, $sce, $timeout, $anchorScroll, $q, $interva
             if (scope.isIntermissionState) {
                 return;
             }
-            console.log(hideControls);
             let showControls = typeof hideControls !== 'undefined' ? !hideControls : scope.controlsOverlayLayer.classList.contains('hidden-layer');
 
             $timeout(function () {

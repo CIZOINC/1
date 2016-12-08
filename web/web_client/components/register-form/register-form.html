@@ -1,0 +1,50 @@
+<form class="register-form-wrapper">
+    <div class="register-form">
+        <button class="register-form_facebook-login" ng-click="facebookRegister()">
+            <span class="register-form_facebook_login-icon">
+                [[images/facebook.svg]]
+            </span>
+            <span class="register-form_facebook_login-text">
+                Continue with Facebook
+            </span>
+        </button>
+
+        <div class="register-form_title_wrapper">
+            <div class="register-form_title_decoration"></div>
+            <span class="register-form_title">or with your email</span>
+            <div class="register-form_title_decoration"></div>
+        </div>
+
+        <input ng-model="register.email" class="register-form_input" placeholder="Email Address" type="email">
+        <input ng-model="register.password" class="register-form_input" placeholder="Password" type="password">
+        <div class="register-form_input_date-wrapper">
+            <select name="month"
+                    ng-model="register.month"
+                    class="register-form_input_date register-form_input_date--month"
+                    ng-options="month as month.name for month in months track by month.key"
+            >
+            </select>
+            <div class="register-form_arrow-down">&#711;</div>
+            <input ng-model="register.day" class="register-form_input_date register-form_input_date--day" placeholder="Day">
+            <input ng-model="register.year" class="register-form_input_date register-form_input_date--year" placeholder="Year">
+        </div>
+
+        <div class="register-form_description">
+            By clicking on Sign Up, you agree to <br>
+            CIZO's <span ui-sref="terms" ng-click="closeView()" class="register-form_terms">Terms of Use</span> and
+            <span ui-sref="privacy" ng-click="closeView()" class="register-form_terms">Privacy Notice</span>
+        </div>
+
+        <button class="register-form_sign-up" ng-click="registerUser()">Sign up</button>
+
+    </div>
+
+    <div class="register-form_have-account">
+        Already have an account? <span class="register-form_have-account_login" ng-click="loginClick()">Login</span>
+    </div>
+
+    <div class="icon-close register-form_close" ng-click="closeView()"></div>
+</form>
+
+
+<message-overlay params="message" class="register-form"></message-overlay>

@@ -27,6 +27,29 @@ body {
   background-color: #1b1c1e;
 }
 
+.app {
+  &--blurred {
+    filter: blur(4px);
+  }
+  &--no-scroll {
+    overflow: hidden;
+  }
+}
+
+login-form, register-form  {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.standalone-page {
+  background-color: #1b1c1e;
+}
+
 .hidden-layer {
   display: none !important;
 }

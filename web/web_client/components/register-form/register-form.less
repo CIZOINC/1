@@ -1,0 +1,217 @@
+@color-lighter: #3cffee;
+@color-lite: #24aabc;
+@color-mid: #356781;
+@color-dark: #2c3d51;
+@color-darker: #1c1f24;
+
+form {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+@elem-width: 333px;
+
+.register-form-wrapper {
+  justify-content: center;
+}
+
+.register-form_input_mix {
+  border-radius: 9px;
+  font-size: 16px;
+  padding: 10px;
+  outline: none;
+  border: 1px solid transparent;
+  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
+  color: white;
+  font-family: main-cizo;
+
+  &_facebook-login {
+    font-family: Arial;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: #3b5998;
+    font-size: 16px;
+    padding: 9px;
+    margin-bottom: 46px;
+    outline: none;
+    border: none;
+    width: @elem-width;
+  }
+
+  &_facebook_login-icon {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    vertical-align: middle;
+    position: relative;
+    margin-right: 14px;
+    svg {
+      width: 100%;
+    }
+  }
+
+  &_facebook_login-text {
+    line-height: 30px;
+    display: inline-block;
+  }
+
+  &_title {
+    font-family: main-cizo;
+    font-size: 16px;
+    text-transform: uppercase;
+
+    &_decoration {
+      width: 70px;
+      height: 1px;
+      border-bottom: solid 1px white;
+    }
+
+    &_wrapper {
+      width: @elem-width;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      align-content: center;
+      margin-bottom: 43px;
+    }
+  }
+
+  &_input {
+    width: @elem-width;
+    .register-form_input_mix;
+
+    &::-webkit-input-placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:focus {
+      border: solid 1px #3cffee;
+      color: white;
+    }
+
+    &_date-wrapper {
+      width: @elem-width;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      align-content: center;
+      position: relative;
+    }
+
+    &_date {
+      width: @elem-width / 4;
+      .register-form_input_mix;
+
+      &::-webkit-input-placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      &:focus {
+        border: solid 1px #3cffee;
+        color: white;
+      }
+
+      &--day {
+        width: 56px;
+      }
+      &--month {
+        width: 166px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+      }
+      &--year {
+        width: 76px;
+      }
+    }
+  }
+
+  &_description {
+    margin: 20px 0;
+    font-size: 13px;
+    color: white;
+    text-align: center;
+  }
+
+  &_sign-up {
+    width: @elem-width;
+    background-color: #24aabc;
+    font-size: 18px;
+    text-transform: uppercase;
+    padding: 15px;
+    text-align: center;
+    margin: 11px 0 30px 0;
+    border: none;
+  }
+
+  &_forgot-password {
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: bold-cizo;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+
+  &_close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+
+    font-size: 20px;
+    color: white;
+  }
+
+  & option {
+    background-color: @color-darker;
+  }
+
+  &_terms {
+    color: #3cffee;
+    font-family: bold-cizo;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  &_have-account {
+    font-family: main-cizo;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: white;
+    &_login {
+      color: #3cffee;
+      font-family: bold-cizo;
+      padding-left: 10px;
+      cursor: pointer;
+    }
+  }
+
+  &_arrow-down {
+    position: absolute;
+    pointer-events: none;
+    color: rgba(255,255,255,.5);
+    font-size: 40px;
+    left: 140px;
+    top: 10px;
+  }
+}
+

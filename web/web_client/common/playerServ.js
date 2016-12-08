@@ -201,17 +201,16 @@ function playerServ($q, $state, $rootScope, categoriesServ, videoServ, storageSe
                     video.instantPlay = false;
                 }
 
-                if (scope.storage.userAuthorized) {
-                    if (scope.storage.seenItems && scope.storage.seenItems.length) {
-                        video.isWatched = _.some(scope.storage.seenItems, item => item === video.id);
-                    }
-
-                    if (scope.storage.favoritesItems && scope.storage.favoritesItems.length) {
-                        video.favorites = _.some(scope.storage.favoritesItems, item => item === video.id);
-                    } else {
-                        video.favorites = false;
-                    }
+                if (scope.storage.seenItems && scope.storage.seenItems.length) {
+                    video.isWatched = _.some(scope.storage.seenItems, item => item === video.id);
                 }
+
+                if (scope.storage.favoritesItems && scope.storage.favoritesItems.length) {
+                    video.favorites = _.some(scope.storage.favoritesItems, item => item === video.id);
+                } else {
+                    video.favorites = false;
+                }
+
                 return video;
             });
             scope.videosList = updatedVideos;

@@ -32,6 +32,8 @@ function topMenu($state, $rootScope, $anchorScroll, $http, $timeout, $q, $log, p
             search: search,
             playFoundVideo: playFoundVideo,
             toggleSideMenu: toggleSideMenu,
+            login: login,
+            register: register,
             logout: logout,
             onShowAdvanced: () => scope.showAdvanced
         });
@@ -64,8 +66,14 @@ function topMenu($state, $rootScope, $anchorScroll, $http, $timeout, $q, $log, p
                     $state.go('play', {videoId: firstCategoryVideoList[0].id, categoryId: id});
                 }
             }
+        }
 
+        function login() {
+            $rootScope.$broadcast('loginOpen');
+        }
 
+        function register() {
+            $rootScope.$broadcast('registerOpen');
         }
 
         function logout() {

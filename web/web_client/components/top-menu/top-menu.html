@@ -32,10 +32,10 @@
                     </div>
                 </div>
             </div>
-            <button class="top-menu_login" ui-sref="register" ng-hide="storage.userAuthorized">
+            <button class="top-menu_login" ng-click="register()" ng-hide="storage.userAuthorized">
                 Sign Up
             </button>
-            <button class="top-menu_login top-menu_login--last" ui-sref="login" ng-hide="storage.userAuthorized">
+            <button class="top-menu_login top-menu_login--last" ng-click="login()" ng-hide="storage.userAuthorized">
                 Login
             </button>
             <button class="top-menu_login top-menu_login--last" ng-click="logout()" ng-show="storage.userAuthorized">

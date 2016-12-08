@@ -51,6 +51,9 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         videosList: [],
         categoriesList: [],
         featuredList: [],
+        //
+        showLogin: false,
+        showRegister: false,
 
         checkMature: function () {
             return $scope.storage.showMatureScreen;
@@ -59,7 +62,6 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         storage: {
             userAuthorized: false,
             showMatureScreen: false,
-
 
             storageSeenKey: 'seen',
             storageFavoritesKey: 'favorites',
@@ -76,6 +78,7 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
 
         linkToLogin: linkToLogin,
         linkToHome: linkToHome,
+        resetPassword: resetPassword,
         closeMatureScreen: closeMatureScreen
 
     });
@@ -92,6 +95,11 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
     function linkToHome() {
         $scope.storage.showMatureScreen = false;
         $state.go('home', {}, {reload: true});
+    }
+
+    function resetPassword() {
+        $rootScope.$broadcast('loginClose');
+        $state.go('reset');
     }
 
     function closeMatureScreen() {
@@ -113,7 +121,6 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
                         $scope.storage.token = response.data;
                     });
             }, 30000);
-
         }
 
         if (!userServ.isUnexpiredToken($scope.storage.token)) {
@@ -128,7 +135,12 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         $rootScope.wentFrom = '';
         $rootScope.wentFromParams = undefined;
         $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
-            if (from.name === 'register' || from.name === 'login' || from.name === 'reset') {
+            if (from.name === 'register'
+                || from.name === 'login'
+                || from.name === 'reset'
+                || from.name === 'terms'
+                || from.name === 'privacy'
+            ) {
                 return;
             }
             if (typeof $rootScope.loginTarget !== 'undefined') {
@@ -141,6 +153,24 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
                 $rootScope.wentFromParams = fromParams;
             }
 
+        });
+    }
+
+    function setupLoginEventListener() {
+        $rootScope.$on('loginOpen', function(){
+            $scope.showLogin = true;
+        });
+        $rootScope.$on('loginClose', function(){
+            $scope.showLogin = false;
+        });
+    }
+
+    function setupRegisterEventListener() {
+        $rootScope.$on('registerOpen', function(){
+            $scope.showRegister = true;
+        });
+        $rootScope.$on('registerClose', function(){
+            $scope.showRegister = false;
         });
     }
 
@@ -210,6 +240,7 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
             });
     }
 
-
+    setupLoginEventListener();
+    setupRegisterEventListener();
 }
 AppCtrl.$inject = ['$rootScope', '$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', '$timeout', 'ezfb'];

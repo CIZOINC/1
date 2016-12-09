@@ -24,7 +24,9 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ
                     return userServ.refreshFavoritesFromNetwork($scope.hostName, $scope.storage);
                 }
             })
-            .then(playerServ.updateVideos)
+            .then(()=>{
+                return playerServ.updateVideos($scope);
+            })
             .then(viewSetup);
     }
 

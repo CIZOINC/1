@@ -26,15 +26,7 @@ function HomeCtrl($scope, $rootScope, playerServ, userServ, _, storageServ) {
         });
 
     if ($scope.userAuthorized) {
-        userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
-            .then((favorites) => {
-                let favoritesArray = _.map(favorites, fav => fav.id);
-                let storedArray = storageServ.getItem($scope.storage.storageFavoritesKey);
-
-                let newArray = _.union(favoritesArray, storedArray);
-                storageServ.setItem($scope.storage.storageFavoritesKey, newArray);
-                $scope.storage.favoritesItems = newArray;
-            });
+        userServ.refreshFavoritesFromNetwork($scope.hostName, $scope.storage);
     }
 
 }

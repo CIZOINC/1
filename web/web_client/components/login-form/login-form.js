@@ -69,7 +69,8 @@ function loginForm($rootScope, $state, userServ, storageServ, playerServ) {
                 login: scope.login.email,
                 password: scope.login.password
             }).then((response) => {
-                userServ.load(scope.hostName, scope.storage, response.data);
+                userServ.storeAuthToken(scope.storage, response.data);
+                userServ.refreshStoragesFromNetwork(scope.hostName, scope.storage, response.data);
                 loginClose();
             })
                 .catch((response) => {
@@ -83,7 +84,8 @@ function loginForm($rootScope, $state, userServ, storageServ, playerServ) {
         function facebookLogin() {
             userServ.facebookAuth(scope.hostName)
                 .then((response) => {
-                    userServ.load(scope.hostName, scope.storage, response);
+                    userServ.storeAuthToken(scope.storage, response);
+                    userServ.refreshStoragesFromNetwork(scope.hostName, scope.storage);
                     loginClose();
                 })
                 .catch(() => {

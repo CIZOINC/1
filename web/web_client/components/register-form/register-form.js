@@ -108,7 +108,8 @@ function registerForm($rootScope, userServ, moment, playerServ, _) {
         function facebookRegister() {
             userServ.facebookAuth(scope.hostName)
                 .then((response) => {
-                    userServ.load(scope.hostName, scope.storage, response);
+                    userServ.storeAuthToken(scope.storage, response);
+                    userServ.refreshStoragesFromNetwork(scope.hostName, scope.storage);
                     registerClose();
                 })
                 .catch(() => {

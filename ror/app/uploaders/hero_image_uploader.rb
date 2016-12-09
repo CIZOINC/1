@@ -38,12 +38,12 @@ class HeroImageUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    "#{secure_token}.#{file.extension}" if original_filename.present?
+    "#{unique_token}.#{file.extension}" if original_filename.present?
   end
 
   protected
-  def secure_token
-    var = :"@#{mounted_as}_secure_token"
+  def unique_token
+    var = :"@#{mounted_as}_unique_token"
     model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
   end
 end

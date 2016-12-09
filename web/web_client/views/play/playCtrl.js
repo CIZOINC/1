@@ -19,7 +19,9 @@ function PlayCtrl($scope, $rootScope,  $stateParams, _, playerServ, userServ) {
                     return userServ.refreshFavoritesFromNetwork($scope.hostName, $scope.storage);
                 }
             })
-            .then(playerServ.updateVideos)
+            .then(()=>{
+                return playerServ.updateVideos($scope);
+            })
             .then(viewSetup);
     }
 

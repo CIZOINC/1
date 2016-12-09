@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161205220749) do
+ActiveRecord::Schema.define(version: 20161209185559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 20161205220749) do
     t.string   "hero_image_upload_status",             default: "idle"
     t.string   "subtitle",                 limit: 255
     t.string   "description_title",        limit: 255
+    t.string   "hero_image_unique_token"
   end
 
   add_index "videos", ["featured_order"], name: "index_videos_on_featured_order", using: :btree

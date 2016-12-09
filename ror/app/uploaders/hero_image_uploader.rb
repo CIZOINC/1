@@ -43,7 +43,6 @@ class HeroImageUploader < CarrierWave::Uploader::Base
 
   protected
   def unique_token
-    var = :"@#{mounted_as}_unique_token"
-    model.instance_variable_get(var) or model.instance_variable_set(var, SecureRandom.uuid)
+    model.hero_image_unique_token ||= SecureRandom.uuid
   end
 end

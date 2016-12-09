@@ -22,16 +22,16 @@ angular
         'angular-perfect-scrollbar-2',
     ])
     .controller('AppCtrl', AppCtrl)
-    .filter('nl2br', function($sce){
-        return function(msg) {
-            var newMsg = (msg + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ '<br>' +'$2');
+    .filter('nl2br', function ($sce) {
+        return function (msg) {
+            var newMsg = (msg + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + '<br>' + '$2');
             return $sce.trustAsHtml(newMsg);
         }
     })
     .filter('parseLinks', function ($sce) {
-        return function(msg) {
+        return function (msg) {
             var exp = /\b((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-            var newMsg = (msg+'').replace(exp, "<a href='$1'>$1</a>");
+            var newMsg = (msg + '').replace(exp, "<a href='$1'>$1</a>");
             return $sce.trustAsHtml(newMsg);
         }
     });
@@ -157,21 +157,48 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
     }
 
     function setupLoginEventListener() {
-        $rootScope.$on('loginOpen', function(){
+        $rootScope.$on('loginOpen', function () {
             $scope.showLogin = true;
         });
-        $rootScope.$on('loginClose', function(){
+        $rootScope.$on('loginClose', function () {
             $scope.showLogin = false;
         });
     }
 
     function setupRegisterEventListener() {
-        $rootScope.$on('registerOpen', function(){
+        $rootScope.$on('registerOpen', function () {
             $scope.showRegister = true;
         });
-        $rootScope.$on('registerClose', function(){
+        $rootScope.$on('registerClose', function () {
             $scope.showRegister = false;
         });
+    }
+
+    function markFavorites(favorites) {
+        if ($scope.storage.userAuthorized) {
+            _.each(favorites, (favId) => {
+                userServ.setLiked($scope.hostName, $scope.storage.token.access_token, favId);
+            });
+        }
+    }
+
+    function loadStorages() {
+        $scope.storage.seenItems = storageServ.getItem($scope.storage.storageSeenKey);
+        if ($scope.storage.seenItems == null) {
+            $scope.storage.seenItems = [];
+        }
+        $scope.storage.unseenItems = storageServ.getItem($scope.storage.storageUnseenKey);
+        if ($scope.storage.unseenItems == null) {
+            $scope.storage.unseenItems = [];
+        }
+        $scope.storage.favoritesItems = storageServ.getItem($scope.storage.storageFavoritesKey);
+        if ($scope.storage.favoritesItems == null) {
+            $scope.storage.favoritesItems = [];
+        }
+        $scope.storage.skippedItems = storageServ.getItem($scope.storage.storageSkippedKey);
+        if ($scope.storage.skippedItems == null) {
+            $scope.storage.skippedItems = [];
+        }
     }
 
     loadUserToken();
@@ -180,64 +207,11 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
 
     setupBackLinksTracking();
 
-    // upload storage
-    $scope.storage.seenItems = storageServ.getItem($scope.storage.storageSeenKey);
-    if ($scope.storage.seenItems == null) {
-        $scope.storage.seenItems = [];
-    }
-    $scope.storage.unseenItems = storageServ.getItem($scope.storage.storageUnseenKey);
-    if ($scope.storage.unseenItems == null) {
-        $scope.storage.unseenItems = [];
-    }
-    $scope.storage.favoritesItems = storageServ.getItem($scope.storage.storageFavoritesKey);
-    if ($scope.storage.favoritesItems == null) {
-        $scope.storage.favoritesItems = [];
-    }
-    $scope.storage.skippedItems = storageServ.getItem($scope.storage.storageSkippedKey);
-    if ($scope.storage.skippedItems == null) {
-        $scope.storage.skippedItems = [];
-    }
+    // load storage
+    loadStorages();
 
     if ($scope.storage.userAuthorized) {
-        userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
-            .then((favorites) => {
-                let favoritesArray = _.map(favorites, fav => fav.id);
-                let storedArray = storageServ.getItem($scope.storage.storageFavoritesKey);
-
-                let newArray = _.union(favoritesArray, storedArray);
-                storageServ.setItem($scope.storage.storageFavoritesKey, newArray);
-                $scope.storage.favoritesItems = newArray;
-            });
-
-        userServ.getVideoSeen($scope.hostName, $scope.storage.token.access_token)
-            .then((seen) => {
-                let seenArray = _.map(seen, seenItem => seenItem.id);
-                let storedArray = storageServ.getItem($scope.storage.storageSeenKey);
-
-                let newArray = _.union(seenArray, storedArray);
-                storageServ.setItem($scope.storage.storageSeenKey, newArray);
-                $scope.storage.seenItems = newArray;
-            });
-
-        userServ.getUnseenList($scope.hostName, $scope.storage.token.access_token)
-            .then((unseen) => {
-                let unseenArray = _.map(unseen, unseenItem => unseenItem.id);
-                let storedArray = storageServ.getItem($scope.storage.storageUnseenKey);
-
-                let newArray = _.union(unseenArray, storedArray);
-                storageServ.setItem($scope.storage.storageUnseenKey, newArray);
-                $scope.storage.unseenItems = newArray;
-            });
-
-        userServ.getSkipped($scope.hostName, $scope.storage.token.access_token)
-            .then((skipped) => {
-                let skippedArray = _.map(skipped, skippedItem => skippedItem.id);
-                let storedArray = storageServ.getItem($scope.storage.storageSkippedKey);
-
-                let newArray = _.union(skippedArray, storedArray);
-                storageServ.setItem($scope.storage.storageSkippedKey, newArray);
-                $scope.storage.skippedItems = newArray;
-            });
+        userServ.refreshStoragesFromNetwork($scope.hostName, $scope.storage);
     }
 
     setupLoginEventListener();

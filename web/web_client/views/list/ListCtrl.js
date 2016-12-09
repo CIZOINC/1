@@ -19,18 +19,12 @@ function ListCtrl($scope, $state, $stateParams, $rootScope, userServ, playerServ
             .then(playerServ.getCategories)
             .then(playerServ.getVideos)
             .then(playerServ.updateCategories)
-            .then(playerServ.updateVideos)
-            .then((videos) => {
+            .then(()=>{
                 if ($scope.storage.userAuthorized) {
-                    userServ.getLiked($scope.hostName, $scope.storage.token.access_token)
-                        .then((favorites) => {
-                            _.each(videos, (videoItem) => {
-                                let favItem = _.filter(favorites, item => item.id === videoItem.id);
-                                videoItem.favorites = !!favItem.length;
-                            });
-                        });
+                    return userServ.refreshFavoritesFromNetwork($scope.hostName, $scope.storage);
                 }
             })
+            .then(playerServ.updateVideos)
             .then(viewSetup);
     }
 

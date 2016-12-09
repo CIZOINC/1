@@ -10,7 +10,14 @@ function userServ($http, $q, $log, moment, ezfb, storageServ) {
     return {
         registerUser: registerUser,
         login: login,
-        load: load,
+
+        refreshStoragesFromNetwork: refreshStoragesFromNetwork,
+        refreshFavoritesFromNetwork: refreshFavoritesFromNetwork,
+        refreshSeenFromNetwork: refreshSeenFromNetwork,
+        refreshUnseenFromNetwork: refreshUnseenFromNetwork,
+        refreshSkippedFromNetwork: refreshSkippedFromNetwork,
+
+        storeAuthToken: storeAuthToken,
         facebookAuth: facebookAuth,
         updateToken: updateToken,
         resetPassword: resetPassword,
@@ -53,6 +60,78 @@ function userServ($http, $q, $log, moment, ezfb, storageServ) {
         });
     }
 
+    function storeAuthToken(storage, data) {
+        storageServ.setItem(storage.storageUserToken, data);
+        storage.token = data;
+        storage.userAuthorized = true;
+    }
+
+    function markFavorites(hostName, storage, favorites) {
+        if (storage.userAuthorized) {
+            _.each(favorites, (favId) => {
+                setLiked(hostName, storage.token.access_token, favId);
+            });
+        }
+    }
+
+    function refreshFavoritesFromNetwork(hostName, storage) {
+        return getLiked(hostName, storage.token.access_token)
+            .then((favorites) => {
+                let favoritesArray = _.map(favorites, fav => fav.id);
+                let storedArray = storageServ.getItem(storage.storageFavoritesKey);
+
+                let newArray = _.union(favoritesArray, storedArray);
+                // favorites, marked while unauthorized
+                let pendingFavorites = _.difference(storedArray, favoritesArray);
+                markFavorites(hostName, storage, pendingFavorites);
+                storageServ.setItem(storage.storageFavoritesKey, newArray);
+                storage.favoritesItems = newArray;
+            });
+    }
+
+    function refreshSeenFromNetwork(hostName, storage) {
+        return getVideoSeen(hostName, storage.token.access_token)
+            .then((seen) => {
+                let seenArray = _.map(seen, seenItem => seenItem.id);
+                let storedArray = storageServ.getItem(storage.storageSeenKey);
+
+                let newArray = _.union(seenArray, storedArray);
+                storageServ.setItem(storage.storageSeenKey, newArray);
+                storage.seenItems = newArray;
+            });
+    }
+
+    function refreshUnseenFromNetwork(hostName, storage) {
+        return getUnseenList(hostName, storage.token.access_token)
+            .then((unseen) => {
+                let unseenArray = _.map(unseen, unseenItem => unseenItem.id);
+                let storedArray = storageServ.getItem(storage.storageUnseenKey);
+
+                let newArray = _.union(unseenArray, storedArray);
+                storageServ.setItem(storage.storageUnseenKey, newArray);
+                storage.unseenItems = newArray;
+            });
+    }
+
+    function refreshSkippedFromNetwork(hostName, storage) {
+        return getSkipped(hostName, storage.token.access_token)
+            .then((skipped) => {
+                let unseenArray = _.map(skipped, skippedItem => skippedItem.id);
+                let storedArray = storageServ.getItem(storage.storageSkippedKey);
+
+                let newArray = _.union(unseenArray, storedArray);
+                storageServ.setItem(storage.storageSkippedKey, newArray);
+                storage.skippedItems = newArray;
+            });
+    }
+
+    function refreshStoragesFromNetwork(hostName, storage) {
+        refreshFavoritesFromNetwork(hostName, storage);
+        refreshSeenFromNetwork(hostName, storage);
+        refreshUnseenFromNetwork(hostName, storage);
+        refreshSkippedFromNetwork(hostName, storage);
+    }
+
     function login(hostName, loginData) {
         return $q(function (resolve, reject) {
             $http({
@@ -70,53 +149,6 @@ function userServ($http, $q, $log, moment, ezfb, storageServ) {
                 reject(response);
             }
         });
-    }
-
-    function load(hostName, storage, data) {
-        storageServ.setItem(storage.storageUserToken, data);
-        storage.token = data;
-        storage.userAuthorized = true;
-
-        /**/
-        getLiked(hostName, storage.token.access_token)
-            .then((favorites) => {
-                let favoritesArray = _.map(favorites, fav => fav.id);
-                let storedArray = storageServ.getItem(storage.storageFavoritesKey);
-
-                let newArray = _.union(favoritesArray, storedArray);
-                storageServ.setItem(storage.storageFavoritesKey, newArray);
-                storage.favoritesItems = newArray;
-            });
-
-        getVideoSeen(hostName, storage.token.access_token)
-            .then((seen) => {
-                let seenArray = _.map(seen, seenItem => seenItem.id);
-                let storedArray = storageServ.getItem(storage.storageSeenKey);
-
-                let newArray = _.union(seenArray, storedArray);
-                storageServ.setItem(storage.storageSeenKey, newArray);
-                storage.seenItems = newArray;
-            });
-
-        getUnseenList(hostName, storage.token.access_token)
-            .then((unseen) => {
-                let unseenArray = _.map(unseen, unseenItem => unseenItem.id);
-                let storedArray = storageServ.getItem(storage.storageUnseenKey);
-
-                let newArray = _.union(unseenArray, storedArray);
-                storageServ.setItem(storage.storageUnseenKey, newArray);
-                storage.unseenItems = newArray;
-            });
-
-        getSkipped(hostName, storage.token.access_token)
-            .then((skipped) => {
-                let unseenArray = _.map(skipped, skippedItem => skippedItem.id);
-                let storedArray = storageServ.getItem(storage.storageSkippedKey);
-
-                let newArray = _.union(unseenArray, storedArray);
-                storageServ.setItem(storage.storageSkippedKey, newArray);
-                storage.skippedItems = newArray;
-            });
     }
 
     function facebookAuth(hostName) {

@@ -5,7 +5,7 @@ if @show_invisible || @show_deleted
 else
   json.extract! video, :id, :created_at, :updated_at, :title, :subtitle, :description_title, :description, :mature_content, :category_id, :visible, :featured
 
-  if video.hero_image.url
+  if video.hero_image.url && video.hero_image_ready?
     json.set! :hero_images do
       json.hero_image_link video.hero_image.url
       %w(large_banner medium_banner thumb_banner).each { |size| json.set! "hero_image_link_#{size}", video.hero_image.url(size.to_sym) }

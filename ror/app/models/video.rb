@@ -102,6 +102,10 @@ class Video < ActiveRecord::Base
     end
   end
 
+  def hero_image_ready?
+    self.hero_image_upload_status == 'completed'
+  end
+
  protected
 
  def create_streams

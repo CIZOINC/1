@@ -89,7 +89,7 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
 
     function linkToLogin() {
         $scope.storage.showMatureScreen = false;
-        $state.go('login');
+        $rootScope.$broadcast('loginOpen');
     }
 
     function linkToHome() {

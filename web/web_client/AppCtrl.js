@@ -51,6 +51,8 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         videosList: [],
         categoriesList: [],
         featuredList: [],
+        isUserMature: false,
+        userInfo: null,
         //
         showLogin: false,
         showRegister: false,
@@ -211,6 +213,7 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
     loadStorages();
 
     if ($scope.storage.userAuthorized) {
+        userServ.refreshUserInfoFromNetwork($scope.hostName, $scope.storage);
         userServ.refreshStoragesFromNetwork($scope.hostName, $scope.storage);
     }
 

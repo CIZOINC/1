@@ -70,6 +70,7 @@ function loginForm($rootScope, $state, userServ, storageServ, playerServ) {
                 password: scope.login.password
             }).then((response) => {
                 userServ.storeAuthToken(scope.storage, response.data);
+                userServ.refreshUserInfoFromNetwork(scope.hostName, scope.storage);
                 userServ.refreshStoragesFromNetwork(scope.hostName, scope.storage, response.data);
                 loginClose();
             })

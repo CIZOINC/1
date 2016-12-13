@@ -16,6 +16,7 @@ function userServ($http, $q, $log, moment, ezfb, storageServ) {
         refreshSeenFromNetwork: refreshSeenFromNetwork,
         refreshUnseenFromNetwork: refreshUnseenFromNetwork,
         refreshSkippedFromNetwork: refreshSkippedFromNetwork,
+        refreshUserInfoFromNetwork: refreshUserInfoFromNetwork,
 
         storeAuthToken: storeAuthToken,
         facebookAuth: facebookAuth,
@@ -24,6 +25,7 @@ function userServ($http, $q, $log, moment, ezfb, storageServ) {
         updatePassword: updatePassword,
         updatePasswordOnline: updatePasswordOnline,
         isUnexpiredToken: isUnexpiredToken,
+        getUserInfo: getUserInfo,
 
         getUnseenList: getUnseenList,
         setVideoSeen: setVideoSeen,
@@ -72,6 +74,11 @@ function userServ($http, $q, $log, moment, ezfb, storageServ) {
                 setLiked(hostName, storage.token.access_token, favId);
             });
         }
+    }
+
+    function refreshUserInfoFromNetwork(hostName, storage) {
+        return getUserInfo(hostName, storage.token.access_token)
+            .then( (userInfo) => {} );
     }
 
     function refreshFavoritesFromNetwork(hostName, storage) {
@@ -258,6 +265,14 @@ function userServ($http, $q, $log, moment, ezfb, storageServ) {
         let now = moment();
         let expirationDate = createdDate.add(token.expires_in);
         return now.diff(expirationDate) > 0;
+    }
+
+    function getUserInfo(hostName, token) {
+        return $http({
+            method: 'GET',
+            url: hostName + '/users/me',
+            headers: {'Authorization': `Bearer ${token}`}
+        }).then((response) => response.data);
     }
 
     function getUnseenList(hostName, token, params) {

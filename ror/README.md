@@ -59,13 +59,18 @@ Development for both the web app and admin panel is done on the web/develop bran
 
 ### Deploying
 
-Deployment is done using AWS's Elastic Beanstalk. To deploy a new version use the following command to deploy to staging, replacing <version> with the current version (eg v0.0.1).
+Deployment is done using AWS's Elastic Beanstalk. The following commands assume you have an AWS profile named "cizo" with valid credentials (access key id and secret access key) that have access to S3 and Elastic Beanstalk. Instructions on how to configure the AWS cli can be found [here](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html). 
+
+**Note** `aws configure --profile cizo` should be used as the configuration command so that a profile named `cizo` is generated. The default region name should be `us-east-1`.
+
+To deploy a new version use the following command to deploy to staging.
+
 
 ```
 eb deploy --profile cizo cizo-staging --label "api-`git rev-parse HEAD`"
 ```
 
-Once deployment has completed and has been validated, use the following command to deploy that version to production
+Once deployment has completed and has been validated, use the following command to deploy that version to production.
 
 ```
 eb deploy --profile cizo cizo-production --version "api-`git rev-parse HEAD`"

@@ -155,7 +155,7 @@
                     mature_content: false,
                     visible: false,
                     featured: false,
-                    tag_list: 'Add Tags'
+                    tag_list: ''
                 };
 
                 function isEmptyVideo(video) {
@@ -919,19 +919,10 @@
                 }
             };
 
-            $scope.tags = ($scope.video.tag_list || '').split(/,\s?/);
+            $scope.tags = $scope.video.tag_list ? ($scope.video.tag_list || '').split(/,\s*/) : [];
 
-            $scope.tagAdded = function (tags) {
-                let tag_list = '';
-                for (let tag in tags) {
-                    console.log(tags.length, tag, tags[tag]);
-                    if (parseInt(tag) === tags.length - 1) {
-                        tag_list += tags[tag].text;
-                    } else {
-                        tag_list += `${tags[tag].text}, `;
-                    }
-                }
-                video.tag_list = tag_list;
+            $scope.tagAdded = $scope.tagRemoved = function (tags) {
+                video.tag_list = tags.map((tag) => tag.text).join(', ');
             };
 
             $scope.ok = function () {

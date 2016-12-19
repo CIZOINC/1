@@ -163,7 +163,7 @@ function userServ($http, $q, $log, moment, ezfb, storageServ) {
                 } else {
                     reject();
                 }
-            }, {scope: 'user_birthday,email'});
+            }, {scope: 'public_profile,email'});
         });
     }
 

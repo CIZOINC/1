@@ -65,7 +65,7 @@ function featuredSection(_, $state, playerServ) {
         }
 
         function playVideo(video) {
-            $state.go('play', {videoId: video.id, categoryId: video.category_id});
+            $state.go('play', {videoId: video.id});
         }
 
         onFeaturesUpdate();

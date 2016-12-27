@@ -31,8 +31,8 @@
 
         <div class="register-form_description">
             By clicking on Sign Up, you agree to <br>
-            CIZO's <span ui-sref="terms" ng-click="closeView()" class="register-form_terms">Terms of Use</span> and
-            <span ui-sref="privacy" ng-click="closeView()" class="register-form_terms">Privacy Notice</span>
+            CIZO's <span ng-click="termsOpen()" class="register-form_terms">Terms of Use</span> and
+            <span ng-click="privacyOpen()" class="register-form_terms">Privacy Notice</span>
         </div>
 
         <button class="register-form_sign-up" ng-click="registerUser()">Sign up</button>

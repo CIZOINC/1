@@ -23,13 +23,7 @@ function ResetCtrl($scope, $rootScope, $state, userServ, playerServ) {
     });
 
     function closeView() {
-        if ($rootScope.wentFrom && $rootScope.wentFrom.name) {
-            $state.go($rootScope.wentFrom, $rootScope.wentFromParams);
-            $rootScope.wentFrom = undefined;
-            $rootScope.wentFromParams = undefined;
-        } else {
-            $state.go('home');
-        }
+        $rootScope.goBack();
     }
 
     function resetPassword() {

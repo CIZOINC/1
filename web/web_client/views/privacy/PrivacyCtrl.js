@@ -4,7 +4,7 @@ angular
     .controller('PrivacyCtrl', PrivacyCtrl);
 
 /* @ngInject */
-function PrivacyCtrl($scope, $state) {
+function PrivacyCtrl($scope, $state, $rootScope) {
     "use strict";
 
     $scope = angular.extend($scope, {
@@ -12,8 +12,8 @@ function PrivacyCtrl($scope, $state) {
     });
 
     function closeView() {
-        $state.go('register');
+        $rootScope.goBack();
     }
 }
 
-PrivacyCtrl.$inject = ['$scope', '$state'];
+PrivacyCtrl.$inject = ['$scope', '$state', '$rootScope'];

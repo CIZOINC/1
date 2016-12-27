@@ -38,7 +38,7 @@ angular
 
 
 /* @ngInject */
-function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, $timeout, ezfb) {
+function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, $timeout, $anchorScroll, ezfb) {
 
     $rootScope.isInitLoad = true;
 
@@ -135,6 +135,8 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
         $rootScope.wentFrom = '';
         $rootScope.wentFromParams = undefined;
         $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
+            $anchorScroll();
+
             if (from.name === 'register'
                 || from.name === 'login'
                 || from.name === 'reset'
@@ -217,4 +219,5 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
     setupLoginEventListener();
     setupRegisterEventListener();
 }
-AppCtrl.$inject = ['$rootScope', '$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', '$timeout', 'ezfb'];
+AppCtrl.$inject = ['$rootScope', '$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', '$timeout',
+    '$anchorScroll', 'ezfb'];

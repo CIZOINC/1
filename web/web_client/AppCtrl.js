@@ -38,7 +38,7 @@ angular
 
 
 /* @ngInject */
-function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, $timeout, ezfb) {
+function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageServ, userServ, $timeout, $anchorScroll, ezfb) {
 
     $rootScope.isInitLoad = true;
 
@@ -132,9 +132,22 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
     }
 
     function setupBackLinksTracking() {
-        $rootScope.wentFrom = '';
-        $rootScope.wentFromParams = undefined;
+        $rootScope.wentFromStack = [];
+        $rootScope.goBack = function() {
+            if (!$rootScope.wentFromStack.length) {
+                $state.go('home');
+            }
+            var prevState = $rootScope.wentFromStack.pop();
+            if (prevState.from) {
+                $state.go(prevState.from, prevState.fromParams);
+            } else {
+                $state.go('home');
+            }
+        };
+
         $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
+            $anchorScroll();
+
             if (from.name === 'register'
                 || from.name === 'login'
                 || from.name === 'reset'
@@ -144,15 +157,22 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
                 return;
             }
             if (typeof $rootScope.loginTarget !== 'undefined') {
-                $rootScope.wentFrom = $rootScope.loginTarget;
-                $rootScope.wentFromParams = $rootScope.loginTargetParams;
+                $rootScope.wentFromStack.push({
+                    from: $rootScope.loginTarget,
+                    fromParams: $rootScope.loginTargetParams
+                });
                 $rootScope.loginTarget = undefined;
                 $rootScope.loginTargetParams = undefined;
             } else {
-                $rootScope.wentFrom = from;
-                $rootScope.wentFromParams = fromParams;
+                $rootScope.wentFromStack.push({
+                    from: from,
+                    fromParams: fromParams
+                });
             }
-
+            if ($rootScope.pendingWentFrom) {
+                $rootScope.wentFromStack.push($rootScope.pendingWentFrom);
+                $rootScope.pendingWentFrom = undefined;
+            }
         });
     }
 
@@ -217,4 +237,5 @@ function AppCtrl($rootScope, $scope, routerHelper, routesList, $state, storageSe
     setupLoginEventListener();
     setupRegisterEventListener();
 }
-AppCtrl.$inject = ['$rootScope', '$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', '$timeout', 'ezfb'];
+AppCtrl.$inject = ['$rootScope', '$scope', 'routerHelper', 'routesList', '$state', 'storageServ', 'userServ', '$timeout',
+    '$anchorScroll', 'ezfb'];

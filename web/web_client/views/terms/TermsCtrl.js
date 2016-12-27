@@ -4,7 +4,7 @@ angular
     .controller('TermsCtrl', TermsCtrl);
 
 /* @ngInject */
-function TermsCtrl($scope, $state) {
+function TermsCtrl($scope, $state, $rootScope) {
     "use strict";
 
     $scope = angular.extend($scope, {
@@ -12,8 +12,8 @@ function TermsCtrl($scope, $state) {
     });
 
     function closeView() {
-        $state.go('register');
+        $rootScope.goBack();
     }
 }
 
-TermsCtrl.$inject = ['$scope', '$state'];
+TermsCtrl.$inject = ['$scope', '$state', '$rootScope'];

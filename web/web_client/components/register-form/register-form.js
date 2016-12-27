@@ -4,7 +4,7 @@ angular
     .directive('registerForm', registerForm);
 
 /* @ngInject */
-function registerForm($rootScope, userServ, moment, playerServ, _) {
+function registerForm($rootScope, userServ, moment, playerServ, _, $state, $timeout) {
     "use strict";
 
     const months = [
@@ -51,6 +51,8 @@ function registerForm($rootScope, userServ, moment, playerServ, _) {
             facebookRegister: facebookRegister,
             closeView: closeView,
             loginClick: loginClick,
+            termsOpen: termsOpen,
+            privacyOpen: privacyOpen,
             message: {
                 title: '123',
                 description: 'this is it',
@@ -60,6 +62,18 @@ function registerForm($rootScope, userServ, moment, playerServ, _) {
                 }
             }
         });
+
+        function termsOpen() {
+            scope.closeView();
+            $rootScope.pendingWentFrom = {from: 'register', fromParams: []};
+            $state.go('terms');
+        }
+
+        function privacyOpen() {
+            scope.closeView();
+            $rootScope.pendingWentFrom = {from: 'register', fromParams: []};
+            $state.go('privacy');
+        }
 
         function loginOpen() {
             if (scope.onLoginOpen) {
@@ -128,4 +142,4 @@ function registerForm($rootScope, userServ, moment, playerServ, _) {
 
     }
 }
-registerForm.$inject = ['$rootScope', 'userServ', 'moment', 'playerServ', 'lodash'];
+registerForm.$inject = ['$rootScope', 'userServ', 'moment', 'playerServ', 'lodash', '$state', '$timeout'];

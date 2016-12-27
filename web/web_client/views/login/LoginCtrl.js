@@ -15,13 +15,7 @@ function LoginCtrl($scope, $rootScope, $state) {
     });
 
     function loginClose() {
-        if ($rootScope.wentFrom && $rootScope.wentFrom.name) {
-            $state.go($rootScope.wentFrom, $rootScope.wentFromParams);
-            $rootScope.wentFrom = undefined;
-            $rootScope.wentFromParams = undefined;
-        } else {
-            $state.go('home');
-        }
+        $rootScope.goBack();
     }
 
     function registerOpen() {

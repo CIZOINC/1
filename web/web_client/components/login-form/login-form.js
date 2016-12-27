@@ -111,12 +111,16 @@ function loginForm($rootScope, $state, userServ, storageServ, playerServ) {
                 if (passInput) {
                     passInput.focus();
                 }
+                event.preventDefault();
+                event.stopPropagation();
             }
         }
 
         function loginOnEnter(event) {
             if (event && event.keyCode === 13) {
                 processLogin();
+                event.preventDefault();
+                event.stopPropagation();
             }
         }
     }
